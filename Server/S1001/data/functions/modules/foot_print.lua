@@ -19,7 +19,7 @@ function foot_print_OnActorPayMoney(sysarg, args)
 	send_foot_print_pay_data(sysarg)
 end
 
--- 仅用于击杀Boss模拟充值时，增加足迹/神盾每周累计充值
+-- 旧兼容入口：正常 Boss 已通过 ActorPayMoney 累计，勿同时调用两条入口。
 function foot_print_add_weekly_pay_money_by_killboss(sysarg, yuanBao)
 	yuanBao = tonumber(yuanBao) or 0
 	if yuanBao <= 0 then
@@ -69,6 +69,8 @@ end
 
 function foot_print_clear_pay_gift_data(sysarg)
 	local var = Actor.getStaticVar(sysarg)
+	-- 保留旧周期已受理但未发完的凭据，新周期使用独立领取位。
+	var.weeklyPayGiftPeriod = (var.weeklyPayGiftPeriod or 0) + 1
 	var.FootPrintPayMoney = nil
 	var.footPrintGiftFlags = nil
 	var.shendunGiftFlags = nil 
@@ -96,107 +98,81 @@ function send_foot_print_pay_data(sysarg)
 	DataPack.flush(netPack)
 end
 
--- 领取足迹充值大礼包
+-- 补完旧周期已经受理的奖励，不占用本周领取位，也不重新核算旧周充值。
+function retry_previous_weekly_pay_gifts(sysarg)
+	local var = Actor.getStaticVar(sysarg)
+	local period = var.weeklyPayGiftPeriod or 0
+	if var.weeklyPayGiftGrants == nil then return end
+	for key, receipt in pairs(var.weeklyPayGiftGrants) do
+		if receipt.period ~= period and receipt.progress and receipt.progress.items then
+			local logId = receipt.kind == "foot" and LogIds.footPrintPayPift or LogIds.shendunPayPift
+			if Awards.GiveTracked(sysarg, receipt.progress.items, receipt.progress, logId, "补发往期周礼包"..receipt.giftIndex) then
+				var.weeklyPayGiftGrants[key] = nil
+			end
+		end
+	end
+end
+
+local function grant_weekly_pay_gift(sysarg, packet, isShendun)
+	local giftIndex = DataPack.readByte(packet)
+	if giftIndex < 1 or giftIndex > 32 then return end
+	local var = Actor.getStaticVar(sysarg)
+	local flagName = isShendun and "shendunGiftFlags" or "footPrintGiftFlags"
+	local flags = var[flagName] or 0
+	if System.getIntBit(flags, giftIndex - 1) ~= 0 then
+		Actor.sendTipmsg(sysarg, "该礼包您已经领取了", ttFlyTip)
+		return
+	end
+	local period = var.weeklyPayGiftPeriod or 0
+	local kind = isShendun and "shendun" or "foot"
+	local key = kind..":"..period..":"..giftIndex
+	local receipts = var.weeklyPayGiftGrants
+	local receipt = receipts and receipts[key]
+	local awards = receipt and receipt.progress and receipt.progress.items
+	local giftList = foot_print_cfg and (isShendun and foot_print_cfg.shendun_gift_list or foot_print_cfg.gift_list)
+	local giftCfg = giftList and giftList[giftIndex]
+	if awards == nil and giftCfg == nil then return end
+	if awards == nil then
+		if receipt == nil and (var.FootPrintPayMoney or 0) < giftCfg.needPay then
+			Actor.sendTipmsg(sysarg, "本周累计充值达到 "..giftCfg.needPay.." 元宝才可以领取该礼包", ttFlyTip)
+			return
+		end
+		local progress = receipt and receipt.progress or {}
+		if Awards.PrepareTracked(giftCfg.award, progress) ~= true then return end
+		awards = progress.items
+		if receipt == nil then
+			if receipts == nil then
+				receipts = {}
+				var.weeklyPayGiftGrants = receipts
+			end
+			receipt = {period = period, kind = kind, giftIndex = giftIndex, progress = progress}
+			receipts[key] = receipt
+		else
+			receipt.progress = progress
+		end
+	end
+	local logId = isShendun and LogIds.shendunPayPift or LogIds.footPrintPayPift
+	if not Awards.GiveTracked(sysarg, awards, receipt.progress, logId, tostring(giftIndex)) then return end
+	var[flagName] = System.setIntBit(flags, giftIndex - 1, true)
+	receipts[key] = nil
+	local netPack = DataPack.allocPacket(sysarg, 151, LogicCmd.miscSysEx.sub.sFootPrint)
+	DataPack.writeByte(netPack, isShendun and 3 or 2)
+	DataPack.writeByte(netPack, giftIndex)
+	DataPack.flush(netPack)
+	Actor.sendTipmsg(sysarg, isShendun and "您成功领取了神盾充值大礼包" or "您成功领取了足迹充值大礼包", ttFlyTip)
+end
+
 function get_foot_print_pay_gift(sysarg, packet)
-	-- 礼包索引（从1开始）
-	local gift_idx = DataPack.readByte(packet)
-	if gift_idx < 1 or gift_idx > 32 then
-		return
-	end
-	
-	local giftCfg = foot_print_cfg.gift_list[gift_idx]
-	if giftCfg == nil then return end	
-	
-	local var = Actor.getStaticVar(sysarg)
-	local FootPrintPayMoney = var.FootPrintPayMoney
-	if FootPrintPayMoney == nil then FootPrintPayMoney = 0 end
-	
-	if FootPrintPayMoney < giftCfg.needPay then
-		Actor.sendTipmsg(sysarg, "本周累计充值达到 "..giftCfg.needPay.." 元宝才可以领取该礼包", ttFlyTip)
-		return
-	end
-	
-	local footPrintGiftFlags = var.footPrintGiftFlags
-	if footPrintGiftFlags == nil then footPrintGiftFlags = 0 end
-	
-	local f = System.getIntBit(footPrintGiftFlags, gift_idx - 1)
-	if f ~= 0 then
-		Actor.sendTipmsg(sysarg, "该礼包您已经领取了", ttFlyTip)
-		return
-	end
-	
-	if not Awards.CheckBagGridCount(sysarg, giftCfg.award) then
-		return
-	end
-
-	if Awards.GiveNoCheck(sysarg, giftCfg.award, LogIds.footPrintPayPift, tostring(gift_idx)) == false then
-		local actorId = Actor.getIntProperty(sysarg, PROP_ENTITY_ID)
-		print("Awards.Give error, get_foot_print_pay_gift actorid="..actorId..",gift_idx="..gift_idx)
-	end
-	
-	footPrintGiftFlags = System.setIntBit(footPrintGiftFlags, gift_idx - 1, true)
-	var.footPrintGiftFlags = footPrintGiftFlags
-	
-	local netPack = DataPack.allocPacket(sysarg, 151, LogicCmd.miscSysEx.sub.sFootPrint)
-	DataPack.writeByte(netPack, 2) -- 领取足迹充值大礼包	
-	DataPack.writeByte(netPack, gift_idx)	
-	DataPack.flush(netPack)
-	
-	Actor.sendTipmsg(sysarg, "您成功领取了足迹充值大礼包", ttFlyTip)
+	grant_weekly_pay_gift(sysarg, packet, false)
 end
 
---领取神盾充值大礼包
 function get_shendun_pay_gift(sysarg, packet)
-	-- 礼包索引（从1开始）
-	local gift_idx = DataPack.readByte(packet)
-	if gift_idx < 1 or gift_idx > 32 then
-		return
-	end
-	
-	local giftCfg = foot_print_cfg.shendun_gift_list[gift_idx]
-	if giftCfg == nil then return end	
-	
-	local var = Actor.getStaticVar(sysarg)
-	local FootPrintPayMoney = var.FootPrintPayMoney
-	if FootPrintPayMoney == nil then FootPrintPayMoney = 0 end
-	
-	if FootPrintPayMoney < giftCfg.needPay then
-		Actor.sendTipmsg(sysarg, "本周累计充值达到 "..giftCfg.needPay.." 元宝才可以领取该礼包", ttFlyTip)
-		return
-	end
-	
-	local shendunGiftFlags = var.shendunGiftFlags
-	if shendunGiftFlags == nil then shendunGiftFlags = 0 end
-	
-	local f = System.getIntBit(shendunGiftFlags, gift_idx - 1)
-	if f ~= 0 then
-		Actor.sendTipmsg(sysarg, "该礼包您已经领取了", ttFlyTip)
-		return
-	end
-	
-	if not Awards.CheckBagGridCount(sysarg, giftCfg.award) then
-		return
-	end
-
-	if Awards.GiveNoCheck(sysarg, giftCfg.award, LogIds.shendunPayPift, tostring(gift_idx)) == false then
-		local actorId = Actor.getIntProperty(sysarg, PROP_ENTITY_ID)
-		print("Awards.Give error, shendunPayPift actorid="..actorId..",gift_idx="..gift_idx)
-	end
-	
-	shendunGiftFlags = System.setIntBit(shendunGiftFlags, gift_idx - 1, true)
-	var.shendunGiftFlags = shendunGiftFlags
-	
-	local netPack = DataPack.allocPacket(sysarg, 151, LogicCmd.miscSysEx.sub.sFootPrint)
-	DataPack.writeByte(netPack, 3) -- 领取足迹充值大礼包	
-	DataPack.writeByte(netPack, gift_idx)	
-	DataPack.flush(netPack)
-	
-	Actor.sendTipmsg(sysarg, "您成功领取了神盾充值大礼包", ttFlyTip)
+	grant_weekly_pay_gift(sysarg, packet, true)
 end
-
 
 function foot_print_main(sysarg, sysid, packet)
 	local msgid = DataPack.readByte(packet)
+	if msgid >= 1 and msgid <= 3 then retry_previous_weekly_pay_gifts(sysarg) end
 		
 	if msgid == 1 then -- 获得足迹充值数据
 		send_foot_print_pay_data(sysarg)

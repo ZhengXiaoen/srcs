@@ -1,29 +1,48 @@
 ﻿--#include "data\config\activity\EveryDayPayGiftCfg.lua" once
 --#include "data\functions\Activity\PublicTest.lua" once
 
+-- 每日领取位会跨天清空，旧日已经受理但未发完的奖励必须独立保存并补发。
+local function retryPreviousNewEveryDayGifts(sysarg, var, today)
+	local receipts = var.newEveryDayGiftGrants
+	if receipts == nil then return end
+	for key, receipt in pairs(receipts) do
+		if receipt.day ~= today and receipt.progress and receipt.progress.items then
+			if Awards.GiveTracked(sysarg, receipt.progress.items, receipt.progress, GameLog.cGiveNewEverydayAward, "补发往期每日充值奖励") then
+				receipts[key] = nil
+			end
+		end
+	end
+end
+
 --领取每日充值大礼包
 MiscsImplement.handleGetPayGiftOp2 = function (sysarg,msgid,packet)
 	
 	local level = DataPack.readByte(packet);
-	
-	if not EveryDayPayGiftCfg then return end
-	
-	local nDays = System.getDaysSinceOpenServer()
-	local count = #EveryDayPayGiftCfg - 1 -- 去掉最后一个特别的礼包
-	local nConfig 
-	if nDays <= count then
-		nConfig = EveryDayPayGiftCfg[nDays]
-	else
-		nConfig = EveryDayPayGiftCfg[count]
+	local var = Actor.getStaticVar(sysarg)
+	if var.days == nil then var.days = {} end
+	local today = System.getToday()
+	retryPreviousNewEveryDayGifts(sysarg, var, today)
+	local nConfig
+	if EveryDayPayGiftCfg then
+		local nDays = System.getDaysSinceOpenServer()
+		local count = #EveryDayPayGiftCfg - 1 -- 去掉最后一个特别的礼包
+		if nDays <= count then
+			nConfig = EveryDayPayGiftCfg[nDays]
+		else
+			nConfig = EveryDayPayGiftCfg[count]
+		end
 	end
-
 	if level == 0 then
 		
 		SendNewEveryDayData(sysarg,nConfig)
 		return
 	end
 	
-	if not nConfig[level] then return end
+	local key = tostring(today)..":"..tostring(level)
+	local receipts = var.newEveryDayGiftGrants
+	local receipt = receipts and receipts[key]
+	-- 已受理的奖励使用冻结清单；只有首次领取才依赖当下的活动配置。
+	if receipt == nil and (not nConfig or not nConfig[level]) then return end
 	
 	--领取的方法又修改了,没有分页了。。。。。
 	--if level>5 then --大于5，出现分页
@@ -32,14 +51,6 @@ MiscsImplement.handleGetPayGiftOp2 = function (sysarg,msgid,packet)
 	--		return 
 	--	end
 	--end
-	
-	local var = Actor.getStaticVar(sysarg)
-	local nPeyCount = var.days.PeyNum
-	if not nPeyCount then 
-		return
-	elseif nPeyCount < nConfig[level].needPayMoney then
-		return
-	end
 	
 	if not var.days.newEveryDayGiftFlag then
 		var.days.newEveryDayGiftFlag = {}
@@ -73,19 +84,30 @@ MiscsImplement.handleGetPayGiftOp2 = function (sysarg,msgid,packet)
 --	if IsMonthActivityTime() then
 --		awards = nConfig[level].monthAward
 --	else
-		awards = nConfig[level].award
+		awards = receipt and receipt.progress.items or nConfig[level].award
 --	end
 
-	--检查背包
-	if not Awards.CheckBagGridCount(sysarg, awards) then
-		return
+	if receipt == nil then
+		local nPeyCount = var.days.PeyNum
+		if not nPeyCount or nPeyCount < nConfig[level].needPayMoney then return end
+		local progress = {}
+		if Awards.PrepareTracked(awards, progress) ~= true then return end
+		if receipts == nil then
+			receipts = {}
+			var.newEveryDayGiftGrants = receipts
+		end
+		receipt = {day = today, level = level, progress = progress}
+		receipts[key] = receipt
 	end
-	
-	Awards.Give(sysarg, awards, GameLog.cGiveNewEverydayAward, "每日充值奖励")
+	-- GiveTracked 只重试尚未明确成功的项目，并自行检查剩余奖励所需的背包空间。
+	if not Awards.GiveTracked(sysarg, receipt.progress.items, receipt.progress, GameLog.cGiveNewEverydayAward, "每日充值奖励") then return end
 	var.days.newEveryDayGiftFlag[level] = 1
+	receipts[key] = nil
 
-	System.broadcastTipmsg(string.format(Lang.ScriptTips.zf363,Actor.getName(sysarg),nConfig[level].worth,nConfig[level].name),2048)
-	System.broadcastTipmsg(string.format(Lang.ScriptTips.zf363,Actor.getName(sysarg),nConfig[level].worth,nConfig[level].name).."<我要领取/@@showWin,104>",ttChatWindow)
+	if nConfig and nConfig[level] then
+		System.broadcastTipmsg(string.format(Lang.ScriptTips.zf363,Actor.getName(sysarg),nConfig[level].worth,nConfig[level].name),2048)
+		System.broadcastTipmsg(string.format(Lang.ScriptTips.zf363,Actor.getName(sysarg),nConfig[level].worth,nConfig[level].name).."<我要领取/@@showWin,104>",ttChatWindow)
+	end
 	
 	SendNewEveryDayData(sysarg,nConfig)
 

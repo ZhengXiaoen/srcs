@@ -338,8 +338,46 @@ end
 
 
 --开始国庆活动
-SatrtNationalDayActivity = function(openday , nowOpenday)
+-- Bind untagged legacy actor data to the rollout round, including offline actors.
+function EnsureNationalDayActivityCycleId()
 	local svar = System.getStaticVar()
+	local changed = false
+	if svar.NationalDayActivityCycleId == nil then
+		if svar.isDringNational ~= nil and svar.isDringNational > 0 then
+			svar.NationalDayActivityCycleId = 1
+		else
+			svar.NationalDayActivityCycleId = 0
+		end
+		changed = true
+	end
+	if svar.NationalDayLegacyCycleId == nil then
+		svar.NationalDayLegacyCycleId = svar.NationalDayActivityCycleId
+		changed = true
+	end
+	if changed then System.saveStaticVar() end
+	return svar.NationalDayActivityCycleId
+end
+
+function EnsureNationalDayActorData(sysarg)
+	local cycleId = EnsureNationalDayActivityCycleId()
+	local svar = System.getStaticVar()
+	local var = Actor.getStaticVar(sysarg)
+	if var.NationalDayActivityCycleId == nil then
+		if cycleId ~= svar.NationalDayLegacyCycleId then
+			var.nationalDayInfoNew = nil
+		end
+		var.NationalDayActivityCycleId = cycleId
+	elseif var.NationalDayActivityCycleId ~= cycleId then
+		var.nationalDayInfoNew = nil
+		var.NationalDayActivityCycleId = cycleId
+	end
+	return var
+end
+
+SatrtNationalDayActivity = function(openday , nowOpenday)
+	local previousCycleId = EnsureNationalDayActivityCycleId()
+	local svar = System.getStaticVar()
+	svar.NationalDayActivityCycleId = previousCycleId + 1
 	if nowOpenday == nil or nowOpenday == 0 then
 		svar.isDringNational = 1
 	else
@@ -378,6 +416,7 @@ end
 
 --结束国庆活动
 EndNationalDayActivity = function()
+	EnsureNationalDayActivityCycleId()
 	local svar = System.getStaticVar()
 	svar.isDringNational = nil
 	svar.StartNational_Year = nil
@@ -416,69 +455,100 @@ end
 
 --国庆活动
 NationalDayActivitysNew =function (sysarg, sysid, packet)
-	--是否在开关时间内
+	RetryNationalDayPayGrants(sysarg)
 	local msgid = DataPack.readByte(packet)
-	if msgid ==1 then --请求当前是第几天
+	if msgid == 1 then --请求当前是第几天
 		SentNationalDayIndex(sysarg)
-	elseif msgid==2 then --请求数据
+	elseif msgid == 2 then --请求数据
 		SentNationalDayInfoNew(sysarg)
-	elseif msgid==3 then --请求领取
-		GetNationalDayAwardNew(sysarg,DataPack.readByte(packet))
+	elseif msgid == 3 then --请求领取
+		GetNationalDayAwardNew(sysarg, DataPack.readByte(packet))
+	end
+end
+
+-- 逐项补发已冻结的国庆充值奖励；往期凭据不得占用新一轮的已领标记。
+function RetryNationalDayPayGrants(sysarg)
+	if System.isCrossServer and System.isCrossServer() then return end
+	local var = Actor.getStaticVar(sysarg)
+	local grants = var and var.nationalDayPayGrants
+	if type(grants) ~= "table" then return end
+	local cycle = EnsureNationalDayActivityCycleId()
+	for key, receipt in pairs(grants) do
+		local progress = type(receipt) == "table" and receipt.progress
+		-- 旧空凭据只可能产生于清单冻结前；没有进行中项目或已发项，可安全清除。
+		if type(progress) == "table" and progress.items == nil and progress.inFlight == nil
+			and not progress.needsReview and (progress.done == nil or (type(progress.done) == "table" and next(progress.done) == nil)) then
+			grants[key] = nil
+		elseif type(progress) == "table" and type(progress.items) == "table" and #progress.items > 0
+			and type(receipt.index) == "number" and receipt.index >= 1 and receipt.index <= 7 then
+			local current = cycle > 0 and receipt.cycle == cycle
+			if current then EnsureNationalDayActorData(sysarg) end
+			if not progress.needsReview and progress.inFlight == nil
+				and Awards.GiveTracked(sysarg, progress.items, progress, LogIds.NationalDays, "补发国庆充值奖励") then
+				if current then
+					var.nationalDayInfoNew = System.setIntBit(var.nationalDayInfoNew or 0, receipt.index + 7, true)
+				end
+				grants[key] = nil
+			end
+		end
 	end
 end
 
 --领取第几天的奖励
-function GetNationalDayAwardNew(sysarg,index)
-	local NowDayIndex = GetNationalIndexDay()
-	if NowDayIndex<0 or NowDayIndex>7 then 
-		return 
-	end
-	
-	if index<1 or index>7 then 
-		return 
-	end
-	
+function GetNationalDayAwardNew(sysarg, index)
+	if type(index) ~= "number" or index < 1 or index > 7 then return end
+	local cycle = EnsureNationalDayActivityCycleId()
 	local var = Actor.getStaticVar(sysarg)
-	
-	--充值是否足够
-	local cfg = NationalDayActivityCfg.NationalDayNew
-	if var.nationalDayInfoNew==nil or System.getIntBit(var.nationalDayInfoNew,index)==0 then 
-		if NowDayIndex==index then 
-			Actor.sendTipmsg(sysarg,"充值不足",ttFlyTip)
-		elseif NowDayIndex<index then 
-			Actor.sendTipmsg(sysarg,"未到天数,不能领取",ttFlyTip)
-		elseif NowDayIndex>index then 
-			Actor.sendTipmsg(sysarg,"活动时间已过，领取失败",ttFlyTip)
+	local key = tostring(cycle)..":"..index
+	local grants = var.nationalDayPayGrants
+	local hadReceipt = type(grants) == "table" and grants[key] ~= nil
+	RetryNationalDayPayGrants(sysarg)
+	if hadReceipt then return end
+
+	local nowDayIndex = GetNationalIndexDay()
+	if cycle <= 0 or nowDayIndex < 1 or nowDayIndex > 7 then return end
+	var = EnsureNationalDayActorData(sysarg)
+	local cfg = NationalDayActivityCfg and NationalDayActivityCfg.NationalDayNew
+	cfg = type(cfg) == "table" and cfg[index]
+	if type(cfg) ~= "table" or type(cfg.award) ~= "table" or #cfg.award == 0 then return end
+	local flags = var.nationalDayInfoNew or 0
+	if System.getIntBit(flags, index) == 0 then
+		if nowDayIndex == index then
+			Actor.sendTipmsg(sysarg, "充值不足", ttFlyTip)
+		elseif nowDayIndex < index then
+			Actor.sendTipmsg(sysarg, "未到天数,不能领取", ttFlyTip)
+		else
+			Actor.sendTipmsg(sysarg, "活动时间已过，领取失败", ttFlyTip)
 		end
-		return 
+		return
 	end
-	
-	--是否已经领取过
-	if var.nationalDayInfoNew~=nil and System.getIntBit(var.nationalDayInfoNew,index+7)==1 then 
-		Actor.sendTipmsg(sysarg,"不能重复领取",ttFlyTip)
-		return 
+	if System.getIntBit(flags, index + 7) == 1 then
+		Actor.sendTipmsg(sysarg, "不能重复领取", ttFlyTip)
+		return
 	end
-	
-	--槽位是否足够
-	if not Awards.CheckBagGridCount(sysarg, cfg[index].award) then
-		return 
+
+	if type(grants) ~= "table" then
+		grants = {}
+		var.nationalDayPayGrants = grants
 	end
-	
-	--设置已经领取过
-	var.nationalDayInfoNew = System.setIntBit(var.nationalDayInfoNew,index+7,true)
-	
-	--给奖品
-	local bResult = Awards.Give(sysarg, cfg[index].award, LogIds.NationalDays,cfg[index].name)
-	if bResult == false then
-		print("NationalDayActivityCfg ChongZhi2 Gift error, actor name = "..Actor.getName(sysarg))
-		return 
+	-- 配置为男女两种互斥物品，只冻结本角色可领取的那一项。
+	local award = {}
+	local sex = Actor.getIntProperty(sysarg, PROP_ACTOR_SEX)
+	for _, item in ipairs(cfg.award) do
+		if item.type ~= 0 or item.sex == nil or item.sex == -1 or item.sex == sex then
+			award[#award + 1] = item
+		end
 	end
-	
-	--给前端发协议
+	if #award == 0 then return end
+	local progress = {}
+	if Awards.PrepareTracked(award, progress) ~= true then return end
+	local receipt = {cycle = cycle, index = index, progress = progress}
+	grants[key] = receipt
+	if not Awards.GiveTracked(sysarg, progress.items, progress, LogIds.NationalDays, cfg.name) then return end
+	var.nationalDayInfoNew = System.setIntBit(flags, index + 7, true)
+	grants[key] = nil
 	SentNationalDayInfoNew(sysarg)
 end
-
-
 
 --请求国庆节index
 function SentNationalDayIndex(sysarg)
@@ -494,7 +564,7 @@ end
 
 --请求国庆节数据
 function SentNationalDayInfoNew(sysarg)
-	local var = Actor.getStaticVar(sysarg)
+	local var = EnsureNationalDayActorData(sysarg)
 	local netPack = DataPack.allocPacket(sysarg,151,LogicCmd.miscSysEx.sub.sNationalDayActivityNew)
 	DataPack.writeByte(netPack,2)
 	if var.nationalDayInfoNew==nil then 
@@ -534,4 +604,25 @@ GetNationalIndexDay = function()
 end
 
 
+-- Shared by real recharge and Boss recharge; writes an absolute eligibility bit.
+function SyncNationalDayRechargeProgress(sysarg)
+	local dayIndex = GetNationalIndexDay()
+	if dayIndex < 1 or dayIndex > 7 then return false end
+	local var = EnsureNationalDayActorData(sysarg)
+	local cfg = NationalDayActivityCfg and NationalDayActivityCfg.NationalDayNew
+	cfg = cfg and cfg[dayIndex]
+	if cfg == nil or cfg.needYB == nil then return false end
+	local payYb = (var.days and var.days.PeyNum) or 0
+	if payYb < cfg.needYB then return false end
+	local flags = var.nationalDayInfoNew or 0
+	if System.getIntBit(flags, dayIndex) ~= 0 then return false end
+	var.nationalDayInfoNew = System.setIntBit(flags, dayIndex, true)
+	SentNationalDayInfoNew(sysarg)
+	return true
+end
+
 MiscsImplementEx.registerMsgHandler(LogicCmd.miscSysEx.sub.cNationalDayActivityNew, NationalDayActivitysNew)
+
+if registerLuaEventCallback and LuaEventId and LuaEventId.PlayerLogin then
+	registerLuaEventCallback(LuaEventId.PlayerLogin, RetryNationalDayPayGrants)
+end

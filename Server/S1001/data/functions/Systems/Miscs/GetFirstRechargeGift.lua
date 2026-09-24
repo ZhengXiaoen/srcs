@@ -26,59 +26,97 @@ MiscsImplement.GetFirstRechargeInfo = function(sysarg)
 end
 
 MiscsImplement.BuyEveryDayPreference = function(sysarg)
-	local var = Actor.getStaticVar(sysarg) 
-	local buyEveryDayPreference = var.days.everyDayPreferenceFlag
-	if buyEveryDayPreference and buyEveryDayPreference == 1 then
-		Actor.sendTipmsg(sysarg,Lang.ScriptTips.zf407,ttFlyTip)
+	local var = Actor.getStaticVar(sysarg)
+	if var.days == nil then var.days = {} end
+	local today = System.getToday()
+	local pending = var.everyDayPreferenceGrant
+	-- 已付款的待补发记录放在 days 外；跨天后先补上一笔，不重复扣款。
+	if pending ~= nil then
+		if pending.paid ~= true or pending.paymentInFlight or pending.needsReview then
+			Actor.sendTipmsg(sysarg, "上次购买需要核对付款和发奖记录，请联系客服", ttFlyTip)
+			return
+		end
+		if Awards.GiveTracked(sysarg, pending.items, pending, GameLog.cBuyEveryDayPreference, "补发每日特惠礼包") then
+			if pending.purchaseDay == today then var.days.everyDayPreferenceFlag = 1 end
+			var.everyDayPreferenceGrant = nil
+		end
 		return
 	end
-
-	if not ActivityGiftConfig or not ActivityGiftConfig.EveryDayPreference then
+	if var.days.everyDayPreferenceFlag == 1 then
+		Actor.sendTipmsg(sysarg, Lang.ScriptTips.zf407, ttFlyTip)
 		return
 	end
-
+	local cfg = ActivityGiftConfig and ActivityGiftConfig.EveryDayPreference
+	-- 空奖励配置意味着不可销售，必须在任何扣款和购买标记之前拒绝。
+	if not cfg or type(cfg.award) ~= "table" or #cfg.award == 0 then
+		Actor.sendTipmsg(sysarg, "每日特惠礼包暂未开放", ttFlyTip)
+		return
+	end
+	local progress = {purchaseDay = today}
+	if Awards.PrepareTracked(cfg.award, progress) ~= true then
+		Actor.sendTipmsg(sysarg, "每日特惠礼包配置异常，暂时无法购买", ttFlyTip)
+		return
+	end
 	local consumeData = {}
-	local ret = CheckAllConsume(sysarg, false, ActivityGiftConfig.EveryDayPreference.consume, true, consumeData)
-
-	if not ret then
-		Actor.sendTipmsg(sysarg,Lang.ScriptTips.zf408,ttFlyTip)
-		return 
-	end
-
-	if not Awards.CheckBagGridCount(sysarg,ActivityGiftConfig.EveryDayPreference.award) then
-		return	
-	end
-
-	ret = DeductAllConsume(sysarg, false, ActivityGiftConfig.EveryDayPreference.consume, GameLog.cBuyEveryDayPreference)
-	if not ret then
+	if not CheckAllConsume(sysarg, false, cfg.consume, true, consumeData) then
+		Actor.sendTipmsg(sysarg, Lang.ScriptTips.zf408, ttFlyTip)
 		return
 	end
+	if not Awards.CheckBagGridCount(sysarg, progress.items) then return end
+	var.everyDayPreferenceGrant = progress
+	progress.paymentInFlight = true
+	local ok, paid = pcall(DeductAllConsume, sysarg, false, cfg.consume, GameLog.cBuyEveryDayPreference)
+	if not ok then
+		progress.needsReview = true
+		Actor.sendTipmsg(sysarg, "购买付款异常，请联系客服核对，请勿重复付款", ttFlyTip)
+		return
+	end
+	progress.paymentInFlight = nil
+	if paid ~= true then
+		var.everyDayPreferenceGrant = nil
+		return
+	end
+	progress.paid = true
+	if not Awards.GiveTracked(sysarg, progress.items, progress, GameLog.cBuyEveryDayPreference, "购买每日特惠礼包") then return end
 	var.days.everyDayPreferenceFlag = 1
-	Awards.Give(sysarg,ActivityGiftConfig.EveryDayPreference.award,GameLog.cBuyEveryDayPreference,"购买每日特惠礼包")
+	var.everyDayPreferenceGrant = nil
 end
 
 MiscsImplement.TakeFirstRechargeGift = function(sysarg)
 	local var = Actor.getStaticVar( sysarg )
 	local firstRecharge = var.FirstRechargeFlag
+	local progress = var.firstRechargeGrant
+	local pendingAwards = type(progress) == "table" and progress.items or nil
 	if firstRecharge ~= nil and firstRecharge == 2 then
 		Actor.sendTipmsg( sysarg,Lang.ScriptTips.zf375,ttFlyTip )
 		return
 	end
-	if not firstRecharge or firstRecharge ~= 1 then
+	if pendingAwards == nil and firstRecharge ~= 1 then
 		Actor.sendTipmsg( sysarg,Lang.ScriptTips.zf156,ttFlyTip )
 		return
 	end
 	
 
-	if not ActivityGiftConfig or not ActivityGiftConfig.RechargeGift then
-		return
+	-- 已受理的奖励按冻结清单补发；配置只在首次领取时读取。
+	local awards = pendingAwards
+	if awards == nil then
+		local config = ActivityGiftConfig and ActivityGiftConfig.RechargeGift
+		local gift = config and config[1]
+		if not gift then return end
+		awards = gift.reward
+		if progress == nil then
+			local prepared = {}
+			if Awards.PrepareTracked(awards, prepared) ~= true then return end
+			progress = prepared
+			var.firstRechargeGrant = progress
+		elseif Awards.PrepareTracked(awards, progress) ~= true then
+			return
+		end
 	end
 
-	if not Awards.CheckBagGridCount(sysarg,ActivityGiftConfig.RechargeGift[1].reward) then
-		return	
+	if not Awards.GiveTracked(sysarg, awards, progress, 996, "领取首充奖励") then
+		return
 	end
-	
-	Awards.Give(sysarg,ActivityGiftConfig.RechargeGift[1].reward,996,"领取首充奖励")
 	
 	--Actor.sendTipmsg(sysarg,Lang.ScriptTips.zf669,2048)
  	--System.broadcastTipmsg(string.format(Lang.ScriptTips.zf670,Actor.getName(sysarg)),2)

@@ -8,6 +8,7 @@ QingDianActivitys = function (sysarg, sysid, packet)
 	if not Actor.IsActorInited(sysarg) then
 		return
 	end
+	RetryQingDianTotalPayGrants(sysarg)
 	
 	--是否在开关时间内
 	local svar = System.getStaticVar()	
@@ -1335,68 +1336,81 @@ function GetQD_totalLoginGift(sysarg,index)
 end
 
 --得到庆典每天充值礼物
-function GetQD_EveryTotalPayGife(sysarg,x,y)
-
-	local cfg = QingDianActivityCfg.EveryTotalPay
-	if x<1 or x>#cfg then 
-		return 
-	end
-	
-	if y<1 or y>#cfg[x].days then 
-		return 
-	end
+function RetryQingDianTotalPayGrants(sysarg)
+	if System.isCrossServer and System.isCrossServer() then return end
 	local var = Actor.getStaticVar(sysarg)
-	
-	ClearQingDian_Data(sysarg)
-	
-	if var.QDHD_Data.payTotal  == nil then 
-		var.QDHD_Data.payTotal = {}
+	local grants = var and var.qingDianTotalPayGrants
+	if type(grants) ~= "table" then return end
+	local cycle = System.getStaticVar().StartQDHDtime or 0
+	for key, receipt in pairs(grants) do
+		local progress = type(receipt) == "table" and receipt.progress
+		if type(progress) == "table" and progress.items == nil and progress.inFlight == nil
+			and not progress.needsReview and (progress.done == nil or (type(progress.done) == "table" and next(progress.done) == nil)) then
+			grants[key] = nil
+		elseif type(progress) == "table" and type(progress.items) == "table" and #progress.items > 0
+			and type(receipt.x) == "number" and type(receipt.y) == "number" then
+			local current = cycle > 0 and receipt.cycle == cycle
+			if current then ClearQingDian_Data(sysarg) end
+			if not progress.needsReview and progress.inFlight == nil
+				and Awards.GiveTracked(sysarg, progress.items, progress, LogIds.qingdianleijichongzhi, "补发庆典累计充值") then
+				if current then
+					var.QDHD_Data.payTotalFalg = var.QDHD_Data.payTotalFalg or {}
+					local flags = var.QDHD_Data.payTotalFalg
+					flags[receipt.x] = flags[receipt.x] or {}
+					flags[receipt.x][receipt.y] = 1
+				end
+				grants[key] = nil
+			end
+		end
 	end
-	
-	if var.QDHD_Data.payTotalFalg  == nil then 
-		var.QDHD_Data.payTotalFalg = {}
-	end
-	
-	if var.QDHD_Data.payTotalFalg[x]==nil then 
-		var.QDHD_Data.payTotalFalg[x] ={}
-	end
-		
-	if var.QDHD_Data.payTotalFalg[x][y] ~=nil and var.QDHD_Data.payTotalFalg[x][y]==1 then	
-		Actor.sendTipmsg(sysarg,"不能重复领取",ttFlyTip)
-		return 
-	end
-	
-	if var.QDHD_Data.payTotal[x]==nil or var.QDHD_Data.payTotal[x]<y then 
-		Actor.sendTipmsg(sysarg,"累计达到充值金额的天数不足",ttFlyTip)
-		return 
-	end
-	
-	
-	
-	local award = cfg[x].days[y].award
-	
-	--背包不足
-	if not Awards.CheckBagGridCount(sysarg, award) then
-		return 
-	end
-	
-	var.QDHD_Data.payTotalFalg[x][y] = 1
-	
-	--给奖励
-	local bResult = Awards.Give(sysarg, award, LogIds.qingdianleijichongzhi,"连续累计充值")
-	if bResult == false then
-		print("qingdian leijipay Gift error, actor name = "..Actor.getName(sysarg))
-		return 
-	end
-	
-	GetQingDianActivityInfo(sysarg,12)
-		
-	Actor.sendTipmsg(sysarg,"领取奖励成功",ttFlyTip)
-	
-	System.sendCommonLog(LogIds.qingdianleijichongzhi,Actor.getIntProperty(sysarg,PROP_ENTITY_ID),Actor.getName(sysarg),0,0,0,x.."档"..y.."天")
+end
 
-	System.broadcastTipmsg(string.format("<(n%s)>玩家领取了庆典活动连续累计充值礼包,超级丰盛<我也要领取/@@showWin,216,2>",Actor.getName(sysarg)), ttChatWindow)
-	
+function GetQD_EveryTotalPayGife(sysarg, x, y)
+	if type(x) ~= "number" or type(y) ~= "number" or x < 1 or y < 1 then return end
+	local svar = System.getStaticVar()
+	local cycle = svar.StartQDHDtime or 0
+	local var = Actor.getStaticVar(sysarg)
+	local key = tostring(cycle)..":"..x..":"..y
+	local grants = var.qingDianTotalPayGrants
+	local hadReceipt = type(grants) == "table" and grants[key] ~= nil
+	RetryQingDianTotalPayGrants(sysarg)
+	if hadReceipt then return end
+	if cycle <= 0 or svar.QingDian_openDay == nil or svar.isDringQingDianActivity == nil
+		or svar.isDringQingDianActivity < 1 or svar.isDringQingDianActivity > svar.QingDian_openDay then return end
+
+	local cfg = QingDianActivityCfg and QingDianActivityCfg.EveryTotalPay
+	if type(cfg) ~= "table" or x > #cfg or type(cfg[x].days) ~= "table" or y > #cfg[x].days then return end
+	ClearQingDian_Data(sysarg)
+	var.QDHD_Data.payTotal = var.QDHD_Data.payTotal or {}
+	var.QDHD_Data.payTotalFalg = var.QDHD_Data.payTotalFalg or {}
+	local flags = var.QDHD_Data.payTotalFalg
+	flags[x] = flags[x] or {}
+	if flags[x][y] == 1 then
+		Actor.sendTipmsg(sysarg, "不能重复领取", ttFlyTip)
+		return
+	end
+	if var.QDHD_Data.payTotal[x] == nil or var.QDHD_Data.payTotal[x] < y then
+		Actor.sendTipmsg(sysarg, "累计达到充值金额的天数不足", ttFlyTip)
+		return
+	end
+
+	local award = cfg[x].days[y].award
+	if type(award) ~= "table" or #award == 0 then return end
+	if type(grants) ~= "table" then
+		grants = {}
+		var.qingDianTotalPayGrants = grants
+	end
+	local progress = {}
+	if Awards.PrepareTracked(award, progress) ~= true then return end
+	local receipt = {cycle = cycle, x = x, y = y, progress = progress}
+	grants[key] = receipt
+	if not Awards.GiveTracked(sysarg, progress.items, progress, LogIds.qingdianleijichongzhi, "连续累计充值") then return end
+	flags[x][y] = 1
+	grants[key] = nil
+	GetQingDianActivityInfo(sysarg, 12)
+	Actor.sendTipmsg(sysarg, "领取奖励成功", ttFlyTip)
+	System.sendCommonLog(LogIds.qingdianleijichongzhi, Actor.getIntProperty(sysarg, PROP_ENTITY_ID), Actor.getName(sysarg), 0, 0, 0, x.."档"..y.."天")
+	System.broadcastTipmsg(string.format("<(n%s)>玩家领取了庆典活动连续累计充值礼包,超级丰盛<我也要领取/@@showWin,216,2>", Actor.getName(sysarg)), ttChatWindow)
 end
 
 
@@ -1907,6 +1921,9 @@ StartQingDianActivity = function(openday , nowOpenday,nType) --开几天，当�
 	end
 	
 	--计算一种开启了多少次庆典活动，下一次开的时候，数据是要清空的
+	if svar.QDHDLegacyCycleId == nil then
+		svar.QDHDLegacyCycleId = svar.StartQDHDtime or 0
+	end
 	if svar.StartQDHDtime ==nil or svar.StartQDHDtime==0 then 
 		svar.StartQDHDtime = 1
 	else
@@ -2477,4 +2494,7 @@ function cQDC(sysarg,name,addnumber)
 	else 
 		Actor.sendTipmsg(sysarg,"没有这人",ttFlyTip)
 	end
+end
+if registerLuaEventCallback and LuaEventId and LuaEventId.PlayerLogin then
+	registerLuaEventCallback(LuaEventId.PlayerLogin, RetryQingDianTotalPayGrants)
 end

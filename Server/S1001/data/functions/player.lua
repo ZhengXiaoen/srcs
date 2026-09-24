@@ -2207,6 +2207,21 @@ function GetBossKillPayMoneyReward(nBossLevel, nBossMaxHp)
 	return math.floor(nBossLevel * nRate * nLuckRate + 0.5), nBossLevel, nLuckRate, bLuckyTriggered, bLuckyExtraTriggered
 end
 
+-- 远古积分单项失败时保留补发凭据；不重新累计已到账的模拟充值。
+function RetryPendingBossYuanGu(sysarg)
+	local var = Actor.getStaticVar(sysarg)
+	local pending = var and var.BossPendingYuanGu
+	if pending == nil then return end
+	for key, progress in pairs(pending) do
+		if type(progress) == "table" and progress.items ~= nil and not progress.needsReview and progress.inFlight == nil then
+			if Awards.GiveTracked(sysarg, progress.items, progress, GameLog.cKillBossAward, "补发击杀Boss远古积分") then
+				pending[key] = nil
+			end
+		end
+	end
+end
+registerLuaEventCallback(LuaEventId.PlayerLogin, RetryPendingBossYuanGu)
+
 function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nLuckRate, bLuckyTriggered, bLuckyExtraTriggered)
 	nYuanBao = tonumber(nYuanBao) or 0
 	nYuanGu = tonumber(nYuanGu) or 0
@@ -2221,16 +2236,26 @@ function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nL
 	if var == nil then return false end
 	if var.days == nil then var.days = {} end
 
-	local awards = {}
-	if nYuanBao > 0 then
-		awards[#awards + 1] = {type = 15, id = 0, count = nYuanBao}
-	end
-	if nYuanGu > 0 then
-		awards[#awards + 1] = {type = 69, id = 0, count = nYuanGu}
+	-- 元宝是充值累计的依据。单项确认后才更新充值进度，避免组合奖励部分成功被误判为全发。
+	if nYuanBao > 0 and Awards.Give(sysarg, {{type = 15, id = 0, count = nYuanBao}}, GameLog.cKillBossAward, "击杀Boss模拟充值元宝") ~= true then
+		return false
 	end
 
-	if Awards.Give(sysarg, awards, GameLog.cKillBossAward, "击杀Boss模拟充值奖励") ~= true then
-		return false
+	local yuanGuDelivered = true
+	if nYuanGu > 0 then
+		local progress = {}
+		local yuanGuAward = {{type = 69, id = 0, count = nYuanGu}}
+		if Awards.PrepareTracked(yuanGuAward, progress) then
+			var.BossPendingYuanGu = var.BossPendingYuanGu or {}
+			var.BossPendingYuanGuSeq = (var.BossPendingYuanGuSeq or 0) + 1
+			local key = var.BossPendingYuanGuSeq
+			var.BossPendingYuanGu[key] = progress
+			yuanGuDelivered = Awards.GiveTracked(sysarg, progress.items, progress, GameLog.cKillBossAward, "击杀Boss远古积分") == true
+			if yuanGuDelivered then var.BossPendingYuanGu[key] = nil end
+		else
+			yuanGuDelivered = false
+			System.trace("Boss YuanGu award configuration invalid, actorId="..tostring(Actor.getIntProperty(sysarg, PROP_ENTITY_ID)))
+		end
 	end
 
 	-- 杀怪额外奖励：根据boss等级(nYuanGu)给予对应的灵力，boss等级随机5-10倍
@@ -2375,65 +2400,12 @@ function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nL
 			end
 		end
 
-		-- 4. 竞技大赛（累计充值天数）
-		if activity_jingji ~= nil and activity_jingji.payGiveAwardNew ~= nil and activity_jingji.payGiveAwardNew.needMoney ~= nil then
-			if (svar.isDringJingJi == nil or svar.isDringJingJi < 1 or svar.JingJiOpenDay == nil or svar.isDringJingJi > svar.JingJiOpenDay) == false then
-				if ClearJingJi_Data ~= nil then ClearJingJi_Data(sysarg) end
-				local cfg = activity_jingji.payGiveAwardNew.needMoney
-				if var.days.jingjiAddFlag == nil then var.days.jingjiAddFlag = {} end
-				if var.JingJi_Data == nil then var.JingJi_Data = {} end
-				for i = 1, #cfg do
-					if var.days.PeyNum >= cfg[i] and var.days.jingjiAddFlag[i] == nil then
-						var.days.jingjiAddFlag[i] = 1
-						if var.JingJi_Data.chongzhiDataNew == nil then
-							var.JingJi_Data.chongzhiDataNew = {}
-						end
-						if var.JingJi_Data.chongzhiDataNew[i] == nil then
-							var.JingJi_Data.chongzhiDataNew[i] = 1
-						else
-							var.JingJi_Data.chongzhiDataNew[i] = 1 + var.JingJi_Data.chongzhiDataNew[i]
-						end
+		-- 4. 竞技大赛（真实充值与 Boss 共用进度同步）
+		SyncJingJiRechargeProgress(sysarg)
 
-						if var.JingJi_Data.chongzhiDataNew[i] > svar.isDringJingJi then
-							var.JingJi_Data.chongzhiDataNew[i] = svar.isDringJingJi
-						end
-					end
-				end
-				if GetJingjiiInfo ~= nil then GetJingjiiInfo(sysarg, 3) end
-			end
-		end
-
-		-- 5. 国庆送礼
-		if NationalDayActivityCfg ~= nil and NationalDayActivityCfg.NationalDayNew ~= nil then
-			local dayIndex = 0
-			if GetNationalIndexDay ~= nil then
-				dayIndex = GetNationalIndexDay()
-			else
-				local y2, m2, d2 = System.getDate()
-				if svar.isDringNational ~= nil and svar.isDringNational > 0 and svar.StartNational_Year ~= nil and svar.StartNational_Month ~= nil and svar.StartNational_Day ~= nil then
-					local startDt = System.encodeNumTime(svar.StartNational_Year, svar.StartNational_Month, svar.StartNational_Day, 0, 0, 0)
-					local curDt = System.encodeNumTime(y2, m2, d2, 0, 0, 0)
-					local diffTime = curDt - startDt
-					if diffTime >= 0 then
-						local maxOpenDay = svar.National_openDay or 8
-						local idx = math.floor(diffTime / 86400) + 1
-						if idx >= 1 and idx <= maxOpenDay then
-							dayIndex = idx
-						end
-					end
-				end
-			end
-			if dayIndex >= 1 and dayIndex <= 7 then
-				if var.days.PeyNum >= NationalDayActivityCfg.NationalDayNew[dayIndex].needYB then
-					if var.nationalDayInfoNew == nil then var.nationalDayInfoNew = 0 end
-					if System.getIntBit(var.nationalDayInfoNew, dayIndex) == 0 then
-						var.nationalDayInfoNew = System.setIntBit(var.nationalDayInfoNew, dayIndex, true)
-						if SentNationalDayInfoNew ~= nil then
-							SentNationalDayInfoNew(sysarg)
-						end
-					end
-				end
-			end
+		-- 5. 国庆送礼（按活动轮次同步）
+		if SyncNationalDayRechargeProgress ~= nil then
+			SyncNationalDayRechargeProgress(sysarg)
 		end
 
 		-- 6. 新春活动/新春送礼
@@ -2509,15 +2481,7 @@ function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nL
 			daily_pay_ranking_sync_pay(sysarg)
 		end
 
-		if foot_print_add_weekly_pay_money_by_killboss ~= nil then
-			foot_print_add_weekly_pay_money_by_killboss(sysarg, nYuanBao)
-		else
-			-- 兜底：避免模块加载顺序导致函数未定义时，足迹/神盾周累充不累计
-			var.FootPrintPayMoney = (var.FootPrintPayMoney or 0) + nYuanBao
-			if send_foot_print_pay_data ~= nil then
-				send_foot_print_pay_data(sysarg)
-			end
-		end
+		-- 周充值仅由下方 ActorPayMoney 事件累计，避免 Boss 奖励重复记账。
 
 		var.RechInt = (var.RechInt or 0) + nYuanBao
 
@@ -2569,17 +2533,21 @@ function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nL
 		end
 	end
 
-	local szRewardTip = string.format("<(c0xFFd4ab6f)击败Boss><(c0xFFFF0000)【%s】><(c0xFFd4ab6f)！地点：%s 掉落：><(c0xFFFFD700)元宝直充+%d><(c0xFFd4ab6f)，远古积分+%d>", szBossName, szSceneName, nYuanBao, nYuanGu)
+	local shownYuanGu = yuanGuDelivered and nYuanGu or 0
+	local szRewardTip = string.format("<(c0xFFd4ab6f)击败Boss><(c0xFFFF0000)【%s】><(c0xFFd4ab6f)！地点：%s 掉落：><(c0xFFFFD700)元宝直充+%d><(c0xFFd4ab6f)，远古积分+%d>", szBossName, szSceneName, nYuanBao, shownYuanGu)
 	local szBroadcastTip = string.format("<(n%s)><(c0xFFd4ab6f)在><%s><(c0xFFd4ab6f)击败Boss><(c0xFFFF0000)【%s】><(c0xFFd4ab6f)，获得><(c0xFFFFD700)元宝直充+%d>", Actor.getName(sysarg), szSceneName, szBossName, nYuanBao)
 	if bLuckyTriggered then
-		szRewardTip = string.format("<(c0xFFd4ab6f)击败Boss><(c0xFFFF0000)【%s】><(c0xFFd4ab6f)！地点：%s 触发><(c0xFF00FF00)幸运暴击><(c0xFFd4ab6f)！掉落：><(c0xFFFFD700)元宝直充+%d><(c0xFF00FF00)（%.2f倍）><(c0xFFd4ab6f) 远古积分+%d>", szBossName, szSceneName, nYuanBao, nLuckRate, nYuanGu)
+		szRewardTip = string.format("<(c0xFFd4ab6f)击败Boss><(c0xFFFF0000)【%s】><(c0xFFd4ab6f)！地点：%s 触发><(c0xFF00FF00)幸运暴击><(c0xFFd4ab6f)！掉落：><(c0xFFFFD700)元宝直充+%d><(c0xFF00FF00)（%.2f倍）><(c0xFFd4ab6f) 远古积分+%d>", szBossName, szSceneName, nYuanBao, nLuckRate, shownYuanGu)
 		szBroadcastTip = string.format("<(n%s)><(c0xFFd4ab6f)在><%s><(c0xFFd4ab6f)击败Boss><(c0xFFFF0000)【%s】><(c0xFFd4ab6f)触发><(c0xFF00FF00)幸运暴击><(c0xFFd4ab6f)！获得><(c0xFFFFD700)元宝直充+%d><(c0xFF00FF00)（%.2f倍）>", Actor.getName(sysarg), szSceneName, szBossName, nYuanBao, nLuckRate)
 		if bLuckyExtraTriggered then
-			szRewardTip = string.format("<(c0xFFd4ab6f)击败Boss><(c0xFFFF0000)【%s】><(c0xFFd4ab6f)！地点：%s 触发><(c0xFFFF6600)神级暴击><(c0xFFd4ab6f)！！掉落：><(c0xFFFFD700)元宝直充+%d><(c0xFFFF6600)（%.2f倍）><(c0xFFd4ab6f) 远古积分+%d>", szBossName, szSceneName, nYuanBao, nLuckRate, nYuanGu)
+			szRewardTip = string.format("<(c0xFFd4ab6f)击败Boss><(c0xFFFF0000)【%s】><(c0xFFd4ab6f)！地点：%s 触发><(c0xFFFF6600)神级暴击><(c0xFFd4ab6f)！！掉落：><(c0xFFFFD700)元宝直充+%d><(c0xFFFF6600)（%.2f倍）><(c0xFFd4ab6f) 远古积分+%d>", szBossName, szSceneName, nYuanBao, nLuckRate, shownYuanGu)
 			szBroadcastTip = string.format("<(n%s)><(c0xFFd4ab6f)在><%s><(c0xFFd4ab6f)击败Boss><(c0xFFFF0000)【%s】><(c0xFFd4ab6f)触发><(c0xFFFF6600)神级暴击><(c0xFFd4ab6f)！！获得><(c0xFFFFD700)元宝直充+%d><(c0xFFFF6600)（%.2f倍）>", Actor.getName(sysarg), szSceneName, szBossName, nYuanBao, nLuckRate)
 		end
 	end
 
+	if not yuanGuDelivered then
+		szRewardTip = szRewardTip.."<(c0xFFFF6600)；远古积分发放延迟，已记录待补发>"
+	end
 	Actor.sendTipmsg(sysarg, szRewardTip, ttFlyTip)
 	System.broadcastTipmsg(szBroadcastTip, 128)
 	return true
@@ -3934,74 +3902,54 @@ end
 --要是是上一次的数据，那就把数据给全清了
 function ClearQingDian_Data(sysarg)
 	local svar = System.getStaticVar()
-	local var = Actor.getStaticVar(sysarg) 
-	--跨服不改变数据
-	if System.isCrossServer()==true then 
-		return 
-	end
-	
-	--if svar.StartQDHDtime ==nil or svar.StartQDHDtime==0 then 
-	--	svar.StartQDHDtime = 1
-	--end
-    --
-	--local var = Actor.getStaticVar(sysarg) 
-	--if var.QDHD_time ==nil or var.QDHD_time~=svar.StartQDHDtime then --重来就没有参与过/参与的是上一次活动
-	--	var.QDHD_time = svar.StartQDHDtime
-	--	var.QDHD_Data ={} --把所有的数据清了
-	--elseif var.QDHD_Data == nil then
-	--	var.QDHD_Data ={}
-	--end
-	
-	if  var.QDHD_Data == nil then
-		var.QDHD_Data ={}
-	end
-	
-	--活动没有开起来
-	if svar.StartQDHD_MiNitime ==nil then 
-		return 
-	end
-	
-	if var.QDHD_MiNitime ==nil or var.QDHD_MiNitime~=svar.StartQDHD_MiNitime then 
-		var.QDHD_MiNitime = svar.StartQDHD_MiNitime
-		var.QDHD_Data ={}
-	end
-end
+	local var = Actor.getStaticVar(sysarg)
+	if System.isCrossServer() == true then return end
+	var.QDHD_Data = var.QDHD_Data or {}
+	local startTime = svar.StartQDHD_MiNitime
+	if startTime == nil then return end
 
+	local cycleId = svar.StartQDHDtime
+	if cycleId ~= nil and cycleId > 0 then
+		-- 首次接管旧角色时，同轮保留原数据；新轮即使同一秒重开也要清理。
+		if svar.QDHDLegacyCycleId == nil then
+			svar.QDHDLegacyCycleId = cycleId
+			System.saveStaticVar()
+		end
+		local actorCycle = var.QDHD_CycleId
+		if actorCycle == nil then actorCycle = svar.QDHDLegacyCycleId end
+		if actorCycle ~= cycleId or var.QDHD_MiNitime ~= startTime then
+			var.QDHD_Data = {}
+		end
+		var.QDHD_CycleId = cycleId
+	elseif var.QDHD_MiNitime ~= startTime then
+		var.QDHD_Data = {}
+	end
+	var.QDHD_MiNitime = startTime
+end
 
 
 --要是是上一次的数据，那就把数据给全清了
 function ClearSanRenHongLi_Data(sysarg)
 	local svar = System.getStaticVar()
-	local var = Actor.getStaticVar(sysarg) 
-	--跨服不改变数据
-	if System.isCrossServer()==true then 
-		return 
-	end
-	
-	if var.SRHL_Data==nil then 
-		var.SRHL_Data ={}
-	end
-	
-	--散人红利还没有开
-	if svar.StartSRHL_MiNitime ==nil then 
-		return 
-	end
-	
-	if var.RRHL_MiNitime ==nil or var.RRHL_MiNitime~=svar.StartSRHL_MiNitime then 
-		
-		if var.RRHL_MiNitime==nil then 
-			var.RRHL_MiNitime=0
+	local var = Actor.getStaticVar(sysarg)
+	if System.isCrossServer() == true then return end
+	var.SRHL_Data = var.SRHL_Data or {}
+	local startTime = svar.StartSRHL_MiNitime
+	if startTime == nil then return end
+
+	local cycleId = svar.StartSRHLCycleId
+	if cycleId ~= nil then
+		local actorCycle = var.SRHL_CycleId
+		if actorCycle == nil then actorCycle = svar.SanRenLegacyCycleId or 0 end
+		if actorCycle ~= cycleId or var.RRHL_MiNitime ~= startTime then
+			var.SRHL_Data = {}
 		end
-		
-		local actorid = Actor.getIntProperty(sysarg,PROP_ENTITY_ID)
-		--System.trace(actorid.." clear dajidali date , on the way "..n.."    var.RRHL_MiNitime="..var.RRHL_MiNitime..",svar.StartSRHL_MiNitime="..svar.StartSRHL_MiNitime)
-		
-		var.RRHL_MiNitime = svar.StartSRHL_MiNitime
-		var.SRHL_Data ={} --把所有的数据清了
+		var.SRHL_CycleId = cycleId
+	elseif var.RRHL_MiNitime ~= startTime then
+		var.SRHL_Data = {}
 	end
-
+	var.RRHL_MiNitime = startTime
 end
-
 
 
 --要是是上一次的数据，那就把数据给全清了
@@ -4033,8 +3981,38 @@ function ClearJingJi_Data(sysarg)
 		
 		var.StartJingJi_MiNitime = svar.StartJingJi_MiNitime
 		var.JingJi_Data ={} --把所有的数据清了
+		if var.days ~= nil then
+			var.days.jingjiAddFlag = nil
+		end
 	end
 
+end
+
+
+-- Keep daily recharge progress identical for real recharge and Boss rewards.
+function SyncJingJiRechargeProgress(sysarg)
+	local svar = System.getStaticVar()
+	if svar.isDringJingJi == nil or svar.isDringJingJi < 1 or svar.JingJiOpenDay == nil or svar.isDringJingJi > svar.JingJiOpenDay then
+		return
+	end
+	if activity_jingji == nil or activity_jingji.payGiveAwardNew == nil or activity_jingji.payGiveAwardNew.needMoney == nil then
+		return
+	end
+	ClearJingJi_Data(sysarg)
+	local var = Actor.getStaticVar(sysarg)
+	if var == nil then return end
+	var.days = var.days or {}
+	var.days.jingjiAddFlag = var.days.jingjiAddFlag or {}
+	var.JingJi_Data = var.JingJi_Data or {}
+	local cfg = activity_jingji.payGiveAwardNew.needMoney
+	for i = 1, #cfg do
+		if (var.days.PeyNum or 0) >= cfg[i] and var.days.jingjiAddFlag[i] == nil then
+			var.days.jingjiAddFlag[i] = 1
+			var.JingJi_Data.chongzhiDataNew = var.JingJi_Data.chongzhiDataNew or {}
+			var.JingJi_Data.chongzhiDataNew[i] = math.min((var.JingJi_Data.chongzhiDataNew[i] or 0) + 1, svar.isDringJingJi)
+		end
+	end
+	if GetJingjiiInfo ~= nil then GetJingjiiInfo(sysarg, 3) end
 end
 
 
@@ -6796,7 +6774,12 @@ function srhlkq(sysarg)
     local svar = System.getStaticVar()
     -- 设置活动开启状态为第 1 天
     svar.isDringSanRenHongLi = 1
-    -- 记录活动开始的分钟时间
+    -- 新轮使用递增序号，同一秒重开也不会继承旧轮充值资格。
+    if svar.StartSRHLCycleId == nil then
+        svar.SanRenLegacyCycleId = svar.StartSRHL_MiNitime and 1 or 0
+        svar.StartSRHLCycleId = svar.SanRenLegacyCycleId
+    end
+    svar.StartSRHLCycleId = svar.StartSRHLCycleId + 1
     svar.StartSRHL_MiNitime = System.getCurrMiniTime()
     -- 保存系统静态变量
     System.saveStaticVar()
@@ -6825,7 +6808,10 @@ function qdhdkq(sysarg)
     -- 设置庆典活动开启状态为第 1 天
     svar.isDringQingDianActivity = 1
 
-	-- 兼容庆典活动的正式字段，首日必须写入该时间戳用于玩家数据重置。
+	-- 保存旧轮迁移锚点，再建立新轮；同一秒重开仍可区分。
+	if svar.QDHDLegacyCycleId == nil then
+		svar.QDHDLegacyCycleId = svar.StartQDHDtime or 0
+	end
 	if svar.StartQDHDtime == nil or svar.StartQDHDtime == 0 then
 		svar.StartQDHDtime = 1
 	else

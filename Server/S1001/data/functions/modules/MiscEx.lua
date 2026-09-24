@@ -893,43 +893,37 @@ GetFirstRechargeGiftEx=function(sysarg)
 	DataPack.flush(npack)  
 end
 OnTakeFirstRechargeGiftEx=function(sysarg)
-	local var = Actor.getStaticVar( sysarg )
+	local var = Actor.getStaticVar(sysarg)
+	if type(var.ShouChongEx) ~= "table" then var.ShouChongEx = {} end
+	if var.ShouChongEx[1] == nil then var.ShouChongEx[1] = 0 end
+	if var.ShouChongEx[1] == 1 then
+		Actor.sendTipmsg(sysarg, "不能重复领取", ttFlyTip)
+		return
+	end
 
-	if var.ShouChongEx == nil then 
-		var.ShouChongEx={}
-	end	
-	if var.ShouChongEx[1] == nil then 
-		var.ShouChongEx[1]=0
-	end	
-	
-	if var.ShouChongEx[1]==1 then 
-		Actor.sendTipmsg( sysarg,"不能重复领取",ttFlyTip )
-		return 
+	-- 已受理的奖励按冻结清单补发；期限、配置和充值资格只限制新请求。
+	local progress = var.firstRechargeExGrant
+	if progress ~= nil and type(progress) ~= "table" then return end
+	local award = progress and progress.items
+	if award == nil then
+		local openServerDay = System.getDaysSinceOpenServer()
+		if openServerDay > 7 then return end
+		local cfg = ActivityGiftConfig and ActivityGiftConfig.ShouChongEx and ActivityGiftConfig.ShouChongEx[1]
+		if type(cfg) ~= "table" or type(cfg.money) ~= "number"
+			or type(cfg.reward) ~= "table" or #cfg.reward == 0 then return end
+		local curPoint = Actor.getIntProperty(sysarg, PROP_ACTOR_VIP_POINT)
+		if curPoint < cfg.money then
+			Actor.sendTipmsg(sysarg, "充值元宝不足"..cfg.money..",不能领取", ttFlyTip)
+			return
+		end
+		award = cfg.reward
+		local prepared = progress or {}
+		if Awards.PrepareTracked(award, prepared) ~= true then return end
+		progress = prepared
+		var.firstRechargeExGrant = progress
 	end
-	
-	--首冲二挡改放在开服活动里面，过了就不能领取
-	local openServerDay = System.getDaysSinceOpenServer()
-	if openServerDay>7 then 
-		return 
-	end
-	
-	local cfg = ActivityGiftConfig.ShouChongEx[1]
-	
-	--判断金钱是否达到9900
-	local curPoint = Actor.getIntProperty(sysarg, PROP_ACTOR_VIP_POINT) --这个就是总元宝数量，用作计算vip值的，是最准确的
-	if curPoint <cfg.money then 
-		Actor.sendTipmsg( sysarg,"充值元宝不足"..cfg.money..",不能领取",ttFlyTip )
-		return 
-	end
-	
-	
-	if not Awards.CheckBagGridCount(sysarg,cfg.reward) then
-		return	
-	end
-	
-	Awards.Give(sysarg,cfg.reward,996,"领取首充二挡")
-	
-	
+	if not Awards.GiveTracked(sysarg, award, progress, 996, "领取首充二挡") then return end
+
 	var.ShouChongEx[1]=1
 	GetFirstRechargeGiftEx(sysarg)
 	
@@ -1445,125 +1439,84 @@ HandleTianJiangHongLiOper = function (sysarg,msgid,packet)
 
 end
 --开服活动累计充值
-MiscOpenSeverContinuePay =function(sysarg,msgid,packet)	
-
-	local openSeverDay = System.getDaysSinceOpenServer()
-	if openSeverDay<1 and openSeverDay>7 then 	
-		return 
-	end
-	
+MiscOpenSeverContinuePay = function(sysarg, msgid, packet)
+	local activity = OpenServerAward and OpenServerAward[12]
+	local cfg = activity and activity.list
+	local openTime = activity and activity.openTime
 	local nType = DataPack.readByte(packet)
-    local var = Actor.getStaticVar(sysarg)
-	local Cfg2 = OpenServerAward[12].list
-		--nType=1
-    if nType == 0 then	--充值数据
-		local netPack = DataPack.allocPacket(sysarg,151,LogicCmd.miscSysEx.sub.sOpenSeverContinuePay)
+	local var = Actor.getStaticVar(sysarg)
+
+	if nType == 0 then -- 充值数据
+		local netPack = DataPack.allocPacket(sysarg, 151, LogicCmd.miscSysEx.sub.sOpenSeverContinuePay)
 		DataPack.writeByte(netPack, 0)
-		
-		if var.OScontinuePay==nil then 
-			var.OScontinuePay={}
+		local paidDays = var.OScontinuePay or {}
+		for i = 1, 7 do DataPack.writeInt(netPack, paidDays[i] or 0) end
+		DataPack.flush(netPack)
+	elseif nType == 1 then -- 领取或补发
+		local x = DataPack.readByte(packet)
+		local y = DataPack.readByte(packet)
+		if x < 1 or y < 1 then return end
+		if var.GetcontinuePay and var.GetcontinuePay[x] and var.GetcontinuePay[x][y] == 1 then
+			Actor.sendTipmsg(sysarg, "不能重复领取", ttFlyTip)
+			return
 		end
-		for i=1,7 do 
-			if var.OScontinuePay[i]==nil then 
-				DataPack.writeInt(netPack, 0)
-				--print("充钱:0")
-			else 
-				DataPack.writeInt(netPack, var.OScontinuePay[i])
-				--print("充钱:"..var.OScontinuePay[i])
+		local grants = var.openServerPayGrants
+		local progress = grants and grants[x] and grants[x][y]
+		-- 冻结前遗留的空凭据未发出任何项目；清理后按当前配置和活动期重新校验。
+		if type(progress) == "table" and progress.items == nil and progress.inFlight == nil
+			and not progress.needsReview and (progress.done == nil or (type(progress.done) == "table" and next(progress.done) == nil)) then
+			grants[x][y] = nil
+			progress = nil
+		end
+		-- 有已发项但缺少冻结清单的记录无法安全重建，留待人工核对。
+		if progress ~= nil and (type(progress) ~= "table" or type(progress.items) ~= "table" or #progress.items == 0) then return end
+		-- 已受理凭据可以补剩余项目；活动期外不允许新领奖。
+		local award
+		if type(progress) == "table" and progress.items then
+			award = progress.items
+		else
+			if type(cfg) ~= "table" or type(cfg.PayRMB) ~= "table" or type(cfg.totalDays) ~= "table" then return end
+			if type(openTime) ~= "table" or type(openTime[1]) ~= "number" or type(openTime[2]) ~= "number" then return end
+			local openServerDay = System.getDaysSinceOpenServer()
+			if openServerDay < openTime[1] or openServerDay > openTime[2] then return end
+			if x > #cfg.PayRMB or y > #cfg.totalDays then return end
+			local tier = cfg.PayRMB[x]
+			local needCount = cfg.totalDays[y]
+			if type(tier) ~= "table" or type(tier.needPayYb) ~= "number" or type(needCount) ~= "number" then return end
+			if type(tier.award) ~= "table" or type(tier.award[y]) ~= "table" or #tier.award[y] == 0 then return end
+			award = tier.award[y]
+			local count = 0
+			for i = 1, 7 do
+				if var.OScontinuePay and (var.OScontinuePay[i] or 0) >= tier.needPayYb then count = count + 1 end
+			end
+			if count < needCount then
+				Actor.sendTipmsg(sysarg, "条件不满足", ttFlyTip)
+				return
 			end
 		end
+		if var.openServerPayGrants == nil then var.openServerPayGrants = {} end
+		if var.openServerPayGrants[x] == nil then var.openServerPayGrants[x] = {} end
+		if progress == nil then
+			progress = {}
+			if Awards.PrepareTracked(award, progress) ~= true then return end
+			var.openServerPayGrants[x][y] = progress
+		end
+		if not Awards.GiveTracked(sysarg, award, progress, GameLog.cOpenServerAward, "累计充值"..x..","..y) then return end
+		if var.GetcontinuePay == nil then var.GetcontinuePay = {} end
+		if var.GetcontinuePay[x] == nil then var.GetcontinuePay[x] = {} end
+		var.GetcontinuePay[x][y] = 1
+		local netPack = DataPack.allocPacket(sysarg, 151, LogicCmd.miscSysEx.sub.sOpenSeverContinuePay)
+		DataPack.writeByte(netPack, 1)
 		DataPack.flush(netPack)
-	elseif  nType ==1 then --领取奖励
-		local x = DataPack.readByte(packet) --领取第几档
-		local y = DataPack.readByte(packet) --领取第几个
-		
-		--x=1
-		--y=2
-		
-		if x<1 or x>#Cfg2.PayRMB then 
-			return 
-		end
-		if y<1 or x>#Cfg2.totalDays then 
-			return 
-		end
-		
-		--是否满足领取条件
-		if var.OScontinuePay==nil then 
-			var.OScontinuePay={}
-			Actor.sendTipmsg(sysarg,"条件不满足",ttFlyTip)
-			return 
-		end
-		local needYb = Cfg2.PayRMB[x].needPayYb
-		local needCount = Cfg2.totalDays[y]
-		local count = 0
-		--需要大于xxx元宝的有n个
-		for i=1,7 do 
-			if var.OScontinuePay[i]==nil then 
-				
-			else 
-				if var.OScontinuePay[i]>=needYb then  
-					count = count + 1
-				end
-			end
-		end
-		
-		if count<needCount then  
-			Actor.sendTipmsg(sysarg,"条件不满足",ttFlyTip)
-			return 
-		end
-		
-		--是否足够位置
-		
-		if not Awards.CheckBagGridCount(sysarg,Cfg2.PayRMB[x].award[y]) then
-			return 
-		end
-		
-		--是否已经领取过
-		if var.GetcontinuePay==nil then 
-			var.GetcontinuePay={}
-		end
-		
-		if var.GetcontinuePay[x]==nil then 
-			var.GetcontinuePay[x] ={}
-		end
-		
-		if var.GetcontinuePay[x][y]~=nil and var.GetcontinuePay[x][y]==1 then 
-			Actor.sendTipmsg(sysarg,"不能重复领取",ttFlyTip)
-			return 
-		end
-		
-		var.GetcontinuePay[x][y]=1
-		
-		Awards.Give(sysarg,Cfg2.PayRMB[x].award[y],GameLog.cOpenServerAward,"累计充值"..x..","..y)
-	   
-		local netPack = DataPack.allocPacket(sysarg,151,LogicCmd.miscSysEx.sub.sOpenSeverContinuePay)
-		DataPack.writeByte(netPack, 1)	 --领取成功	
-		DataPack.flush(netPack)
-		
-	elseif nType ==2 then --个人领取数据
-		if var.GetcontinuePay==nil then 
-			var.GetcontinuePay={}
-		end
-		
-		local netPack = DataPack.allocPacket(sysarg,151,LogicCmd.miscSysEx.sub.sOpenSeverContinuePay)
+	elseif nType == 2 then -- 个人领取数据
+		if type(cfg) ~= "table" or type(cfg.PayRMB) ~= "table" or type(cfg.totalDays) ~= "table" then return end
+		local netPack = DataPack.allocPacket(sysarg, 151, LogicCmd.miscSysEx.sub.sOpenSeverContinuePay)
 		DataPack.writeByte(netPack, 2)
-		
-		for i=1,#Cfg2.PayRMB do --将8个是否领取全部下发
-			if var.GetcontinuePay[i]==nil then 
-				var.GetcontinuePay[i]={}
-			end
-			
-			for j=1,#Cfg2.totalDays do 
-				if var.GetcontinuePay[i][j]==nil then 
-					DataPack.writeByte(netPack, 0)
-					--print("是否领取:0")
-				else 
-					DataPack.writeByte(netPack, var.GetcontinuePay[i][j])
-					--print("是否领取:"..var.GetcontinuePay[i][j])
-				end
+		for i = 1, #cfg.PayRMB do
+			for j = 1, #cfg.totalDays do
+				DataPack.writeByte(netPack, var.GetcontinuePay and var.GetcontinuePay[i] and var.GetcontinuePay[i][j] or 0)
 			end
 		end
-		
 		DataPack.flush(netPack)
 	end
 end

@@ -90,42 +90,42 @@ DynamicScriptTimer=
     {
         name ="开服活动充值排行第一轮",
         npcid = 0,
-        timer = 60, --持续时间 / 秒
+        timer = 8 * 60 * 60, --持续时间 / 秒
         start_func = "Pay_Rank_Activity_Start,1",  --开始活动函数   
         end_func = "Pay_Rank_Activity_Stop", --结束活动函数
     },
     {
         name ="开服活动充值排行第二轮",
         npcid = 0,
-        timer = 60, --持续时间 / 秒
+        timer = 8 * 60 * 60, --持续时间 / 秒
         start_func = "Pay_Rank_Activity_Start,2",  --开始活动函数   
         end_func = "Pay_Rank_Activity_Stop", --结束活动函数
     },
     {
         name ="开服活动充值排行第三轮",
         npcid = 0,
-        timer = 60, --持续时间 / 秒
+        timer = 8 * 60 * 60, --持续时间 / 秒
         start_func = "Pay_Rank_Activity_Start,3",  --开始活动函数   
         end_func = "Pay_Rank_Activity_Stop", --结束活动函数
     },
     {
         name ="开服活动充值排行第四轮",
         npcid = 0,
-        timer = 60, --持续时间 / 秒
+        timer = 8 * 60 * 60, --持续时间 / 秒
         start_func = "Pay_Rank_Activity_Start,4",  --开始活动函数   
         end_func = "Pay_Rank_Activity_Stop", --结束活动函数
     },
     {
         name ="开服活动充值排行第五轮",
         npcid = 0,
-        timer = 60, --持续时间 / 秒
+        timer = 8 * 60 * 60, --持续时间 / 秒
         start_func = "Pay_Rank_Activity_Start,5",  --开始活动函数   
         end_func = "Pay_Rank_Activity_Stop", --结束活动函数
     },
     {
         name ="开服活动充值排行第六轮",
         npcid = 0,
-        timer = 60, --持续时间 / 秒
+        timer = 8 * 60 * 60, --持续时间 / 秒
         start_func = "Pay_Rank_Activity_Start,6",  --开始活动函数   
         end_func = "Pay_Rank_Activity_Stop", --结束活动函数
     },

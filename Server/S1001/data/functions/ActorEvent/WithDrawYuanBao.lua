@@ -440,7 +440,10 @@ function GetPeyYuanBaoHandlerEx(sysarg, args)
 
 	--获取上次领取每次充值礼包时间和本次登录时间
 	local loginTime = System.getCurrMiniTime()
-	local lastPeyTime = var.lastPeyTime or loginTime
+	local lastPeyTime = var.lastPeyTime
+	if not lastPeyTime then
+		var.lastPeyTime = System.getCurrMiniTime()
+	end
 
 	--检查是否同一天
 	if System.isSameDay(loginTime, lastPeyTime) == false then
@@ -534,14 +537,56 @@ function GetPeyYuanBaoHandlerEx(sysarg, args)
 	
 	UpdateQingDianEveryTotalPayProgressByDailyPay(sysarg, var, svar)
 	
-	-- 国庆资格同步同时校验活动轮次。
-	SyncNationalDayRechargeProgress(sysarg)
+	--在国庆活动里面
+	local dayIndex = GetNationalIndexDay()
+	if dayIndex>=1 and dayIndex<=7 then
+		if var.days.PeyNum>=NationalDayActivityCfg.NationalDayNew[dayIndex].needYB then 
+			if var.nationalDayInfoNew==nil then 
+				var.nationalDayInfoNew=0
+			end
+			if System.getIntBit(var.nationalDayInfoNew,dayIndex)==0 then 
+				var.nationalDayInfoNew = System.setIntBit(var.nationalDayInfoNew,dayIndex,true)
+				--给前端发协议
+				SentNationalDayInfoNew(sysarg)
+			end
+		end
+	end
+	
 	
 	UpdateSanRenHongLiEveryTotalPayProgressByDailyPay(sysarg, var, svar)
 	
 	
-	-- 真实充值与 Boss 奖励使用同一份竞技进度规则。
-	SyncJingJiRechargeProgress(sysarg)
+	--是否在竞技活动里面，是的话，判断超过3000，10000的累计天数有多少
+	if (svar.isDringJingJi ==nil or svar.isDringJingJi<1 or svar.JingJiOpenDay==nil or svar.isDringJingJi>svar.JingJiOpenDay)==false then 
+		ClearJingJi_Data(sysarg)
+		local var = Actor.getStaticVar(sysarg)
+		
+		local cfg =activity_jingji.payGiveAwardNew.needMoney
+		if var.days.jingjiAddFlag ==nil then 
+			var.days.jingjiAddFlag={}
+		end
+		for i=1,#cfg do 
+			if var.days.PeyNum >=cfg[i] and var.days.jingjiAddFlag[i]==nil then --今天第一次完成充值
+				var.days.jingjiAddFlag[i]=1
+				if var.JingJi_Data.chongzhiDataNew==nil then 
+					var.JingJi_Data.chongzhiDataNew={}
+				end
+				if var.JingJi_Data.chongzhiDataNew[i]==nil then 
+					var.JingJi_Data.chongzhiDataNew[i]=1
+				else 
+					var.JingJi_Data.chongzhiDataNew[i] = 1 + var.JingJi_Data.chongzhiDataNew[i]
+				end
+				
+				if var.JingJi_Data.chongzhiDataNew[i]>svar.isDringJingJi then --容错，不能比当前天数大
+					var.JingJi_Data.chongzhiDataNew[i] = svar.isDringJingJi
+				end
+				--print("var.JingJi_Data.chongzhiDataNew[i]="..var.JingJi_Data.chongzhiDataNew[i])
+				
+			end
+		end
+		
+		GetJingjiiInfo(sysarg,3)
+	end	
 	
 	--是否在春节里面，是的话，判断超过100,500,2000的累计天数有多少
 	if (is_spring_festival_time()==true) then 

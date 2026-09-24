@@ -290,18 +290,12 @@ EnsureSpringHongYunDangTouSystemData = function()
 		return nil
 	end
 
-	local cycleTime = get_spring_festival_cycle_time()
 	local svar = System.getStaticVar()
-	if svar.SpringHYDT_data ~= nil and svar.SpringHYDT_data.cycleTime ~= cycleTime then
-		ClearSpringHongYunDangTouSystemData()
-		System.saveStaticVar()
-	end
 	if svar.SpringHYDT_data == nil then
 		svar.SpringHYDT_data = {}
 	end
 
 	local data = svar.SpringHYDT_data
-	data.cycleTime = cycleTime
 	if data.days == nil then
 		data.days = {}
 	end
@@ -567,7 +561,7 @@ ClearSpringHongYunDangTouSystemData =function()
 	local svar = System.getStaticVar()
 	local maxDay = SpringHongYunDangTouMaxDay()
 	if maxDay <= 0 then maxDay = 12 end
-	svar.SpringHYDT_data = {cycleTime = get_spring_festival_cycle_time()}
+	svar.SpringHYDT_data = {}
 	
 	--清空全部的幸运号码和幸运儿
 	svar.SpringHYDT_data.days = {}
@@ -604,20 +598,18 @@ end
 function spring_hongyun_activity_start_or_end(is_start, is_started_server)
 	
 	local svar = System.getStaticVar()
-	if is_start then
-		-- Preserve the configured start when restoring legacy data without SpringTime.
-		if svar.SpringTime == nil or svar.SpringTime <= 0 then
-			svar.SpringTime = get_spring_festival_cycle_time()
-			if svar.SpringTime <= 0 then
-				local y, m, d = System.getDate()
-				svar.SpringTime = System.encodeNumTime(y, m, d, 0, 0, 0)
-			end
-			System.saveStaticVar()
-		end
+	if is_start then 
 		if is_started_server then
 			EnsureSpringHongYunDangTouSystemData()
 		else
 			ClearSpringHongYunDangTouSystemData()
+		end
+		
+		if svar.SpringTime == nil or svar.SpringTime <= 0 then
+			local Year,Month,Day,nHour,nMinute,nSecond = System.GetSystemTimeInMiniTime(System.getCurrMiniTime())
+			local refreshTime = System.encodeNumTime(Year,Month,Day,0,0,0)
+			svar.SpringTime = refreshTime
+			System.saveStaticVar()
 		end
 
         --守岁红包
@@ -652,7 +644,6 @@ end
 
 --累计充值
 function spring_Lijichongzhi_main(sysarg,packet)
-	RetrySpringTotalPayGrants(sysarg)
 	--是否在开关时间内
 	if is_spring_festival_time()~=true then 
 		return
@@ -733,80 +724,69 @@ function GetSpringLiJiChongzhi(sysarg)
 end
 
 --得到奖励
-function RetrySpringTotalPayGrants(sysarg)
-	if System.isCrossServer and System.isCrossServer() then return end
-	local var = Actor.getStaticVar(sysarg)
-	local grants = var and var.springTotalPayGrants
-	if type(grants) ~= "table" then return end
-	local cycle = get_spring_festival_cycle_time()
-	for key, receipt in pairs(grants) do
-		local progress = type(receipt) == "table" and receipt.progress
-		if type(progress) == "table" and progress.items == nil and progress.inFlight == nil
-			and not progress.needsReview and (progress.done == nil or (type(progress.done) == "table" and next(progress.done) == nil)) then
-			grants[key] = nil
-		elseif type(progress) == "table" and type(progress.items) == "table" and #progress.items > 0
-			and type(receipt.x) == "number" and type(receipt.y) == "number" then
-			local current = cycle > 0 and receipt.cycle == cycle
-			if current then ClearAllSpringData(sysarg) end
-			if not progress.needsReview and progress.inFlight == nil
-				and Awards.GiveTracked(sysarg, progress.items, progress, LogIds.spring_lijichongzhi, "补发春节累计充值") then
-				if current then
-					var.Spring_Data.payTotalFalg = var.Spring_Data.payTotalFalg or {}
-					local flags = var.Spring_Data.payTotalFalg
-					flags[receipt.x] = flags[receipt.x] or {}
-					flags[receipt.x][receipt.y] = 1
-				end
-				grants[key] = nil
-			end
-		end
+function GetSpringLiJiChongzhiGife(sysarg,x,y)
+
+	local cfg = SpringFestivalCfg.EveryTotalPay
+	if x<1 or x>#cfg then 
+		return 
 	end
-end
-
-function GetSpringLiJiChongzhiGife(sysarg, x, y)
-	if type(x) ~= "number" or type(y) ~= "number" or x < 1 or y < 1 then return end
-	local cycle = get_spring_festival_cycle_time()
+	
+	if y<1 or y>#cfg[x].days then 
+		return 
+	end
 	local var = Actor.getStaticVar(sysarg)
-	local key = tostring(cycle)..":"..x..":"..y
-	local grants = var.springTotalPayGrants
-	local hadReceipt = type(grants) == "table" and grants[key] ~= nil
-	RetrySpringTotalPayGrants(sysarg)
-	if hadReceipt then return end
-	if cycle <= 0 or is_spring_festival_time() ~= true then return end
-
-	local cfg = SpringFestivalCfg and SpringFestivalCfg.EveryTotalPay
-	if type(cfg) ~= "table" or x > #cfg or type(cfg[x].days) ~= "table" or y > #cfg[x].days then return end
+	
 	ClearAllSpringData(sysarg)
+	-- 领取前先兜底更新累计充值进度，避免客户端状态已过期导致误判不可领
 	GetSpringLiJiChongzhi(sysarg)
-	var.Spring_Data.payTotal = var.Spring_Data.payTotal or {}
-	var.Spring_Data.payTotalFalg = var.Spring_Data.payTotalFalg or {}
-	local flags = var.Spring_Data.payTotalFalg
-	flags[x] = flags[x] or {}
-	if flags[x][y] == 1 then
-		Actor.sendTipmsg(sysarg, "不能重复领取", ttFlyTip)
-		return
+	
+	if var.Spring_Data.payTotal  == nil then 
+		var.Spring_Data.payTotal = {}
 	end
-	if var.Spring_Data.payTotal[x] == nil or var.Spring_Data.payTotal[x] < y then
-		Actor.sendTipmsg(sysarg, "累计达到充值金额的天数不足", ttFlyTip)
-		return
+	
+	if var.Spring_Data.payTotalFalg  == nil then 
+		var.Spring_Data.payTotalFalg = {}
 	end
-
+	
+	if var.Spring_Data.payTotalFalg[x]==nil then 
+		var.Spring_Data.payTotalFalg[x] ={}
+	end
+		
+	if var.Spring_Data.payTotalFalg[x][y] ~=nil and var.Spring_Data.payTotalFalg[x][y]==1 then	
+		Actor.sendTipmsg(sysarg,"不能重复领取",ttFlyTip)
+		return 
+	end
+	if var.Spring_Data.payTotal[x]==nil or var.Spring_Data.payTotal[x]<y then 
+		Actor.sendTipmsg(sysarg,"累计达到充值金额的天数不足",ttFlyTip)
+		return 
+	end
+	
+	
+	
 	local award = cfg[x].days[y].award
-	if type(award) ~= "table" or #award == 0 then return end
-	if type(grants) ~= "table" then
-		grants = {}
-		var.springTotalPayGrants = grants
+	
+	--背包不足
+	if not Awards.CheckBagGridCount(sysarg, award) then
+		return 
 	end
-	local progress = {}
-	if Awards.PrepareTracked(award, progress) ~= true then return end
-	local receipt = {cycle = cycle, x = x, y = y, progress = progress}
-	grants[key] = receipt
-	if not Awards.GiveTracked(sysarg, progress.items, progress, LogIds.spring_lijichongzhi, "连续累计充值") then return end
-	flags[x][y] = 1
-	grants[key] = nil
+	
+	var.Spring_Data.payTotalFalg[x][y] = 1
+	
+	--给奖励
+	local bResult = Awards.Give(sysarg, award, LogIds.spring_lijichongzhi,"连续累计充值")
+	if bResult == false then
+		print("spring_lijichongzhi leijipay Gift error, actor name = "..Actor.getName(sysarg))
+		return 
+	end
+	
 	GetSpringLiJiChongzhi(sysarg)
-	Actor.sendTipmsg(sysarg, "领取奖励成功", ttFlyTip)
-	System.sendCommonLog(LogIds.spring_lijichongzhi, Actor.getIntProperty(sysarg, PROP_ENTITY_ID), Actor.getName(sysarg), 0, 0, 0, x.."档"..y.."天")
-	System.broadcastTipmsg(string.format("<(n%s)>玩家领取了春节连续累计充值礼包,超级丰盛<我也要领取/@@showWin,243,2>", Actor.getName(sysarg)), ttChatWindow)
+		
+	Actor.sendTipmsg(sysarg,"领取奖励成功",ttFlyTip)
+	
+	System.sendCommonLog(LogIds.spring_lijichongzhi,Actor.getIntProperty(sysarg,PROP_ENTITY_ID),Actor.getName(sysarg),0,0,0,x.."档"..y.."天")
+
+	System.broadcastTipmsg(string.format("<(n%s)>玩家领取了春节连续累计充值礼包,超级丰盛<我也要领取/@@showWin,243,2>",Actor.getName(sysarg)), ttChatWindow)
+	
 end
 
 ------------------------------------------------------------------------------
@@ -1045,6 +1025,3 @@ function ClearAllSpringData(sysarg)
 end
 
 register_spring_festival_start_end_func(spring_hongyun_activity_start_or_end)
-if registerLuaEventCallback and LuaEventId and LuaEventId.PlayerLogin then
-	registerLuaEventCallback(LuaEventId.PlayerLogin, RetrySpringTotalPayGrants)
-end

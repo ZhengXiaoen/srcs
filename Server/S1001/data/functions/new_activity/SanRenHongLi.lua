@@ -3,7 +3,6 @@
 
 handleSanRenHongLi= function (sysarg, sysid, packet)
 	local msgid = DataPack.readByte(packet)
-	RetrySanRenTotalPayGrants(sysarg)
 	if msgid == 0 then
 		local actIdx = DataPack.readByte(packet)
 		local isActTime = false -- 是否在活动时间内
@@ -69,95 +68,66 @@ function SRHL_isDringJingjiActivity(svar)
 end
 
 --1累计充值
-function EnsureSanRenHongLiCycleId()
-	local svar = System.getStaticVar()
-	local changed = false
-	if svar.StartSRHLCycleId == nil then
-		svar.StartSRHLCycleId = svar.StartSRHL_MiNitime and 1 or 0
-		changed = true
+function SRHL_EveryDaysPay(sysarg,x,y)
+	local cfg = SanRenHongLiCfg.EveryTotalPay
+	if x<1 or x>#cfg then 
+		return 
 	end
-	if svar.SanRenLegacyCycleId == nil then
-		svar.SanRenLegacyCycleId = svar.StartSRHL_MiNitime and 1 or 0
-		changed = true
+	
+	if y<1 or y>#cfg[x].days then 
+		return 
 	end
-	if changed then System.saveStaticVar() end
-	return svar.StartSRHLCycleId
-end
-
-function RetrySanRenTotalPayGrants(sysarg)
-	if System.isCrossServer and System.isCrossServer() then return end
 	local var = Actor.getStaticVar(sysarg)
-	local grants = var and var.sanRenTotalPayGrants
-	if type(grants) ~= "table" then return end
-	local cycle = EnsureSanRenHongLiCycleId()
-	for key, receipt in pairs(grants) do
-		local progress = type(receipt) == "table" and receipt.progress
-		if type(progress) == "table" and progress.items == nil and progress.inFlight == nil
-			and not progress.needsReview and (progress.done == nil or (type(progress.done) == "table" and next(progress.done) == nil)) then
-			grants[key] = nil
-		elseif type(progress) == "table" and type(progress.items) == "table" and #progress.items > 0
-			and type(receipt.x) == "number" and type(receipt.y) == "number" then
-			local current = cycle > 0 and receipt.cycle == cycle
-			if current then ClearSanRenHongLi_Data(sysarg) end
-			if not progress.needsReview and progress.inFlight == nil
-				and Awards.GiveTracked(sysarg, progress.items, progress, LogIds.sanrenhongli, "补发散人累计充值") then
-				if current then
-					var.SRHL_Data.payTotalFalg = var.SRHL_Data.payTotalFalg or {}
-					local flags = var.SRHL_Data.payTotalFalg
-					flags[receipt.x] = flags[receipt.x] or {}
-					flags[receipt.x][receipt.y] = 1
-				end
-				grants[key] = nil
-			end
-		end
-	end
-end
-
-function SRHL_EveryDaysPay(sysarg, x, y)
-	if type(x) ~= "number" or type(y) ~= "number" or x < 1 or y < 1 then return end
-	local svar = System.getStaticVar()
-	local cycle = EnsureSanRenHongLiCycleId()
-	local var = Actor.getStaticVar(sysarg)
-	local key = tostring(cycle)..":"..x..":"..y
-	local grants = var.sanRenTotalPayGrants
-	local hadReceipt = type(grants) == "table" and grants[key] ~= nil
-	RetrySanRenTotalPayGrants(sysarg)
-	if hadReceipt then return end
-	if cycle <= 0 or svar.isDringSanRenHongLi == nil
-		or svar.isDringSanRenHongLi < 1 or svar.isDringSanRenHongLi > 3 then return end
-
-	local cfg = SanRenHongLiCfg and SanRenHongLiCfg.EveryTotalPay
-	if type(cfg) ~= "table" or x > #cfg or type(cfg[x].days) ~= "table" or y > #cfg[x].days then return end
+	
 	ClearSanRenHongLi_Data(sysarg)
-	var.SRHL_Data.payTotal = var.SRHL_Data.payTotal or {}
-	var.SRHL_Data.payTotalFalg = var.SRHL_Data.payTotalFalg or {}
-	local flags = var.SRHL_Data.payTotalFalg
-	flags[x] = flags[x] or {}
-	if flags[x][y] == 1 then
-		Actor.sendTipmsg(sysarg, "不能重复领取", ttFlyTip)
-		return
+	
+	if var.SRHL_Data.payTotal  == nil then 
+		var.SRHL_Data.payTotal = {}
 	end
-	if var.SRHL_Data.payTotal[x] == nil or var.SRHL_Data.payTotal[x] < y then
-		Actor.sendTipmsg(sysarg, "累计达到充值金额的天数不足", ttFlyTip)
-		return
+	
+	if var.SRHL_Data.payTotalFalg  == nil then 
+		var.SRHL_Data.payTotalFalg = {}
 	end
-
+	
+	if var.SRHL_Data.payTotalFalg[x]==nil then 
+		var.SRHL_Data.payTotalFalg[x] ={}
+	end
+		
+	if var.SRHL_Data.payTotalFalg[x][y] ~=nil and var.SRHL_Data.payTotalFalg[x][y]==1 then	
+		Actor.sendTipmsg(sysarg,"不能重复领取",ttFlyTip)
+		return 
+	end
+	
+	if var.SRHL_Data.payTotal[x]==nil or var.SRHL_Data.payTotal[x]<y then 
+		Actor.sendTipmsg(sysarg,"累计达到充值金额的天数不足",ttFlyTip)
+		return 
+	end
+	
+	
+	
 	local award = cfg[x].days[y].award
-	if type(award) ~= "table" or #award == 0 then return end
-	if type(grants) ~= "table" then
-		grants = {}
-		var.sanRenTotalPayGrants = grants
+	
+	--背包不足
+	if not Awards.CheckBagGridCount(sysarg, award) then
+		return 
 	end
-	local progress = {}
-	if Awards.PrepareTracked(award, progress) ~= true then return end
-	local receipt = {cycle = cycle, x = x, y = y, progress = progress}
-	grants[key] = receipt
-	if not Awards.GiveTracked(sysarg, progress.items, progress, LogIds.sanrenhongli, "连续累计充值") then return end
-	flags[x][y] = 1
-	grants[key] = nil
-	GetSanRenHongLiInfo(sysarg, 1)
-	Actor.sendTipmsg(sysarg, "领取奖励成功", ttFlyTip)
-	System.broadcastTipmsg(string.format("<(n%s)>玩家领取了散人红利的累计充值大奖<我也要领取/@@showWin,259,2>", Actor.getName(sysarg)), ttChatWindow)
+	
+	var.SRHL_Data.payTotalFalg[x][y] = 1
+	
+	--给奖励
+	local bResult = Awards.Give(sysarg, award, LogIds.sanrenhongli,"连续累计充值")
+	if bResult == false then
+		print("sanrenhongli leijipay Gift error, actor name = "..Actor.getName(sysarg))
+		return 
+	end
+	
+	GetSanRenHongLiInfo(sysarg,1)
+		
+	Actor.sendTipmsg(sysarg,"领取奖励成功",ttFlyTip)
+	
+	--System.sendCommonLog(LogIds.sanrenhongli,Actor.getIntProperty(sysarg,PROP_ENTITY_ID),Actor.getName(sysarg),0,0,0,x.."档"..y.."天")
+    --
+	System.broadcastTipmsg(string.format("<(n%s)>玩家领取了散人红利的累计充值大奖<我也要领取/@@showWin,259,2>",Actor.getName(sysarg)), ttChatWindow)
 end
 
 
@@ -365,11 +335,9 @@ function SRHL_XinShiGift(sysarg,x,y) --第几个，第几档
 		return 
 	end
 	
-	if cfg[x] == nil or y<1 or y>#cfg[x] then
-		return
+	if y<1 or x>#cfg[x]then 	
+		return 
 	end
-	local itemCfg = cfg[x][y]
-	if itemCfg == nil then return end
 	
 	if var.days.SRHL_XinShi==nil then 
 		var.days.SRHL_XinShi={}
@@ -386,18 +354,18 @@ function SRHL_XinShiGift(sysarg,x,y) --第几个，第几档
 	
 	
 	local myYb = Actor.getIntProperty( sysarg, PROP_ACTOR_YUANBAO)
-	if myYb < itemCfg.needYB then
+	if myYb < cfg[x][y].needYB then
 		Actor.sendTipmsg(sysarg, "元宝不足", ttFlyTip)
 		return
 	end
 	
 	--背包不足
-	if not Awards.CheckBagGridCount(sysarg, itemCfg.Award) then
+	if not Awards.CheckBagGridCount(sysarg, cfg[x][y].Award) then
 		return 
 	end
 	
 	--扣元宝
-	if Actor.changeMoney(sysarg, mtYuanbao, -itemCfg.needYB, LogIds.sanrenhongli, "限时购买")==false then
+	if Actor.changeMoney(sysarg, mtYuanbao, -cfg[x][y].needYB, LogIds.sanrenhongli, "限时购买")==false then 
 		Actor.sendTipmsg(sysarg,"扣除元宝失败",ttFlyTip)
 		return
 	end
@@ -406,7 +374,7 @@ function SRHL_XinShiGift(sysarg,x,y) --第几个，第几档
 	var.days.SRHL_XinShi[x][y] = 1
 	
 	--给奖励
-	local bResult = Awards.Give(sysarg, itemCfg.Award, LogIds.sanrenhongli,"限时购买")
+	local bResult = Awards.Give(sysarg, cfg[x][y].Award, LogIds.sanrenhongli,"限时购买")
 	if bResult == false then
 		print("sanrenhongli xianshi Gift error, actor name = "..Actor.getName(sysarg))
 		return 
@@ -547,7 +515,6 @@ StartSanRenHongLi = function(nowOpenday) --开几天，当前是第几天
 	end
 	
 	
-	svar.StartSRHLCycleId = EnsureSanRenHongLiCycleId() + 1
 	svar.StartSRHL_MiNitime = System.getCurrMiniTime()
 		
 	System.saveStaticVar()
@@ -657,6 +624,3 @@ end
 
 -- 后台命令(节日活动): SanRenHongLiActs|1|2018|4|18|开启天数
 RegisterBackCmd("SanRenHongLiActs", backcmd_SanRenHongLiActs)
-if registerLuaEventCallback and LuaEventId and LuaEventId.PlayerLogin then
-	registerLuaEventCallback(LuaEventId.PlayerLogin, RetrySanRenTotalPayGrants)
-end

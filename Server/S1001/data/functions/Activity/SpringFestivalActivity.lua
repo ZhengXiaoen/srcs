@@ -26,21 +26,6 @@ end
 
 function get_spring_festival_time(init_if_missing)
 	local svar = System.getStaticVar()
-	-- Tag legacy data before replacing its old activity time with a new round.
-	if svar.SpringHYDT_data ~= nil and svar.SpringHYDT_data.cycleTime == nil then
-		local legacyTime = svar.SpringTime
-		if legacyTime == nil or legacyTime <= 0 then
-			local time = SpringFestivalCfg and SpringFestivalCfg.time
-			if time ~= nil and time[1] ~= nil then
-				legacyTime = System.encodeNumTime(time[1], time[2], time[3], 0, 0, 0)
-			else
-				legacyTime = 0
-			end
-		end
-		svar.SpringHYDT_data.cycleTime = legacyTime
-		System.saveStaticVar()
-		svar = System.getStaticVar()
-	end
 	local needInit = false
 	if svar.SpringTime == nil or svar.SpringTime <= 0 then
 		needInit = true
@@ -76,12 +61,6 @@ function get_spring_festival_time(init_if_missing)
 	end
 
 	return {}
-end
-
-function get_spring_festival_cycle_time()
-	local time = get_spring_festival_time(false)
-	if time == nil or time[1] == nil then return 0 end
-	return System.encodeNumTime(time[1], time[2], time[3], 0, 0, 0)
 end
 
 -- var.spring_flags

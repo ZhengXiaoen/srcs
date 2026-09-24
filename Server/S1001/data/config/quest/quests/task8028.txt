@@ -1,0 +1,89 @@
+﻿--lua script
+{
+	id = 8028,			-- 驱散怨念
+	parentid = 0,type = 11,level = 0,circle = 0,entrust = 15,star = 4,guideId = 0,timelimit = 0,interval = 86400,maxcount = 5,
+	cangiveup = true,
+	automount = true,
+	autoRun = false,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = true,
+	name = Lang.Quest.name8028,
+	content = Lang.Quest.desc8028,
+
+	prom = 0,
+	comp = 0,
+	target = {
+		{
+			type = 0, id = 557, count = 120, rewardId = 0,useList = false,
+			location = {
+				sceneid = 121, x= 0,y = 0,entityName = Lang.EntityName.m557,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 60, count = 120, rewardId = 1,useList = false,
+			location = {
+				sceneid = 121, x= 0,y = 0,entityName = Lang.EntityName.m560,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 563, count = 120, rewardId = 2,useList = false,
+			location = {
+				sceneid = 121, x= 0,y = 0,entityName = Lang.EntityName.m563,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 60, count = 120, rewardId = 3,useList = false,
+			location = {
+				sceneid = 122, x= 0,y = 0,entityName = Lang.EntityName.m564,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 562, count = 120, rewardId = 4,useList = false,
+			location = {
+				sceneid = 121, x= 0,y = 0,entityName = Lang.EntityName.m562,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 1, id = 1363, count = 10, rewardId = 5,useList = false,
+			location = {
+				sceneid = 121, x= 0,y = 0,entityName = Lang.EntityName.m582,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 12, id = 122, count = 120, rewardId = 6,useList = false, data = Lang.Quest.data80286,
+		},
+	},
+	conds = {
+		{ type = 0, id = 70, count = 61 },
+	},
+	awards = {
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk80281,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk80281,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip80281,
+	},
+	PassMsTip = {
+	},
+},

@@ -1,0 +1,6790 @@
+﻿--#include "..\..\language\LangCode.txt" once
+StdBuff =
+{
+	{
+		--//万年雪霜
+		id=1,
+		name=Lang.Activity.buff1,
+		type=139,
+		value=0,
+		group=119,
+		times=100000,
+		interval=1,
+		timeoverlay=true,
+		fullDel=false,
+		icon=57,
+		dieRemove=false,
+		param=500,
+		param2=500,
+	},
+	{
+		--//天山雪莲
+		id=2,
+		name=Lang.Activity.buff2,
+		type=139,
+		value=0,
+		group=119,
+		times=600000,
+		interval=1,
+		timeoverlay=true,
+		fullDel=false,
+		icon=57,
+		dieRemove=false,
+		param=500,
+		param2=500,
+	},
+	{
+		--//天山雪莲
+		id=3,
+		name=Lang.Activity.buff3,
+		type=139,
+		value=0,
+		group=119,
+		times=1200000,
+		interval=1,
+		timeoverlay=true,
+		fullDel=false,
+		icon=57,
+		dieRemove=false,
+		param=500,
+		param2=500,
+	},
+	{
+		--//两倍经验(1小时)
+		id=4,
+		name=Lang.Activity.buff4,
+		type=64,
+		value=1,
+		group=100,
+		times=1,
+		interval=3600,
+		timeoverlay=true,
+		fullDel=false,
+		icon=58,
+		dieRemove=false,
+	},
+	{
+		--//两倍经验(2小时)
+		id=5,
+		name=Lang.Activity.buff5,
+		type=64,
+		value=1,
+		group=100,
+		times=1,
+		interval=7200,
+		timeoverlay=true,
+		fullDel=false,
+		icon=58,
+		dieRemove=false,
+	},
+	{
+		--//两倍经验(5小时)
+		id=6,
+		name=Lang.Activity.buff6,
+		type=64,
+		value=1,
+		group=100,
+		times=1,
+		interval=18000,
+		timeoverlay=true,
+		fullDel=false,
+		icon=58,
+		dieRemove=false,
+	},
+	{
+		--//两倍经验(8小时)
+		id=7,
+		name=Lang.Activity.buff7,
+		type=64,
+		value=1,
+		group=100,
+		times=1,
+		interval=28800,
+		timeoverlay=true,
+		fullDel=false,
+		icon=58,
+		dieRemove=false,
+	},
+	{
+		--//万年人参
+		id=8,
+		name=Lang.Activity.buff8,
+		type=1,
+		value=5000,
+		group=113,
+		times=5,
+		interval=1,
+		timeoverlay=true,
+		fullDel=false,
+		icon=100,
+		dieRemove=false,
+
+	},
+	{
+		--//物攻药水
+		id=9,
+		name=Lang.Activity.buff9,
+		type=12,
+		value=0.02,
+		group=103,
+		times=1,
+		interval=300,
+		timeoverlay=true,
+		fullDel=false,
+		icon=64,
+		dieRemove=false,
+	},
+	{
+		--//魔攻药水
+		id=10,
+		name=Lang.Activity.buff10,
+		type=16,
+		value=0.02,
+		group=104,
+		times=1,
+		interval=300,
+		timeoverlay=true,
+		fullDel=false,
+		icon=65,
+		dieRemove=false,
+	},
+	{
+		--//道攻药水
+		id=11,
+		name=Lang.Activity.buff11,
+		type=20,
+		value=0.02,
+		group=105,
+		times=1,
+		interval=300,
+		timeoverlay=true,
+		fullDel=false,
+		icon=66,
+		dieRemove=false,
+	},
+	{
+		--//物防药水
+		id=12,
+		name=Lang.Activity.buff12,
+		type=24,
+		value=0.02,
+		group=106,
+		times=1,
+		interval=300,
+		timeoverlay=true,
+		fullDel=false,
+		icon=67,
+		dieRemove=false,
+	},
+	{
+		--//1级魔法盾
+		id=13,
+		name=Lang.Activity.buff13,
+		type=54,
+		value=0.38,
+		group=112,
+		times=1,
+		interval=20,
+		timeoverlay=false,
+		effectType=6,
+		effectId=20,
+		icon=82,
+	},
+	{
+		--//2级魔法盾
+		id=14,
+		name=Lang.Activity.buff14,
+		type=54,
+		value=0.39,
+		group=112,
+		times=1,
+		interval=40,
+		timeoverlay=false,
+		effectType=6,
+		effectId=20,
+		icon=82,
+	},
+	{
+		--//3级魔法盾
+		id=15,
+		name=Lang.Activity.buff15,
+		type=54,
+		value=0.40,
+		group=112,
+		times=1,
+		interval=60,
+		timeoverlay=false,
+		effectType=6,
+		effectId=20,
+		icon=82,
+	},
+	{
+		--//1级治愈术
+		id=16,
+		name=Lang.Activity.buff16,
+		type=1,
+		value=300,
+		group=113,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=89,
+	},
+	{
+		--//2级治愈术
+		id=17,
+		name=Lang.Activity.buff17,
+		type=1,
+		value=400,
+		group=113,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=89,
+	},
+	{
+		--//3级治愈术
+		id=18,
+		name=Lang.Activity.buff18,
+		type=1,
+		value=500,
+		group=113,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=89,
+	},
+	{
+		--//1级隐身术
+		id=19,
+		name=Lang.Activity.buff19,
+		type=63,
+		value=0,
+		group=115,
+		times=1,
+		interval=30,
+		timeoverlay=false,
+		icon=84,
+	},
+	{
+		--//2级隐身术
+		id=20,
+		name=Lang.Activity.buff20,
+		type=63,
+		value=0,
+		group=115,
+		times=1,
+		interval=100,
+		timeoverlay=false,
+		icon=84,
+	},
+	{
+		--//3级隐身术
+		id=21,
+		name=Lang.Activity.buff21,
+		type=63,
+		value=0,
+		group=115,
+		times=1,
+		interval=190,
+		timeoverlay=false,
+		icon=84,
+		cover = true,
+	},
+	{
+		--//1级幽灵盾
+		id=22,
+		name=Lang.Activity.buff22,
+		type=23,
+		value=100,
+		group=116,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		display=4,
+		icon=85,
+		cover = true,
+	},
+	{
+		--//1级幽灵盾
+		id=23,
+		name=Lang.Activity.buff23,
+		type=27,
+		value=100,
+		group=116,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		display=4,
+		icon=85,
+		cover = true,
+	},
+	{
+		--//2级幽灵盾
+		id=24,
+		name=Lang.Activity.buff24,
+		type=23,
+		value=150,
+		group=116,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		display=4,
+		icon=85,
+		cover = true,
+	},
+	{
+		--//2级幽灵盾
+		id=25,
+		name=Lang.Activity.buff25,
+		type=27,
+		value=150,
+		group=116,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		display=4,
+		icon=85,
+		cover = true,
+	},
+	{
+		--//3级幽灵盾
+		id=26,
+		name=Lang.Activity.buff26,
+		type=23,
+		value=200,
+		group=116,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		display=4,
+		icon=85,
+		cover = true,
+	},
+	{
+		--//3级幽灵盾
+		id=27,
+		name=Lang.Activity.buff27,
+		type=27,
+		value=200,
+		group=116,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		display=4,
+		icon=85,
+		cover = true,
+	},
+	{
+		--//1级施毒术(减血)
+		id=28,
+		name=Lang.Activity.buff28,
+		type=1,
+		value=-75,
+		group=114,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//1级施毒术(减少物理防御)
+		id=29,
+		name=Lang.Activity.buff29,
+		type=23,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//1级施毒术(减少魔法防御)
+		id=30,
+		name=Lang.Activity.buff30,
+		type=27,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//2级施毒术
+		id=31,
+		name=Lang.Activity.buff31,
+		type=1,
+		value=-150,
+		group=114,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//2级施毒术
+		id=32,
+		name=Lang.Activity.buff32,
+		type=23,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//2级施毒术
+		id=33,
+		name=Lang.Activity.buff33,
+		type=27,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//3级施毒术
+		id=34,
+		name=Lang.Activity.buff34,
+		type=1,
+		value=-200,
+		group=114,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//3级施毒术
+		id=35,
+		name=Lang.Activity.buff35,
+		type=23,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//3级施毒术
+		id=36,
+		name=Lang.Activity.buff36,
+		type=27,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//新手保护
+		id=37,
+		name=Lang.Activity.buff37,
+		type=93,
+		value=1,
+		group=117,
+		times=1,
+		interval=10800,
+		timeoverlay=false,
+		isSave=true,
+		icon=53,
+	},
+	{
+		--//王城城主
+		id=38,
+		name=Lang.Activity.buff38,
+		type=64,
+		value=1.5,
+		group=118,
+		times=1,
+		interval=3600,
+		timeoverlay=false,
+		icon=54,
+	},
+	{
+		--//武林争霸
+		id=39,
+		name=Lang.Activity.buff39,
+		type=64,
+		value=1.5,
+		group=119,
+		times=1,
+		interval=3600,
+		timeoverlay=false,
+		icon=76,
+	},
+	{
+		--//蓝钻
+		id=40,
+		name=Lang.Activity.buff40,
+		type=64,
+		value=1.5,
+		group=120,
+		times=1,
+		interval=3600,
+		timeoverlay=false,
+	},
+	{
+		--//绿钻
+		id=41,
+		name=Lang.Activity.buff41,
+		type=64,
+		value=1.5,
+		group=120,
+		times=1,
+		interval=3600,
+		timeoverlay=false,
+	},
+	{
+		--//紫钻
+		id=42,
+		name=Lang.Activity.buff42,
+		type=64,
+		value=1.5,
+		group=120,
+		times=1,
+		interval=3600,
+		timeoverlay=false,
+	},
+	{
+		--//红钻
+		id=43,
+		name=Lang.Activity.buff43,
+		type=64,
+		value=1.5,
+		group=120,
+		times=1,
+		interval=3600,
+		timeoverlay=false,
+	},
+	{
+		--//世界文明等级
+		id=44,
+		name=Lang.Activity.buff44,
+		type=64,
+		value=1.5,
+		group=121,
+		times=1,
+		interval=3600,
+		timeoverlay=false,
+		icon=73,
+	},
+	{
+		--//VIP
+		id=45,
+		name=Lang.Activity.buff45,
+		type=64,
+		value=1.5,
+		group=122,
+		times=1,
+		interval=3600,
+		timeoverlay=false,
+		icon=69,
+	},
+	{
+		--//行会
+		id=46,
+		name=Lang.Activity.buff46,
+		type=64,
+		value=1.5,
+		group=123,
+		times=1,
+		interval=3600,
+		timeoverlay=false,
+		icon=87,
+	},
+	{
+		--//历练封号
+		id=47,
+		name=Lang.Activity.buff47,
+		type=64,
+		value=1.5,
+		group=124,
+		times=1,
+		interval=3600,
+		timeoverlay=false,
+	},
+	{
+		--//世界文明等级(1级)
+		id=48,
+		name=Lang.Activity.buff48,
+		type=64,
+		value=1.1,
+		group=125,
+		times=1,
+		interval=-1,
+		timeoverlay=false,
+		isSave=true,
+		icon=73,
+	},
+	{
+		--//世界文明等级(2级)
+		id=49,
+		name=Lang.Activity.buff49,
+		type=64,
+		value=1.5,
+		group=125,
+		times=1,
+		interval=-1,
+		timeoverlay=false,
+		isSave=true,
+		icon=73,
+	},
+	{
+		--//世界文明等级(3级)
+		id=50,
+		name=Lang.Activity.buff50,
+		type=64,
+		value=2,
+		group=125,
+		times=1,
+		interval=-1,
+		timeoverlay=false,
+		isSave=true,
+		icon=73,
+	},
+	{
+		--//世界文明等级(4级)
+		id=51,
+		name=Lang.Activity.buff51,
+		type=64,
+		value=2.5,
+		group=125,
+		times=1,
+		interval=-1,
+		timeoverlay=false,
+		isSave=true,
+		icon=73,
+	},
+	{
+		--//世界文明等级(5级)
+		id=52,
+		name=Lang.Activity.buff52,
+		type=64,
+		value=3,
+		group=125,
+		times=1,
+		interval=-1,
+		timeoverlay=false,
+		isSave=true,
+		icon=73,
+	},
+	{
+		--//世界文明等级(6级)
+		id=53,
+		name=Lang.Activity.buff53,
+		type=64,
+		value=3.5,
+		group=125,
+		times=1,
+		interval=-1,
+		timeoverlay=false,
+		isSave=true,
+		icon=73,
+	},
+	{
+		--//世界文明等级(7级)
+		id=54,
+		name=Lang.Activity.buff54,
+		type=64,
+		value=4,
+		group=125,
+		times=1,
+		interval=-1,
+		timeoverlay=false,
+		isSave=true,
+		icon=73,
+	},
+	{
+		--//世界文明等级(8级)
+		id=55,
+		name=Lang.Activity.buff55,
+		type=64,
+		value=4.5,
+		group=125,
+		times=1,
+		interval=-1,
+		timeoverlay=false,
+		isSave=true,
+		icon=73,
+	},
+	{
+		--//世界文明等级(9级)
+		id=56,
+		name=Lang.Activity.buff56,
+		type=64,
+		value=5,
+		group=125,
+		times=1,
+		interval=-1,
+		timeoverlay=false,
+		isSave=true,
+		icon=73,
+	},
+	{
+		--//世界文明等级(10级)
+		id=57,
+		name=Lang.Activity.buff57,
+		type=64,
+		value=5.5,
+		group=125,
+		times=1,
+		interval=-1,
+		timeoverlay=false,
+		isSave=true,
+		icon=73,
+	},
+	{
+		--//世界文明等级(11级)
+		id=58,
+		name=Lang.Activity.buff58,
+		type=64,
+		value=6,
+		group=125,
+		times=1,
+		interval=-1,
+		timeoverlay=false,
+		isSave=true,
+		icon=73,
+	},
+	{
+		--//世界文明等级(12级)
+		id=59,
+		name=Lang.Activity.buff59,
+		type=64,
+		value=6.5,
+		group=125,
+		times=1,
+		interval=-1,
+		timeoverlay=false,
+		isSave=true,
+		icon=73,
+	},
+	{
+		--//世界文明等级(13级)
+		id=60,
+		name=Lang.Activity.buff60,
+		type=64,
+		value=7,
+		group=125,
+		times=1,
+		interval=-1,
+		timeoverlay=false,
+		isSave=true,
+		icon=73,
+	},
+	{
+		--//世界文明等级(14级)
+		id=61,
+		name=Lang.Activity.buff61,
+		type=64,
+		value=7.5,
+		group=125,
+		times=1,
+		interval=-1,
+		timeoverlay=false,
+		isSave=true,
+		icon=73,
+	},
+	{
+		--//您中了【触龙神】的毒
+		id=62,
+		name=Lang.Activity.buff62,
+		type=1,
+		value=-150,
+		group=93,
+		times=30,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=90,
+		dieRemove=true,
+	},
+	{
+		--//您中了【触龙神】的毒
+		id=63,
+		name=Lang.Activity.buff63,
+		type=23,
+		value=-40,
+		group=93,
+		times=1,
+		interval=15,
+		timeoverlay=false,
+		color=16711680,
+		icon=90,
+		dieRemove=true,
+	},
+	{
+		--//您中了【触龙神】的毒
+		id=64,
+		name=Lang.Activity.buff64,
+		type=27,
+		value=-25,
+		group=93,
+		times=1,
+		interval=15,
+		timeoverlay=false,
+		color=16711680,
+		icon=90,
+		dieRemove=true,
+	},
+	{
+		--//您中了【宝箱】的毒
+		id=65,
+		name=Lang.Activity.buff65,
+		type=1,
+		value=-150,
+		group=93,
+		times=30,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=90,
+		dieRemove=true,
+	},
+	{
+		--//您中了【宝箱】的毒
+		id=66,
+		name=Lang.Activity.buff66,
+		type=23,
+		value=-40,
+		group=93,
+		times=1,
+		interval=15,
+		timeoverlay=false,
+		color=16711680,
+		icon=90,
+		dieRemove=true,
+	},
+	{
+		--//您中了【宝箱】的毒
+		id=67,
+		name=Lang.Activity.buff67,
+		type=27,
+		value=-25,
+		group=93,
+		times=1,
+		interval=15,
+		timeoverlay=false,
+		color=16711680,
+		icon=90,
+		dieRemove=true,
+	},
+	{
+		--//天镜魔王(减血虫毒)
+		id=68,
+		name=Lang.Activity.buff68,
+		type=1,
+		value=-200,
+		group=93,
+		times=30,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		dieRemove=true,
+	},
+	{
+		--//天镜魔王(减物理防御虫毒)
+		id=69,
+		name=Lang.Activity.buff69,
+		type=23,
+		value=-50,
+		group=93,
+		times=1,
+		interval=15,
+		timeoverlay=false,
+		color=16711680,
+		dieRemove=true,
+	},
+	{
+		--//天镜魔王(减魔法防御虫毒)
+		id=70,
+		name=Lang.Activity.buff70,
+		type=27,
+		value=-40,
+		group=93,
+		times=1,
+		interval=15,
+		timeoverlay=false,
+		color=16711680,
+		dieRemove=true,
+	},
+	{
+		--//追魂统领(无敌盾)
+		id=71,
+		name=Lang.Activity.buff71,
+		type=60,
+		value=0,
+		group=93,
+		times=3,
+		interval=3,
+		timeoverlay=false,
+	},
+	{
+		--//天幽教主(困锁光圈)
+		id=72,
+		name=Lang.Activity.buff72,
+		type=56,
+		value=0,
+		group=93,
+		times=3,
+		interval=3,
+		timeoverlay=false,
+	},
+	{
+		--//巨蝠教主(减速毒圈)
+		id=73,
+		name=Lang.Activity.buff73,
+		type=49,
+		value=1000,
+		group=93,
+		times=3,
+		interval=3,
+		timeoverlay=false,
+	},
+	{
+		--//暗之九霄教主(困锁冰刺)
+		id=74,
+		name=Lang.Activity.buff74,
+		type=56,
+		value=0,
+		group=93,
+		times=3,
+		interval=3,
+		timeoverlay=false,
+	},
+	{
+		--//夜行百鬼(减血尸毒)
+		id=75,
+		name=Lang.Activity.buff75,
+		type=1,
+		value=-150,
+		group=93,
+		times=30,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		dieRemove=true,
+	},
+	{
+		--//夜行百鬼(减物理防御尸毒)
+		id=76,
+		name=Lang.Activity.buff76,
+		type=23,
+		value=-40,
+		group=93,
+		times=1,
+		interval=15,
+		timeoverlay=false,
+		color=16711680,
+		dieRemove=true,
+	},
+	{
+		--//夜行百鬼(减魔法防御尸毒)
+		id=77,
+		name=Lang.Activity.buff77,
+		type=27,
+		value=-25,
+		group=93,
+		times=1,
+		interval=15,
+		timeoverlay=false,
+		color=16711680,
+		dieRemove=true,
+	},
+	{
+		--//阴灵鬼王(困锁雷电)
+		id=78,
+		name=Lang.Activity.buff78,
+		type=56,
+		value=0,
+		group=93,
+		times=3,
+		interval=3,
+		timeoverlay=false,
+	},
+	{
+		--//猛毒蛇王(困锁)
+		id=79,
+		name=Lang.Activity.buff79,
+		type=56,
+		value=0,
+		group=93,
+		times=3,
+		interval=3,
+		timeoverlay=false,
+	},
+	{
+		--//蚩尤魔王(困锁冰刺)
+		id=80,
+		name=Lang.Activity.buff80,
+		type=56,
+		value=0,
+		group=93,
+		times=3,
+		interval=3,
+		timeoverlay=false,
+	},
+	{
+		--//剧毒妖魁毒(减血)
+		id=81,
+		name=Lang.Activity.buff81,
+		type=1,
+		value=-150,
+		group=93,
+		times=30,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		dieRemove=true,
+	},
+	{
+		--//剧毒妖魁毒(减物理防御)
+		id=82,
+		name=Lang.Activity.buff82,
+		type=23,
+		value=-40,
+		group=93,
+		times=1,
+		interval=15,
+		timeoverlay=false,
+		color=16711680,
+		dieRemove=true,
+	},
+	{
+		--//剧毒妖魁毒(减魔法防御)
+		id=83,
+		name=Lang.Activity.buff83,
+		type=27,
+		value=-25,
+		group=93,
+		times=1,
+		interval=15,
+		timeoverlay=false,
+		color=16711680,
+		dieRemove=true,
+	},
+	{
+		--//三倍经验(2小时)
+		id=84,
+		name=Lang.Activity.buff84,
+		type=64,
+		value=2,
+		group=100,
+		times=1,
+		interval=7200,
+		timeoverlay=true,
+		fullDel=false,
+		icon=59,
+		dieRemove=false,
+	},
+	{
+		--//三倍经验(3小时)
+		id=85,
+		name=Lang.Activity.buff85,
+		type=64,
+		value=2,
+		group=100,
+		times=1,
+		interval=10800,
+		timeoverlay=true,
+		fullDel=false,
+		icon=59,
+		dieRemove=false,
+	},
+	{
+		--//三倍经验(4小时)
+		id=86,
+		name=Lang.Activity.buff86,
+		type=64,
+		value=2,
+		group=100,
+		times=1,
+		interval=14400,
+		timeoverlay=true,
+		fullDel=false,
+		icon=59,
+		dieRemove=false,
+	},
+	{
+		--//四倍经验(1小时)
+		id=87,
+		name=Lang.Activity.buff87,
+		type=64,
+		value=3,
+		group=100,
+		times=1,
+		interval=3600,
+		timeoverlay=true,
+		fullDel=false,
+		icon=60,
+		dieRemove=false,
+	},
+	{
+		--//四倍经验(2小时)
+		id=88,
+		name=Lang.Activity.buff88,
+		type=64,
+		value=3,
+		group=100,
+		times=1,
+		interval=7200,
+		timeoverlay=true,
+		fullDel=false,
+		icon=60,
+		dieRemove=false,
+	},
+	{
+		--//四倍经验(3小时)
+		id=89,
+		name=Lang.Activity.buff89,
+		type=64,
+		value=3,
+		group=100,
+		times=1,
+		interval=10800,
+		timeoverlay=true,
+		fullDel=false,
+		icon=60,
+		dieRemove=false,
+	},
+	{
+		--//五倍经验(2小时)
+		id=90,
+		name=Lang.Activity.buff90,
+		type=64,
+		value=4,
+		group=100,
+		times=1,
+		interval=7200,
+		timeoverlay=true,
+		fullDel=false,
+		icon=61,
+		dieRemove=false,
+	},
+	{
+		--//传送保护
+		id=91,
+		name=Lang.Activity.buff91,
+		type=67,
+		value=1,
+		group=117,
+		times=1,
+		interval=3,
+		timeoverlay=false,
+		isSave=true,
+		icon=74,
+	},
+	{
+		--//1级野蛮冲撞
+		id=92,
+		name=Lang.Activity.buff92,
+		type=56,
+		value=1.5,
+		group=99,
+		times=0.3,
+		interval=0.3,
+		timeoverlay=false,
+		icon=81,
+		dieRemove=true,
+	},
+	{
+		--//1级群体施毒术(减少HP)
+		id=93,
+		name=Lang.Activity.buff93,
+		type=1,
+		value=-75,
+		group=114,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//1级群体施毒术(减少物防)
+		id=94,
+		name=Lang.Activity.buff94,
+		type=23,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//1级群体施毒术(减少魔防)
+		id=95,
+		name=Lang.Activity.buff95,
+		type=27,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//2级群体施毒术(减少HP)
+		id=96,
+		name=Lang.Activity.buff96,
+		type=1,
+		value=-100,
+		group=114,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//2级群体施毒术(减少物防)
+		id=97,
+		name=Lang.Activity.buff97,
+		type=23,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//2级群体施毒术(减少魔防)
+		id=98,
+		name=Lang.Activity.buff98,
+		type=27,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//3级群体施毒术(减少HP)
+		id=99,
+		name=Lang.Activity.buff99,
+		type=1,
+		value=-125,
+		group=114,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//3级群体施毒术(减少物防)
+		id=100,
+		name=Lang.Activity.buff100,
+		type=23,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//3级群体施毒术(减少魔防)
+		id=101,
+		name=Lang.Activity.buff101,
+		type=27,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//2级野蛮冲撞
+		id=102,
+		name=Lang.Activity.buff102,
+		type=56,
+		value=0.8,
+		group=99,
+		times=0.8,
+		interval=0.8,
+		timeoverlay=false,
+		icon=81,
+		dieRemove=true,
+	},
+	{
+		--//3级野蛮冲撞
+		id=103,
+		name=Lang.Activity.buff103,
+		type=56,
+		value=1.5,
+		group=99,
+		times=1.5,
+		interval=1.5,
+		timeoverlay=false,
+		icon=81,
+		dieRemove=true,
+	},
+
+	{
+		--//两倍经验(半小时)
+		id=104,
+		name=Lang.Activity.buff104,
+		type=64,
+		value=1,
+		group=126,
+		times=1,
+		interval=1800,
+		timeoverlay=false,
+		isSave=false,
+		dieRemove=false,
+	},
+	{
+		--//国庆双倍经验
+		id=105,
+		name=Lang.Activity.buff105,
+		type=64,
+		value=1,
+		group=127,
+		times=-1,
+		interval=-1,
+		timeoverlay=false,
+		isSave=false,
+		dieRemove=false,
+	},
+	{
+		--//魔防药水
+		id=106,
+		name=Lang.Activity.buff106,
+		type=28,
+		value=0.02,
+		group=107,
+		times=1,
+		interval=300,
+		timeoverlay=true,
+		fullDel=false,
+		icon=87,
+		dieRemove=false,
+	},
+	{
+		--//全服双倍
+		id=107,
+		name=Lang.Activity.buff107,
+		type=64,
+		value=1,
+		group=108,
+		times=-1,
+		interval=-1,
+		timeoverlay=true,
+		icon=56,
+		dieRemove=false,
+	},
+	{
+		--//无敌镖车
+		id=108,
+		name=Lang.Activity.buff108,
+		type=60,
+		value=1,
+		group=109,
+		times=1,
+		interval=5,
+		timeoverlay=true,
+		icon=88,
+		dieRemove=false,
+	},
+	{
+		--//五倍经验(5小时)
+		id=109,
+		name=Lang.Activity.buff109,
+		type=64,
+		value=4,
+		group=100,
+		times=1,
+		interval=18000,
+		timeoverlay=true,
+		fullDel=false,
+		icon=99,
+		dieRemove=false,
+	},
+	{
+		--//五倍经验(8小时)
+		id=110,
+		name=Lang.Activity.buff110,
+		type=64,
+		value=4,
+		group=100,
+		times=1,
+		interval=28800,
+		timeoverlay=true,
+		fullDel=false,
+		icon=99,
+		dieRemove=false,
+	},
+	{
+		--//魔血丹
+		id=111,
+		name=Lang.Activity.buff111,
+		type=139,
+		value=0,
+		group=119,
+		times=5000000,
+		interval=1,
+		timeoverlay=true,
+		fullDel=false,
+		icon=61,
+		dieRemove=false,
+		param=200,
+		param2=600,
+	},
+	{
+		--//终极天神之力
+		id=112,
+		name=Lang.Activity.buff112,
+		type=12,
+		value=0.2,
+		group=130,
+		times=1,
+		interval=86400,
+		timeoverlay=false,
+		fullDel=false,
+		isSave=false,
+		icon=92,
+		dieRemove=false,
+	},
+	{
+		--//终极天神之力
+		id=113,
+		name=Lang.Activity.buff113,
+		type=16,
+		value=0.2,
+		group=130,
+		times=1,
+		interval=86400,
+		timeoverlay=false,
+		fullDel=false,
+		isSave=false,
+		icon=93,
+		dieRemove=false,
+	},
+	{
+		--//终极天神之力
+		id=114,
+		name=Lang.Activity.buff114,
+		type=20,
+		value=0.2,
+		group=130,
+		times=1,
+		interval=86400,
+		timeoverlay=false,
+		fullDel=false,
+		isSave=false,
+		icon=94,
+		dieRemove=false,
+	},
+	{
+		--//高级天神之力
+		id=115,
+		name=Lang.Activity.buff115,
+		type=12,
+		value=0.15,
+		group=130,
+		times=1,
+		interval=86400,
+		timeoverlay=false,
+		fullDel=false,
+		isSave=false,
+		icon=92,
+		dieRemove=false,
+	},
+	{
+		--//高级天神之力
+		id=116,
+		name=Lang.Activity.buff116,
+		type=16,
+		value=0.15,
+		group=130,
+		times=1,
+		interval=86400,
+		timeoverlay=false,
+		fullDel=false,
+		isSave=false,
+		icon=93,
+		dieRemove=false,
+	},
+	{
+		--//高级天神之力
+		id=117,
+		name=Lang.Activity.buff117,
+		type=20,
+		value=0.15,
+		group=130,
+		times=1,
+		interval=86400,
+		timeoverlay=false,
+		fullDel=false,
+		isSave=false,
+		icon=94,
+		dieRemove=false,
+	},
+	{
+		--//中级天神之力
+		id=118,
+		name=Lang.Activity.buff118,
+		type=12,
+		value=0.10,
+		group=130,
+		times=1,
+		interval=86400,
+		timeoverlay=false,
+		fullDel=false,
+		isSave=false,
+		icon=92,
+		dieRemove=false,
+	},
+	{
+		--//中级天神之力
+		id=119,
+		name=Lang.Activity.buff119,
+		type=16,
+		value=0.10,
+		group=130,
+		times=1,
+		interval=86400,
+		timeoverlay=false,
+		fullDel=false,
+		isSave=false,
+		icon=93,
+		dieRemove=false,
+	},
+	{
+		--//中级天神之力
+		id=120,
+		name=Lang.Activity.buff120,
+		type=20,
+		value=0.10,
+		group=130,
+		times=1,
+		interval=86400,
+		timeoverlay=false,
+		fullDel=false,
+		isSave=false,
+		icon=94,
+		dieRemove=false,
+	},
+	{
+		--//初级天神之力
+		id=121,
+		name=Lang.Activity.buff121,
+		type=12,
+		value=0.05,
+		group=130,
+		times=1,
+		interval=86400,
+		timeoverlay=false,
+		fullDel=false,
+		isSave=false,
+		icon=92,
+		dieRemove=false,
+	},
+	{
+		--//初级天神之力
+		id=122,
+		name=Lang.Activity.buff122,
+		type=16,
+		value=0.05,
+		group=130,
+		times=1,
+		interval=86400,
+		timeoverlay=false,
+		fullDel=false,
+		isSave=false,
+		icon=93,
+		dieRemove=false,
+	},
+	{
+		--//初级天神之力
+		id=123,
+		name=Lang.Activity.buff123,
+		type=20,
+		value=0.05,
+		group=130,
+		times=1,
+		interval=86400,
+		timeoverlay=false,
+		fullDel=false,
+		isSave=false,
+		icon=94,
+		dieRemove=false,
+	},
+	{
+		--//1级疾走如飞
+		id=124,
+		name=Lang.Activity.buff124,
+		type=49,
+		value=50,
+		group=118,
+		times=0,
+		interval=5,
+		timeoverlay=false,
+		effectType=6,
+		
+	},
+	{
+		--//2级疾走如飞
+		id=125,
+		name=Lang.Activity.buff125,
+		type=49,
+		value=70,
+		group=118,
+		times=0,
+		interval=5,
+		timeoverlay=false,
+		effectType=6,
+		
+	},
+	{
+		--//3级疾走如飞
+		id=126,
+		name=Lang.Activity.buff126,
+		type=49,
+		value=90,
+		group=118,
+		times=0,
+		interval=5,
+		timeoverlay=false,
+		effectType=6,
+		
+	},
+	{
+		--//4级疾走如飞
+		id=127,
+		name=Lang.Activity.buff127,
+		type=49,
+		value=110,
+		group=118,
+		times=0,
+		interval=5,
+		timeoverlay=false,
+		effectType=6,
+		
+	},
+	{
+		--//高级HP药水
+		id=128,
+		name=Lang.Activity.buff128,
+		type=6,
+		value=0.35,
+		group=106,
+		times=1,
+		interval=300,
+		timeoverlay=true,
+		fullDel=false,
+		icon=63,
+		dieRemove=false,
+	},
+	{
+		--//高级MP药水
+		id=129,
+		name=Lang.Activity.buff129,
+		type=8,
+		value=0.35,
+		group=107,
+		times=1,
+		interval=300,
+		timeoverlay=true,
+		fullDel=false,
+		icon=64,
+		dieRemove=false,
+	},
+	{
+		--//高级物攻药水
+		id=130,
+		name=Lang.Activity.buff130,
+		type=12,
+		value=0.15,
+		group=108,
+		times=1,
+		interval=300,
+		timeoverlay=true,
+		fullDel=false,
+		icon=65,
+		dieRemove=false,
+	},
+	{
+		--//高级魔攻药水
+		id=131,
+		name=Lang.Activity.buff131,
+		type=16,
+		value=0.15,
+		group=109,
+		times=1,
+		interval=300,
+		timeoverlay=true,
+		fullDel=false,
+		icon=66,
+		dieRemove=false,
+	},
+	{
+		--//高级道攻药水
+		id=132,
+		name=Lang.Activity.buff132,
+		type=20,
+		value=0.15,
+		group=110,
+		times=1,
+		interval=300,
+		timeoverlay=true,
+		fullDel=false,
+		icon=67,
+		dieRemove=false,
+	},
+	{
+		--//双倍内功经验卷
+		id=133,
+		name=Lang.Activity.buff133,
+		type=64,
+		value=1,
+		group=101,
+		times=1,
+		interval=3600,
+		timeoverlay=true,
+		fullDel=false,
+		icon=57,
+		dieRemove=false,
+	},
+	{
+		--//双倍内功经验卷
+		id=134,
+		name=Lang.Activity.buff134,
+		type=64,
+		value=1,
+		group=101,
+		times=1,
+		interval=7200,
+		timeoverlay=true,
+		fullDel=false,
+		icon=57,
+		dieRemove=false,
+	},
+	{
+		--//双倍内功经验卷
+		id=135,
+		name=Lang.Activity.buff135,
+		type=64,
+		value=1,
+		group=101,
+		times=1,
+		interval=18000,
+		timeoverlay=true,
+		fullDel=false,
+		icon=57,
+		dieRemove=false,
+	},
+	{
+		--//双倍内功经验卷
+		id=136,
+		name=Lang.Activity.buff136,
+		type=64,
+		value=1,
+		group=101,
+		times=1,
+		interval=28800,
+		timeoverlay=true,
+		fullDel=false,
+		icon=57,
+		dieRemove=false,
+	},
+	{
+		--//三倍内功经验卷
+		id=137,
+		name=Lang.Activity.buff137,
+		type=64,
+		value=2,
+		group=101,
+		times=1,
+		interval=3600,
+		timeoverlay=true,
+		fullDel=false,
+		icon=58,
+		dieRemove=false,
+	},
+	{
+		--//三倍内功经验卷
+		id=138,
+		name=Lang.Activity.buff138,
+		type=64,
+		value=2,
+		group=101,
+		times=1,
+		interval=7200,
+		timeoverlay=true,
+		fullDel=false,
+		icon=58,
+		dieRemove=false,
+	},
+	{
+		--//三倍内功经验卷
+		id=139,
+		name=Lang.Activity.buff139,
+		type=64,
+		value=2,
+		group=101,
+		times=1,
+		interval=18000,
+		timeoverlay=true,
+		fullDel=false,
+		icon=58,
+		dieRemove=false,
+	},
+	{
+		--//三倍内功经验卷
+		id=140,
+		name=Lang.Activity.buff140,
+		type=64,
+		value=2,
+		group=101,
+		times=1,
+		interval=28800,
+		timeoverlay=true,
+		fullDel=false,
+		icon=58,
+		dieRemove=false,
+	},
+	{
+		--//四倍内功经验卷
+		id=141,
+		name=Lang.Activity.buff141,
+		type=64,
+		value=3,
+		group=101,
+		times=1,
+		interval=3600,
+		timeoverlay=true,
+		fullDel=false,
+		icon=58,
+		dieRemove=false,
+	},
+	{
+		--//四倍内功经验卷
+		id=142,
+		name=Lang.Activity.buff142,
+		type=64,
+		value=3,
+		group=101,
+		times=1,
+		interval=7200,
+		timeoverlay=true,
+		fullDel=false,
+		icon=58,
+		dieRemove=false,
+	},
+	{
+		--//四倍内功经验卷
+		id=143,
+		name=Lang.Activity.buff143,
+		type=64,
+		value=3,
+		group=101,
+		times=1,
+		interval=18000,
+		timeoverlay=true,
+		fullDel=false,
+		icon=58,
+		dieRemove=false,
+	},
+	{
+		--//四倍内功经验卷
+		id=144,
+		name=Lang.Activity.buff144,
+		type=64,
+		value=3,
+		group=101,
+		times=1,
+		interval=28800,
+		timeoverlay=true,
+		fullDel=false,
+		icon=58,
+		dieRemove=false,
+	},
+	{
+		--//五倍内功经验卷
+		id=145,
+		name=Lang.Activity.buff145,
+		type=64,
+		value=4,
+		group=101,
+		times=1,
+		interval=3600,
+		timeoverlay=true,
+		fullDel=false,
+		icon=58,
+		dieRemove=false,
+	},
+	{
+		--//五倍内功经验卷
+		id=146,
+		name=Lang.Activity.buff146,
+		type=64,
+		value=4,
+		group=101,
+		times=1,
+		interval=7200,
+		timeoverlay=true,
+		fullDel=false,
+		icon=58,
+		dieRemove=false,
+	},
+	{
+		--//五倍内功经验卷
+		id=147,
+		name=Lang.Activity.buff147,
+		type=64,
+		value=4,
+		group=101,
+		times=1,
+		interval=18000,
+		timeoverlay=true,
+		fullDel=false,
+		icon=58,
+		dieRemove=false,
+	},
+	{
+		--//五倍内功经验卷
+		id=148,
+		name=Lang.Activity.buff148,
+		type=64,
+		value=4,
+		group=101,
+		times=1,
+		interval=28800,
+		timeoverlay=true,
+		fullDel=false,
+		icon=58,
+		dieRemove=false,
+	},
+	{
+		--//4级魔法盾
+		id=149,
+		name=Lang.Activity.buff149,
+		type=54,
+		value=0.2,
+		group=111,
+		times=1,
+		interval=120,
+		timeoverlay=false,
+		effectType=6,
+		effectId=21,
+	},
+	{
+		--//4级隐身术
+		id=150,
+		name=Lang.Activity.buff150,
+		type=63,
+		value=0,
+		group=112,
+		times=1,
+		interval=120,
+		timeoverlay=false,
+	},
+	{
+		--//4级治愈术
+		id=151,
+		name=Lang.Activity.buff151,
+		type=1,
+		value=227,
+		group=113,
+		times=15,
+		interval=1,
+		timeoverlay=false,
+	},
+
+
+	{
+		--//4级幽灵盾
+		id=152,
+		name=Lang.Activity.buff152,
+		type=23,
+		value=300,
+		group=116,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		display=4,
+		icon=85,
+		cover = true,
+	},
+	{
+		--//4级幽灵盾
+		id=153,
+		name=Lang.Activity.buff153,
+		type=27,
+		value=300,
+		group=116,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		display=4,
+		icon=85,
+		cover = true,
+	},
+
+{
+		--//4级施毒术
+		id=154,
+		name=Lang.Activity.buff154,
+		type=1,
+		value=-200,
+		group=114,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//4级施毒术
+		id=155,
+		name=Lang.Activity.buff155,
+		type=23,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//4级施毒术
+		id=156,
+		name=Lang.Activity.buff156,
+		type=27,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//4级野蛮冲撞
+		id=157,
+		name=Lang.Activity.buff157,
+		type=56,
+		value=1,
+		group=116,
+		times=0.3,
+		interval=0.3,
+		timeoverlay=false,
+		dieRemove=true,
+	},
+	{
+		--//4级群体施毒术(减血)
+		id=158,
+		name=Lang.Activity.buff158,
+		type=1,
+		value=-20,
+		group=117,
+		times=60,
+		interval=1,
+		timeoverlay=false,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//4级群体施毒术(降低物理防御)
+		id=159,
+		name=Lang.Activity.buff159,
+		type=23,
+		value=0,
+		group=117,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//4级群体施毒术(降低魔法防御)
+		id=160,
+		name=Lang.Activity.buff160,
+		type=27,
+		value=0,
+		group=117,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//4级疾走如飞
+		id=161,
+		name=Lang.Activity.buff161,
+		type=49,
+		value=110,
+		group=118,
+		times=0,
+		interval=5,
+		timeoverlay=false,
+		effectType=6,
+		
+	},
+	{
+		--//膜拜盟主
+		id=162,
+		name=Lang.Activity.buff162,
+		type=58,
+		value=38888,
+		group=119,
+		times=180,
+		interval=10,
+		timeoverlay=false,
+		effectType=6,
+		icon=58,
+	},
+
+	{
+		--//个人BUFF——物理攻击 1级
+		id=163,
+		name=Lang.Activity.buff163,
+		type=12,
+		value=0.2,
+		group=250,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//个人BUFF——魔法攻击  1级
+		id=164,
+		name=Lang.Activity.buff164,
+		type=16,
+		value=0.2,
+		group=250,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+
+	{
+		--//个人BUFF——道术攻击  1级
+		id=165,
+		name=Lang.Activity.buff165,
+		type=20,
+		value=0.2,
+		group=250,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+	{
+		--//个人BUFF——物理攻击 2级
+		id=166,
+		name=Lang.Activity.buff166,
+		type=12,
+		value=0.5,
+		group=250,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//个人BUFF——魔法攻击  2级
+		id=167,
+		name=Lang.Activity.buff167,
+		type=16,
+		value=0.5,
+		group=250,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+	{
+		--//个人BUFF——道术攻击  2级
+		id=168,
+		name=Lang.Activity.buff168,
+		type=20,
+		value=0.5,
+		group=250,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+
+	{
+		--//个人BUFF——物理攻击 3级
+		id=169,
+		name=Lang.Activity.buff169,
+		type=12,
+		value=1,
+		group=250,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//个人BUFF——魔法攻击  3级
+		id=170,
+		name=Lang.Activity.buff170,
+		type=16,
+		value=1,
+		group=250,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+	{
+		--//个人BUFF——道术攻击  3级
+		id=171,
+		name=Lang.Activity.buff171,
+		type=20,
+		value=1,
+		group=250,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+
+
+
+
+	{
+		--//个人BUFF——物理防御 1级
+		id=172,
+		name=Lang.Activity.buff172,
+		type=24,
+		value=0.03,
+		group=120,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=85,
+		isSave=false,
+	},
+
+
+	{
+		--//个人BUFF——魔法防御  1级
+		id=173,
+		name=Lang.Activity.buff173,
+		type=28,
+		value=0.03,
+		group=120,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=85,
+		isSave=false,
+	},
+
+
+	{
+		--//个人BUFF——最大生命值  1级
+		id=174,
+		name=Lang.Activity.buff174,
+		type=6,
+		value=0.03,
+		group=120,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=63,
+		isSave=false,
+	},
+
+
+	{
+		--//个人BUFF——物理防御 2级
+		id=175,
+		name=Lang.Activity.buff175,
+		type=24,
+		value=0.06,
+		group=120,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=85,
+		isSave=false,
+	},
+
+
+	{
+		--//个人BUFF——魔法防御  2级
+		id=176,
+		name=Lang.Activity.buff176,
+		type=28,
+		value=0.06,
+		group=120,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=85,
+		isSave=false,
+	},
+
+
+	{
+		--//个人BUFF——最大生命值  2级
+		id=177,
+		name=Lang.Activity.buff177,
+		type=6,
+		value=0.06,
+		group=120,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=63,
+		isSave=false,
+	},
+	
+	{
+		--//个人BUFF——物理防御 3级
+		id=178,
+		name=Lang.Activity.buff178,
+		type=24,
+		value=0.09,
+		group=120,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=85,
+		isSave=false,
+	},
+
+
+	{
+		--//个人BUFF——魔法防御  3级
+		id=179,
+		name=Lang.Activity.buff179,
+		type=28,
+		value=0.09,
+		group=250,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=85,
+		isSave=false,
+	},
+
+
+	{
+		--//个人BUFF——最大生命值  3级
+		id=180,
+		name=Lang.Activity.buff180,
+		type=6,
+		value=0.09,
+		group=250,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=63,
+		isSave=false,
+	},
+	
+	{
+		--//团队BUFF——物理攻击 1级
+		id=181,
+		name=Lang.Activity.buff181,
+		type=12,
+		value=0.2,
+		group=120,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=103,
+		isSave=false,
+	},
+
+
+	{
+		--//团队BUFF——魔法攻击  1级
+		id=182,
+		name=Lang.Activity.buff182,
+		type=16,
+		value=0.2,
+		group=120,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=104,
+		isSave=false,
+	},
+
+
+	{
+		--//团队BUFF——道术攻击  1级
+		id=183,
+		name=Lang.Activity.buff183,
+		type=20,
+		value=0.2,
+		group=120,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=105,
+		isSave=false,
+	},
+	{
+		--//团队BUFF——物理攻击 2级
+		id=184,
+		name=Lang.Activity.buff184,
+		type=12,
+		value=0.5,
+		group=120,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=103,
+		isSave=false,
+	},
+
+
+	{
+		--//团队BUFF——魔法攻击  2级
+		id=185,
+		name=Lang.Activity.buff185,
+		type=16,
+		value=0.5,
+		group=120,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=104,
+		isSave=false,
+	},
+
+	{
+		--//团队BUFF——道术攻击  2级
+		id=186,
+		name=Lang.Activity.buff186,
+		type=20,
+		value=0.5,
+		group=120,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=105,
+		isSave=false,
+	},
+
+	{
+		--//团队BUFF——物理攻击 3级
+		id=187,
+		name=Lang.Activity.buff187,
+		type=12,
+		value=1,
+		group=120,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=103,
+		isSave=false,
+	},
+
+
+	{
+		--//团队BUFF——魔法攻击  3级
+		id=188,
+		name=Lang.Activity.buff188,
+		type=16,
+		value=1,
+		group=120,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=104,
+		isSave=false,
+	},
+
+	{
+		--//团队BUFF——道术攻击  3级
+		id=189,
+		name=Lang.Activity.buff189,
+		type=20,
+		value=1,
+		group=120,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=105,
+		isSave=false,
+	},
+
+	{
+		--//4级群体施毒术(减少HP)
+		id=190,
+		name=Lang.Activity.buff190,
+		type=1,
+		value=-150,
+		group=114,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//4级群体施毒术(减少物防)
+		id=191,
+		name=Lang.Activity.buff191,
+		type=23,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//4级群体施毒术(减少魔防)
+		id=192,
+		name=Lang.Activity.buff192,
+		type=27,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+
+
+	{
+		--//5级群体施毒术(减少HP)
+		id=193,
+		name=Lang.Activity.buff193,
+		type=1,
+		value=-200,
+		group=114,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//5级群体施毒术(减少物防)
+		id=194,
+		name=Lang.Activity.buff194,
+		type=23,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//5级群体施毒术(减少魔防)
+		id=195,
+		name=Lang.Activity.buff195,
+		type=27,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//野蛮冲撞加速
+		id=196,
+		name=Lang.Activity.buff196,
+		type=49,
+		value=-80,
+		group=99,
+		times=1,
+		interval=4,
+		timeoverlay=false,
+		icon=81,
+		dieRemove=true,
+
+	},
+
+	{
+		--//10%几率怪物麻痹
+		id=197,
+		name=Lang.Activity.buff197,
+		type=56,
+		value=0,
+		group=93,
+		times=3,
+		interval=1,
+		timeoverlay=false,
+		icon=90,
+		dieRemove=true,
+	},
+
+	{
+		--//20%几率怪物麻痹
+		id=198,
+		name=Lang.Activity.buff198,
+		type=56,
+		value=0,
+		group=93,
+		times=1,
+		interval=1,
+		timeoverlay=false,
+		icon=90,
+		dieRemove=true,
+	},
+
+	{
+		--//无敌
+		id=199,
+		name=Lang.Activity.buff199,
+		type=60,
+		value=0,
+		group=93,
+		times=10,
+		interval=1,
+		timeoverlay=false,
+		icon=84,
+		dieRemove=true,
+	},
+
+	{
+		--//奔跑老哥加速BUFF
+		id=200,
+		name=Lang.Activity.buff200,
+		type=49,
+		value=-90,
+		group=99,
+		times=10,
+		interval=1,
+		timeoverlay=false,
+		icon=81,
+		dieRemove=true,
+
+	},
+
+	{
+		--//奔跑老哥减速BUFF
+		id=201,
+		name=Lang.Activity.buff201,
+		type=49,
+		value=200,
+		group=98,
+		times=10,
+		interval=1,
+		timeoverlay=false,
+		icon=86,
+		dieRemove=true,
+
+	},
+	{
+		--//野蛮冲撞麻痹
+		id=202,
+		name=Lang.Activity.buff202,
+		type=56,
+		value=2,
+		group=98,
+		times=1,
+		interval=2,
+		timeoverlay=false,
+		icon=81,
+		dieRemove=true,
+	},
+
+	{
+		--//黄铜增加血值BUFF
+		id=203,
+		name=Lang.Activity.buff203,
+		type=5,
+		value=500,
+		group=150,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=107,
+	},
+	{
+		--//黄铜增加蓝值BUFF
+		id=204,
+		name=Lang.Activity.buff204,
+		type=7,
+		value=500,
+		group=150,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=107,
+	},
+	{
+		--//黄铜增加攻击
+		id=205,
+		name=Lang.Activity.buff205,
+		type=11,
+		value=150,
+		group=150,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=107,
+	},
+
+	{
+		--//白银增加血值BUFF
+		id=206,
+		name=Lang.Activity.buff206,
+		type=5,
+		value=1500,
+		group=151,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=108,
+	},
+	{
+		--//白银增加蓝值BUFF
+		id=207,
+		name=Lang.Activity.buff207,
+		type=7,
+		value=1500,
+		group=151,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=108,
+	},
+	{
+		--//白银增加攻击
+		id=208,
+		name=Lang.Activity.buff208,
+		type=11,
+		value=350,
+		group=151,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=108,
+	},
+
+	{
+		--//黄金增加血值BUFF
+		id=209,
+		name=Lang.Activity.buff209,
+		type=5,
+		value=2000,
+		group=152,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=109,
+	},
+	{
+		--//黄金增加蓝值BUFF
+		id=210,
+		name=Lang.Activity.buff210,
+		type=7,
+		value=2000,
+		group=152,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=109,
+	},
+	{
+		--//黄金增加攻击
+		id=211,
+		name=Lang.Activity.buff211,
+		type=11,
+		value=450,
+		group=152,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=109,
+	},
+
+	{
+		--//特权经验
+		id=212,
+		name=Lang.Activity.buff212,
+		type=64,
+		value=0.2,
+		group=153,
+		times=-1,
+		interval=1,
+		timeoverlay=true,
+		fullDel=false,
+		icon=58,
+		dieRemove=false,
+	},
+
+	{
+		--//青铜增加魔法攻击
+		id=213,
+		name=Lang.Activity.buff213,
+		type=15,
+		value=150,
+		group=150,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=107,
+	},
+
+	{
+		--//青铜增加道术攻击
+		id=214,
+		name=Lang.Activity.buff214,
+		type=19,
+		value=150,
+		group=150,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=107,
+	},
+
+	{
+		--//白银增加魔法攻击
+		id=215,
+		name=Lang.Activity.buff215,
+		type=15,
+		value=350,
+		group=151,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=108,
+	},
+
+	{
+		--//白银增加道术攻击
+		id=216,
+		name=Lang.Activity.buff216,
+		type=19,
+		value=350,
+		group=151,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=108,
+	},
+
+	{
+		--//黄金增加魔法攻击
+		id=217,
+		name=Lang.Activity.buff217,
+		type=15,
+		value=450,
+		group=152,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=109,
+	},
+
+	{
+		--//黄金增加道术攻击
+		id=218,
+		name=Lang.Activity.buff218,
+		type=19,
+		value=450,
+		group=152,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=109,
+	},
+
+	{
+		--//九花玉露丸
+		id=219,
+		name=Lang.Activity.buff219,
+		type=148,
+		value=1,
+		group=153,
+		times=300,
+		interval=1,
+		timeoverlay=true,
+		icon=25,
+	},
+
+	{
+		--//九转熊蛇丸
+		id=220,
+		name=Lang.Activity.buff220,
+		type=148,
+		value=2,
+		group=153,
+		times=300,
+		interval=1,
+		timeoverlay=true,
+		icon=26,
+	},
+
+	{
+		--//白云熊胆丸
+		id=221,
+		name=Lang.Activity.buff221,
+		type=148,
+		value=5,
+		group=153,
+		times=300,
+		interval=1,
+		timeoverlay=true,
+		icon=27,
+	},
+
+	{
+		--//勇闯天关——物理攻击 1级
+		id=222,
+		name=Lang.Activity.buff222,
+		type=12,
+		value=0.05,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——魔法攻击  1级
+		id=223,
+		name=Lang.Activity.buff223,
+		type=16,
+		value=0.05,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——道术攻击  1级
+		id=224,
+		name=Lang.Activity.buff224,
+		type=20,
+		value=0.05,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——物理攻击 2级
+		id=225,
+		name=Lang.Activity.buff225,
+		type=12,
+		value=0.1,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——魔法攻击  2级
+		id=226,
+		name=Lang.Activity.buff226,
+		type=16,
+		value=0.1,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——道术攻击  2级
+		id=227,
+		name=Lang.Activity.buff227,
+		type=20,
+		value=0.1,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+
+	{
+		--//勇闯天关——物理攻击 3级
+		id=228,
+		name=Lang.Activity.buff228,
+		type=12,
+		value=0.15,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——魔法攻击  3级
+		id=229,
+		name=Lang.Activity.buff229,
+		type=16,
+		value=0.15,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——道术攻击  3级
+		id=230,
+		name=Lang.Activity.buff230,
+		type=20,
+		value=0.15,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+
+	{
+		--//勇闯天关——物理攻击 4级
+		id=231,
+		name=Lang.Activity.buff231,
+		type=12,
+		value=0.2,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——魔法攻击  4级
+		id=232,
+		name=Lang.Activity.buff232,
+		type=16,
+		value=0.2,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——道术攻击  4级
+		id=233,
+		name=Lang.Activity.buff233,
+		type=20,
+		value=0.2,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+
+	{
+		--//勇闯天关——物理攻击 5级
+		id=234,
+		name=Lang.Activity.buff234,
+		type=12,
+		value=0.25,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——魔法攻击  5级
+		id=235,
+		name=Lang.Activity.buff235,
+		type=16,
+		value=0.25,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——道术攻击  5级
+		id=236,
+		name=Lang.Activity.buff236,
+		type=20,
+		value=0.25,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+
+	{
+		--//勇闯天关——物理攻击 6级
+		id=237,
+		name=Lang.Activity.buff237,
+		type=12,
+		value=0.3,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——魔法攻击  6级
+		id=238,
+		name=Lang.Activity.buff238,
+		type=16,
+		value=0.3,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——道术攻击  6级
+		id=239,
+		name=Lang.Activity.buff239,
+		type=20,
+		value=0.3,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+	
+	{
+		--//勇闯天关——物理攻击 7级
+		id=240,
+		name=Lang.Activity.buff240,
+		type=12,
+		value=0.35,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——魔法攻击  7级
+		id=241,
+		name=Lang.Activity.buff241,
+		type=16,
+		value=0.35,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——道术攻击  7级
+		id=242,
+		name=Lang.Activity.buff242,
+		type=20,
+		value=0.35,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+
+	{
+		--//勇闯天关——物理攻击 8级
+		id=243,
+		name=Lang.Activity.buff243,
+		type=12,
+		value=0.4,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——魔法攻击  8级
+		id=244,
+		name=Lang.Activity.buff244,
+		type=16,
+		value=0.4,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——道术攻击  8级
+		id=245,
+		name=Lang.Activity.buff245,
+		type=20,
+		value=0.4,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+
+	{
+		--//勇闯天关——物理攻击 9级
+		id=246,
+		name=Lang.Activity.buff246,
+		type=12,
+		value=0.45,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——魔法攻击  9级
+		id=247,
+		name=Lang.Activity.buff247,
+		type=16,
+		value=0.45,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——道术攻击  9级
+		id=248,
+		name=Lang.Activity.buff248,
+		type=20,
+		value=0.45,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+
+	{
+		--//勇闯天关——物理攻击 10级
+		id=249,
+		name=Lang.Activity.buff249,
+		type=12,
+		value=0.5,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——魔法攻击  10级
+		id=250,
+		name=Lang.Activity.buff250,
+		type=16,
+		value=0.5,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——道术攻击  10级
+		id=251,
+		name=Lang.Activity.buff251,
+		type=20,
+		value=0.5,
+		group=210,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——物理攻击 1级
+		id=252,
+		name=Lang.Activity.buff252,
+		type=12,
+		value=0.05,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——魔法攻击  1级
+		id=253,
+		name=Lang.Activity.buff253,
+		type=16,
+		value=0.05,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——道术攻击  1级
+		id=254,
+		name=Lang.Activity.buff254,
+		type=20,
+		value=0.05,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——物理攻击 2级
+		id=255,
+		name=Lang.Activity.buff255,
+		type=12,
+		value=0.1,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——魔法攻击  2级
+		id=256,
+		name=Lang.Activity.buff256,
+		type=16,
+		value=0.1,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——道术攻击  2级
+		id=257,
+		name=Lang.Activity.buff257,
+		type=20,
+		value=0.1,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+
+	{
+		--//勇闯天关——物理攻击 3级
+		id=258,
+		name=Lang.Activity.buff258,
+		type=12,
+		value=0.15,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——魔法攻击  3级
+		id=259,
+		name=Lang.Activity.buff259,
+		type=16,
+		value=0.15,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——道术攻击  3级
+		id=260,
+		name=Lang.Activity.buff260,
+		type=20,
+		value=0.15,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+
+	{
+		--//勇闯天关——物理攻击 4级
+		id=261,
+		name=Lang.Activity.buff261,
+		type=12,
+		value=0.2,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——魔法攻击  4级
+		id=262,
+		name=Lang.Activity.buff262,
+		type=16,
+		value=0.2,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——道术攻击  4级
+		id=263,
+		name=Lang.Activity.buff263,
+		type=20,
+		value=0.2,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+
+	{
+		--//勇闯天关——物理攻击 5级
+		id=264,
+		name=Lang.Activity.buff264,
+		type=12,
+		value=0.25,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——魔法攻击  5级
+		id=265,
+		name=Lang.Activity.buff265,
+		type=16,
+		value=0.25,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——道术攻击  5级
+		id=266,
+		name=Lang.Activity.buff266,
+		type=20,
+		value=0.25,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+
+	{
+		--//勇闯天关——物理攻击 6级
+		id=267,
+		name=Lang.Activity.buff267,
+		type=12,
+		value=0.3,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——魔法攻击  6级
+		id=268,
+		name=Lang.Activity.buff268,
+		type=16,
+		value=0.3,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——道术攻击  6级
+		id=269,
+		name=Lang.Activity.buff269,
+		type=20,
+		value=0.3,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+	
+	{
+		--//勇闯天关——物理攻击 7级
+		id=270,
+		name=Lang.Activity.buff270,
+		type=12,
+		value=0.35,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——魔法攻击  7级
+		id=271,
+		name=Lang.Activity.buff271,
+		type=16,
+		value=0.35,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——道术攻击  7级
+		id=272,
+		name=Lang.Activity.buff272,
+		type=20,
+		value=0.35,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+
+	{
+		--//勇闯天关——物理攻击 8级
+		id=273,
+		name=Lang.Activity.buff273,
+		type=12,
+		value=0.4,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——魔法攻击  8级
+		id=274,
+		name=Lang.Activity.buff274,
+		type=16,
+		value=0.4,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——道术攻击  8级
+		id=275,
+		name=Lang.Activity.buff275,
+		type=20,
+		value=0.4,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+
+	{
+		--//勇闯天关——物理攻击 9级
+		id=276,
+		name=Lang.Activity.buff276,
+		type=12,
+		value=0.45,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——魔法攻击  9级
+		id=277,
+		name=Lang.Activity.buff277,
+		type=16,
+		value=0.45,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——道术攻击  9级
+		id=278,
+		name=Lang.Activity.buff278,
+		type=20,
+		value=0.45,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+
+	{
+		--//勇闯天关——物理攻击 10级
+		id=279,
+		name=Lang.Activity.buff279,
+		type=12,
+		value=0.5,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——魔法攻击  10级
+		id=280,
+		name=Lang.Activity.buff280,
+		type=16,
+		value=0.5,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=101,
+		isSave=false,
+	},
+
+
+	{
+		--//勇闯天关——道术攻击  10级
+		id=281,
+		name=Lang.Activity.buff281,
+		type=20,
+		value=0.5,
+		group=211,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		icon=102,
+		isSave=false,
+	},
+--212是屠魔印记buff组
+
+
+	{
+		--//独孤求败
+		id=282,
+		name=Lang.Activity.buff282,
+		type=0,
+		value=15,
+		group=213,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=112,
+		isSave=false,
+	},
+
+	{
+		--//傲视天下
+		id=283,
+		name=Lang.Activity.buff283,
+		type=0,
+		value=12,
+		group=213,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=111,
+		isSave=false,
+	},
+
+	{
+		--//笑看风云
+		id=284,
+		name=Lang.Activity.buff284,
+		type=0,
+		value=10,
+		group=213,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=110,
+		isSave=false,
+	},
+
+	{
+		--//威慑
+		id=285,
+		name=Lang.Activity.buff285,
+		type=0,
+		value=7,
+		group=213,
+		times=-1,
+		interval=1,
+		timeoverlay=false,
+		icon=106,
+		isSave=false,
+	},
+
+		{
+		--//4级魔法盾
+		id=286,
+		name=Lang.Activity.buff286,
+		type=54,
+		value=0.41,
+		group=112,
+		times=1,
+		interval=20,
+		timeoverlay=false,
+		effectType=6,
+		effectId=20,
+		icon=82,
+	},
+
+		{
+		--//5级魔法盾
+		id=287,
+		name=Lang.Activity.buff287,
+		type=54,
+		value=0.42,
+		group=112,
+		times=1,
+		interval=20,
+		timeoverlay=false,
+		effectType=6,
+		effectId=20,
+		icon=82,
+	},
+
+		{
+		--//6级魔法盾
+		id=288,
+		name=Lang.Activity.buff288,
+		type=54,
+		value=0.43,
+		group=112,
+		times=1,
+		interval=20,
+		timeoverlay=false,
+		effectType=6,
+		effectId=20,
+		icon=82,
+	},
+
+		{
+		--//7级魔法盾
+		id=289,
+		name=Lang.Activity.buff289,
+		type=54,
+		value=0.44,
+		group=112,
+		times=1,
+		interval=20,
+		timeoverlay=false,
+		effectType=6,
+		effectId=20,
+		icon=82,
+	},
+
+		{
+		--//8级魔法盾
+		id=290,
+		name=Lang.Activity.buff290,
+		type=54,
+		value=0.45,
+		group=112,
+		times=1,
+		interval=20,
+		timeoverlay=false,
+		effectType=6,
+		effectId=20,
+		icon=82,
+	},
+
+		{
+		--//9级魔法盾
+		id=291,
+		name=Lang.Activity.buff291,
+		type=54,
+		value=0.46,
+		group=112,
+		times=1,
+		interval=20,
+		timeoverlay=false,
+		effectType=6,
+		effectId=20,
+		icon=82,
+	},
+
+		{
+		--//10级魔法盾
+		id=292,
+		name=Lang.Activity.buff292,
+		type=54,
+		value=0.48,
+		group=112,
+		times=1,
+		interval=20,
+		timeoverlay=false,
+		effectType=6,
+		effectId=20,
+		icon=82,
+	},
+
+		{
+		--//4级治愈术
+		id=293,
+		name=Lang.Activity.buff293,
+		type=1,
+		value=600,
+		group=113,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=89,
+	},
+
+		{
+		--//5级治愈术
+		id=294,
+		name=Lang.Activity.buff294,
+		type=1,
+		value=800,
+		group=113,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=89,
+	},
+
+		{
+		--//6级治愈术
+		id=295,
+		name=Lang.Activity.buff295,
+		type=1,
+		value=1000,
+		group=113,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=89,
+	},
+
+		{
+		--//7级治愈术
+		id=296,
+		name=Lang.Activity.buff296,
+		type=1,
+		value=1200,
+		group=113,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=89,
+	},
+
+		{
+		--//8级治愈术
+		id=297,
+		name=Lang.Activity.buff297,
+		type=1,
+		value=1400,
+		group=113,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=89,
+	},
+
+		{
+		--//9级治愈术
+		id=298,
+		name=Lang.Activity.buff298,
+		type=1,
+		value=1600,
+		group=113,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=89,
+	},
+
+		{
+		--//10级治愈术
+		id=299,
+		name=Lang.Activity.buff299,
+		type=1,
+		value=1800,
+		group=113,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=89,
+	},
+
+
+{
+		--//5级施毒术
+		id=300,
+		name=Lang.Activity.buff300,
+		type=1,
+		value=-250,
+		group=114,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//5级施毒术
+		id=301,
+		name=Lang.Activity.buff301,
+		type=23,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//5级施毒术
+		id=302,
+		name=Lang.Activity.buff302,
+		type=27,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+
+
+{
+		--//6级施毒术
+		id=303,
+		name=Lang.Activity.buff303,
+		type=1,
+		value=-300,
+		group=114,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//6级施毒术
+		id=304,
+		name=Lang.Activity.buff304,
+		type=23,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//6级施毒术
+		id=305,
+		name=Lang.Activity.buff305,
+		type=27,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+
+{
+		--//7级施毒术
+		id=306,
+		name=Lang.Activity.buff306,
+		type=1,
+		value=-350,
+		group=114,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//7级施毒术
+		id=307,
+		name=Lang.Activity.buff307,
+		type=23,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//7级施毒术
+		id=308,
+		name=Lang.Activity.buff308,
+		type=27,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+
+
+{
+		--//8级施毒术
+		id=309,
+		name=Lang.Activity.buff309,
+		type=1,
+		value=-400,
+		group=114,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//8级施毒术
+		id=310,
+		name=Lang.Activity.buff310,
+		type=23,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//8级施毒术
+		id=311,
+		name=Lang.Activity.buff311,
+		type=27,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+
+{
+		--//9级施毒术
+		id=312,
+		name=Lang.Activity.buff312,
+		type=1,
+		value=-450,
+		group=114,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//9级施毒术
+		id=313,
+		name=Lang.Activity.buff313,
+		type=23,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//9级施毒术
+		id=314,
+		name=Lang.Activity.buff314,
+		type=27,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+
+
+{
+		--//10级施毒术
+		id=315,
+		name=Lang.Activity.buff315,
+		type=1,
+		value=-500,
+		group=114,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//10级施毒术
+		id=316,
+		name=Lang.Activity.buff316,
+		type=23,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//10级施毒术
+		id=317,
+		name=Lang.Activity.buff317,
+		type=27,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=83,
+		dieRemove=true,
+		cover = true,
+	},
+
+
+	{	
+		--//5级幽灵盾
+		id=318,
+		name=Lang.Activity.buff318,
+		type=23,
+		value=500,
+		group=116,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		display=4,
+		icon=85,
+		cover = true,
+	},
+	{
+		--//5级幽灵盾
+		id=319,
+		name=Lang.Activity.buff319,
+		type=27,
+		value=500,
+		group=116,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		display=4,
+		icon=85,
+		cover = true,
+	},
+
+	{	
+		--//6级幽灵盾
+		id=320,
+		name=Lang.Activity.buff320,
+		type=23,
+		value=700,
+		group=116,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		display=4,
+		icon=85,
+		cover = true,
+	},
+	{
+		--//6级幽灵盾
+		id=321,
+		name=Lang.Activity.buff321,
+		type=27,
+		value=700,
+		group=116,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		display=4,
+		icon=85,
+		cover = true,
+	},
+
+	{	
+		--//7级幽灵盾
+		id=322,
+		name=Lang.Activity.buff322,
+		type=23,
+		value=900,
+		group=116,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		display=4,
+		icon=85,
+		cover = true,
+	},
+	{
+		--//7级幽灵盾
+		id=323,
+		name=Lang.Activity.buff323,
+		type=27,
+		value=900,
+		group=116,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		display=4,
+		icon=85,
+		cover = true,
+	},
+
+	{	
+		--//8级幽灵盾
+		id=324,
+		name=Lang.Activity.buff324,
+		type=23,
+		value=1100,
+		group=116,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		display=4,
+		icon=85,
+		cover = true,
+	},
+	{
+		--//8级幽灵盾
+		id=325,
+		name=Lang.Activity.buff325,
+		type=27,
+		value=1100,
+		group=116,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		display=4,
+		icon=85,
+		cover = true,
+	},
+
+	{	
+		--//9级幽灵盾
+		id=326,
+		name=Lang.Activity.buff326,
+		type=23,
+		value=1300,
+		group=116,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		display=4,
+		icon=85,
+		cover = true,
+	},
+	{
+		--//9级幽灵盾
+		id=327,
+		name=Lang.Activity.buff327,
+		type=27,
+		value=1300,
+		group=116,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		display=4,
+		icon=85,
+		cover = true,
+	},
+
+	{	
+		--//10级幽灵盾
+		id=328,
+		name=Lang.Activity.buff328,
+		type=23,
+		value=1500,
+		group=116,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		display=4,
+		icon=85,
+		cover = true,
+	},
+	{
+		--//10级幽灵盾
+		id=329,
+		name=Lang.Activity.buff329,
+		type=27,
+		value=1500,
+		group=116,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		display=4,
+		icon=85,
+		cover = true,
+	},
+
+
+{
+		--//6级群体施毒术(减少HP)
+		id=330,
+		name=Lang.Activity.buff330,
+		type=1,
+		value=-250,
+		group=114,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//6级群体施毒术(减少物防)
+		id=331,
+		name=Lang.Activity.buff331,
+		type=23,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//6级群体施毒术(减少魔防)
+		id=332,
+		name=Lang.Activity.buff332,
+		type=27,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+
+
+{
+		--//7级群体施毒术(减少HP)
+		id=333,
+		name=Lang.Activity.buff333,
+		type=1,
+		value=-300,
+		group=114,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//7级群体施毒术(减少物防)
+		id=334,
+		name=Lang.Activity.buff334,
+		type=23,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//7级群体施毒术(减少魔防)
+		id=335,
+		name=Lang.Activity.buff335,
+		type=27,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+
+{
+		--//8级群体施毒术(减少HP)
+		id=336,
+		name=Lang.Activity.buff336,
+		type=1,
+		value=-350,
+		group=114,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//8级群体施毒术(减少物防)
+		id=337,
+		name=Lang.Activity.buff337,
+		type=23,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//8级群体施毒术(减少魔防)
+		id=338,
+		name=Lang.Activity.buff338,
+		type=27,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+
+{
+		--//9级群体施毒术(减少HP)
+		id=339,
+		name=Lang.Activity.buff339,
+		type=1,
+		value=-400,
+		group=114,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//9级群体施毒术(减少物防)
+		id=340,
+		name=Lang.Activity.buff340,
+		type=23,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//9级群体施毒术(减少魔防)
+		id=341,
+		name=Lang.Activity.buff341,
+		type=27,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+
+{
+		--//10级群体施毒术(减少HP)
+		id=342,
+		name=Lang.Activity.buff342,
+		type=1,
+		value=-450,
+		group=114,
+		times=180,
+		interval=1,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//10级群体施毒术(减少物防)
+		id=343,
+		name=Lang.Activity.buff343,
+		type=23,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+	{
+		--//10级群体施毒术(减少魔防)
+		id=344,
+		name=Lang.Activity.buff344,
+		type=27,
+		value=0,
+		group=114,
+		times=1,
+		interval=180,
+		timeoverlay=false,
+		color=16711680,
+		icon=86,
+		dieRemove=true,
+		cover = true,
+	},
+
+		{
+		--//4级隐身术
+		id=345,
+		name=Lang.Activity.buff345,
+		type=63,
+		value=0,
+		group=115,
+		times=1,
+		interval=250,
+		timeoverlay=false,
+		icon=84,
+		cover = true,
+	},
+
+		{
+		--//5级隐身术
+		id=346,
+		name=Lang.Activity.buff346,
+		type=63,
+		value=0,
+		group=115,
+		times=1,
+		interval=300,
+		timeoverlay=false,
+		icon=84,
+		cover = true,
+	},
+
+		{
+		--//6级隐身术
+		id=347,
+		name=Lang.Activity.buff347,
+		type=63,
+		value=0,
+		group=115,
+		times=1,
+		interval=350,
+		timeoverlay=false,
+		icon=84,
+		cover = true,
+	},
+
+		{
+		--//7级隐身术
+		id=348,
+		name=Lang.Activity.buff348,
+		type=63,
+		value=0,
+		group=115,
+		times=1,
+		interval=400,
+		timeoverlay=false,
+		icon=84,
+		cover = true,
+	},
+
+		{
+		--//8级隐身术
+		id=349,
+		name=Lang.Activity.buff349,
+		type=63,
+		value=0,
+		group=115,
+		times=1,
+		interval=450,
+		timeoverlay=false,
+		icon=84,
+		cover = true,
+	},
+
+		{
+		--//9级隐身术
+		id=350,
+		name=Lang.Activity.buff350,
+		type=63,
+		value=0,
+		group=115,
+		times=1,
+		interval=500,
+		timeoverlay=false,
+		icon=84,
+		cover = true,
+	},
+
+	{
+		--//10级隐身术
+		id=351,
+		name=Lang.Activity.buff351,
+		type=63,
+		value=0,
+		group=115,
+		times=1,
+		interval=600,
+		timeoverlay=false,
+		icon=84,
+		cover = true,
+	},
+
+{
+		--//内功丹小
+		id=352,
+		name=Lang.Activity.buff352,
+		type=168,
+		value=500,
+		group=116,
+		times=300,
+		interval=1,
+		timeoverlay=false,
+		icon=113,
+		cover = true,
+	},
+
+{
+		--//内功丹中
+		id=353,
+		name=Lang.Activity.buff353,
+		type=168,
+		value=1000,
+		group=116,
+		times=300,
+		interval=1,
+		timeoverlay=false,
+		icon=113,
+		cover = true,
+	},
+
+{
+		--//内功丹大
+		id=354,
+		name=Lang.Activity.buff354,
+		type=168,
+		value=2000,
+		group=116,
+		times=300,
+		interval=1,
+		timeoverlay=false,
+		icon=113,
+		cover = true,
+	},
+
+
+{
+		--//骷髅精灵幻形水晶——物理攻击
+		id=355,
+		name=Lang.Activity.buff355,
+		type=11,
+		value=168,
+		group=8,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=114,
+		delEvent=ture,
+	},
+
+
+	{
+		--//骷髅精灵幻形水晶——魔法攻击  
+		id=356,
+		name=Lang.Activity.buff356,
+		type=15,
+		value=168,
+		group=8,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=114,
+		delEvent=ture,
+	},
+
+	{
+		--//骷髅精灵幻形水晶——道术攻击  
+		id=357,
+		name=Lang.Activity.buff357,
+		type=19,
+		value=168,
+		group=8,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=114,
+		delEvent=ture,
+	},
+
+
+{
+		--//黄泉教主幻形水晶——物理攻击
+		id=358,
+		name=Lang.Activity.buff358,
+		type=11,
+		value=268,
+		group=9,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=115,
+		delEvent=ture,
+	},
+
+
+	{
+		--//黄泉教主幻形水晶——魔法攻击  
+		id=359,
+		name=Lang.Activity.buff359,
+		type=15,
+		value=268,
+		group=9,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=115,
+		delEvent=ture,
+	},
+
+	{
+		--//黄泉教主幻形水晶——道术攻击  
+		id=360,
+		name=Lang.Activity.buff360,
+		type=19,
+		value=268,
+		group=9,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=115,
+		delEvent=ture,
+	},
+
+
+{
+		--//杜美莎幻形水晶——物理攻击
+		id=361,
+		name=Lang.Activity.buff361,
+		type=11,
+		value=418,
+		group=10,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=116,
+		delEvent=ture,
+	},
+
+
+	{
+		--//杜美莎幻形水晶——魔法攻击  
+		id=362,
+		name=Lang.Activity.buff362,
+		type=15,
+		value=418,
+		group=10,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=116,
+		delEvent=ture,
+	},
+
+	{
+		--//杜美莎幻形水晶——道术攻击  
+		id=363,
+		name=Lang.Activity.buff363,
+		type=19,
+		value=418,
+		group=10,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=116,
+		delEvent=ture,
+	},
+
+
+{
+		--//帝王教主幻形水晶——物理攻击
+		id=364,
+		name=Lang.Activity.buff364,
+		type=11,
+		value=618,
+		group=11,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=117,
+		delEvent=ture,
+	},
+
+
+
+	{
+		--//帝王教主幻形水晶——魔法攻击  
+		id=365,
+		name=Lang.Activity.buff365,
+		type=15,
+		value=618,
+		group=11,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=117,
+		delEvent=ture,
+	},
+
+	{
+		--//帝王教主幻形水晶——道术攻击  
+		id=366,
+		name=Lang.Activity.buff366,
+		type=19,
+		value=618,
+		group=11,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=117,
+		delEvent=ture,
+	},
+
+
+{
+		--//双斧虎王幻形水晶——物理攻击
+		id=367,
+		name=Lang.Activity.buff367,
+		type=11,
+		value=868,
+		group=12,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=118,
+		delEvent=ture,
+	},
+
+
+	{
+		--//双斧虎王幻形水晶——魔法攻击  
+		id=368,
+		name=Lang.Activity.buff368,
+		type=15,
+		value=868,
+		group=12,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=118,
+		delEvent=ture,
+	},
+
+	{
+		--//双斧虎王幻形水晶——道术攻击  
+		id=369,
+		name=Lang.Activity.buff369,
+		type=19,
+		value=868,
+		group=12,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=118,
+		delEvent=ture,
+	},
+
+{
+		--//天蓬元帅幻形水晶——物理攻击
+		id=370,
+		name=Lang.Activity.buff370,
+		type=11,
+		value=1168,
+		group=13,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=119,
+		delEvent=ture,
+	},
+
+
+	{
+		--//天蓬元帅幻形水晶——魔法攻击  
+		id=371,
+		name=Lang.Activity.buff371,
+		type=15,
+		value=1168,
+		group=13,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=119,
+		delEvent=ture,
+	},
+
+	{
+		--//天蓬元帅幻形水晶——道术攻击  
+		id=372,
+		name=Lang.Activity.buff372,
+		type=19,
+		value=1168,
+		group=13,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=119,
+		delEvent=ture,
+	},
+
+	{
+		--//齐天大圣幻形水晶——物理攻击
+		id=373,
+		name=Lang.Activity.buff373,
+		type=11,
+		value=1518,
+		group=14,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=120,
+		delEvent=ture,
+	},
+
+
+	{
+		--//齐天大圣幻形水晶——魔法攻击  
+		id=374,
+		name=Lang.Activity.buff374,
+		type=15,
+		value=1518,
+		group=14,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=120,
+		delEvent=ture,
+	},
+
+	{
+		--//齐天大圣幻形水晶——道术攻击  
+		id=375,
+		name=Lang.Activity.buff375,
+		type=19,
+		value=1518,
+		group=14,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=120,
+		delEvent=ture,
+	},
+
+	{
+		--//骷髅精灵 生命值  
+		id=376,
+		name=Lang.Activity.buff376,
+		type=5,
+		value=2520,
+		group=8,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=114,
+		delEvent=ture,
+	},
+
+		{
+		--//骷髅精灵 抗爆率  
+		id=377,
+		name=Lang.Activity.buff377,
+		type=154,
+		value=500,
+		group=8,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=114,
+		delEvent=ture,
+	},
+
+
+	{
+		--//黄泉教主 生命值  
+		id=378,
+		name=Lang.Activity.buff378,
+		type=5,
+		value=4020,
+		group=9,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=115,
+		delEvent=ture,
+	},
+
+		{
+		--//黄泉教主 抗爆率  
+		id=379,
+		name=Lang.Activity.buff379,
+		type=154,
+		value=500,
+		group=9,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=115,
+		delEvent=ture,
+	},
+
+	{
+		--//杜美莎 生命值  
+		id=380,
+		name=Lang.Activity.buff380,
+		type=5,
+		value=6270,
+		group=10,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=116,
+		delEvent=ture,
+	},
+
+		{
+		--//杜美莎 抗爆率  
+		id=381,
+		name=Lang.Activity.buff381,
+		type=154,
+		value=500,
+		group=10,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=116,
+		delEvent=ture,
+	},
+
+
+	{
+		--//帝王教主 生命值  
+		id=382,
+		name=Lang.Activity.buff382,
+		type=5,
+		value=9270,
+		group=11,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=117,
+		delEvent=ture,
+	},
+
+		{
+		--//帝王教主 抗爆率  
+		id=383,
+		name=Lang.Activity.buff383,
+		type=154,
+		value=500,
+		group=11,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=117,
+		delEvent=ture,
+	},
+
+
+	{
+		--//双斧虎王 生命值  
+		id=384,
+		name=Lang.Activity.buff384,
+		type=5,
+		value=13020,
+		group=12,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=118,
+		delEvent=ture,
+	},
+
+		{
+		--//双斧虎王 抗爆率  
+		id=385,
+		name=Lang.Activity.buff386,
+		type=154,
+		value=500,
+		group=12,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=118,
+		delEvent=ture,
+	},
+
+	{
+		--//天蓬元帅 生命值  
+		id=386,
+		name=Lang.Activity.buff386,
+		type=5,
+		value=17520,
+		group=13,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=119,
+		delEvent=ture,
+	},
+
+		{
+		--//天蓬元帅 抗爆率  
+		id=387,
+		name=Lang.Activity.buff387,
+		type=154,
+		value=500,
+		group=13,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=119,
+		delEvent=ture,
+	},
+
+	{
+		--//齐天大圣 生命值  
+		id=388,
+		name=Lang.Activity.buff388,
+		type=5,
+		value=22770,
+		group=14,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=120,
+		delEvent=ture,
+	},
+
+	{
+		--//齐天大圣 抗爆率  
+		id=389,
+		name=Lang.Activity.buff389,
+		type=154,
+		value=500,
+		group=14,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=120,
+		delEvent=ture,
+	},
+
+
+	{
+		--//雪域巨熊幻形水晶  物理攻击
+		id=390,
+		name=Lang.Activity.buff390,
+		type=11,
+		value=998,
+		group=17,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=121,
+		delEvent=ture,
+	},
+
+	{
+		--//雪域巨熊幻形水晶  魔法攻击
+		id=391,
+		name=Lang.Activity.buff391,
+		type=15,
+		value=998,
+		group=17,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=121,
+		delEvent=ture,
+	},
+
+	{
+		--//雪域巨熊幻形水晶  道术攻击
+		id=392,
+		name=Lang.Activity.buff392,
+		type=19,
+		value=998,
+		group=17,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=121,
+		delEvent=ture,
+	},
+
+	{
+		--//雪域巨熊幻形水晶  对战士伤害增加
+		id=393,
+		name=Lang.Activity.buff393,
+		type=161,
+		value=1000,
+		group=17,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=121,
+		delEvent=ture,
+	},
+
+	{
+		--//雪域巨熊幻形水晶  对法师伤害增加
+		id=394,
+		name=Lang.Activity.buff394,
+		type=163,
+		value=1000,
+		group=17,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=121,
+		delEvent=ture,
+	},
+
+	{
+		--//雪域巨熊幻形水晶  对道士伤害增加
+		id=395,
+		name=Lang.Activity.buff395,
+		type=165,
+		value=1000,
+		group=17,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=121,
+		delEvent=ture,
+	},
+
+
+
+	{
+		--//烈焰双斧幻形水晶  物理攻击
+		id=396,
+		name=Lang.Activity.buff396,
+		type=11,
+		value=998,
+		group=16,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=122,
+		delEvent=ture,
+	},
+
+	{
+		--//烈焰双斧幻形水晶  魔法攻击
+		id=397,
+		name=Lang.Activity.buff397,
+		type=15,
+		value=998,
+		group=16,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=122,
+		delEvent=ture,
+	},
+
+	{
+		--//烈焰双斧幻形水晶  道术攻击
+		id=398,
+		name=Lang.Activity.buff398,
+		type=19,
+		value=998,
+		group=16,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=122,
+		delEvent=ture,
+	},
+
+	{
+		--//烈焰双斧幻形水晶  对战士伤害增加
+		id=399,
+		name=Lang.Activity.buff399,
+		type=161,
+		value=1000,
+		group=16,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=122,
+		delEvent=ture,
+	},
+
+	{
+		--//烈焰双斧幻形水晶  对法师伤害增加
+		id=400,
+		name=Lang.Activity.buff400,
+		type=163,
+		value=1000,
+		group=16,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=122,
+		delEvent=ture,
+	},
+
+	{
+		--//烈焰双斧幻形水晶  对道士伤害增加
+		id=401,
+		name=Lang.Activity.buff401,
+		type=165,
+		value=1000,
+		group=16,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=122,
+		delEvent=ture,
+	},
+
+	{
+		--//无敌
+		id=402,
+		name=Lang.Activity.buff402,
+		type=60,
+		value=0,
+		group=18,
+		times=2,
+		interval=1,
+		timeoverlay=false,
+		icon=84,
+		dieRemove=true,
+	},
+
+	{
+		--//雷神之火 --每秒扣除对方血%
+		id=403,
+		name=Lang.Activity.buff403,
+		type=183,
+		value=-1000,
+		group=19,
+		times=5,
+		interval=1,
+		timeoverlay=false,
+		icon=123,
+		dieRemove=true,
+	},
+
+	{
+		--//雷神之火 --每秒扣除对方血恢复
+		id=404,
+		name=Lang.Activity.buff404,
+		type=167,
+		value=-5000,
+		group=19,
+		times=5,
+		interval=1,
+		timeoverlay=false,
+		icon=123,
+		dieRemove=true,
+	},
+
+	{
+		--//雷神威慑 --降低对方总伤害
+		id=405,
+		name=Lang.Activity.buff405,
+		type=184,
+		value=4000,
+		group=20,
+		times=2.5,
+		interval=1,
+		timeoverlay=false,
+		icon=124,
+		dieRemove=true,
+	},
+
+	{
+		--//雷神威慑 --降低对方物理防御
+		id=406,
+		name=Lang.Activity.buff406,
+		type=24,
+		value=-0.3,
+		group=20,
+		times=2.5,
+		interval=1,
+		timeoverlay=false,
+		icon=124,
+		dieRemove=true,
+	},
+
+	{
+		--//雷神威慑 --降低对方魔法防御
+		id=407,
+		name=Lang.Activity.buff407,
+		type=28,
+		value=-0.3,
+		group=20,
+		times=2.5,
+		interval=1,
+		timeoverlay=false,
+		icon=124,
+		dieRemove=true,
+	},
+
+
+
+	{
+		--//龙王幻形水晶  物理攻击
+		id=408,
+		name=Lang.Activity.buff408,
+		type=11,
+		value=1888,
+		group=21,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=125,
+		delEvent=ture,
+	},
+
+	{
+		--//龙王幻形水晶  魔法攻击
+		id=409,
+		name=Lang.Activity.buff409,
+		type=15,
+		value=1888,
+		group=21,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=125,
+		delEvent=ture,
+	},
+
+	{
+		--//龙王幻形水晶  道术攻击
+		id=410,
+		name=Lang.Activity.buff410,
+		type=19,
+		value=1888,
+		group=21,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=125,
+		delEvent=ture,
+	},
+
+	{
+		--//龙王幻形水晶  受战士伤害减少
+		id=411,
+		name=Lang.Activity.buff411,
+		type=119,
+		value=1200,
+		group=21,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=125,
+		delEvent=ture,
+	},
+
+	{
+		--//龙王幻形水晶  受法师伤害减少
+		id=412,
+		name=Lang.Activity.buff412,
+		type=121,
+		value=1200,
+		group=21,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=125,
+		delEvent=ture,
+	},
+
+	{
+		--//龙王幻形水晶  受道士伤害减少
+		id=413,
+		name=Lang.Activity.buff413,
+		type=123,
+		value=1200,
+		group=21,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=125,
+		delEvent=ture,
+	},
+
+
+
+
+	{
+		--//黑龙幻形水晶  物理攻击
+		id=414,
+		name=Lang.Activity.buff414,
+		type=11,
+		value=1688,
+		group=22,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=126,
+		delEvent=ture,
+	},
+
+	{
+		--//黑龙幻形水晶  魔法攻击
+		id=415,
+		name=Lang.Activity.buff415,
+		type=15,
+		value=1688,
+		group=22,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=126,
+		delEvent=ture,
+	},
+
+	{
+		--//黑龙幻形水晶  道术攻击
+		id=416,
+		name=Lang.Activity.buff416,
+		type=19,
+		value=1688,
+		group=22,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=126,
+		delEvent=ture,
+	},
+
+	{
+		--//黑龙幻形水晶  受战士伤害减少
+		id=417,
+		name=Lang.Activity.buff417,
+		type=119,
+		value=1000,
+		group=22,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=126,
+		delEvent=ture,
+	},
+
+	{
+		--//黑龙幻形水晶  受法师伤害减少
+		id=418,
+		name=Lang.Activity.buff418,
+		type=121,
+		value=1000,
+		group=22,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=126,
+		delEvent=ture,
+	},
+
+	{
+		--//黑龙幻形水晶  受道士伤害减少
+		id=419,
+		name=Lang.Activity.buff419,
+		type=123,
+		value=1000,
+		group=22,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=126,
+		delEvent=ture,
+	},
+
+
+
+	{
+		--//冰龙幻形水晶  物理攻击
+		id=420,
+		name=Lang.Activity.buff420,
+		type=11,
+		value=1488,
+		group=23,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=127,
+		delEvent=ture,
+	},
+
+	{
+		--//冰龙幻形水晶  魔法攻击
+		id=421,
+		name=Lang.Activity.buff421,
+		type=15,
+		value=1488,
+		group=23,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=127,
+		delEvent=ture,
+	},
+
+	{
+		--//冰龙幻形水晶  道术攻击
+		id=422,
+		name=Lang.Activity.buff422,
+		type=19,
+		value=1488,
+		group=23,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=127,
+		delEvent=ture,
+	},
+
+	{
+		--//冰龙幻形水晶  受战士伤害减少
+		id=423,
+		name=Lang.Activity.buff423,
+		type=119,
+		value=800,
+		group=23,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=127,
+		delEvent=ture,
+	},
+
+	{
+		--//冰龙幻形水晶  受法师伤害减少
+		id=424,
+		name=Lang.Activity.buff424,
+		type=121,
+		value=800,
+		group=23,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=127,
+		delEvent=ture,
+	},
+
+	{
+		--//冰龙幻形水晶  受道士伤害减少
+		id=425,
+		name=Lang.Activity.buff425,
+		type=123,
+		value=800,
+		group=23,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=127,
+		delEvent=ture,
+	},
+
+
+
+
+	{
+		--//火龙幻形水晶  物理攻击
+		id=426,
+		name=Lang.Activity.buff426,
+		type=11,
+		value=1288,
+		group=24,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=128,
+		delEvent=ture,
+	},
+
+	{
+		--//火龙幻形水晶  魔法攻击
+		id=427,
+		name=Lang.Activity.buff427,
+		type=15,
+		value=1288,
+		group=24,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=128,
+		delEvent=ture,
+	},
+
+	{
+		--//火龙幻形水晶  道术攻击
+		id=428,
+		name=Lang.Activity.buff428,
+		type=19,
+		value=1288,
+		group=24,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=128,
+		delEvent=ture,
+	},
+
+	{
+		--//火龙幻形水晶  受战士伤害减少
+		id=429,
+		name=Lang.Activity.buff429,
+		type=119,
+		value=600,
+		group=24,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=128,
+		delEvent=ture,
+	},
+
+	{
+		--//火龙幻形水晶  受法师伤害减少
+		id=430,
+		name=Lang.Activity.buff430,
+		type=121,
+		value=600,
+		group=24,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=128,
+		delEvent=ture,
+	},
+
+	{
+		--//火龙幻形水晶  受道士伤害减少
+		id=431,
+		name=Lang.Activity.buff431,
+		type=123,
+		value=600,
+		group=24,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=128,
+		delEvent=ture,
+	},
+
+
+
+
+{
+		--//龙骑士幻形水晶  物理攻击
+		id=432,
+		name=Lang.Activity.buff432,
+		type=11,
+		value=1088,
+		group=25,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=129,
+		delEvent=ture,
+	},
+
+	{
+		--//龙骑士幻形水晶  魔法攻击
+		id=433,
+		name=Lang.Activity.buff433,
+		type=15,
+		value=1088,
+		group=25,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=129,
+		delEvent=ture,
+	},
+
+	{
+		--//龙骑士幻形水晶  道术攻击
+		id=434,
+		name=Lang.Activity.buff434,
+		type=19,
+		value=1088,
+		group=25,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=129,
+		delEvent=ture,
+	},
+
+	{
+		--//龙骑士幻形水晶  受战士伤害减少
+		id=435,
+		name=Lang.Activity.buff435,
+		type=119,
+		value=500,
+		group=25,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=129,
+		delEvent=ture,
+	},
+
+	{
+		--//龙骑士幻形水晶  受法师伤害减少
+		id=436,
+		name=Lang.Activity.buff436,
+		type=121,
+		value=500,
+		group=25,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=129,
+		delEvent=ture,
+	},
+
+	{
+		--//龙骑士幻形水晶  受道士伤害减少
+		id=437,
+		name=Lang.Activity.buff437,
+		type=123,
+		value=500,
+		group=25,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=129,
+		delEvent=ture,
+	},
+
+
+	{
+		--//逍遥幻形水晶  物理攻击
+		id=438,
+		name=Lang.Activity.buff438,
+		type=11,
+		value=888,
+		group=26,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=130,
+		delEvent=ture,
+	},
+
+	{
+		--//逍遥幻形水晶  魔法攻击
+		id=439,
+		name=Lang.Activity.buff439,
+		type=15,
+		value=888,
+		group=26,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=130,
+		delEvent=ture,
+	},
+
+	{
+		--//逍遥幻形水晶  道术攻击
+		id=440,
+		name=Lang.Activity.buff440,
+		type=19,
+		value=888,
+		group=26,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=130,
+		delEvent=ture,
+	},
+
+	{
+		--//逍遥幻形水晶  受战士伤害减少
+		id=441,
+		name=Lang.Activity.buff441,
+		type=119,
+		value=400,
+		group=26,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=130,
+		delEvent=ture,
+	},
+
+	{
+		--//逍遥幻形水晶  受法师伤害减少
+		id=442,
+		name=Lang.Activity.buff442,
+		type=121,
+		value=400,
+		group=26,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=130,
+		delEvent=ture,
+	},
+
+	{
+		--//逍遥幻形水晶  受道士伤害减少
+		id=443,
+		name=Lang.Activity.buff443,
+		type=123,
+		value=400,
+		group=26,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=130,
+		delEvent=ture,
+	},
+
+
+
+	{
+		--//通天幻形水晶  物理攻击
+		id=444,
+		name=Lang.Activity.buff444,
+		type=11,
+		value=688,
+		group=27,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=131,
+		delEvent=ture,
+	},
+
+	{
+		--//通天幻形水晶  魔法攻击
+		id=445,
+		name=Lang.Activity.buff445,
+		type=15,
+		value=688,
+		group=27,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=131,
+		delEvent=ture,
+	},
+
+	{
+		--//通天幻形水晶  道术攻击
+		id=446,
+		name=Lang.Activity.buff446,
+		type=19,
+		value=688,
+		group=27,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=131,
+		delEvent=ture,
+	},
+
+	{
+		--//通天幻形水晶  受战士伤害减少
+		id=447,
+		name=Lang.Activity.buff447,
+		type=119,
+		value=300,
+		group=27,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=131,
+		delEvent=ture,
+	},
+
+	{
+		--//通天幻形水晶  受法师伤害减少
+		id=448,
+		name=Lang.Activity.buff448,
+		type=121,
+		value=300,
+		group=27,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=131,
+		delEvent=ture,
+	},
+
+	{
+		--//通天幻形水晶  受道士伤害减少
+		id=449,
+		name=Lang.Activity.buff449,
+		type=123,
+		value=300,
+		group=27,
+		times=1,
+		interval=0,
+		timeoverlay=false,
+		icon=131,
+		delEvent=ture,
+	},
+
+	{
+		--//对自己减少所受伤害 1级
+		id=450,
+		name=Lang.Activity.buff450,
+		type=54,
+		value=0.3,
+		group=28,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=132,
+		cover = true,
+		delEvent=ture,
+	},
+
+	{
+		--//对周围友军减少所受伤害  1级
+		id=451,
+		name=Lang.Activity.buff451,
+		type=54,
+		value=0.1,
+		group=29,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=132,
+		cover = true,
+		delEvent=ture,
+	},
+
+
+
+	{
+		--//对自己减少所受伤害 2级
+		id=452,
+		name=Lang.Activity.buff452,
+		type=54,
+		value=0.35,
+		group=28,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=132,
+		cover = true,
+		delEvent=ture,
+	},
+
+	{
+		--//对周围友军减少所受伤害  2级
+		id=453,
+		name=Lang.Activity.buff453,
+		type=54,
+		value=0.12,
+		group=29,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=132,
+		cover = true,
+		delEvent=ture,
+	},
+
+
+	{
+		--//对自己减少所受伤害 3级
+		id=454,
+		name=Lang.Activity.buff454,
+		type=54,
+		value=0.4,
+		group=28,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=132,
+		cover = true,
+		delEvent=ture,
+	},
+
+	{
+		--//对周围友军减少所受伤害  3级
+		id=455,
+		name=Lang.Activity.buff455,
+		type=54,
+		value=0.14,
+		group=29,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=132,
+		cover = true,
+		delEvent=ture,
+	},
+
+
+	{
+		--//对自己减少所受伤害 4级
+		id=456,
+		name=Lang.Activity.buff456,
+		type=54,
+		value=0.45,
+		group=28,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=132,
+		cover = true,
+		delEvent=ture,
+	},
+
+	{
+		--//对周围友军减少所受伤害  4级
+		id=457,
+		name=Lang.Activity.buff457,
+		type=54,
+		value=0.16,
+		group=29,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=132,
+		cover = true,
+		delEvent=ture,
+	},
+
+	{
+		--//对自己减少所受伤害 5级
+		id=458,
+		name=Lang.Activity.buff458,
+		type=54,
+		value=0.5,
+		group=28,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=132,
+		cover = true,
+		delEvent=ture,
+	},
+
+	{
+		--//对周围友军减少所受伤害  5级
+		id=459,
+		name=Lang.Activity.buff459,
+		type=54,
+		value=0.18,
+		group=29,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=132,
+		cover = true,
+		delEvent=ture,
+	},
+
+	{
+		--//对自己减少所受伤害 6级
+		id=460,
+		name=Lang.Activity.buff460,
+		type=54,
+		value=0.55,
+		group=28,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=132,
+		cover = true,
+		delEvent=ture,
+	},
+
+	{
+		--//对周围友军减少所受伤害  6级
+		id=461,
+		name=Lang.Activity.buff461,
+		type=54,
+		value=0.2,
+		group=29,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=132,
+		cover = true,
+		delEvent=ture,
+	},
+
+	{
+		--//对自己减少所受伤害 7级
+		id=462,
+		name=Lang.Activity.buff462,
+		type=54,
+		value=0.6,
+		group=28,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=132,
+		cover = true,
+		delEvent=ture,
+	},
+
+	{
+		--//对周围友军减少所受伤害  7级
+		id=463,
+		name=Lang.Activity.buff463,
+		type=54,
+		value=0.22,
+		group=29,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=132,
+		cover = true,
+		delEvent=ture,
+	},
+
+	{
+		--//对自己减少所受伤害 8级
+		id=464,
+		name=Lang.Activity.buff464,
+		type=54,
+		value=0.65,
+		group=28,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=132,
+		cover = true,
+		delEvent=ture,
+	},
+
+	{
+		--//对周围友军减少所受伤害  8级
+		id=465,
+		name=Lang.Activity.buff465,
+		type=54,
+		value=0.24,
+		group=29,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=132,
+		cover = true,
+		delEvent=ture,
+	},
+
+
+	{
+		--//对自己减少所受伤害 9级
+		id=466,
+		name=Lang.Activity.buff466,
+		type=54,
+		value=0.7,
+		group=28,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=132,
+		cover = true,
+		delEvent=ture,
+	},
+
+	{
+		--//对周围友军减少所受伤害  9级
+		id=467,
+		name=Lang.Activity.buff467,
+		type=54,
+		value=0.26,
+		group=29,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=132,
+		cover = true,
+		delEvent=ture,
+	},
+
+
+	{
+		--//对自己减少所受伤害 10级
+		id=468,
+		name=Lang.Activity.buff468,
+		type=54,
+		value=0.75,
+		group=28,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=132,
+		cover = true,
+		delEvent=ture,
+	},
+
+	{
+		--//对周围友军减少所受伤害  10级
+		id=469,
+		name=Lang.Activity.buff469,
+		type=54,
+		value=0.28,
+		group=29,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		icon=132,
+		cover = true,
+		delEvent=ture,
+	},
+
+
+	{
+		--//戒灵护体
+		id=470,
+		name=Lang.Activity.buff470,
+		type=54,
+		value=0.3,
+		group=30,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		cover = true,
+		icon=133,
+		delEvent=ture,
+	},
+
+
+	{
+		--//戒灵破甲率
+		id=471,
+		name=Lang.Activity.buff471,
+		type=130,
+		value=3000,
+		group=31,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		cover = true,
+		icon=135,
+		delEvent=ture,
+	},
+
+	{
+		--//戒灵破甲值
+		id=472,
+		name=Lang.Activity.buff472,
+		type=131,
+		value=1000000,
+		group=31,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		cover = true,
+		icon=135,
+		delEvent=ture,
+	},
+
+
+	{
+		--//戒灵吞噬率
+		id=473,
+		name=Lang.Activity.buff473,
+		type=83,
+		value=10000,
+		group=32,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		cover = true,
+		icon=136,
+		delEvent=ture,
+	},
+
+	{
+		--//戒灵吞噬值
+		id=474,
+		name=Lang.Activity.buff474,
+		type=84,
+		value=5000,
+		group=32,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		cover = true,
+		icon=136,
+		delEvent=ture,
+	},
+
+
+	{
+		--//戒灵暴走率
+		id=475,
+		name=Lang.Activity.buff475,
+		type=189,
+		value=3000,
+		group=33,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		cover = true,
+		icon=134,
+		delEvent=ture,
+	},
+
+	{
+		--//戒灵暴走值
+		id=476,
+		name=Lang.Activity.buff476,
+		type=190,
+		value=3000,
+		group=33,
+		times=8,
+		interval=1,
+		timeoverlay=false,
+		cover = true,
+		icon=134,
+		delEvent=ture,
+	},
+
+
+
+
+
+
+}

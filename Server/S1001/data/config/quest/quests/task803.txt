@@ -1,0 +1,36 @@
+﻿--lua script
+{
+	id = 803,			-- 坐骑幻化
+	parentid = 0,type = 1,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 0,
+	cangiveup = true,
+	automount = true,
+	autoRun = true,
+	excludetree = false,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name803,
+	content = Lang.Quest.desc803,
+
+	prom = 0,
+	comp = 0,
+	target = {
+	},
+	conds = {
+		{ type = 0, id = 1, count = 40 },
+	},
+	awards = {
+		{
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk8031,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk8031,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip8031,
+	},
+	PassMsTip = {
+	},
+},

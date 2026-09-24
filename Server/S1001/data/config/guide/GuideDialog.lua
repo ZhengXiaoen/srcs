@@ -1,0 +1,366 @@
+﻿GuideDialog =
+{
+--	{
+--		--历练面板引导 现在引导加上动画 一个流程的引导最好一致
+--		questId = 20, --接受这个任务开始引导
+--		--openNewFunc = 12, --新功能开启类型
+--		hideUIType = 19, --关闭面板窗口ID
+--		hideUIHelpId = 501,  --关闭面板的help id
+--		delayContinueTask = 180000, --180000玩家自动做主线
+--		step =
+--		{
+--			{
+--				desc = "点击历练系统", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 152, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				forceClick = true, --是否强制点击
+--			},
+--			{
+--				desc = "领取历练值",
+--				dir = 0,
+--				uiHelpId = 153,
+--				addEffect = false,
+--			},
+--			{
+--				desc = "获取称号",
+--				dir = 0,
+--				uiHelpId = 154,
+--				addEffect = false,
+--			},
+--		},
+--	},
+--	
+--	{
+--		questId = 154, --回收引导
+--		--guideId = 12, --引导ID 后面可以直接调用ID来进行引导
+--		hideUIType = 126, --关闭面板
+--		hideUIHelpId = 503,
+--		openNewFunc = 0,
+--		delayContinueTask = 180000, --180000玩家自动做主线
+--		step =
+--		{
+--			{
+--				desc = "回收多余装备", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 177, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				forceClick = true, --是否强制点击
+--			},
+--			{
+--				desc = "添加回收装备", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 178, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				notice = "", --2048提示
+--			},
+--			{
+--				desc = "确定回收", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 179, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				notice = "多余装备进行回收能够获取海量经验，助你快速升级", --2048提示
+--			},
+--		},
+--	},
+--		{
+--		questId = 50, --回收引导
+--		--guideId = 12, --引导ID 后面可以直接调用ID来进行引导
+--		hideUIType = 126, --关闭面板
+--		hideUIHelpId = 503,
+--		openNewFunc = 0,
+--		delayContinueTask = 180000, --180000玩家自动做主线
+--		step =
+--		{
+--			{
+--				desc = "点击回收系统", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 177, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				forceClick = true, --是否强制点击
+--			},
+--			{
+--				desc = "添加回收装备", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 178, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				notice = "", --2048提示
+--			},
+--			{
+--				desc = "确定回收", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 179, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				notice = "多余装备进行回收能够获取海量经验，助你快速升级", --2048提示
+--			},
+--		},
+--	},
+--	{
+--		questId = 61, --回收引导
+--		--guideId = 12, --引导ID 后面可以直接调用ID来进行引导
+--		hideUIType = 126, --关闭面板
+--		hideUIHelpId = 503,
+--		openNewFunc = 0,
+--		delayContinueTask = 180000, --180000玩家自动做主线
+--		step =
+--		{
+--			{
+--				desc = "点击回收系统", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 177, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				forceClick = true, --是否强制点击
+--			},
+--			{
+--				desc = "添加回收装备", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 178, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				notice = "", --2048提示
+--			},
+--			{
+--				desc = "确定回收", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 179, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				notice = "多余装备进行回收能够获取海量经验，助你快速升级", --2048提示
+--			},
+--		},
+--	},
+--	{
+--		questId = 64, --回收引导
+--		--guideId = 12, --引导ID 后面可以直接调用ID来进行引导
+--		hideUIType = 126, --关闭面板
+--		hideUIHelpId = 503,
+--		openNewFunc = 0,
+--		delayContinueTask = 180000, --180000玩家自动做主线
+--		step =
+--		{
+--			{
+--				desc = "点击回收系统", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 177, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				forceClick = true, --是否强制点击
+--			},
+--			{
+--				desc = "添加回收装备", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 178, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				notice = "", --2048提示
+--			},
+--			{
+--				desc = "确定回收", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 179, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				notice = "多余装备进行回收能够获取海量经验，助你快速升级", --2048提示
+--			},
+--		},
+--	},
+--	{
+--		questId = 85, --药品购买
+--		hideUIType = 3, --关闭面板
+--		hideUIHelpId = 20,
+--		step =
+--		{
+--			{
+--				desc = "点击打开背包", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 2, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				forceClick = true, --是否强制点击
+--			},
+--			{
+--				desc = "购买6捆药品", --描述可以编辑颜色
+--				dir = 2,  --方向 0向下 1向上
+--				uiHelpId = 506, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				notice = "", --2048提示
+--			},
+--			{
+--				desc = "购买6捆药品", --描述可以编辑颜色
+--				dir = 2,  --方向 0向下 1向上
+--				uiHelpId = 506, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				notice = "", --2048提示
+--			},
+--			{
+--				desc = "购买6捆药品", --描述可以编辑颜色
+--				dir = 2,  --方向 0向下 1向上
+--				uiHelpId = 506, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				notice = "", --2048提示
+--			},
+--			{
+--				desc = "购买6捆药品", --描述可以编辑颜色
+--				dir = 2,  --方向 0向下 1向上
+--				uiHelpId = 506, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				notice = "", --2048提示
+--			},
+--			{
+--				desc = "购买6捆药品", --描述可以编辑颜色
+--				dir = 2,  --方向 0向下 1向上
+--				uiHelpId = 506, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				notice = "", --2048提示
+--			},
+--			{
+--				desc = "购买6捆药品", --描述可以编辑颜色
+--				dir = 2,  --方向 0向下 1向上
+--				uiHelpId = 506, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				notice = "", --2048提示
+--			},
+--		},
+--	},
+--	{
+--		questId = 66, --神炉引导  盾牌引导 在第一次降妖除魔结束后接降妖除魔任务
+--		--guideId = 13, --引导ID 后面可以直接调用ID来进行引导
+--		questStatus = 0, -- 0表示接任务 1表示删除任务
+--		hideUIType = 129, --关闭面板
+--		hideUIHelpId = 504,
+--		openNewFunc = 0,
+--		delayContinueTask = 180000, --180000玩家自动做主线
+--		step =
+--		{
+--			{
+--				desc = "点击神炉", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 180, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				forceClick = true, --是否强制点击
+--			},
+--			{
+--				desc = "点击盾牌切页", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 200, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--			},
+--			{
+--				desc = "升级盾牌", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 201, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				notice = "盾牌能够提升防御,脆皮变坦克不是梦", --2048提示
+--				addEffect = true, --是否加特效
+--			},
+--		},
+--	},
+--	{
+--		questId = 69, --神炉引导  护符引导 在第一次采集任务结束后接采集珍珠
+--		questStatus = 0, -- 0表示接任务 1表示删除任务
+--		--guideId = 13, --引导ID 后面可以直接调用ID来进行引导
+--		hideUIType = 129, --关闭面板
+--		hideUIHelpId = 504,
+--		openNewFunc = 0,
+--		delayContinueTask = 180000, --180000玩家自动做主线
+--		step =
+--		{
+--			{
+--				desc = "点击神炉", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 180, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				forceClick = true, --是否强制点击
+--			},
+--			{
+--				desc = "点击护符切页", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 181, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--			},
+--			{
+--				desc = "升级护符", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 182, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				notice = "护符能够提升HP,脆皮变坦克不是梦", --2048提示
+--				addEffect = true, --是否加特效
+--			},
+--		},
+--	},
+--	{
+--		questId = 71, --宠物升级引导 护送完第一次黄杠
+--		questStatus = 1, -- 0表示接任务 1表示删除任务
+--		--guideId = 13, --引导ID 后面可以直接调用ID来进行引导
+--		hideUIType = 118, --关闭面板
+--		hideUIHelpId = 505,
+--		openNewFunc = 0,
+--		delayContinueTask = 180000, --180000玩家自动做主线
+--		step =
+--		{
+--			{
+--				desc = "点击佣兵", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 174, --对应的按钮 需程序告知
+--				offsetX = 5, --偏移横坐标
+--				offsetY = 25, --偏移纵坐标
+--				addEffect = true, --是否加特效
+--				forceClick = true, --是否强制点击
+--			},
+--			{
+--				desc = "升级佣兵", --描述可以编辑颜色
+--				dir = 0,  --方向 0向下 1向上
+--				uiHelpId = 175, --对应的按钮 需程序告知
+--				offsetX = 0, --偏移横坐标
+--				offsetY = 0, --偏移纵坐标
+--				notice = "佣兵血厚防高,单挑BOSS不是梦", --2048提示
+--				addEffect = true, --是否加特效
+--			},
+--		},
+--	},
+	
+}

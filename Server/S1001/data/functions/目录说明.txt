@@ -1,0 +1,56 @@
+	目录													|	描述
+--------------------------------+----------------------------------
+Activity													活动
+ActorEvent												角色事件
+BaseDef														基本定义
+Brother													 	结拜
+CampKingNPC											 	阵营
+CombatChallange									 	战斗挑战
+compensate											 	补偿
+config													 	配置
+CrossServerEvent								 	跨服处理
+EquipEnhance										 	装备提升
+ExpandFunc											 	扩展功能
+Fuben														 	副本
+FuBenNpcFunc										 	副本NPC功能
+guildOperate										 	公会操作
+HeroOperate											 	英雄操作
+modules													 	模块(果园、聚宝盆、天神之力排行榜、练功房、王陵、衣橱模块、征途模块、月度活动 元宝消耗排行榜)
+MonEvent												 	怪物事件
+NpcMiscFun											 	NPC界面功能
+PetOperate											 	宠物操作
+SpaceCopys												擂台
+Systems													 	系统界面功能
+TalkFunc												 	NPC对话功能界面调度
+teleport													传送功能
+VipFunc														vip功能
+
+
+	文件													|  描述
+--------------------------------+-----------------------------------
+ActorFlags.lua									  角色状态标志位，永久标志
+ActorDataFunc.lua								  角色基本数据
+ActorTimerIds.lua								 	角色定时器
+ChuanSong.lua											传送
+ChuanSongNextScene.lua						传送场景
+Consume.lua												消耗扣除(元宝、绑定元宝、金币、绑定金币)
+DropBroadcast.lua									掉宝全服公告回调
+GetHander.lua											领取处理
+GlobalDefine.lua									全局定义
+GlobalFunction.lua								全局NPC的脚本文件，游戏重要的语法逻辑全部挂在这个NPC下面
+GlobalMisc.lua										全局的比较零散的函数，放在这里,被全局脚本包含 
+json.lua
+LogIds.lua												脚本日志ID定义
+lua_utils.lua											lua全局函数
+MobMonsterTips.lua								刷怪提示
+MonsterFunction.lua							 	怪物死亡触发
+NormalFuncForQuest.lua						正常任务请求
+NPCStorehouseFunc.lua							扩展仓库
+NpcTradeEventFunc.lua							NPC交易
+OnTimeRunFunction.lua							定时调用的脚本
+player.lua												触发事件
+Qfunctions.lua										
+registerFunction.lua							定时发布系统公告
+Server.lua												游戏启动触发函数
+SpecialQuest.lua									每日日常任务刷新
+TimerFunc.lua										 	特定定时器对应的脚本回调

@@ -1,0 +1,3 @@
+--#include "data\functions\FunctionGift\FunctionGift.lua" once
+--MiscsImplement.registerMsgHandler(LogicCmd.miscSys.sub.cGetFunctionGiftInfo,GetGiftTask)
+--MiscsImplement.registerMsgHandler(LogicCmd.miscSys.sub.cGiveFunctionGiftInfo,GiveCompleteGiftTask)

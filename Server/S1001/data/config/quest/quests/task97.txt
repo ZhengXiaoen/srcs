@@ -1,0 +1,37 @@
+﻿--lua script
+{
+	id = 97,			-- 月下悠闲
+	parentid = 96,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = false,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = true,
+	randomTarget = false,
+	name = Lang.Quest.name97,
+	content = Lang.Quest.desc97,
+
+	prom = 289,
+	comp = 251,
+	target = {
+	},
+	conds = {
+		{ type = 0, id = 0, count = 1 },
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 28000000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk971,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk971,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip971,
+	},
+	PassMsTip = {
+	},
+},

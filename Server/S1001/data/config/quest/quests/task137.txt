@@ -1,0 +1,39 @@
+﻿--lua script
+{
+	id = 137,			-- 大展宏图
+	parentid = 136,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = true,
+	randomTarget = false,
+	name = Lang.Quest.name137,
+	content = Lang.Quest.desc137,
+
+	prom = 99,
+	comp = 102,
+	target = {
+		{
+			type = 5, id = 0, count = 79, rewardId = 0,useList = false,
+		},
+	},
+	conds = {
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 28000000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk1371,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk1371,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip1371,
+	},
+	PassMsTip = {
+	},
+},

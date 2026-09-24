@@ -1,0 +1,22 @@
+﻿{
+	id = 198,
+	name = Lang.Skill.s14Name,
+	desc = Lang.Skill.s14Desc,
+	-- = 神圣雷光,
+	vocation = 0,
+	isDelete = false,
+	skillType = 2,
+	skillClass = 9,
+	skillSpellType = 2,
+	commonCd = 300,
+	canbeDefault = false,
+	specialBuffCond = 0,
+	notAutoUse = false,
+	magicLock = false,
+	needCalPassiveProperty = false,
+	priority = 0,
+	miaoshu = "升到35级自动学习",
+	skillSubLevel = { 
+--#include "Skill_198_1.lua"
+	},
+},

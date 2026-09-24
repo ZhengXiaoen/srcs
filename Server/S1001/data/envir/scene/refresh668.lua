@@ -1,0 +1,9 @@
+{count=1,time=43200,firstTime=1,mapx=30,mapy=136,range=20,entityid=1340,entityLevel=180,progress=0,},--熊猫林-国宝小绿
+{count=1,time=43200,firstTime=1,mapx=58,mapy=26,range=20,entityid=1341,entityLevel=180,progress=0,},--熊猫林-国宝小红
+{count=1,time=43200,firstTime=1,mapx=129,mapy=94,range=20,entityid=1342,entityLevel=180,progress=0,},--熊猫林-国宝小金
+{count=1,time=18000,firstTime=1,mapx=58,mapy=120,range=20,entityid=1312,entityLevel=150,progress=0,},--熊猫林-食人猎手
+{count=1,time=18000,firstTime=1,mapx=85,mapy=92,range=20,entityid=1267,entityLevel=150,progress=0,},--熊猫林-九尾仙狐
+{count=1,time=18000,firstTime=1,mapx=116,mapy=80,range=20,entityid=1268,entityLevel=150,progress=0,},--熊猫林-九尾灵狐
+{count=1,time=21600,firstTime=1,mapx=111,mapy=107,range=20,entityid=1269,entityLevel=160,progress=0,},--熊猫林-天炎蜘蛛
+{count=1,time=21600,firstTime=1,mapx=55,mapy=47,range=20,entityid=1270,entityLevel=160,progress=0,},--熊猫林-魔炎蜘蛛
+{count=1,time=28800,firstTime=1,mapx=82,mapy=34,range=20,entityid=1346,entityLevel=180,progress=0,},--熊猫林-奇肱之蛇

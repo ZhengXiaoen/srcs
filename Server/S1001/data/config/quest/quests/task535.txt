@@ -1,0 +1,43 @@
+﻿--lua script
+{
+	id = 535,			-- 商城购物
+	parentid = 0,type = 1,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = true,
+	automount = true,
+	autoRun = true,
+	excludetree = false,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name535,
+	content = Lang.Quest.desc535,
+
+	prom = 0,
+	comp = 0,
+	target = {
+		{
+			type = 127, id = 50090, count = 1, rewardId = 0,useList = false, data = Lang.Quest.data5350,
+			location = {
+				sceneid = 73, x= 0,y = 0,entityName = Lang.EntityName.n00197,hideFastTransfer = false,
+			},
+		},
+	},
+	conds = {
+		{ type = 0, id = 0, count = 25 },
+		{ type = 3, id = 458, count = 0 },
+	},
+	awards = {
+		{
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk5351,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk5351,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip5351,
+	},
+	PassMsTip = {
+	},
+},

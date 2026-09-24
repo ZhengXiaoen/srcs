@@ -1,0 +1,74 @@
+﻿--lua script
+{
+	id = 8006,			-- 恶魔来袭
+	parentid = 0,type = 11,level = 0,circle = 0,entrust = 8,star = 1,guideId = 0,timelimit = 0,interval = 86400,maxcount = 5,
+	cangiveup = true,
+	automount = true,
+	autoRun = false,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = true,
+	name = Lang.Quest.name8006,
+	content = Lang.Quest.desc8006,
+
+	prom = 0,
+	comp = 0,
+	target = {
+		{
+			type = 0, id = 168, count = 40, rewardId = 0,useList = false,
+			location = {
+				sceneid = 18, x= 0,y = 0,entityName = Lang.EntityName.m168,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 54, count = 40, rewardId = 1,useList = false,
+			location = {
+				sceneid = 19, x= 0,y = 0,entityName = Lang.EntityName.m54,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 53, count = 40, rewardId = 2,useList = false,
+			location = {
+				sceneid = 18, x= 0,y = 0,entityName = Lang.EntityName.m53,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 180, count = 40, rewardId = 3,useList = false,
+			location = {
+				sceneid = 19, x= 0,y = 0,entityName = Lang.EntityName.m180,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 1, id = 987, count = 5, rewardId = 4,useList = false,
+			location = {
+				sceneid = 15, x= 0,y = 0,entityName = Lang.EntityName.m545,hideFastTransfer = false,
+			},
+		},
+	},
+	conds = {
+		{ type = 0, id = 40, count = 35 },
+	},
+	awards = {
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk80061,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk80061,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip80061,
+	},
+	PassMsTip = {
+	},
+},

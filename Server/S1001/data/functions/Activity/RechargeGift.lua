@@ -1,0 +1,144 @@
+--#include "data\config\activity\ActivityGiftConfig.lua" once
+--#include "data\functions\Activity\Common\Awards.lua" once
+
+MiscsImplement.GetRechargeflag = function(sysarg)
+
+	--local var = Actor.getStaticVar(sysarg)
+	--local npack = DataPack.allocPacket(sysarg,139,97) 
+	--
+	--local config = ActivityGiftConfig.RechargeGift
+	--
+	--local firstRecharge = var.FirstRechargeFlag
+	--local PeyFlag = var.days.PeyFlag
+	--
+	--local RechInt = var.RechInt
+	--	if not RechInt then
+	--	RechInt = 0
+	--end
+	--
+	--local Recharge = var.Recharge
+	--if not Recharge then 
+	--	var.Recharge = {}
+	--	Recharge = var.Recharge
+	--end
+    --
+	--DataPack.writeUInt(npack,RechInt)
+	--
+	--for i = 3 ,#config do
+	--	DataPack.writeByte(npack,i)
+	--	if config[i].Isrepeat == 1 then
+	--		if Recharge[i] == nil then 
+	--			Recharge[i] = 0 
+	--		end
+	--		if Recharge[i] >= 1 then
+	--			DataPack.writeByte(npack,1)
+	--		else
+	--			local drawYbCount = Actor.getUIntProperty(sysarg, PROP_ACTOR_DRAW_YB_COUNT)
+	--			if (RechInt >= config[i].RechargeIntegral and i ~= 6) or (i == 6 and drawYbCount >= 500000) then 
+	--				DataPack.writeByte(npack,0)
+	--			else
+	--				DataPack.writeByte(npack,1)
+	--			end
+	--			
+	--		end
+	--	elseif config[i].Isrepeat == 2 then
+	--		if RechInt >= config[i].RechargeIntegral then
+	--			DataPack.writeByte(npack,0)
+	--		else 
+	--			DataPack.writeByte(npack,1)
+	--		end
+	--	end
+	--end
+	--DataPack.flush(npack)
+end
+
+MiscsImplement.GetRecharge = function(sysarg, msgid, packet)
+	
+	--GiftID = DataPack.readByte(packet)
+	--if GiftID < 1 and GiftID > #ActivityGiftConfig.RechargeGift then return end
+    --
+	--local config = ActivityGiftConfig.RechargeGift
+	--
+	----充值领取标识
+	--local var = Actor.getStaticVar(sysarg)
+	--local Recharge = var.Recharge
+	--if not Recharge then 
+	--	var.Recharge = {}
+	--	Recharge = var.Recharge
+	--end
+    --
+	----充值积分
+	--local RechInt = var.RechInt
+	--if not RechInt then
+	--	var.RechInt = 0
+	--	RechInt = var.RechInt
+	--end
+	--
+	----已领取
+	--if Recharge[GiftID] == 1 then 
+	--	return
+	--end
+    --
+	----配置不存在
+	--if not ActivityGiftConfig or not config then 
+	--	return
+	--end
+    --
+	----充值积分不足
+	--if GiftID > 2 and RechInt < config[GiftID].RechargeIntegral then 
+	--	return
+	--end
+    --
+	----检查背包
+	--GiftConfig = config[GiftID].reward
+	--if not Awards.CheckBagGridCount(sysarg, GiftConfig) then
+	--	return
+	--end
+	--
+	--var.RechInt = RechInt - config[GiftID].RechargeIntegral
+	--if config[GiftID].Isrepeat == 1 then 
+	--	var.Recharge[GiftID] = 1
+	--else 
+	--	var.Recharge[GiftID] = 0
+	--end
+    --
+	----奖品一个物品给玩家
+	--local logstr = string.format(Lang.LogTips.l00172)
+	--Awards.Give(sysarg, GiftConfig, 210, logstr)
+	--local name  = Actor.getName(sysarg)
+	--local itemName = Item.getItemName(GiftConfig[1].id)
+	----版号服 暂时屏蔽
+	--System.broadcastTipmsg(string.format(Lang.ScriptTips.zf584,name,Item.getItemLinkMsg(GiftConfig[1].id)),2+128)
+	--
+	--local npack = DataPack.allocPacket(sysarg,139,97) 
+	--DataPack.writeUInt(npack,var.RechInt)
+	--for i = 3 ,#config do
+	--	DataPack.writeByte(npack,i)
+	--	if config[i].Isrepeat == 1 then
+	--		if Recharge[i] == nil then 
+	--			Recharge[i] = 0 
+	--		end
+	--		if Recharge[i] >= 1 then
+	--			DataPack.writeByte(npack,1)
+	--		else
+	--			local drawYbCount = Actor.getUIntProperty(sysarg, PROP_ACTOR_DRAW_YB_COUNT)
+	--			if (RechInt >= config[i].RechargeIntegral and i ~= 6) or (i == 6 and drawYbCount >= 500000) then 
+	--				DataPack.writeByte(npack,0)
+	--			else
+	--				DataPack.writeByte(npack,1)
+	--			end
+	--			
+	--		end
+	--	elseif config[i].Isrepeat == 2 then
+	--		if var.RechInt >= config[i].RechargeIntegral then
+	--			DataPack.writeByte(npack,0)
+	--		else 
+	--			DataPack.writeByte(npack,1)
+	--		end
+	--	end
+	--end
+	--DataPack.flush(npack)
+end
+
+MiscsImplement.registerMsgHandler(LogicCmd.miscSys.sub.cGetChargeGift, MiscsImplement.GetRecharge)
+MiscsImplement.registerMsgHandler(LogicCmd.miscSys.sub.cGetChargeGiftflag, MiscsImplement.GetRechargeflag)

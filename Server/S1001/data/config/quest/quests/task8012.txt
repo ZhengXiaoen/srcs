@@ -1,0 +1,63 @@
+﻿--lua script
+{
+	id = 8012,			-- 毁灭屠城
+	parentid = 0,type = 11,level = 0,circle = 0,entrust = 11,star = 3,guideId = 0,timelimit = 0,interval = 86400,maxcount = 5,
+	cangiveup = true,
+	automount = true,
+	autoRun = false,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = true,
+	name = Lang.Quest.name8012,
+	content = Lang.Quest.desc8012,
+
+	prom = 0,
+	comp = 0,
+	target = {
+		{
+			type = 0, id = 85, count = 100, rewardId = 0,useList = false,
+			location = {
+				sceneid = 30, x= 0,y = 0,entityName = Lang.EntityName.m72,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 89, count = 100, rewardId = 1,useList = false,
+			location = {
+				sceneid = 31, x= 0,y = 0,entityName = Lang.EntityName.m89,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 99, count = 100, rewardId = 2,useList = false,
+			location = {
+				sceneid = 32, x= 0,y = 0,entityName = Lang.EntityName.m99,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 12, id = 31, count = 120, rewardId = 3,useList = false, data = Lang.Quest.data80123,
+		},
+	},
+	conds = {
+		{ type = 0, id = 55, count = 51 },
+	},
+	awards = {
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk80121,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk80121,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip80121,
+	},
+	PassMsTip = {
+	},
+},

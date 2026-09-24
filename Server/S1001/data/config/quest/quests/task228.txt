@@ -1,0 +1,48 @@
+﻿--lua script
+{
+	id = 228,			-- 犹豫
+	parentid = 500,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = false,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name228,
+	content = Lang.Quest.desc228,
+
+	prom = 0,
+	comp = 0,
+	target = {
+		{
+			type = 0, id = 34, count = 50, rewardId = 0,useList = false,
+			location = {
+				sceneid = 12, x= 320,y = 105,entityName = Lang.EntityName.m34,hideFastTransfer = false,
+			},
+		},
+	},
+	conds = {
+		{ type = 0, id = 0, count = 1 },
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 35113, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 6, id = 0, count = 2000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 0, id = 386, count = 1, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+			{ type = 0, id = 338, count = 3, group = 0,strong = 0,quality = 0,job = 1,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+			{ type = 0, id = 345, count = 3, group = 0,strong = 0,quality = 0,job = 2,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+			{ type = 0, id = 345, count = 3, group = 0,strong = 0,quality = 0,job = 3,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk2281,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk2281,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip2281,
+	},
+	PassMsTip = {
+	},
+},

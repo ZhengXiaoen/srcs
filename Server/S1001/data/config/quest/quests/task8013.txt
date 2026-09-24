@@ -1,0 +1,63 @@
+﻿--lua script
+{
+	id = 8013,			-- 远古种族
+	parentid = 0,type = 3,level = 0,circle = 0,entrust = 9,star = 3,guideId = 0,timelimit = 0,interval = 86400,maxcount = 5,
+	cangiveup = true,
+	automount = true,
+	autoRun = false,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = true,
+	name = Lang.Quest.name8013,
+	content = Lang.Quest.desc8013,
+
+	prom = 0,
+	comp = 0,
+	target = {
+		{
+			type = 0, id = 175, count = 120, rewardId = 0,useList = false,
+			location = {
+				sceneid = 33, x= 0,y = 0,entityName = Lang.EntityName.m175,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 97, count = 120, rewardId = 1,useList = false,
+			location = {
+				sceneid = 32, x= 0,y = 0,entityName = Lang.EntityName.m97,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 104, count = 120, rewardId = 2,useList = false,
+			location = {
+				sceneid = 32, x= 0,y = 0,entityName = Lang.EntityName.m104,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 12, id = 32, count = 120, rewardId = 3,useList = false, data = Lang.Quest.data80133,
+		},
+	},
+	conds = {
+		{ type = 0, id = 60, count = 56 },
+	},
+	awards = {
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk80131,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk80131,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip80131,
+	},
+	PassMsTip = {
+	},
+},

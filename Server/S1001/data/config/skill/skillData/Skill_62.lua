@@ -1,0 +1,21 @@
+﻿{
+	id = 62,
+	name = Lang.Skill.s62Name,
+	desc = Lang.Skill.s62Desc,
+	-- = 弓箭手攻击,
+	vocation = 0,
+	isDelete = true,
+	skillType = 2,
+	skillClass = 4,
+	skillSpellType = 0,
+	commonCd = 500,
+	canbeDefault = true,
+	specialBuffCond = 0,
+	notAutoUse = false,
+	magicLock = false,
+	needCalPassiveProperty = false,
+	priority = 0,
+	skillSubLevel = { 
+--#include "Skill_62_1.lua"
+	},
+},

@@ -1,0 +1,39 @@
+﻿--lua script
+{
+	id = 16,			-- 神兵传说
+	parentid = 15,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name16,
+	content = Lang.Quest.desc16,
+
+	prom = 15,
+	comp = 16,
+	target = {
+	},
+	conds = {
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 10500, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 5, id = 0, count = 100000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 0, id = 148, count = 1, group = 0,strong = 0,quality = 0,job = 1,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+			{ type = 0, id = 154, count = 1, group = 0,strong = 0,quality = 0,job = 2,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+			{ type = 0, id = 160, count = 1, group = 0,strong = 0,quality = 0,job = 3,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk161,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk161,
+	},
+	CompMsTip = {
+	},
+	PassMsTip = {
+	},
+},

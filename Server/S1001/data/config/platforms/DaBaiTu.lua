@@ -1,0 +1,110 @@
+﻿--大白兔平台配置
+
+DaBaiTuPlatformCfg = {
+    
+    QQ = "2607538300",
+    --冲值元宝奖励
+    PayYuanBao = 50000,
+    AwardId = 635,	--奖励道具id	
+	-- VIP 奖励
+--	VipRewards =
+--	{	
+--		-- 等级 1
+--		{
+--			level = 1,
+--			rewards =
+--			{
+--				{type = 0, id = 511, count = 1,  bind = 1},--经验丹小*1	
+--				{type = 0, id = 518, count = 1,  bind = 1},--100绑定元宝*1
+--				{type = 0, id = 530, count = 1,  bind = 1},--盾灵卷轴*1
+--				{type = 0, id = 816, count = 1,  bind = 1},--声望卷*1
+--				{type = 0, id = 506, count = 1,  bind = 1},--2倍经验卷8小时*1
+--			},
+--		},
+--		-- 等级 2
+--		{
+--			level = 2,
+--			rewards =
+--			{
+--				{type = 0, id = 512, count = 1,  bind = 1},--经验丹中*1	
+--				{type = 0, id = 518, count = 3,  bind = 1},--100绑定元宝*3
+--				{type = 0, id = 530, count = 2,  bind = 1},--盾灵卷轴*2
+--				{type = 0, id = 816, count = 2,  bind = 1},--声望卷*2
+--				{type = 0, id = 843, count = 1,  bind = 1},--3倍经验卷2小时*1
+--			},
+--		},
+--		-- 等级 3
+--		{
+--			level = 3,
+--			rewards =
+--			{
+--				{type = 0, id = 513, count = 1,  bind = 1},--经验丹大*1	
+--				{type = 0, id = 519, count = 1,  bind = 1},--500绑定元宝*1
+--				{type = 0, id = 530, count = 3,  bind = 1},--盾灵卷轴*3
+--				{type = 0, id = 816, count = 3,  bind = 1},--声望卷*3
+--				{type = 0, id = 844, count = 1,  bind = 1},--3倍经验卷3小时*1
+--			},
+--		},
+--		-- 等级 4
+--		{
+--			level = 4,
+--			rewards = 
+--			{
+--				{type = 0, id = 513, count = 2,  bind = 1},--经验丹大*2	
+--				{type = 0, id = 519, count = 2,  bind = 1},--500绑定元宝*2
+--				{type = 0, id = 530, count = 5,  bind = 1},--盾灵卷轴*5
+--				{type = 0, id = 816, count = 4,  bind = 1},--声望卷*4
+--				{type = 0, id = 845, count = 1,  bind = 1},--3倍经验卷4小时*1
+--			},
+--		},
+--		-- 等级 5
+--		{
+--			level = 5,
+--			rewards = 
+--			{
+--				{type = 0, id = 513, count = 4,  bind = 1},--经验大*4	
+--				{type = 0, id = 519, count = 4,  bind = 1},--500绑定元宝*4
+--				{type = 0, id = 530, count = 8,  bind = 1},--盾灵卷轴*8
+--				{type = 0, id = 816, count = 5,  bind = 1},--声望卷*5
+--				{type = 0, id = 846, count = 1,  bind = 1},--4倍经验卷1小时*1
+--			},
+--		},
+--		-- 等级 6
+--		{
+--			level = 6,
+--			rewards = 
+--			{
+--				{type = 0, id = 513, count = 7,  bind = 1},--经验丹大*7	
+--				{type = 0, id = 519, count = 6,  bind = 1},--500绑定元宝*6
+--				{type = 0, id = 530, count = 12,  bind = 1},--盾灵卷轴*12
+--				{type = 0, id = 816, count = 6,  bind = 1},--声望卷*6
+--				{type = 0, id = 847, count = 1,  bind = 1},--4倍经验卷2小时*1
+--			},
+--		},
+--		-- 等级 7
+--		{
+--			level = 7,
+--			rewards = 
+--			{
+--				{type = 0, id = 513, count = 11,  bind = 1},--经验丹大*11	
+--				{type = 0, id = 519, count = 8,  bind = 1},--500绑定元宝*8
+--				{type = 0, id = 530, count = 18,  bind = 1},--盾灵卷轴*17
+--				{type = 0, id = 816, count = 7,  bind = 1},--声望卷*7
+--				{type = 0, id = 848, count = 1,  bind = 1},--4倍经验卷3小时*1
+--			},
+--		},
+--		-- 等级 8
+--		{
+--			level = 8,
+--			rewards = 
+--			{
+--				{type = 0, id = 513, count = 16,  bind = 1},--经验丹大*16	
+--				{type = 0, id = 519, count = 10,  bind = 1},--500绑定元宝*10
+--				{type = 0, id = 530, count = 28,  bind = 1},--盾灵卷轴*28
+--				{type = 0, id = 816, count = 8,  bind = 1},--声望卷*8
+--				{type = 0, id = 849, count = 1,  bind = 1},--5倍经验卷2小时*1
+--			},
+--		},
+--	}
+
+}

@@ -1,0 +1,21 @@
+﻿{
+	id = 55,
+	name = Lang.Skill.s55Name,
+	desc = Lang.Skill.s55Desc,
+	-- = 麻醉术,
+	vocation = 0,
+	isDelete = true,
+	skillType = 4,
+	skillClass = 2,
+	skillSpellType = 4,
+	commonCd = 500,
+	canbeDefault = true,
+	specialBuffCond = 0,
+	notAutoUse = false,
+	magicLock = false,
+	needCalPassiveProperty = false,
+	priority = 0,
+	skillSubLevel = { 
+--#include "Skill_55_1.lua"
+	},
+},

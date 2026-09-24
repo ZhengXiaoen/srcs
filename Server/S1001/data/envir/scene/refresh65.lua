@@ -1,0 +1,14 @@
+{count=8,time=20,firstTime=1,mapx=30,mapy=63,range=10,entityid=85,entityLevel=160,progress=0,},--9转极北之地8-远古战士
+{count=8,time=20,firstTime=1,mapx=41,mapy=53,range=10,entityid=86,entityLevel=160,progress=0,},--9转极北之地8-冰族刀卫
+{count=8,time=20,firstTime=1,mapx=54,mapy=41,range=10,entityid=87,entityLevel=160,progress=0,},--9转极北之地8-冰族骑士
+{count=8,time=20,firstTime=1,mapx=64,mapy=31,range=10,entityid=88,entityLevel=160,progress=0,},--9转极北之地8-冰族巨人
+{count=8,time=20,firstTime=1,mapx=73,mapy=42,range=10,entityid=89,entityLevel=160,progress=0,},--9转极北之地8-大法师
+{count=8,time=20,firstTime=1,mapx=52,mapy=65,range=10,entityid=85,entityLevel=160,progress=0,},--9转极北之地8-远古战士
+{count=8,time=20,firstTime=1,mapx=43,mapy=74,range=10,entityid=86,entityLevel=160,progress=0,},--9转极北之地8-冰族刀卫
+{count=8,time=20,firstTime=1,mapx=54,mapy=85,range=10,entityid=87,entityLevel=160,progress=0,},--9转极北之地8-冰族骑士
+{count=8,time=20,firstTime=1,mapx=66,mapy=73,range=10,entityid=88,entityLevel=160,progress=0,},--9转极北之地8-冰族巨人
+{count=8,time=20,firstTime=1,mapx=78,mapy=61,range=10,entityid=89,entityLevel=160,progress=0,},--9转极北之地8-大法师
+{count=8,time=20,firstTime=1,mapx=95,mapy=60,range=10,entityid=85,entityLevel=160,progress=0,},--9转极北之地8-远古战士
+{count=8,time=20,firstTime=1,mapx=85,mapy=70,range=10,entityid=86,entityLevel=160,progress=0,},--9转极北之地8-冰族刀卫
+{count=8,time=20,firstTime=1,mapx=63,mapy=92,range=10,entityid=87,entityLevel=160,progress=0,},--9转极北之地8-冰族骑士
+{count=8,time=20,firstTime=1,mapx=63,mapy=62,range=10,entityid=88,entityLevel=160,progress=0,},--9转极北之地8-冰族巨人

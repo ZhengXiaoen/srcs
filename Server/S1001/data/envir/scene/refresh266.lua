@@ -1,0 +1,17 @@
+{count=5,time=600,firstTime=1,mapx=87,mapy=84,range=5,entityid=588,entityLevel=80,progress=0,},--«ÿ ºª ¡Í1≤„-ª ¡Í ÿŒ¿
+{count=5,time=600,firstTime=1,mapx=75,mapy=76,range=5,entityid=588,entityLevel=80,progress=0,},--«ÿ ºª ¡Í1≤„-ª ¡Í ÿŒ¿
+{count=5,time=600,firstTime=1,mapx=61,mapy=78,range=5,entityid=588,entityLevel=80,progress=0,},--«ÿ ºª ¡Í1≤„-ª ¡Í ÿŒ¿
+{count=5,time=600,firstTime=1,mapx=48,mapy=88,range=5,entityid=588,entityLevel=80,progress=0,},--«ÿ ºª ¡Í1≤„-ª ¡Í ÿŒ¿
+{count=5,time=600,firstTime=1,mapx=34,mapy=84,range=5,entityid=588,entityLevel=80,progress=0,},--«ÿ ºª ¡Í1≤„-ª ¡Í ÿŒ¿
+{count=5,time=600,firstTime=1,mapx=31,mapy=67,range=5,entityid=588,entityLevel=80,progress=0,},--«ÿ ºª ¡Í1≤„-ª ¡Í ÿŒ¿
+{count=5,time=600,firstTime=1,mapx=39,mapy=53,range=5,entityid=588,entityLevel=80,progress=0,},--«ÿ ºª ¡Í1≤„-ª ¡Í ÿŒ¿
+{count=5,time=600,firstTime=1,mapx=55,mapy=53,range=5,entityid=588,entityLevel=80,progress=0,},--«ÿ ºª ¡Í1≤„-ª ¡Í ÿŒ¿
+{count=5,time=600,firstTime=1,mapx=42,mapy=41,range=5,entityid=588,entityLevel=80,progress=0,},--«ÿ ºª ¡Í1≤„-ª ¡Í ÿŒ¿
+{count=5,time=600,firstTime=1,mapx=56,mapy=31,range=5,entityid=588,entityLevel=80,progress=0,},--«ÿ ºª ¡Í1≤„-ª ¡Í ÿŒ¿
+{count=5,time=600,firstTime=1,mapx=69,mapy=49,range=5,entityid=588,entityLevel=80,progress=0,},--«ÿ ºª ¡Í1≤„-ª ¡Í ÿŒ¿
+{count=5,time=600,firstTime=1,mapx=86,mapy=61,range=5,entityid=588,entityLevel=80,progress=0,},--«ÿ ºª ¡Í1≤„-ª ¡Í ÿŒ¿
+{count=5,time=600,firstTime=1,mapx=90,mapy=46,range=5,entityid=588,entityLevel=80,progress=0,},--«ÿ ºª ¡Í1≤„-ª ¡Í ÿŒ¿
+{count=5,time=600,firstTime=1,mapx=88,mapy=30,range=5,entityid=588,entityLevel=80,progress=0,},--«ÿ ºª ¡Í1≤„-ª ¡Í ÿŒ¿
+{count=5,time=600,firstTime=1,mapx=74,mapy=26,range=5,entityid=588,entityLevel=80,progress=0,},--«ÿ ºª ¡Í1≤„-ª ¡Í ÿŒ¿
+{count=5,time=600,firstTime=1,mapx=68,mapy=62,range=5,entityid=588,entityLevel=80,progress=0,},--«ÿ ºª ¡Í1≤„-ª ¡Í ÿŒ¿
+{count=5,time=600,firstTime=1,mapx=33,mapy=42,range=5,entityid=588,entityLevel=80,progress=0,},--«ÿ ºª ¡Í1≤„-ª ¡Í ÿŒ¿

@@ -1,0 +1,80 @@
+﻿--lua script
+{
+	id = 8010,			-- 苍茫孤城
+	parentid = 0,type = 11,level = 0,circle = 0,entrust = 10,star = 2,guideId = 0,timelimit = 0,interval = 86400,maxcount = 5,
+	cangiveup = true,
+	automount = true,
+	autoRun = false,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = true,
+	name = Lang.Quest.name8010,
+	content = Lang.Quest.desc8010,
+
+	prom = 0,
+	comp = 0,
+	target = {
+		{
+			type = 0, id = 185, count = 75, rewardId = 0,useList = false,
+			location = {
+				sceneid = 28, x= 0,y = 0,entityName = Lang.EntityName.m185,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 171, count = 75, rewardId = 1,useList = false,
+			location = {
+				sceneid = 29, x= 0,y = 0,entityName = Lang.EntityName.m171,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 83, count = 75, rewardId = 2,useList = false,
+			location = {
+				sceneid = 28, x= 0,y = 0,entityName = Lang.EntityName.m83,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50045, count = 1, rewardId = 3,useList = false, data = Lang.Quest.data80103,
+			location = {
+				sceneid = 105, x= 0,y = 0,entityName = Lang.EntityName.n00166,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50046, count = 1, rewardId = 4,useList = false, data = Lang.Quest.data80104,
+			location = {
+				sceneid = 107, x= 0,y = 0,entityName = Lang.EntityName.n00159,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 12, id = 27, count = 100, rewardId = 5,useList = false, data = Lang.Quest.data80105,
+		},
+	},
+	conds = {
+		{ type = 0, id = 50, count = 46 },
+	},
+	awards = {
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk80101,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk80101,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip80101,
+	},
+	PassMsTip = {
+		Lang.Quest.passTip80101,
+	},
+},

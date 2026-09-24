@@ -1,0 +1,112 @@
+SingleBossCfg=
+{
+--
+--	{
+--		type = 5,   --1: 世界BOSS   2：VIP BOSS 3：圣境BOSS
+--		BossId = 146,
+--		BossName = "暗之领域教主",
+--		award = 
+--		{
+--			{type = 36, id = 0, count = 100}, -----赠送圣魂值
+--		},
+--		
+--
+--	},
+--	{
+--		type = 5,   --1: 世界BOSS   2：VIP BOSS 3：圣境BOSS
+--		BossId = 148,
+--		BossName = "暗之盘灵教主",
+--		award = 
+--		{
+--			{type = 36, id = 0, count = 150}, -----赠送圣魂值
+--		},
+--		
+--
+--	},
+--	{
+--		type = 5,   --1: 世界BOSS   2：VIP BOSS 3：圣境BOSS
+--		BossId = 430,
+--		BossName = "暗之黄金教主",
+--		award = 
+--		{
+--			{type = 36, id = 0, count = 200}, -----赠送圣魂值
+--		},
+--		
+--
+--	},
+--	{
+--		type = 5,   --1: 世界BOSS   2：VIP BOSS 3：圣境BOSS
+--		BossId = 147,
+--		BossName = "暗之祭坛教主",
+--		award = 
+--		{
+--			{type = 36, id = 0, count = 250}, -----赠送圣魂值
+--		},
+--		
+--
+--	},
+--	{
+--		type = 5,   --1: 世界BOSS   2：VIP BOSS 3：圣境BOSS
+--		BossId = 149,
+--		BossName = "暗之镇魔教主",
+--		award = 
+--		{
+--			{type = 36, id = 0, count = 300}, -----赠送圣魂值
+--		},
+--		
+--
+--	},
+--	{
+--		type = 5,   --1: 世界BOSS   2：VIP BOSS 3：圣境BOSS
+--		BossId = 150,
+--		BossName = "暗之蜀山教主",
+--		award = 
+--		{
+--			{type = 36, id = 0, count = 350}, -----赠送圣魂值
+--		},
+--		
+--
+--	},
+--	{
+--		type = 5,   --1: 世界BOSS   2：VIP BOSS 3：圣境BOSS
+--		BossId = 151,
+--		BossName = "暗之秘窟教主",
+--		award = 
+--		{
+--			{type = 36, id = 0, count = 400}, -----赠送圣魂值
+--		},
+--		
+--
+--	},
+--	{
+--		type = 5,   --1: 世界BOSS   2：VIP BOSS 3：圣境BOSS
+--		BossId = 152,
+--		BossName = "暗之九霄教主",
+--		award = 
+--		{
+--			{type = 36, id = 0, count = 450}, -----赠送圣魂值
+--		},
+--		
+--
+--	},
+--	{
+--		type = 5,   --1: 世界BOSS   2：VIP BOSS 3：圣境BOSS
+--		BossId = 153,
+--		BossName = "暗之神魔教主",
+--		award = 
+--		{
+--			{type = 36, id = 0, count = 500}, -----赠送圣魂值
+--		},
+--	},
+--	{
+--		type = 5,   --1: 世界BOSS   2：VIP BOSS 3：圣境BOSS
+--		BossId = 526,
+--		BossName = "暗黑劳模",
+--		award = 
+--		{
+--			{type = 36, id = 0, count = 2000}, -----赠送圣魂值
+--		},
+--	},
+} 
+	
+	

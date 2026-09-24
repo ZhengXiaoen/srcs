@@ -1,0 +1,43 @@
+﻿--lua script
+{
+	id = 469,			-- 详解
+	parentid = 105,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = true,
+	randomTarget = false,
+	name = Lang.Quest.name469,
+	content = Lang.Quest.desc469,
+
+	prom = 92,
+	comp = 227,
+	target = {
+	},
+	conds = {
+		{ type = 0, id = 0, count = 0 },
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 5000000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk4691,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk4691,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip4691,
+	},
+	PassMsTip = {
+	},
+	PromCallBack = "OnPromFly",
+	PromCallBackArg = {
+		 18,
+		 3,
+		 4,
+	},
+},

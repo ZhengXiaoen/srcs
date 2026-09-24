@@ -1,0 +1,12 @@
+{count=1,time=9999,firstTime=1,mapx=35,mapy=31,range=3,entityid=433,entityLevel=50,progress=0,},--秘境之旅5层-变异骷髅王?十阶
+{count=1,time=9999,firstTime=1,mapx=51,mapy=24,range=3,entityid=443,entityLevel=50,progress=0,},--秘境之旅5层-铁链僵尸皇?十阶
+{count=1,time=9999,firstTime=1,mapx=65,mapy=29,range=3,entityid=463,entityLevel=50,progress=0,},--秘境之旅5层-异教教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=59,mapy=46,range=3,entityid=473,entityLevel=50,progress=0,},--秘境之旅5层-虚空大帝?十阶
+{count=1,time=9999,firstTime=1,mapx=62,mapy=65,range=3,entityid=433,entityLevel=50,progress=0,},--秘境之旅5层-变异骷髅王?十阶
+{count=1,time=9999,firstTime=1,mapx=18,mapy=45,range=3,entityid=453,entityLevel=50,progress=0,},--秘境之旅5层-暗之钳虫皇?十阶
+{count=1,time=9999,firstTime=1,mapx=17,mapy=67,range=3,entityid=463,entityLevel=50,progress=0,},--秘境之旅5层-异教教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=30,mapy=54,range=3,entityid=473,entityLevel=50,progress=0,},--秘境之旅5层-虚空大帝?十阶
+{count=1,time=9999,firstTime=1,mapx=26,mapy=74,range=3,entityid=493,entityLevel=50,progress=0,},--秘境之旅5层-蛮荒大教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=42,mapy=69,range=3,entityid=433,entityLevel=50,progress=0,},--秘境之旅5层-变异骷髅王?十阶
+{count=1,time=9999,firstTime=1,mapx=50,mapy=54,range=3,entityid=453,entityLevel=50,progress=0,},--秘境之旅5层-暗之钳虫皇?十阶
+{count=1,time=9999,firstTime=1,mapx=35,mapy=42,range=3,entityid=740,entityLevel=50,progress=0,},--秘境之旅5层-修罗王[4转]

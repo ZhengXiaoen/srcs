@@ -1,0 +1,258 @@
+﻿--lua script
+--#include "..\language\LangCode.txt"
+FuBen = 
+{
+--#include "scene\fuben0.lua"	
+----#include "scene\fuben1.lua"	--尸王殿             
+----#include "scene\fuben2.lua"	--沃玛殿             
+----#include "scene\fuben3.lua"	--蜈蚣殿             
+----#include "scene\fuben4.lua"	--猪妖殿             
+----#include "scene\fuben5.lua"	--祖玛殿             
+--#include "scene\fuben6.lua"	--荣耀王城             
+--#include "scene\fuben7.lua"	 --个人BOSS挑战            
+--#include "scene\fuben8.lua"	 --个人BOSS挑战           
+--#include "scene\fuben9.lua"	--个人BOSS挑战        
+--#include "scene\fuben10.lua"	 --个人BOSS挑战     
+--#include "scene\fuben11.lua"	--个人BOSS挑战      
+--#include "scene\fuben12.lua"	--个人BOSS挑战
+--#include "scene\fuben13.lua"	--个人BOSS挑战
+--#include "scene\fuben14.lua"	--个人BOSS挑战
+--#include "scene\fuben15.lua"	--个人BOSS挑战
+--#include "scene\fuben16.lua"	--个人BOSS挑战
+--#include "scene\fuben17.lua"	--个人BOSS挑战
+--#include "scene\fuben18.lua"	--蛮荒大教皇挑战
+--#include "scene\fuben19.lua"	--护符副本
+--#include "scene\fuben20.lua"	--护盾副本
+--#include "scene\fuben21.lua"	--宝石副本
+--#include "scene\fuben22.lua"	--圣珠副本
+--#include "scene\fuben23.lua"	--强化副本
+--#include "scene\fuben24.lua"	--羽毛副本
+--#include "scene\fuben25.lua"	--功勋副本
+--#include "scene\fuben26.lua"	--面巾挑战
+--#include "scene\fuben27.lua"	--勇者闯关副本
+----#include "scene\fuben28.lua"  --虚拟红名村
+----#include "scene\fuben29.lua"
+----#include "scene\fuben30.lua"
+----#include "scene\fuben31.lua"
+----#include "scene\fuben32.lua"
+----#include "scene\fuben33.lua"
+----#include "scene\fuben34.lua"
+----#include "scene\fuben35.lua"
+----#include "scene\fuben36.lua"
+----#include "scene\fuben37.lua"
+----#include "scene\fuben38.lua"
+----#include "scene\fuben39.lua"
+----#include "scene\fuben40.lua"
+----#include "scene\fuben41.lua"
+----#include "scene\fuben42.lua"
+----#include "scene\fuben43.lua"
+----#include "scene\fuben44.lua"
+----#include "scene\fuben45.lua"
+----#include "scene\fuben46.lua"
+----#include "scene\fuben47.lua"
+----#include "scene\fuben48.lua"
+----#include "scene\fuben49.lua"
+----#include "scene\fuben50.lua"
+----#include "scene\fuben51.lua"
+----#include "scene\fuben52.lua"
+----#include "scene\fuben53.lua"
+----#include "scene\fuben54.lua"
+----#include "scene\fuben55.lua"
+----#include "scene\fuben56.lua"
+----#include "scene\fuben57.lua"
+----#include "scene\fuben58.lua"
+----#include "scene\fuben59.lua" 
+----#include "scene\fuben60.lua" 
+----#include "scene\fuben61.lua" 
+----#include "scene\fuben62.lua" 
+----#include "scene\fuben63.lua" 
+----#include "scene\fuben64.lua" 
+--#include "scene\fuben65.lua"	--封魔岭
+----#include "scene\fuben66.lua"
+----#include "scene\fuben67.lua"
+----#include "scene\fuben68.lua"	--勇者闯关
+----#include "scene\fuben69.lua"
+----#include "scene\fuben70.lua"
+----#include "scene\fuben71.lua"
+----#include "scene\fuben72.lua"
+----#include "scene\fuben73.lua"
+----#include "scene\fuben74.lua"
+----#include "scene\fuben75.lua"
+----#include "scene\fuben76.lua"
+----#include "scene\fuben77.lua"
+----#include "scene\fuben78.lua"
+----#include "scene\fuben79.lua"
+----#include "scene\fuben80.lua"
+----#include "scene\fuben81.lua"
+----#include "scene\fuben82.lua"
+----#include "scene\fuben83.lua"
+----#include "scene\fuben84.lua"
+----#include "scene\fuben85.lua"
+----#include "scene\fuben86.lua"
+----#include "scene\fuben87.lua"
+----#include "scene\fuben88.lua"
+----#include "scene\fuben89.lua"
+----#include "scene\fuben90.lua"
+----#include "scene\fuben91.lua"
+----#include "scene\fuben92.lua"
+----#include "scene\fuben93.lua"
+----#include "scene\fuben94.lua"
+----#include "scene\fuben95.lua"
+----#include "scene\fuben96.lua"
+----#include "scene\fuben97.lua"
+----#include "scene\fuben98.lua"
+--#include "scene\fuben99.lua"
+--#include "scene\fuben100.lua"
+--#include "scene\fuben101.lua"
+--#include "scene\fuben102.lua"
+--#include "scene\fuben103.lua"
+--#include "scene\fuben104.lua"
+--#include "scene\fuben105.lua"
+--#include "scene\fuben106.lua"
+--#include "scene\fuben107.lua"
+--#include "scene\fuben108.lua"
+--#include "scene\fuben109.lua"
+--#include "scene\fuben110.lua"
+--#include "scene\fuben111.lua"
+--#include "scene\fuben112.lua"
+--#include "scene\fuben113.lua"
+--#include "scene\fuben114.lua"
+--#include "scene\fuben115.lua"
+--#include "scene\fuben116.lua"
+--#include "scene\fuben117.lua"
+--#include "scene\fuben118.lua"
+--#include "scene\fuben119.lua"
+--#include "scene\fuben120.lua"
+--#include "scene\fuben121.lua"
+--#include "scene\fuben122.lua" --天关1
+--#include "scene\fuben123.lua"
+--#include "scene\fuben124.lua"
+--#include "scene\fuben125.lua"
+--#include "scene\fuben126.lua"
+--#include "scene\fuben127.lua"
+--#include "scene\fuben128.lua"
+--#include "scene\fuben129.lua"
+--#include "scene\fuben130.lua"
+--#include "scene\fuben131.lua"
+--#include "scene\fuben132.lua"
+--#include "scene\fuben133.lua"
+--#include "scene\fuben134.lua"
+--#include "scene\fuben135.lua"
+--#include "scene\fuben136.lua"
+--#include "scene\fuben137.lua"
+--#include "scene\fuben138.lua"
+--#include "scene\fuben139.lua"
+--#include "scene\fuben140.lua"
+--#include "scene\fuben141.lua"
+--#include "scene\fuben142.lua"
+--#include "scene\fuben143.lua"
+--#include "scene\fuben144.lua"
+--#include "scene\fuben145.lua"
+--#include "scene\fuben146.lua"
+--#include "scene\fuben147.lua"
+--#include "scene\fuben148.lua"
+--#include "scene\fuben149.lua"
+--#include "scene\fuben150.lua"
+--#include "scene\fuben151.lua"  --天关30
+
+--#include "scene\fuben152.lua"  --74-82boss试练
+--#include "scene\fuben153.lua"  --74-82boss试练
+--#include "scene\fuben154.lua"  --74-82boss试练
+--#include "scene\fuben155.lua"  --74-82boss试练
+--#include "scene\fuben156.lua"  --74-82boss试练
+
+--#include "scene\fuben157.lua"  --3v3竞技
+
+--#include "scene\fuben158.lua"  --110个人BOSS
+--#include "scene\fuben159.lua"  --115个人BOSS
+
+--#include "scene\fuben160.lua"  --发现BOSS
+--#include "scene\fuben161.lua"  --发现BOSS
+--#include "scene\fuben162.lua"  --发现BOSS
+--#include "scene\fuben163.lua"  --发现BOSS
+--#include "scene\fuben164.lua"  --发现BOSS
+--#include "scene\fuben165.lua"  --发现BOSS
+--#include "scene\fuben166.lua"  --发现BOSS
+--#include "scene\fuben167.lua"  --发现BOSS
+--#include "scene\fuben168.lua"  --发现BOSS
+--#include "scene\fuben169.lua"  --发现BOSS
+--#include "scene\fuben170.lua"  --发现BOSS
+--#include "scene\fuben171.lua"  --发现BOSS
+--#include "scene\fuben172.lua"  --发现BOSS
+--#include "scene\fuben173.lua"  --发现BOSS
+--#include "scene\fuben174.lua"  --发现BOSS
+--#include "scene\fuben175.lua"  --发现BOSS
+--#include "scene\fuben176.lua"  --发现BOSS
+--#include "scene\fuben177.lua"  --发现BOSS
+--#include "scene\fuben178.lua"  --发现BOSS
+--#include "scene\fuben179.lua"  --发现BOSS
+--#include "scene\fuben180.lua"  --发现BOSS
+--#include "scene\fuben181.lua"  --发现BOSS
+--#include "scene\fuben182.lua"  --发现BOSS
+
+--#include "scene\fuben183.lua"  --发现BOSS
+--#include "scene\fuben184.lua"  --发现BOSS
+--#include "scene\fuben185.lua"  --发现BOSS
+--#include "scene\fuben186.lua"  --发现BOSS
+--#include "scene\fuben187.lua"  --发现BOSS
+--#include "scene\fuben188.lua"  --发现BOSS
+--#include "scene\fuben189.lua"  --发现BOSS
+
+--#include "scene\fuben190.lua"  --行会BOSS
+--#include "scene\fuben191.lua"  --行会BOSS
+--#include "scene\fuben192.lua"  --行会BOSS
+--#include "scene\fuben193.lua"  --行会BOSS
+--#include "scene\fuben194.lua"  --行会BOSS
+--#include "scene\fuben195.lua"  --行会BOSS
+--#include "scene\fuben196.lua"  --行会BOSS
+--#include "scene\fuben197.lua"  --行会BOSS
+--#include "scene\fuben198.lua"  --行会BOSS
+--#include "scene\fuben199.lua"  --行会BOSS
+--#include "scene\fuben200.lua"  --行会BOSS
+--#include "scene\fuben201.lua"  --行会BOSS
+--#include "scene\fuben202.lua"  --行会BOSS
+--#include "scene\fuben203.lua"  --行会BOSS
+--#include "scene\fuben204.lua"  --行会BOSS
+--#include "scene\fuben205.lua"  --血炼
+--#include "scene\fuben206.lua"  --1v1
+--#include "scene\fuben207.lua"  --戒灵
+
+--#include "scene\fuben208.lua"  --通天塔
+--#include "scene\fuben209.lua"  --通天塔
+--#include "scene\fuben210.lua"  --通天塔
+--#include "scene\fuben211.lua"  --通天塔
+--#include "scene\fuben212.lua"  --通天塔
+--#include "scene\fuben213.lua"  --通天塔
+--#include "scene\fuben214.lua"  --通天塔
+--#include "scene\fuben215.lua"  --通天塔
+--#include "scene\fuben216.lua"  --通天塔
+--#include "scene\fuben217.lua"  --通天塔
+--#include "scene\fuben218.lua"  --通天塔
+--#include "scene\fuben219.lua"  --通天塔
+--#include "scene\fuben220.lua"  --通天塔
+--#include "scene\fuben221.lua"  --通天塔
+--#include "scene\fuben222.lua"  --通天塔
+--#include "scene\fuben223.lua"  --通天塔
+--#include "scene\fuben224.lua"  --通天塔
+--#include "scene\fuben225.lua"  --通天塔
+--#include "scene\fuben226.lua"  --通天塔
+--#include "scene\fuben227.lua"  --通天塔
+--#include "scene\fuben228.lua"  --通天塔
+--#include "scene\fuben229.lua"  --通天塔
+--#include "scene\fuben230.lua"  --通天塔
+--#include "scene\fuben231.lua"  --通天塔
+--#include "scene\fuben232.lua"  --通天塔
+--#include "scene\fuben233.lua"  --通天塔
+--#include "scene\fuben234.lua"  --通天塔
+--#include "scene\fuben235.lua"  --通天塔
+--#include "scene\fuben236.lua"  --通天塔
+--#include "scene\fuben237.lua"  --通天塔
+
+
+
+
+
+
+
+
+}

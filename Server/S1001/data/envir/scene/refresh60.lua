@@ -1,0 +1,9 @@
+{count=8,time=20,firstTime=1,mapx=38,mapy=40,range=10,entityid=85,entityLevel=160,progress=0,},--9转极北之地3-远古战士
+{count=8,time=20,firstTime=1,mapx=53,mapy=31,range=10,entityid=86,entityLevel=160,progress=0,},--9转极北之地3-冰族刀卫
+{count=8,time=20,firstTime=1,mapx=36,mapy=58,range=10,entityid=87,entityLevel=160,progress=0,},--9转极北之地3-冰族骑士
+{count=8,time=20,firstTime=1,mapx=46,mapy=76,range=10,entityid=88,entityLevel=160,progress=0,},--9转极北之地3-冰族巨人
+{count=8,time=20,firstTime=1,mapx=32,mapy=81,range=10,entityid=89,entityLevel=160,progress=0,},--9转极北之地3-大法师
+{count=8,time=20,firstTime=1,mapx=84,mapy=59,range=10,entityid=85,entityLevel=160,progress=0,},--9转极北之地3-远古战士
+{count=8,time=20,firstTime=1,mapx=86,mapy=44,range=10,entityid=86,entityLevel=160,progress=0,},--9转极北之地3-冰族刀卫
+{count=8,time=20,firstTime=1,mapx=69,mapy=60,range=10,entityid=87,entityLevel=160,progress=0,},--9转极北之地3-冰族骑士
+{count=8,time=20,firstTime=1,mapx=61,mapy=46,range=10,entityid=88,entityLevel=160,progress=0,},--9转极北之地3-冰族巨人

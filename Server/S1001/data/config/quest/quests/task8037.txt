@@ -1,0 +1,40 @@
+﻿--lua script
+{
+	id = 8037,
+	parentid = 0,type = 3,level = 0,circle = 0,entrust = 180,star = 5,guideId = 0,timelimit = 0,interval = 86400,maxcount = 0,
+	cangiveup = true,
+	automount = false,
+	autoRun = false,
+	excludetree = true,
+	randomTarget = false,
+	name = Lang.Quest.q03594,
+	content = Lang.Quest.q03599,
+
+	prom = { type = 0, scene = "", npc = "" },
+	comp = { type = 0, scene = Lang.SceneName.s00125, npc = Lang.EntityName.n00470 },
+	target = {
+		{
+			type = 8, id = 1, count = 1, rewardId = 0,useList = false,
+		},
+	},
+	conds = {
+		{ type = 0, id = 0, count = 30 },
+		{ type = 4, id = 1, count = 2 },
+	},
+	awards = {
+	},
+	PromMsTalks = {
+		Lang.Talk.t05391,
+	},
+	CompMsTalks = {
+		Lang.Talk.t05386,
+	},
+	CompMsTip = {
+		Lang.Talk.t05387,
+	},
+	PassMsTip = {
+	},
+	CompCallBack = "OnFinCamp",
+	CompCallbackArg = {
+	},
+},

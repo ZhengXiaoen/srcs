@@ -1,0 +1,3 @@
+-- {count=1,time=9999,firstTime=1,mapx=143,mapy=101,range=3,entityid=44,entityLevel=80,progress=0,},--��������-������ħ[2ת]
+-- {count=1,time=9999,firstTime=1,mapx=58,mapy=116,range=3,entityid=44,entityLevel=80,progress=0,},--��������-������ħ[2ת]
+-- {count=1,time=9999,firstTime=1,mapx=106,mapy=31,range=3,entityid=44,entityLevel=80,progress=0,},--��������-������ħ[2ת]

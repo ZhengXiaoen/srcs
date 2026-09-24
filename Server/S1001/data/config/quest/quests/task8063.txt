@@ -1,0 +1,458 @@
+﻿--lua script
+{
+	id = 8063,			-- 天书任务
+	parentid = 0,type = 12,level = 20,circle = 0,entrust = 2,star = 3,guideId = 0,timelimit = 0,interval = 86400,maxcount = 10,
+	cangiveup = true,
+	automount = true,
+	autoRun = false,
+	excludetree = false,
+	showTimerBox = false,
+	randomTarget = true,
+	name = Lang.Quest.name8063,
+	content = Lang.Quest.desc8063,
+
+	prom = 0,
+	comp = 0,
+	target = {
+		{
+			type = 0, id = 62, count = 50, rewardId = 0,useList = false,
+			location = {
+				sceneid = 22, x= 0,y = 0,entityName = Lang.EntityName.m62,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 75, count = 50, rewardId = 0,useList = false,
+			location = {
+				sceneid = 23, x= 0,y = 0,entityName = Lang.EntityName.m75,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 183, count = 50, rewardId = 0,useList = false,
+			location = {
+				sceneid = 25, x= 0,y = 0,entityName = Lang.EntityName.m183,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 182, count = 60, rewardId = 0,useList = false,
+			location = {
+				sceneid = 24, x= 0,y = 0,entityName = Lang.EntityName.m182,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 181, count = 40, rewardId = 0,useList = false,
+			location = {
+				sceneid = 24, x= 0,y = 0,entityName = Lang.EntityName.m181,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 301, count = 10, rewardId = 0,useList = false,
+			location = {
+				sceneid = 24, x= 0,y = 0,entityName = Lang.EntityName.m301,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 300, count = 10, rewardId = 0,useList = false,
+			location = {
+				sceneid = 23, x= 0,y = 0,entityName = Lang.EntityName.m300,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 40, count = 100, rewardId = 0,useList = false,
+			location = {
+				sceneid = 22, x= 0,y = 0,entityName = Lang.EntityName.m62,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 40, count = 80, rewardId = 0,useList = false,
+			location = {
+				sceneid = 25, x= 0,y = 0,entityName = Lang.EntityName.m65,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 40, count = 70, rewardId = 0,useList = false,
+			location = {
+				sceneid = 23, x= 0,y = 0,entityName = Lang.EntityName.m63,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 37, id = 3, count = 1, rewardId = 0,useList = false, data = Lang.Quest.data806310,
+		},
+		{
+			type = 37, id = 2, count = 1, rewardId = 0,useList = false, data = Lang.Quest.data806311,
+		},
+		{
+			type = 37, id = 3, count = 1, rewardId = 0,useList = false, data = Lang.Quest.data806312,
+		},
+		{
+			type = 127, id = 50047, count = 1, rewardId = 0,useList = false, data = Lang.Quest.data806313,
+			location = {
+				sceneid = 8, x= 0,y = 0,entityName = Lang.EntityName.n00154,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50048, count = 1, rewardId = 0,useList = false, data = Lang.Quest.data806314,
+			location = {
+				sceneid = 105, x= 0,y = 0,entityName = Lang.EntityName.n00166,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50049, count = 1, rewardId = 0,useList = false, data = Lang.Quest.data806315,
+			location = {
+				sceneid = 8, x= 0,y = 0,entityName = Lang.EntityName.n00054,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 40, count = 50, rewardId = 0,useList = false,
+			location = {
+				sceneid = 24, x= 0,y = 0,entityName = Lang.EntityName.m68,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50050, count = 1, rewardId = 1,useList = false, data = Lang.Quest.data806317,
+			location = {
+				sceneid = 106, x= 0,y = 0,entityName = Lang.EntityName.n00167,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50051, count = 1, rewardId = 1,useList = false, data = Lang.Quest.data806318,
+			location = {
+				sceneid = 104, x= 0,y = 0,entityName = Lang.EntityName.n00165,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50052, count = 1, rewardId = 1,useList = false, data = Lang.Quest.data806319,
+			location = {
+				sceneid = 8, x= 0,y = 0,entityName = Lang.EntityName.n00095,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50053, count = 1, rewardId = 1,useList = false, data = Lang.Quest.data806320,
+			location = {
+				sceneid = 8, x= 0,y = 0,entityName = Lang.EntityName.n00161,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 305, count = 10, rewardId = 1,useList = false,
+			location = {
+				sceneid = 26, x= 0,y = 0,entityName = Lang.EntityName.m305,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 307, count = 10, rewardId = 1,useList = false,
+			location = {
+				sceneid = 28, x= 0,y = 0,entityName = Lang.EntityName.m307,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 306, count = 10, rewardId = 1,useList = false,
+			location = {
+				sceneid = 27, x= 0,y = 0,entityName = Lang.EntityName.m306,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 78, count = 80, rewardId = 1,useList = false,
+			location = {
+				sceneid = 29, x= 0,y = 0,entityName = Lang.EntityName.m78,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 80, count = 80, rewardId = 1,useList = false,
+			location = {
+				sceneid = 29, x= 0,y = 0,entityName = Lang.EntityName.m80,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 172, count = 30, rewardId = 1,useList = false,
+			location = {
+				sceneid = 29, x= 0,y = 0,entityName = Lang.EntityName.m172,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 40, count = 100, rewardId = 1,useList = false,
+			location = {
+				sceneid = 27, x= 0,y = 0,entityName = Lang.EntityName.m74,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 40, count = 60, rewardId = 1,useList = false,
+			location = {
+				sceneid = 29, x= 0,y = 0,entityName = Lang.EntityName.m172,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 40, count = 40, rewardId = 1,useList = false,
+			location = {
+				sceneid = 29, x= 0,y = 0,entityName = Lang.EntityName.m171,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 37, id = 2, count = 1, rewardId = 1,useList = false, data = Lang.Quest.data806330,
+		},
+		{
+			type = 0, id = 96, count = 30, rewardId = 2,useList = false,
+			location = {
+				sceneid = 31, x= 0,y = 0,entityName = Lang.EntityName.m96,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 92, count = 100, rewardId = 2,useList = false,
+			location = {
+				sceneid = 31, x= 0,y = 0,entityName = Lang.EntityName.m92,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 84, count = 70, rewardId = 2,useList = false,
+			location = {
+				sceneid = 30, x= 0,y = 0,entityName = Lang.EntityName.m84,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50092, count = 1, rewardId = 2,useList = false, data = Lang.Quest.data806334,
+			location = {
+				sceneid = 8, x= 0,y = 0,entityName = Lang.EntityName.n00024,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 302, count = 20, rewardId = 2,useList = false,
+			location = {
+				sceneid = 30, x= 0,y = 0,entityName = Lang.EntityName.m302,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 303, count = 20, rewardId = 2,useList = false,
+			location = {
+				sceneid = 31, x= 0,y = 0,entityName = Lang.EntityName.m303,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 304, count = 20, rewardId = 2,useList = false,
+			location = {
+				sceneid = 32, x= 0,y = 0,entityName = Lang.EntityName.m304,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 105, count = 100, rewardId = 2,useList = false,
+			location = {
+				sceneid = 32, x= 0,y = 0,entityName = Lang.EntityName.m105,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 50, count = 50, rewardId = 2,useList = false,
+			location = {
+				sceneid = 32, x= 0,y = 0,entityName = Lang.EntityName.m108,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 50, count = 60, rewardId = 2,useList = false,
+			location = {
+				sceneid = 32, x= 0,y = 0,entityName = Lang.EntityName.m112,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 50, count = 80, rewardId = 2,useList = false,
+			location = {
+				sceneid = 33, x= 0,y = 0,entityName = Lang.EntityName.m176,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50097, count = 1, rewardId = 2,useList = false, data = Lang.Quest.data806342,
+		},
+		{
+			type = 0, id = 110, count = 50, rewardId = 3,useList = false,
+			location = {
+				sceneid = 32, x= 0,y = 0,entityName = Lang.EntityName.m110,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 175, count = 60, rewardId = 3,useList = false,
+			location = {
+				sceneid = 33, x= 0,y = 0,entityName = Lang.EntityName.m175,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 108, count = 100, rewardId = 3,useList = false,
+			location = {
+				sceneid = 32, x= 0,y = 0,entityName = Lang.EntityName.m108,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 112, count = 50, rewardId = 3,useList = false,
+			location = {
+				sceneid = 32, x= 0,y = 0,entityName = Lang.EntityName.m112,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 107, count = 60, rewardId = 3,useList = false,
+			location = {
+				sceneid = 32, x= 0,y = 0,entityName = Lang.EntityName.m107,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 50, count = 100, rewardId = 3,useList = false,
+			location = {
+				sceneid = 30, x= 0,y = 0,entityName = Lang.EntityName.m84,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 50, count = 50, rewardId = 3,useList = false,
+			location = {
+				sceneid = 31, x= 0,y = 0,entityName = Lang.EntityName.m95,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 50, count = 50, rewardId = 3,useList = false,
+			location = {
+				sceneid = 33, x= 0,y = 0,entityName = Lang.EntityName.m109,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50101, count = 1, rewardId = 3,useList = false, data = Lang.Quest.data806351,
+		},
+		{
+			type = 127, id = 50102, count = 1, rewardId = 3,useList = false, data = Lang.Quest.data806352,
+		},
+		{
+			type = 127, id = 50100, count = 1, rewardId = 4,useList = false, data = Lang.Quest.data806353,
+		},
+		{
+			type = 37, id = 2, count = 1, rewardId = 4,useList = false, data = Lang.Quest.data806354,
+		},
+		{
+			type = 0, id = 108, count = 80, rewardId = 4,useList = false,
+			location = {
+				sceneid = 32, x= 0,y = 0,entityName = Lang.EntityName.m108,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 112, count = 80, rewardId = 4,useList = false,
+			location = {
+				sceneid = 32, x= 0,y = 0,entityName = Lang.EntityName.m112,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 50, count = 60, rewardId = 4,useList = false,
+			location = {
+				sceneid = 31, x= 0,y = 0,entityName = Lang.EntityName.m95,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50101, count = 1, rewardId = 4,useList = false, data = Lang.Quest.data806358,
+		},
+		{
+			type = 127, id = 50102, count = 1, rewardId = 4,useList = false, data = Lang.Quest.data806359,
+		},
+		{
+			type = 127, id = 50092, count = 1, rewardId = 4,useList = false, data = Lang.Quest.data806360,
+			location = {
+				sceneid = 8, x= 0,y = 0,entityName = Lang.EntityName.n00024,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 99, count = 60, rewardId = 4,useList = false,
+			location = {
+				sceneid = 32, x= 0,y = 0,entityName = Lang.EntityName.m99,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 50, count = 40, rewardId = 4,useList = false,
+			location = {
+				sceneid = 33, x= 0,y = 0,entityName = Lang.EntityName.m176,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 557, count = 120, rewardId = 5,useList = false,
+			location = {
+				sceneid = 121, x= 0,y = 0,entityName = Lang.EntityName.m557,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 560, count = 120, rewardId = 5,useList = false,
+			location = {
+				sceneid = 121, x= 0,y = 0,entityName = Lang.EntityName.m560,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 60, count = 120, rewardId = 5,useList = false,
+			location = {
+				sceneid = 121, x= 0,y = 0,entityName = Lang.EntityName.m562,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 60, count = 120, rewardId = 5,useList = false,
+			location = {
+				sceneid = 121, x= 0,y = 0,entityName = Lang.EntityName.m556,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50092, count = 1, rewardId = 4,useList = false, data = Lang.Quest.data806367,
+			location = {
+				sceneid = 8, x= 0,y = 0,entityName = Lang.EntityName.n00024,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 561, count = 120, rewardId = 5,useList = false,
+			location = {
+				sceneid = 121, x= 0,y = 0,entityName = Lang.EntityName.m561,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 567, count = 120, rewardId = 5,useList = false,
+			location = {
+				sceneid = 122, x= 0,y = 0,entityName = Lang.EntityName.m567,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 60, count = 120, rewardId = 5,useList = false,
+			location = {
+				sceneid = 122, x= 0,y = 0,entityName = Lang.EntityName.m568,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 558, count = 120, rewardId = 5,useList = false,
+			location = {
+				sceneid = 121, x= 0,y = 0,entityName = Lang.EntityName.m558,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 60, count = 120, rewardId = 5,useList = false,
+			location = {
+				sceneid = 122, x= 0,y = 0,entityName = Lang.EntityName.m565,hideFastTransfer = false,
+			},
+		},
+	},
+	conds = {
+		{ type = 0, id = 0, count = 53 },
+	},
+	awards = {
+		{
+			{ type = 20, id = 1, count = 155, group = 0,strong = 1,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+		{
+			{ type = 20, id = 1, count = 158, group = 0,strong = 1,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+		{
+			{ type = 20, id = 1, count = 161, group = 0,strong = 1,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+		{
+			{ type = 20, id = 1, count = 164, group = 0,strong = 1,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+		{
+			{ type = 20, id = 1, count = 167, group = 0,strong = 1,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+		{
+			{ type = 20, id = 1, count = 170, group = 0,strong = 1,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk80631,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk80631,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip80631,
+	},
+	PassMsTip = {
+		Lang.Quest.passTip80631,
+	},
+},

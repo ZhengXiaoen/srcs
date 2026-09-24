@@ -1,0 +1,13 @@
+{count=5,time=20,firstTime=1,mapx=31,mapy=51,range=2,entityid=39,entityLevel=90,progress=0,},--2转赤月洞窟4-飞天蜘蛛
+{count=5,time=20,firstTime=1,mapx=51,mapy=40,range=2,entityid=40,entityLevel=90,progress=0,},--2转赤月洞窟4-巨刺蜘蛛
+{count=5,time=20,firstTime=1,mapx=68,mapy=31,range=2,entityid=41,entityLevel=90,progress=0,},--2转赤月洞窟4-赤月巨人
+{count=5,time=20,firstTime=1,mapx=85,mapy=30,range=2,entityid=42,entityLevel=90,progress=0,},--2转赤月洞窟4-赤月血巨人
+{count=5,time=20,firstTime=1,mapx=95,mapy=44,range=2,entityid=43,entityLevel=90,progress=0,},--2转赤月洞窟4-赤月金刚
+{count=5,time=20,firstTime=1,mapx=83,mapy=82,range=2,entityid=39,entityLevel=90,progress=0,},--2转赤月洞窟4-飞天蜘蛛
+{count=5,time=20,firstTime=1,mapx=56,mapy=88,range=2,entityid=40,entityLevel=90,progress=0,},--2转赤月洞窟4-巨刺蜘蛛
+{count=5,time=20,firstTime=1,mapx=48,mapy=62,range=2,entityid=41,entityLevel=90,progress=0,},--2转赤月洞窟4-赤月巨人
+{count=5,time=20,firstTime=1,mapx=59,mapy=51,range=2,entityid=42,entityLevel=90,progress=0,},--2转赤月洞窟4-赤月血巨人
+{count=5,time=20,firstTime=1,mapx=86,mapy=52,range=2,entityid=43,entityLevel=90,progress=0,},--2转赤月洞窟4-赤月金刚
+{count=5,time=20,firstTime=1,mapx=53,mapy=27,range=2,entityid=43,entityLevel=90,progress=0,},--2转赤月洞窟4-赤月金刚
+{count=5,time=20,firstTime=1,mapx=96,mapy=64,range=2,entityid=41,entityLevel=90,progress=0,},--2转赤月洞窟4-赤月巨人
+{count=5,time=20,firstTime=1,mapx=44,mapy=73,range=2,entityid=42,entityLevel=90,progress=0,},--2转赤月洞窟4-赤月血巨人

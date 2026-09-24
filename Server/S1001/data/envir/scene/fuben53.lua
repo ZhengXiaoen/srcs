@@ -1,0 +1,22 @@
+{ --经验战神闯关副本
+	--副本id
+	fbid = 53,
+	--副本的适合等级(推荐等级)，
+	recommandLevel = 55,
+	--destoryTime = 1200,	--副本当没人的时候的销毁时间，如果副本没配置，则默认为全局的，单位秒
+	--这个副本需要用到的场景列表
+	scenes =
+	{
+--#include "scene171.lua"
+--#include "scene172.lua"
+	},
+
+	fbProgressTitles=
+	{
+		Lang.FBTalk.t00055,
+	},
+
+	fbProgressTips = Lang.FBTalk.ts0022,
+
+
+},

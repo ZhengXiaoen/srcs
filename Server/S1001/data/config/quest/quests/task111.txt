@@ -1,0 +1,41 @@
+﻿--lua script
+{
+	id = 111,			-- 援手
+	parentid = 110,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name111,
+	content = Lang.Quest.desc111,
+
+	prom = 264,
+	comp = 38,
+	target = {
+		{
+			type = 5, id = 0, count = 76, rewardId = 0,useList = false,
+		},
+	},
+	conds = {
+		{ type = 0, id = 0, count = 1 },
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 60000000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 5, id = 0, count = 500000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk1111,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk1111,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip1111,
+	},
+	PassMsTip = {
+	},
+},

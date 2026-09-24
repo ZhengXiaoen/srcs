@@ -1,0 +1,63 @@
+﻿--lua script
+{
+	id = 8007,			-- 咆哮亡灵
+	parentid = 0,type = 3,level = 0,circle = 0,entrust = 6,star = 2,guideId = 0,timelimit = 0,interval = 86400,maxcount = 5,
+	cangiveup = true,
+	automount = true,
+	autoRun = false,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = true,
+	name = Lang.Quest.name8007,
+	content = Lang.Quest.desc8007,
+
+	prom = 0,
+	comp = 0,
+	target = {
+		{
+			type = 0, id = 169, count = 50, rewardId = 0,useList = false,
+			location = {
+				sceneid = 22, x= 0,y = 0,entityName = Lang.EntityName.m169,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 75, count = 50, rewardId = 1,useList = false,
+			location = {
+				sceneid = 23, x= 0,y = 0,entityName = Lang.EntityName.m75,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 65, count = 50, rewardId = 2,useList = false,
+			location = {
+				sceneid = 23, x= 0,y = 0,entityName = Lang.EntityName.m65,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 12, id = 24, count = 80, rewardId = 3,useList = false, data = Lang.Quest.data80073,
+		},
+	},
+	conds = {
+		{ type = 0, id = 45, count = 41 },
+	},
+	awards = {
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk80071,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk80071,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip80071,
+	},
+	PassMsTip = {
+	},
+},

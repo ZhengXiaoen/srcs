@@ -1,0 +1,65 @@
+﻿--lua script
+{
+	id = 8072,
+	parentid = 0,type = 2,level = 0,circle = 3,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 86400,maxcount = 1,
+	cangiveup = true,
+	automount = false,
+	autoRun = false,
+	excludetree = true,
+	randomTarget = false,
+	name = Lang.Quest.q03996,
+	content = Lang.Quest.q03997,
+
+	prom = { type = 0, scene = Lang.SceneName.s00049, npc = Lang.EntityName.n00367 },
+	comp = { type = 0, scene = Lang.SceneName.s00049, npc = Lang.EntityName.n00367 },
+	target = {
+		{
+			type = 0, id = 283, count = 10, rewardId = 0,useList = true,
+			location = {
+				sceneid = 74, x= 0,y = 0,entityName = Lang.EntityName.m00283,hideFastTransfer = true,
+				pass = {
+					{ sceneid=49,entityName = Lang.EntityName.n00463, actionDesc = Lang.Talk.t02881,},
+				},
+			},
+		},
+		{
+			type = 0, id = 286, count = 7, rewardId = 0,useList = true,
+			location = {
+				sceneid = 75, x= 0,y = 0,entityName = Lang.EntityName.m00286,hideFastTransfer = true,
+				pass = {
+					{ sceneid=49,entityName = Lang.EntityName.n00463, actionDesc = Lang.Talk.t02881,},
+				},
+			},
+		},
+		{
+			type = 0, id = 322, count = 1, rewardId = 0,useList = true,
+			location = {
+				sceneid = 76, x= 0,y = 0,entityName = Lang.EntityName.m00322,hideFastTransfer = true,
+				pass = {
+					{ sceneid=49,entityName = Lang.EntityName.n00463, actionDesc = Lang.Talk.t02881,},
+				},
+			},
+		},
+	},
+	conds = {
+		{ type = 7, id = 8071, count = 0 },
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 300000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,},
+			{ type = 5, id = 0, count = 700, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,},
+			{ type = 12, id = 0, count = 15, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,},
+		},
+	},
+	PromMsTalks = {
+		Lang.Talk.t05910,
+	},
+	CompMsTalks = {
+		Lang.Talk.t05911,
+	},
+	CompMsTip = {
+		Lang.Talk.t05912,
+	},
+	PassMsTip = {
+	},
+},

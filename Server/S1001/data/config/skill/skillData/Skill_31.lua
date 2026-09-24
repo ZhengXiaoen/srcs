@@ -1,0 +1,21 @@
+﻿{
+	id = 31,
+	name = Lang.Skill.s31Name,
+	desc = Lang.Skill.s31Desc,
+	-- = 挖矿技能,
+	vocation = 0,
+	isDelete = true,
+	skillType = 0,
+	skillClass = 6,
+	skillSpellType = 4,
+	commonCd = 500,
+	canbeDefault = true,
+	specialBuffCond = 0,
+	notAutoUse = false,
+	magicLock = false,
+	needCalPassiveProperty = false,
+	priority = 0,
+	skillSubLevel = { 
+--#include "Skill_31_1.lua" 
+	},
+},

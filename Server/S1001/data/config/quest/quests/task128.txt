@@ -1,0 +1,36 @@
+﻿--lua script
+{
+	id = 128,			-- 首领
+	parentid = 127,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name128,
+	content = Lang.Quest.desc128,
+
+	prom = 227,
+	comp = 24,
+	target = {
+	},
+	conds = {
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 20000000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk1281,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk1281,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip1281,
+	},
+	PassMsTip = {
+	},
+},

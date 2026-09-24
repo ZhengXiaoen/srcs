@@ -1,0 +1,40 @@
+﻿--lua script
+{
+	id = 117,			-- 访问刁三爷
+	parentid = 116,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = true,
+	randomTarget = false,
+	name = Lang.Quest.name117,
+	content = Lang.Quest.desc117,
+
+	prom = 34,
+	comp = 92,
+	target = {
+		{
+			type = 5, id = 0, count = 78, rewardId = 0,useList = false,
+		},
+	},
+	conds = {
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 80000000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 5, id = 0, count = 600000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk1171,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk1171,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip1171,
+	},
+	PassMsTip = {
+	},
+},

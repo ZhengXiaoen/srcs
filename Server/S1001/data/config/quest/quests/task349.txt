@@ -1,0 +1,50 @@
+﻿--lua script
+{
+	id = 349,			-- 攻城记忆
+	parentid = 500,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name349,
+	content = Lang.Quest.desc349,
+
+	prom = 0,
+	comp = 0,
+	target = {
+		{
+			type = 19, id = 113, count = 1, rewardId = 0,useList = false, data = Lang.Quest.data3490,
+			location = {
+				sceneid = 2, x= 0,y = 0,entityName = Lang.EntityName.n00014,hideFastTransfer = true,
+			},
+		},
+	},
+	conds = {
+		{ type = 0, id = 0, count = 1 },
+		{ type = 3, id = 1, count = 450 },
+		{ type = 3, id = 453, count = 0 },
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 1000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 0, id = 1030, count = 1, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk3491,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk3491,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip3491,
+	},
+	PassMsTip = {
+	},
+	PromCallBack = "OnPromEnterFuben",
+	PromCallBackArg = {
+		 35,
+	},
+},

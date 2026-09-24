@@ -1,0 +1,43 @@
+﻿--lua script
+{
+	id = 148,			-- 击退魔族
+	parentid = 500,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name148,
+	content = Lang.Quest.desc148,
+
+	prom = 108,
+	comp = 108,
+	target = {
+		{
+			type = 0, id = 35, count = 5, rewardId = 0,useList = false,
+			location = {
+				sceneid = 14, x= 0,y = 0,entityName = Lang.EntityName.m35,hideFastTransfer = false,
+			},
+		},
+	},
+	conds = {
+		{ type = 0, id = 0, count = 1 },
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 1700000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk1481,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk1481,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip1481,
+	},
+	PassMsTip = {
+	},
+},

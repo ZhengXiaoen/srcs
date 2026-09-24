@@ -1,0 +1,9 @@
+
+--#include "data\functions\Tasks\CampTasks\GroupLeaderConquest\LeaderConquestCommon.lua" once
+
+--ÉêÇëÃËÖ÷Õù¶áÕ½
+MiscsImplement.ApplyLeaderConquest = function (sysarg,msgid, packet)
+	applyGroupLeaderConquest(sysarg)
+end
+
+MiscsImplement.registerMsgHandler(31,MiscsImplement.ApplyLeaderConquest)

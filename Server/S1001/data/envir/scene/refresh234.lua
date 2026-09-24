@@ -1,0 +1,15 @@
+{count=1,time=900,firstTime=1,mapx=54,mapy=26,range=3,entityid=536,entityLevel=80,progress=0,},--¶á±¦Ææ±ø-Òì½Ì½Ì»Ê?¶á±¦
+{count=1,time=900,firstTime=1,mapx=65,mapy=29,range=3,entityid=537,entityLevel=80,progress=0,},--¶á±¦Ææ±ø-Ğé¿Õ´óµÛ?¶á±¦
+{count=1,time=900,firstTime=1,mapx=68,mapy=48,range=3,entityid=539,entityLevel=80,progress=0,},--¶á±¦Ææ±ø-Âù»Ä´ó½Ì»Ê?¶á±¦
+{count=1,time=900,firstTime=1,mapx=56,mapy=52,range=3,entityid=541,entityLevel=80,progress=0,},--¶á±¦Ææ±ø-ÌúÁ´½©Ê¬»Ê?±äÒì
+{count=1,time=900,firstTime=1,mapx=37,mapy=71,range=3,entityid=544,entityLevel=80,progress=0,},--¶á±¦Ææ±ø-Ğé¿Õ´óµÛ?±äÒì
+{count=1,time=900,firstTime=1,mapx=43,mapy=59,range=3,entityid=545,entityLevel=80,progress=0,},--¶á±¦Ææ±ø-ÆÆËé½Ì»Ê?±äÒì
+{count=1,time=900,firstTime=1,mapx=35,mapy=47,range=3,entityid=546,entityLevel=80,progress=0,},--¶á±¦Ææ±ø-Âù»Ä´ó½Ì»Ê?±äÒì
+{count=1,time=900,firstTime=1,mapx=23,mapy=43,range=3,entityid=547,entityLevel=80,progress=0,},--¶á±¦Ææ±ø-±äÒì÷¼÷ÃÍõ?±©×ß
+{count=1,time=900,firstTime=1,mapx=15,mapy=49,range=3,entityid=548,entityLevel=80,progress=0,},--¶á±¦Ææ±ø-ÌúÁ´½©Ê¬»Ê?±©×ß
+{count=1,time=900,firstTime=1,mapx=17,mapy=65,range=3,entityid=550,entityLevel=80,progress=0,},--¶á±¦Ææ±ø-Òì½Ì½Ì»Ê?±©×ß
+{count=1,time=900,firstTime=1,mapx=38,mapy=26,range=3,entityid=553,entityLevel=80,progress=0,},--¶á±¦Ææ±ø-Âù»Ä´ó½Ì»Ê?±©×ß
+{count=1,time=900,firstTime=1,mapx=51,mapy=38,range=3,entityid=554,entityLevel=80,progress=0,},--¶á±¦Ææ±ø-±äÒì÷¼÷ÃÍõ?ÃÔÊ§
+{count=1,time=900,firstTime=1,mapx=26,mapy=71,range=3,entityid=555,entityLevel=80,progress=0,},--¶á±¦Ææ±ø-ÌúÁ´½©Ê¬»Ê?ÃÔÊ§
+{count=1,time=900,firstTime=1,mapx=15,mapy=63,range=3,entityid=556,entityLevel=80,progress=0,},--¶á±¦Ææ±ø-°µÖ®Ç¯³æ»Ê?ÃÔÊ§
+{count=1,time=900,firstTime=1,mapx=63,mapy=69,range=3,entityid=557,entityLevel=80,progress=0,},--¶á±¦Ææ±ø-Òì½Ì½Ì»Ê?ÃÔÊ§

@@ -1,0 +1,36 @@
+﻿--lua script
+{
+	id = 800,			-- 下载并使用登录器
+	parentid = 0,type = 1,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = false,
+	excludetree = false,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name800,
+	content = Lang.Quest.desc800,
+
+	prom = 0,
+	comp = 0,
+	target = {
+		{
+			type = 15, id = 1, count = 1, rewardId = 0,useList = false, data = Lang.Quest.data8000,
+		},
+	},
+	conds = {
+		{ type = 0, id = 0, count = 13 },
+	},
+	awards = {
+		{
+		},
+	},
+	PromMsTalks = {
+	},
+	CompMsTalks = {
+	},
+	CompMsTip = {
+	},
+	PassMsTip = {
+	},
+},

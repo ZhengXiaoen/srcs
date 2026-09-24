@@ -1,0 +1,46 @@
+﻿--lua script
+{
+	id = 7,			-- 解甲归田
+	parentid = 6,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name7,
+	content = Lang.Quest.desc7,
+
+	prom = 6,
+	comp = 7,
+	target = {
+		{
+			type = 0, id = 4, count = 3, rewardId = 0,useList = false,
+			location = {
+				sceneid = 1, x= 0,y = 0,entityName = Lang.EntityName.m4,hideFastTransfer = false,
+			},
+		},
+	},
+	conds = {
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 1400, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 5, id = 0, count = 100000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 0, id = 132, count = 2, group = 0,strong = 0,quality = 0,job = 1,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+			{ type = 0, id = 138, count = 2, group = 0,strong = 0,quality = 0,job = 2,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+			{ type = 0, id = 144, count = 2, group = 0,strong = 0,quality = 0,job = 3,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk71,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk71,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip71,
+	},
+	PassMsTip = {
+	},
+},

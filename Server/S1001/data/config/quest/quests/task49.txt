@@ -1,0 +1,72 @@
+﻿--lua script
+{
+	id = 49,			-- 衔草结环
+	parentid = 48,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name49,
+	content = Lang.Quest.desc49,
+
+	prom = 51,
+	comp = 52,
+	target = {
+		{
+			type = 0, id = 172, count = 1, rewardId = 0,useList = false,
+			location = {
+				sceneid = 173, x= 0,y = 0,entityName = Lang.EntityName.m172,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 173, count = 1, rewardId = 0,useList = false,
+			location = {
+				sceneid = 173, x= 0,y = 0,entityName = Lang.EntityName.m173,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 174, count = 1, rewardId = 0,useList = false,
+			location = {
+				sceneid = 173, x= 0,y = 0,entityName = Lang.EntityName.m174,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 175, count = 1, rewardId = 0,useList = false,
+			location = {
+				sceneid = 173, x= 0,y = 0,entityName = Lang.EntityName.m175,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 176, count = 1, rewardId = 0,useList = false,
+			location = {
+				sceneid = 173, x= 0,y = 0,entityName = Lang.EntityName.m176,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 251, count = 1, rewardId = 0,useList = false,
+			location = {
+				sceneid = 173, x= 0,y = 0,entityName = Lang.EntityName.m251,hideFastTransfer = false,
+			},
+		},
+	},
+	conds = {
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 3000000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 5, id = 0, count = 200000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk491,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk491,
+	},
+	CompMsTip = {
+	},
+	PassMsTip = {
+	},
+},

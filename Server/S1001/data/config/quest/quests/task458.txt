@@ -1,0 +1,40 @@
+﻿--lua script
+{
+	id = 458,			-- 途径水村
+	parentid = 500,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name458,
+	content = Lang.Quest.desc458,
+
+	prom = 0,
+	comp = 0,
+	target = {
+	},
+	conds = {
+		{ type = 0, id = 0, count = 0 },
+	},
+	awards = {
+		{
+			{ type = 0, id = 1, count = 1, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+			{ type = 2, id = 0, count = 100, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+			{ type = 0, id = 2, count = 1, group = 0,strong = 0,quality = 0,job = 0,sex = 0,bind = true,levelRate = 0.00, ringRate = 0.00},
+			{ type = 0, id = 3, count = 1, group = 0,strong = 0,quality = 0,job = 0,sex = 1,bind = true,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk4581,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk4581,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip4581,
+	},
+	PassMsTip = {
+	},
+},

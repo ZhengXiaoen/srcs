@@ -1,0 +1,42 @@
+﻿--lua script
+{
+	id = 133,			-- 九黎传说
+	parentid = 132,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name133,
+	content = Lang.Quest.desc133,
+
+	prom = 98,
+	comp = 98,
+	target = {
+		{
+			type = 0, id = 250, count = 5, rewardId = 0,useList = false,
+			location = {
+				sceneid = 38, x= 0,y = 0,entityName = Lang.EntityName.m250,hideFastTransfer = false,
+			},
+		},
+	},
+	conds = {
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 24000000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk1331,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk1331,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip1331,
+	},
+	PassMsTip = {
+	},
+},

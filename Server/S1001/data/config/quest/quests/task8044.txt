@@ -1,0 +1,56 @@
+﻿{
+	id = 8044,
+	name = Lang.Quest.q03720,
+	parentid = 0,
+	type = 3,
+	level = 0,
+	cangiveup = true,
+	content = Lang.Quest.q03721,
+
+	prom =
+  {
+    type = 0,
+	scene = Lang.SceneName.s00049,
+	npc = Lang.EntityName.n00495,
+	},
+
+	comp =
+	{
+    type = 0,
+	scene = Lang.SceneName.s00049,
+	npc = Lang.EntityName.n00495,
+  },
+
+  target =
+  {
+    { type = 127, id = 31049, count = 1,data = Lang.Talk.t10065 },
+  },
+  --奖励列表
+	awards =
+  {
+    { type = 2, id = 0, count = 112480,  bind = true, job = 0, sex = -1, group=0 },
+},
+  --任务条件表
+  conds =
+  {
+
+    { type = 0, id = 0,count = 200 },  --1级可接
+  },
+  timelimit = 0,
+  interval = 86400,
+  maxcount = 10,
+	excludetree = true,
+
+  PromMsTalks = {
+       Lang.Talk.t05574,
+  },
+  
+  CompMsTalks = {
+       Lang.Talk.t05575,
+  },
+  
+  CompMsTip = {
+       Lang.Talk.t05576,
+  }, 
+ 
+},

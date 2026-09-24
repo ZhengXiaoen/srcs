@@ -1,0 +1,23 @@
+﻿{
+	id = 205,
+	name = Lang.Skill.s15Name,
+	desc = Lang.Skill.s15Desc,
+	-- = 魔法护盾,
+	vocation = 0,
+	isDelete = false,
+	skillType = 2,
+	skillClass = 9,
+	skillSpellType = 3,
+	commonCd = 300,
+	canbeDefault = false,
+	specialBuffCond = 0,
+	notAutoUse = false,
+	magicLock = false,
+	needCalPassiveProperty = false,
+	isAutoLearn=false,
+	priority = 0,
+	miaoshu = "主线猪神掉落/商城购买",
+	skillSubLevel = { 
+--#include "Skill_205_1.lua"
+	},
+},

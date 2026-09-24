@@ -1,0 +1,13 @@
+{count=8,time=20,firstTime=1,mapx=67,mapy=28,range=8,entityid=52,entityLevel=110,progress=0,},--4×ªÐÞÂÞµØ¹¬4-ÐÞÂÞÁ¦Ê¿
+{count=8,time=20,firstTime=1,mapx=53,mapy=41,range=8,entityid=53,entityLevel=110,progress=0,},--4×ªÐÞÂÞµØ¹¬4-ÐÞÂÞÆïÊ¿
+{count=8,time=20,firstTime=1,mapx=40,mapy=54,range=8,entityid=54,entityLevel=110,progress=0,},--4×ªÐÞÂÞµØ¹¬4-ÐÞÂÞ¾ÞÒí
+{count=8,time=20,firstTime=1,mapx=31,mapy=65,range=8,entityid=55,entityLevel=110,progress=0,},--4×ªÐÞÂÞµØ¹¬4-ÐÞÂÞºó´ú
+{count=8,time=20,firstTime=1,mapx=56,mapy=93,range=8,entityid=52,entityLevel=110,progress=0,},--4×ªÐÞÂÞµØ¹¬4-ÐÞÂÞÁ¦Ê¿
+{count=8,time=20,firstTime=1,mapx=76,mapy=92,range=8,entityid=53,entityLevel=110,progress=0,},--4×ªÐÞÂÞµØ¹¬4-ÐÞÂÞÆïÊ¿
+{count=8,time=20,firstTime=1,mapx=89,mapy=80,range=8,entityid=54,entityLevel=110,progress=0,},--4×ªÐÞÂÞµØ¹¬4-ÐÞÂÞ¾ÞÒí
+{count=8,time=20,firstTime=1,mapx=102,mapy=64,range=8,entityid=55,entityLevel=110,progress=0,},--4×ªÐÞÂÞµØ¹¬4-ÐÞÂÞºó´ú
+{count=8,time=20,firstTime=1,mapx=74,mapy=33,range=8,entityid=52,entityLevel=110,progress=0,},--4×ªÐÞÂÞµØ¹¬4-ÐÞÂÞÁ¦Ê¿
+{count=8,time=20,firstTime=1,mapx=67,mapy=53,range=8,entityid=53,entityLevel=110,progress=0,},--4×ªÐÞÂÞµØ¹¬4-ÐÞÂÞÆïÊ¿
+{count=8,time=20,firstTime=1,mapx=54,mapy=66,range=8,entityid=54,entityLevel=110,progress=0,},--4×ªÐÞÂÞµØ¹¬4-ÐÞÂÞ¾ÞÒí
+{count=8,time=20,firstTime=1,mapx=67,mapy=74,range=8,entityid=55,entityLevel=110,progress=0,},--4×ªÐÞÂÞµØ¹¬4-ÐÞÂÞºó´ú
+{count=8,time=20,firstTime=1,mapx=41,mapy=101,range=8,entityid=52,entityLevel=110,progress=0,},--4×ªÐÞÂÞµØ¹¬4-ÐÞÂÞÁ¦Ê¿

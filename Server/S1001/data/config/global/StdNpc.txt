@@ -1,0 +1,436 @@
+﻿--#include "..\..\language\LangCode.txt" once
+--funcId NPC的功能的ID,1 帮派 2 仓库 3 传送 4 装备  5 武器 6 修理 7 药店  8 副本  9 杂货  10 书店， 11 特殊NPC实体(可以任意拼凑的BODY) 默认是0可以不配置 
+--specialModel 特殊NPC模型，0 普通 1 特殊NPC
+StdNpc={
+
+{id=1,name=Lang.EntityName.n00001,talk=Lang.NormalTalk.h00001,modelid=5,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--新手指导员
+{id=2,name=Lang.EntityName.n00002,talk=Lang.NormalTalk.h00002,modelid=78,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--武器店老板
+{id=3,name=Lang.EntityName.n00003,talk=Lang.NormalTalk.h00003,modelid=15,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--服饰店老板娘
+{id=4,name=Lang.EntityName.n00004,talk=Lang.NormalTalk.h00004,modelid=37,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--樵夫
+{id=5,name=Lang.EntityName.n00005,talk=Lang.NormalTalk.h00005,modelid=48,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},---村民妻子
+{id=6,name=Lang.EntityName.n00006,talk=Lang.NormalTalk.h00006,modelid=59,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--受困村民
+{id=7,name=Lang.EntityName.n00007,talk=Lang.NormalTalk.h00007,modelid=49,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--神秘人
+{id=8,name=Lang.EntityName.n00008,talk=Lang.NormalTalk.h00008,modelid=56,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--寻宝者
+{id=9,name=Lang.EntityName.n00009,talk=Lang.NormalTalk.h00009,modelid=80,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--逍遥散人
+{id=10,name=Lang.EntityName.n00010,talk=Lang.NormalTalk.h00010,modelid=12,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--落魄士兵
+{id=11,name=Lang.EntityName.n00011,talk=Lang.NormalTalk.h00011,modelid=34,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--受伤老道
+{id=12,name=Lang.EntityName.n00012,talk=Lang.NormalTalk.h00012,modelid=36,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--传送守卫
+{id=13,name=Lang.EntityName.n00013,talk=Lang.NormalTalk.h00013,modelid=28,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--任务12
+{id=14,name=Lang.EntityName.n00014,talk=Lang.NormalTalk.h00014,modelid=53,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--任务13
+{id=15,name=Lang.EntityName.n00015,talk=Lang.NormalTalk.h00015,modelid=24,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--任务14
+{id=16,name=Lang.EntityName.n00016,talk=Lang.NormalTalk.h00016,modelid=24,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--任务15
+{id=17,name=Lang.EntityName.n00017,talk=Lang.NormalTalk.h00017,modelid=13,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--任务16
+{id=18,name=Lang.EntityName.n00018,talk=Lang.NormalTalk.h00018,modelid=52,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--任务17
+{id=19,name=Lang.EntityName.n00019,talk=Lang.NormalTalk.h00019,modelid=17,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--任务18
+{id=20,name=Lang.EntityName.n00020,talk=Lang.NormalTalk.h00020,modelid=24,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--任务19
+{id=21,name=Lang.EntityName.n00021,talk=Lang.NormalTalk.h00021,modelid=1,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--任务20
+{id=22,name=Lang.EntityName.n00022,talk=Lang.NormalTalk.h00022,modelid=42,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--任务21
+{id=23,name=Lang.EntityName.n00023,talk=Lang.NormalTalk.h00023,modelid=33,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--任务22
+{id=24,name=Lang.EntityName.n00024,talk=Lang.NormalTalk.h00024,modelid=9,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--任务23
+{id=25,name=Lang.EntityName.n00025,talk=Lang.NormalTalk.h00025,modelid=54,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--任务24
+{id=26,name=Lang.EntityName.n00026,talk=Lang.NormalTalk.h00026,modelid=39,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--任务25
+{id=27,name=Lang.EntityName.n00027,talk=Lang.NormalTalk.h00027,modelid=38,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--寺庙庙祝
+{id=28,name=Lang.EntityName.n00028,talk="",modelid=11,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--随便什么
+{id=29,name=Lang.EntityName.n00029,talk=Lang.NormalTalk.h00029,modelid=31,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--逍遥散人
+{id=30,name=Lang.EntityName.n00030,talk=Lang.NormalTalk.h00030,modelid=12,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--失散士兵
+{id=31,name=Lang.EntityName.n00031,talk=Lang.NormalTalk.h00031,modelid=19,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--受伤士兵
+{id=32,name=Lang.EntityName.n00032,talk=Lang.NormalTalk.h00032,modelid=19,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},----重伤士兵
+{id=33,name=Lang.EntityName.n00033,talk=Lang.NormalTalk.h00033,modelid=49,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},---神秘人
+{id=34,name=Lang.EntityName.n00034,talk="",modelid=18,icon=11,classId=0,funcId=2,camp=0,idleInterval=120000,script=""},--仓库管理员
+{id=35,name=Lang.EntityName.n00035,talk=Lang.NormalTalk.h00035,modelid=58,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--拾荒老叟
+{id=36,name=Lang.EntityName.n00036,talk=Lang.NormalTalk.h00036,modelid=43,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--接应士兵
+{id=37,name=Lang.EntityName.n00037,talk=Lang.NormalTalk.h00037,modelid=50,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--任务
+{id=38,name=Lang.EntityName.n00038,talk=Lang.NormalTalk.h00037,modelid=38,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--散人传说隐世老人
+{id=39,name=Lang.EntityName.n00039,talk=Lang.NormalTalk.h00039,modelid=11,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},---门口守卫
+{id=40,name=Lang.EntityName.n00040,talk="",modelid=65,icon=11,classId=0,funcId=39,camp=0,idleInterval=120000,script=""},--暗影迷殿
+
+{id=41,name=Lang.EntityName.n00041,talk=Lang.NormalTalk.h00041,modelid=32,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--幽冥矿区1
+{id=42,name=Lang.EntityName.n00042,talk=Lang.NormalTalk.h00042,modelid=37,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--幽冥矿区2
+{id=43,name=Lang.EntityName.n00043,talk=Lang.NormalTalk.h00043,modelid=40,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--幽冥矿区3
+{id=44,name=Lang.EntityName.n00044,talk=Lang.NormalTalk.h00044,modelid=45,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--幽冥矿区4
+{id=45,name=Lang.EntityName.n00045,talk=Lang.NormalTalk.h00045,modelid=5,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--幽冥矿区5
+{id=46,name=Lang.EntityName.n00046,talk=Lang.NormalTalk.h00046,modelid=55,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--幽冥矿区6
+
+
+{id=47,name=Lang.EntityName.n00047,talk=Lang.NormalTalk.h00047,modelid=9,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--幽冥矿区2-1
+{id=48,name=Lang.EntityName.n00048,talk=Lang.NormalTalk.h00048,modelid=16,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--幽冥矿区2-2
+{id=49,name=Lang.EntityName.n00049,talk=Lang.NormalTalk.h00049,modelid=25,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},---幽冥矿区2-3
+{id=50,name=Lang.EntityName.n00050,talk=Lang.NormalTalk.h00050,modelid=21,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--幽冥矿区2-4
+{id=51,name=Lang.EntityName.n00051,talk=Lang.NormalTalk.h00051,modelid=35,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--幽冥矿区2-5
+{id=52,name=Lang.EntityName.n00052,talk=Lang.NormalTalk.h00052,modelid=46,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--幽冥矿区2-6
+{id=53,name=Lang.EntityName.n00053,talk=Lang.NormalTalk.h00053,modelid=10,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--幽冥矿区2-7
+{id=54,name=Lang.EntityName.n00054,talk=Lang.NormalTalk.h00054,modelid=36,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--幽冥矿区2-8
+{id=55,name=Lang.EntityName.n00055,talk=Lang.NormalTalk.h00055,modelid=57,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--幽冥矿区2-9
+
+{id=56,name=Lang.EntityName.n00056,talk=Lang.NormalTalk.h00056,modelid=671,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--死亡棺材3-2
+{id=57,name=Lang.EntityName.n00057,talk=Lang.NormalTalk.h00057,modelid=763,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},---死亡棺材3-3
+{id=58,name=Lang.EntityName.n00058,talk=Lang.NormalTalk.h00058,modelid=290,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},----死亡棺材3-4
+
+
+
+{id=59,name=Lang.EntityName.n00059,talk=Lang.NormalTalk.h00059,modelid=22,icon=11,classId=0,funcId=41,camp=0,idleInterval=120000,script=""},----初级锻造师
+
+
+{id=60,name=Lang.EntityName.n00060,talk=Lang.NormalTalk.h00060,modelid=82,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--激情使者(黑龙神殿)------------------------------------功能
+{id=61,name=Lang.EntityName.n00061,talk=Lang.NormalTalk.h00061,modelid=128,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--高级BOSS之家(BOSS之家)------------------------------------功能
+{id=62,name=Lang.EntityName.n00062,talk=Lang.NormalTalk.h00062,modelid=159,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--老甲
+{id=63,name=Lang.EntityName.n00063,talk=Lang.NormalTalk.h00063,modelid=421,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--龙神守护
+
+{id=64,name=Lang.EntityName.n00064,talk=Lang.NormalTalk.h00064,modelid=31,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--智老头---沙漠土城
+{id=65,name=Lang.EntityName.n00065,talk=Lang.NormalTalk.h00065,modelid=66,icon=11,classId=0,funcId=30,camp=0,idleInterval=120000,script=""},--挂机休闲------------------------------------功能
+{id=66,name=Lang.EntityName.n00066,talk="",modelid=77,icon=11,classId=0,funcId=4,camp=0,idleInterval=120000,script=""},--BOSS之家------------------------------------功能
+{id=67,name=Lang.EntityName.n00067,talk=Lang.NormalTalk.h00067,modelid=233,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--井神--沙漠土城
+{id=68,name=Lang.EntityName.n00068,talk=Lang.NormalTalk.h00068,modelid=459,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},---石墓守护--沙漠土城
+
+{id=69,name=Lang.EntityName.n00069,talk=Lang.NormalTalk.h00069,modelid=473,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--石墓接引人--猪洞
+{id=70,name=Lang.EntityName.n00070,talk=Lang.NormalTalk.h00070,modelid=228,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--苦行者------猪洞
+{id=71,name=Lang.EntityName.n00071,talk=Lang.NormalTalk.h00071,modelid=140,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--王秀才-----猪洞
+{id=72,name=Lang.EntityName.n00072,talk=Lang.NormalTalk.h00072,modelid=435,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--猪王守护----猪洞
+
+{id=73,name=Lang.EntityName.n00073,talk=Lang.NormalTalk.h00073,modelid=395,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--大刀护卫长--土城
+{id=74,name=Lang.EntityName.n00074,talk=Lang.NormalTalk.h00074,modelid=78,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--祖玛守护----土城
+{id=75,name=Lang.EntityName.n00075,talk=Lang.NormalTalk.h00075,modelid=415,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--祖玛接引人--祖玛寺庙
+{id=76,name=Lang.EntityName.n00076,talk=Lang.NormalTalk.h00076,modelid=135,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--袁天罡-----祖玛寺庙
+{id=77,name=Lang.EntityName.n00077,talk=Lang.NormalTalk.h00077,modelid=66,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},---陈老财-----祖玛寺庙
+{id=78,name=Lang.EntityName.n00078,talk=Lang.NormalTalk.h00078,modelid=476,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--炎之凤-----祖玛寺庙
+{id=79,name=Lang.EntityName.n00079,talk=Lang.NormalTalk.h00079,modelid=609,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--小香玉------祖玛寺庙
+{id=80,name=Lang.EntityName.n00080,talk=Lang.NormalTalk.h00080,modelid=434,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--祖玛王守护--祖玛寺庙
+{id=81,name=Lang.EntityName.n00081,talk=Lang.NormalTalk.h00081,modelid=230,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--猎人--------土城
+{id=82,name=Lang.EntityName.n00082,talk=Lang.NormalTalk.h00082,modelid=693,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--程夫人------土城
+{id=83,name=Lang.EntityName.n00083,talk=Lang.NormalTalk.h00083,modelid=410,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--牛魔守护----土城
+
+{id=84,name=Lang.EntityName.n00084,talk=Lang.NormalTalk.h00084,modelid=384,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--牛魔接引人--牛魔洞
+{id=85,name=Lang.EntityName.n00085,talk=Lang.NormalTalk.h00085,modelid=315,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--大牛--------牛魔洞
+{id=86,name=Lang.EntityName.n00086,talk=Lang.NormalTalk.h00086,modelid=373,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--陈百万-----牛魔洞
+
+{id=87,name=Lang.EntityName.n00087,talk=Lang.NormalTalk.h00087,modelid=65,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--上官虹-----牛魔洞
+{id=88,name=Lang.EntityName.n00088,talk=Lang.NormalTalk.h00088,modelid=148,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--胡大力-------牛魔洞
+{id=89,name=Lang.EntityName.n00089,talk=Lang.NormalTalk.h00089,modelid=436,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--牛魔王守卫--牛魔洞
+{id=90,name=Lang.EntityName.n00090,talk=Lang.NormalTalk.h00090,modelid=21,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--崖边道人
+{id=91,name=Lang.EntityName.n00091,talk=Lang.NormalTalk.h00091,modelid=83,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--伏龙圣者
+{id=92,name=Lang.EntityName.n00092,talk=Lang.NormalTalk.h00092,modelid=56,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--枫叶仙子
+{id=93,name=Lang.EntityName.n00093,talk=Lang.NormalTalk.h00093,modelid=51,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--段家弟子
+{id=94,name=Lang.EntityName.n00094,talk=Lang.NormalTalk.h00094,modelid=49,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--天雷将军
+{id=95,name=Lang.EntityName.n00095,talk=Lang.NormalTalk.h00095,modelid=37,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--睚眦
+{id=96,name=Lang.EntityName.n00096,talk=Lang.NormalTalk.h00096,modelid=80,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--烈焰护法
+{id=97,name=Lang.EntityName.n00097,talk=Lang.NormalTalk.h00097,modelid=150,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--烈焰工匠
+{id=98,name=Lang.EntityName.n00098,talk=Lang.NormalTalk.h00098,modelid=97,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--九黎老人
+{id=99,name=Lang.EntityName.n00099,talk=Lang.NormalTalk.h00099,modelid=2,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--暗月祭司
+{id=100,name=Lang.EntityName.n00100,talk=Lang.NormalTalk.h00100,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=101,name=Lang.EntityName.n00101,talk=Lang.NormalTalk.h00101,modelid=133,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--幻影魔女
+{id=102,name=Lang.EntityName.n00102,talk=Lang.NormalTalk.h00102,modelid=16,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--财神爷
+{id=103,name=Lang.EntityName.n00103,talk=Lang.NormalTalk.h00103,modelid=135,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--幻化牛魔
+{id=104,name=Lang.EntityName.n00104,talk=Lang.NormalTalk.h00104,modelid=339,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--右城门护卫
+{id=105,name=Lang.EntityName.n00105,talk=Lang.NormalTalk.h00105,modelid=13,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--剑侍
+{id=106,name=Lang.EntityName.n00106,talk=Lang.NormalTalk.h00106,modelid=71,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--陈玄奘
+{id=107,name=Lang.EntityName.n00107,talk=Lang.NormalTalk.h00107,modelid=33,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--李铁
+{id=108,name=Lang.EntityName.n00108,talk=Lang.NormalTalk.h00108,modelid=80,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--伏魔散人
+{id=109,name=Lang.EntityName.n00109,talk=Lang.NormalTalk.h00109,modelid=54,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--祭魂婆婆
+{id=110,name=Lang.EntityName.n00110,talk=Lang.NormalTalk.h00110,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},------------血域接引人
+{id=111,name=Lang.EntityName.n00111,talk=Lang.NormalTalk.h00111,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=112,name=Lang.EntityName.n00112,talk=Lang.NormalTalk.h00112,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=113,name=Lang.EntityName.n00113,talk=Lang.NormalTalk.h00113,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=114,name=Lang.EntityName.n00114,talk=Lang.NormalTalk.h00114,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=115,name=Lang.EntityName.n00115,talk=Lang.NormalTalk.h00115,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,1"},--跑环1
+{id=116,name=Lang.EntityName.n00116,talk=Lang.NormalTalk.h00116,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,2"},--跑环2
+{id=117,name=Lang.EntityName.n00117,talk=Lang.NormalTalk.h00117,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,3"},--跑环3
+{id=118,name=Lang.EntityName.n00118,talk=Lang.NormalTalk.h00118,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,4"},--跑环4
+{id=119,name=Lang.EntityName.n00119,talk=Lang.NormalTalk.h00119,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,5"},--跑环5
+{id=120,name=Lang.EntityName.n00120,talk=Lang.NormalTalk.h00120,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,6"},--跑环6
+{id=121,name=Lang.EntityName.n00121,talk=Lang.NormalTalk.h00121,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,7"},--跑环7
+{id=122,name=Lang.EntityName.n00122,talk=Lang.NormalTalk.h00122,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,8"},--跑环8
+{id=123,name=Lang.EntityName.n00123,talk=Lang.NormalTalk.h00123,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,9"},--跑环9
+{id=124,name=Lang.EntityName.n00124,talk=Lang.NormalTalk.h00124,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,10"},--跑环10
+{id=125,name=Lang.EntityName.n00125,talk=Lang.NormalTalk.h00125,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,11"},--跑环11
+{id=126,name=Lang.EntityName.n00126,talk=Lang.NormalTalk.h00126,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,12"},--跑环12
+{id=127,name=Lang.EntityName.n00127,talk=Lang.NormalTalk.h00127,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,13"},--跑环13
+{id=128,name=Lang.EntityName.n00128,talk=Lang.NormalTalk.h00128,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,14"},--跑环14
+{id=129,name=Lang.EntityName.n00129,talk=Lang.NormalTalk.h00129,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,15"},--跑环15
+{id=130,name=Lang.EntityName.n00130,talk=Lang.NormalTalk.h00130,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,16"},--跑环16
+{id=131,name=Lang.EntityName.n00131,talk=Lang.NormalTalk.h00131,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,17"},--跑环17
+{id=132,name=Lang.EntityName.n00132,talk=Lang.NormalTalk.h00132,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,18"},--跑环18
+{id=133,name=Lang.EntityName.n00133,talk=Lang.NormalTalk.h00133,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,19"},--跑环19
+{id=134,name=Lang.EntityName.n00134,talk=Lang.NormalTalk.h00134,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,20"},--跑环20
+{id=135,name=Lang.EntityName.n00135,talk=Lang.NormalTalk.h00135,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,21"},--跑环21
+{id=136,name=Lang.EntityName.n00136,talk=Lang.NormalTalk.h00136,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,22"},--跑环22
+{id=137,name=Lang.EntityName.n00137,talk=Lang.NormalTalk.h00137,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,23"},--跑环23
+{id=138,name=Lang.EntityName.n00138,talk=Lang.NormalTalk.h00138,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,24"},--跑环24
+{id=139,name=Lang.EntityName.n00139,talk=Lang.NormalTalk.h00139,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,25"},--跑环25
+{id=140,name=Lang.EntityName.n00140,talk=Lang.NormalTalk.h00140,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,26"},--跑环26
+{id=141,name=Lang.EntityName.n00141,talk=Lang.NormalTalk.h00141,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,27"},--跑环27
+{id=142,name=Lang.EntityName.n00142,talk=Lang.NormalTalk.h00142,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,28"},--跑环28
+{id=143,name=Lang.EntityName.n00143,talk=Lang.NormalTalk.h00143,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,29"},--跑环29
+{id=144,name=Lang.EntityName.n00144,talk=Lang.NormalTalk.h00144,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script="DayCircleQuest,30"},--跑环30
+{id=145,name=Lang.EntityName.n00145,talk=Lang.NormalTalk.h00145,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=146,name=Lang.EntityName.n00146,talk=Lang.NormalTalk.h00146,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=147,name=Lang.EntityName.n00147,talk=Lang.NormalTalk.h00147,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=148,name=Lang.EntityName.n00148,talk=Lang.NormalTalk.h00148,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=149,name=Lang.EntityName.n00149,talk=Lang.NormalTalk.h00149,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=150,name=Lang.EntityName.n00150,talk=Lang.NormalTalk.h00150,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=151,name=Lang.EntityName.n00151,talk=Lang.NormalTalk.h00151,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=152,name=Lang.EntityName.n00152,talk=Lang.NormalTalk.h00152,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=153,name=Lang.EntityName.n00153,talk=Lang.NormalTalk.h00153,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=154,name=Lang.EntityName.n00154,talk=Lang.NormalTalk.h00154,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=155,name=Lang.EntityName.n00155,talk=Lang.NormalTalk.h00155,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=156,name=Lang.EntityName.n00156,talk=Lang.NormalTalk.h00156,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=157,name=Lang.EntityName.n00157,talk=Lang.NormalTalk.h00157,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=158,name=Lang.EntityName.n00158,talk=Lang.NormalTalk.h00158,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=159,name=Lang.EntityName.n00159,talk=Lang.NormalTalk.h00159,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=160,name=Lang.EntityName.n00160,talk=Lang.NormalTalk.h00160,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=161,name=Lang.EntityName.n00161,talk=Lang.NormalTalk.h00161,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=162,name=Lang.EntityName.n00162,talk=Lang.NormalTalk.h00162,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=163,name=Lang.EntityName.n00163,talk=Lang.NormalTalk.h00163,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=164,name=Lang.EntityName.n00164,talk=Lang.NormalTalk.h00164,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=165,name=Lang.EntityName.n00165,talk=Lang.NormalTalk.h00165,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=166,name=Lang.EntityName.n00166,talk=Lang.NormalTalk.h00166,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=167,name=Lang.EntityName.n00167,talk=Lang.NormalTalk.h00167,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=168,name=Lang.EntityName.n00168,talk=Lang.NormalTalk.h00168,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=169,name=Lang.EntityName.n00169,talk=Lang.NormalTalk.h00169,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=170,name=Lang.EntityName.n00170,talk=Lang.NormalTalk.h00170,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=171,name=Lang.EntityName.n00171,talk=Lang.NormalTalk.h00171,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=172,name=Lang.EntityName.n00172,talk=Lang.NormalTalk.h00172,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=173,name=Lang.EntityName.n00173,talk=Lang.NormalTalk.h00173,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=174,name=Lang.EntityName.n00174,talk=Lang.NormalTalk.h00174,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+
+{id=175,name=Lang.EntityName.n00175,talk=Lang.NormalTalk.h00175,modelid=9,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""}, ---神威幻境
+{id=176,name=Lang.EntityName.n00176,talk=Lang.NormalTalk.h00176,modelid=97,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},----魔族入侵
+{id=177,name=Lang.EntityName.n00177,talk=Lang.NormalTalk.h00177,modelid=85,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},----幻境一层使者
+{id=178,name=Lang.EntityName.n00178,talk=Lang.NormalTalk.h00178,modelid=85,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},----幻境二层使者
+{id=179,name=Lang.EntityName.n00179,talk=Lang.NormalTalk.h00179,modelid=85,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},----幻境三层使者
+{id=180,name=Lang.EntityName.n00180,talk=Lang.NormalTalk.h00180,modelid=85,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},----幻境四层使者
+{id=181,name=Lang.EntityName.n00181,talk=Lang.NormalTalk.h00181,modelid=85,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},----幻境五层使者
+{id=182,name=Lang.EntityName.n00182,talk=Lang.NormalTalk.h00182,modelid=85,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},----幻境六层使者
+
+{id=183,name=Lang.EntityName.n00183,talk=Lang.NormalTalk.h00183,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=184,name=Lang.EntityName.n00184,talk=Lang.NormalTalk.h00184,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=185,name=Lang.EntityName.n00185,talk=Lang.NormalTalk.h00185,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=186,name=Lang.EntityName.n00186,talk=Lang.NormalTalk.h00186,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=187,name=Lang.EntityName.n00187,talk=Lang.NormalTalk.h00187,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=188,name=Lang.EntityName.n00188,talk=Lang.NormalTalk.h00188,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=189,name=Lang.EntityName.n00189,talk=Lang.NormalTalk.h00189,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=190,name=Lang.EntityName.n00190,talk=Lang.NormalTalk.h00190,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=191,name=Lang.EntityName.n00191,talk=Lang.NormalTalk.h00191,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=192,name=Lang.EntityName.n00192,talk=Lang.NormalTalk.h00192,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=193,name=Lang.EntityName.n00193,talk=Lang.NormalTalk.h00193,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=194,name=Lang.EntityName.n00194,talk=Lang.NormalTalk.h00194,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=195,name=Lang.EntityName.n00195,talk=Lang.NormalTalk.h00195,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=196,name=Lang.EntityName.n00196,talk=Lang.NormalTalk.h00196,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=197,name=Lang.EntityName.n00197,talk=Lang.NormalTalk.h00197,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=198,name=Lang.EntityName.n00198,talk=Lang.NormalTalk.h00198,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=199,name=Lang.EntityName.n00199,talk=Lang.NormalTalk.h00199,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=200,name=Lang.EntityName.n00200,talk=Lang.NormalTalk.h00200,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=201,name=Lang.EntityName.n00201,talk="",modelid=7,icon=11,classId=0,funcId=43,camp=0,idleInterval=120000,script=""},--散人传说--行会守护活动NPC
+{id=202,name=Lang.EntityName.n00202,talk="",modelid=14,icon=11,classId=0,funcId=45,camp=0,idleInterval=120000,script=""},--散人传说--行会闯关活动NPC
+{id=203,name=Lang.EntityName.n00203,talk=Lang.NormalTalk.h00203,modelid=5,icon=11,classId=0,funcId=23,camp=0,idleInterval=120000,script=""},--散人传说--王城危机活动NPC
+{id=204,name=Lang.EntityName.n00204,talk=Lang.NormalTalk.h00204,modelid=8,icon=11,classId=0,funcId=31,camp=0,idleInterval=120000,script=""},--散人传说--元宝嘉年华活动NPC
+{id=205,name=Lang.EntityName.n00205,talk=Lang.NormalTalk.h00205,modelid=5,icon=11,classId=0,funcId=27,camp=0,idleInterval=120000,script=""},--散人传说--烛光剑影(活动)
+{id=206,name=Lang.EntityName.n00206,talk=Lang.NormalTalk.h00206,modelid=5,icon=11,classId=0,funcId=16,camp=0,idleInterval=120000,script=""},--散人传说--地下夺宝(活动)
+{id=207,name=Lang.EntityName.n00207,talk=Lang.NormalTalk.h00207,modelid=5,icon=11,classId=0,funcId=28,camp=0,idleInterval=120000,script=""},--散人传说--夺宝使者，地下夺宝地图内(活动)
+{id=208,name=Lang.EntityName.n00208,talk=Lang.NormalTalk.h00208,modelid=434,icon=11,classId=0,funcId=24,camp=0,idleInterval=120000,script=""},--散人传说--勇者试练(活动)
+{id=209,name=Lang.EntityName.n00209,talk=Lang.NormalTalk.h00209,modelid=373,icon=11,classId=0,funcId=15,camp=0,idleInterval=120000,script=""},--散人传说--闭关修炼(活动)
+{id=210,name=Lang.EntityName.n00210,talk=Lang.NormalTalk.h00210,modelid=188,icon=11,classId=0,funcId=1,camp=0,idleInterval=120000,script=""},--散人传说--双倍经验活动NPC
+{id=211,name=Lang.EntityName.n00211,talk=Lang.NormalTalk.h00211,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=212,name=Lang.EntityName.n00212,talk=Lang.NormalTalk.h00212,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=213,name=Lang.EntityName.n00213,talk=Lang.NormalTalk.h00213,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=214,name=Lang.EntityName.n00214,talk=Lang.NormalTalk.h00214,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=215,name=Lang.EntityName.n00215,talk=Lang.NormalTalk.h00215,modelid=280,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=216,name=Lang.EntityName.n00216,talk=Lang.NormalTalk.h00216,modelid=275,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=217,name=Lang.EntityName.n00217,talk=Lang.NormalTalk.h00217,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=218,name=Lang.EntityName.n00218,talk=Lang.NormalTalk.h00218,modelid=27,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--星珠守护-----已用
+{id=219,name=Lang.EntityName.n00219,talk=Lang.NormalTalk.h00219,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=220,name=Lang.EntityName.n00220,talk=Lang.NormalTalk.h00220,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=221,name=Lang.EntityName.n00221,talk=Lang.NormalTalk.h00221,modelid=256,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},
+{id=222,name=Lang.EntityName.n00222,talk=Lang.NormalTalk.h00222,modelid=193,icon=11,classId=0,funcId=5,camp=0,idleInterval=120000,script=""},--散人传说--镖车领取任务
+{id=223,name=Lang.EntityName.n00223,talk=Lang.NormalTalk.h00223,modelid=282,icon=11,classId=0,funcId=6,camp=0,idleInterval=120000,script=""},--散人传说--镖车完成任务
+{id=224,name=Lang.EntityName.n00224,talk=Lang.NormalTalk.h00224,modelid=201,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--散人传说--天人阵营使者--阵营战(活动)
+{id=225,name=Lang.EntityName.n00225,talk=Lang.NormalTalk.h00225,modelid=74,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--散人传说--嗜魂阵营使者--阵营战(活动)
+{id=226,name=Lang.EntityName.n00226,talk=Lang.NormalTalk.h00226,modelid=7,icon=11,classId=0,funcId=12,camp=0,idleInterval=120000,script=""},--散人传说--武林争霸裁判--武林争霸(活动)
+{id=227,name=Lang.EntityName.n00227,talk=Lang.NormalTalk.h00227,modelid=78,icon=11,classId=0,funcId=76,camp=0,idleInterval=120000,script=""},--福利官员------------已用
+{id=228,name=Lang.EntityName.n00228,talk=Lang.NormalTalk.h00228,modelid=20,icon=11,classId=0,funcId=29,camp=0,idleInterval=120000,script=""},--散人传说--红娘(结婚Npc)
+{id=229,name=Lang.EntityName.n00229,talk=Lang.NormalTalk.h00229,modelid=23,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--月老---------------已用
+{id=230,name=Lang.EntityName.n00230,talk=Lang.NormalTalk.h00230,modelid=4,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--王城管家
+{id=231,name=Lang.EntityName.n00231,talk=Lang.NormalTalk.h00231,modelid=200,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--广场传送
+{id=232,name=Lang.EntityName.n00232,talk=Lang.NormalTalk.h00232,modelid=5,icon=11,classId=0,funcId=22,camp=0,idleInterval=120000,script=""},--散人传说--行会活动NPC
+{id=233,name=Lang.EntityName.n00233,talk=Lang.NormalTalk.h00233,modelid=183,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--行会仓库
+{id=234,name=Lang.EntityName.n00234,talk=Lang.NormalTalk.h00234,modelid=187,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--万劫魔宅
+{id=235,name=Lang.EntityName.n00235,talk=Lang.NormalTalk.h00235,modelid=53,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--休闲智多星
+{id=236,name=Lang.EntityName.n00236,talk=Lang.NormalTalk.h00236,modelid=153,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--土城--锻造炉(新)------------已用
+{id=237,name=Lang.EntityName.n00237,talk=Lang.NormalTalk.h00237,modelid=203,icon=11,classId=0,funcId=8,camp=0,idleInterval=120000,script=""}, --散人传说--封魔大师(塔防)
+{id=238,name=Lang.EntityName.n00238,talk=Lang.NormalTalk.h00238,modelid=437,icon=11,classId=0,funcId=20,camp=0,idleInterval=120000,script=""},--散人传说--镇魔将军(活动)
+{id=239,name=Lang.EntityName.n00239,talk=Lang.NormalTalk.h00239,modelid=44,icon=11,classId=0,funcId=42,camp=0,idleInterval=120000,script=""},--散人传说--奔跑吧兄弟活动NPC
+{id=240,name=Lang.EntityName.n00240,talk=Lang.NormalTalk.h00240,modelid=7,icon=11,classId=0,funcId=12,camp=0,idleInterval=120000,script=""},--散人传说--武林争霸活动NPC
+{id=241,name=Lang.EntityName.n00241,talk=Lang.NormalTalk.h00241,modelid=289,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--天下第一男战
+{id=242,name=Lang.EntityName.n00242,talk=Lang.NormalTalk.h00242,modelid=290,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--天下第一女战
+{id=243,name=Lang.EntityName.n00243,talk=Lang.NormalTalk.h00243,modelid=291,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--天下第一男法
+{id=244,name=Lang.EntityName.n00244,talk=Lang.NormalTalk.h00244,modelid=292,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--天下第一女法
+{id=245,name=Lang.EntityName.n00245,talk=Lang.NormalTalk.h00245,modelid=293,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--天下第一男道
+{id=246,name=Lang.EntityName.n00246,talk=Lang.NormalTalk.h00246,modelid=294,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--天下第一女道
+{id=247,name=Lang.EntityName.n00247,talk=Lang.NormalTalk.h00247,modelid=36,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--盾牌锻造(新)------------已用
+{id=248,name=Lang.EntityName.n00248,talk="",modelid=14,icon=11,classId=0,funcId=9,camp=0,idleInterval=120000,script=""},---散人传说--副本总管
+{id=249,name=Lang.EntityName.n00249,talk=Lang.NormalTalk.h00249,modelid=76,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},---护送公主--------------已用
+{id=250,name=Lang.EntityName.n00250,talk=Lang.NormalTalk.h00250,modelid=188,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--GM管理员
+{id=251,name=Lang.EntityName.n00251,talk=Lang.NormalTalk.h00251,modelid=73,icon=11,classId=0,funcId=7,camp=0,idleInterval=120000,script=""},	--战无双(日常)
+{id=252,name=Lang.EntityName.n00252,talk=Lang.NormalTalk.h00252,modelid=40,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--锻造师②-----------------已用
+{id=253,name=Lang.EntityName.n00253,talk=Lang.NormalTalk.h00252,modelid=282,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--大内密探-----------------已用
+{id=254,name=Lang.EntityName.n00254,talk=Lang.NormalTalk.h00252,modelid=192,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--佣兵管理员
+{id=255,name=Lang.EntityName.n00255,talk=Lang.NormalTalk.h00252,modelid=191,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--转生魂印师
+{id=256,name=Lang.EntityName.n00256,talk=Lang.NormalTalk.h00252,modelid=262,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--排行榜管理
+{id=257,name=Lang.EntityName.n00257,talk=Lang.NormalTalk.h00252,modelid=186,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--卧龙城城主
+{id=258,name=Lang.EntityName.n00258,talk=Lang.NormalTalk.h00252,modelid=195,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--土城城主
+{id=259,name=Lang.EntityName.n00259,talk=Lang.NormalTalk.h00253,modelid=36,icon=21,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--指挥官
+{id=260,name=Lang.EntityName.n00260,talk=Lang.NormalTalk.h00260,modelid=155,icon=21,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--指挥官
+{id=261,name=Lang.EntityName.n00261,talk=Lang.NormalTalk.h00261,modelid=126,icon=11,classId=0,funcId=3,camp=0,idleInterval=120000,script=""},	--散人传说-传送员
+{id=262,name=Lang.EntityName.n00262,talk="",modelid=5,icon=11,classId=0,funcId=58,camp=0,idleInterval=120000,script=""},	--万事通---------------已用
+{id=263,name=Lang.EntityName.n00263,talk=Lang.NormalTalk.h00263,modelid=60,icon=11,classId=0,funcId=10,camp=0,idleInterval=120000,script=""},	--散人传说-装备回收
+{id=264,name=Lang.EntityName.n00264,talk=Lang.NormalTalk.h00264,modelid=72,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--采珠农女-----------------已用
+{id=265,name=Lang.EntityName.n00265,talk=Lang.NormalTalk.h00265,modelid=1,icon=21,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--红名监狱传送员
+{id=266,name=Lang.EntityName.n00266,talk=Lang.NormalTalk.h00265,modelid=1,icon=21,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--喷泉
+{id=267,name=Lang.EntityName.n00267,talk=Lang.NormalTalk.h00265,modelid=110,icon=21,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--武林争霸
+{id=268,name=Lang.EntityName.n00268,talk=Lang.NormalTalk.h00265,modelid=103,icon=21,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--金佛降福-----------------已用
+{id=269,name=Lang.EntityName.n00269,talk=Lang.NormalTalk.h00265,modelid=97,icon=21,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--泉水结阵-----------------已用
+{id=270,name=Lang.EntityName.n00270,talk=Lang.NormalTalk.h00265,modelid=110,icon=21,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--积分盛宴
+{id=271,name=Lang.EntityName.n00271,talk=Lang.NormalTalk.h00265,modelid=5,icon=21,classId=0,funcId=26,camp=0,idleInterval=120000,script=""},	--阵营战活动NPC
+{id=272,name=Lang.EntityName.n00272,talk=Lang.NormalTalk.h00265,modelid=5,icon=21,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--夺宝奇兵
+{id=273,name=Lang.EntityName.n00273,talk=Lang.NormalTalk.h00265,modelid=5,icon=21,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--夺宝奇兵管理员
+{id=274,name=Lang.EntityName.n00274,talk=Lang.NormalTalk.h00238,modelid=190,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},----天关管理员
+{id=275,name=Lang.EntityName.n00275,talk=Lang.NormalTalk.h00238,modelid=190,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},----天关使者1
+{id=276,name=Lang.EntityName.n00276,talk=Lang.NormalTalk.h00238,modelid=190,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},----天关使者2
+{id=277,name=Lang.EntityName.n00277,talk=Lang.NormalTalk.h00238,modelid=190,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},----天关使者3
+{id=278,name=Lang.EntityName.n00278,talk=Lang.NormalTalk.h00238,modelid=190,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},----天关使者4
+{id=279,name=Lang.EntityName.n00279,talk=Lang.NormalTalk.h00238,modelid=190,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},----天关使者5
+{id=280,name=Lang.EntityName.n00280,talk=Lang.NormalTalk.h00238,modelid=190,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},----天关使者6
+{id=281,name=Lang.EntityName.n00281,talk=Lang.NormalTalk.h00265,modelid=183,icon=21,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--游泳
+{id=282,name=Lang.EntityName.n00282,talk=Lang.NormalTalk.h00265,modelid=183,icon=21,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--游泳管理员
+{id=283,name=Lang.EntityName.n00283,talk=Lang.NormalTalk.h00265,modelid=263,icon=21,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--灵兽献瑞
+{id=284,name=Lang.EntityName.n00284,talk=Lang.NormalTalk.h00265,modelid=279,icon=21,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--神树
+{id=285,name=Lang.EntityName.n00285,talk=Lang.NormalTalk.h00265,modelid=278,icon=21,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--神树接引人
+{id=286,name=Lang.EntityName.n00286,talk=Lang.NormalTalk.h00265,modelid=188,icon=21,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--闭关修炼
+{id=287,name=Lang.EntityName.n00287,talk=Lang.NormalTalk.h00265,modelid=114,icon=21,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--望月殿堂
+{id=288,name=Lang.EntityName.n00288,talk=Lang.NormalTalk.h00265,modelid=693,icon=21,classId=0,funcId=21,camp=0,idleInterval=120000,script=""},	--散人传说--玛雅神殿--特殊地图
+{id=289,name=Lang.EntityName.n00289,talk=Lang.NormalTalk.h00265,modelid=675,icon=21,classId=0,funcId=13,camp=0,idleInterval=120000,script=""},	--散人传说--转生神殿--转生地图
+{id=290,name=Lang.EntityName.n00290,talk=Lang.NormalTalk.h00265,modelid=639,icon=21,classId=0,funcId=14,camp=0,idleInterval=120000,script=""},	--散人传说--未知暗殿--转生地图
+{id=291,name=Lang.EntityName.n00291,talk=Lang.NormalTalk.h00265,modelid=241,icon=21,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--万劫魔宅
+{id=292,name=Lang.EntityName.n00292,talk=Lang.NormalTalk.h00265,modelid=188,icon=21,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--安全挂机
+{id=293,name=Lang.EntityName.n00293,talk=Lang.NormalTalk.h00265,modelid=188,icon=21,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--封魔祭坛
+{id=294,name=Lang.EntityName.n00294,talk=Lang.NormalTalk.h00265,modelid=188,icon=21,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},	--活动npc
+{id=295,name=Lang.EntityName.n00295,talk=Lang.NormalTalk.h00295,modelid=1005,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--城主雕像-----------------------------------------------散人传说
+{id=296,name=Lang.EntityName.n00296,talk=Lang.NormalTalk.h00265,modelid=302,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--开启弓箭塔-------------------已用
+{id=297,name=Lang.EntityName.n00297,talk=Lang.NormalTalk.h00265,modelid=302,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--开启弓箭塔-------------------已用
+{id=298,name=Lang.EntityName.n00298,talk=Lang.NormalTalk.h00265,modelid=302,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--开启弓箭塔-------------------已用
+{id=299,name=Lang.EntityName.n00299,talk=Lang.NormalTalk.h00265,modelid=302,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--开启弓箭塔-------------------已用
+{id=300,name=Lang.EntityName.n00300,talk=Lang.NormalTalk.h00265,modelid=302,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--开启弓箭塔-------------------已用
+{id=301,name=Lang.EntityName.n00301,talk=Lang.NormalTalk.h00265,modelid=302,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--开启弓箭塔-------------------已用
+{id=302,name=Lang.EntityName.n00302,talk=Lang.NormalTalk.h00265,modelid=302,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--开启弓箭塔-------------------已用
+{id=303,name=Lang.EntityName.n00303,talk=Lang.NormalTalk.h00265,modelid=302,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--开启弓箭塔-------------------已用
+{id=304,name=Lang.EntityName.n00304,talk=Lang.NormalTalk.h00265,modelid=302,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--开启弓箭塔-------------------已用
+{id=305,name=Lang.EntityName.n00305,talk=Lang.NormalTalk.h00265,modelid=302,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--开启弓箭塔-------------------已用
+{id=306,name=Lang.EntityName.n00306,talk=Lang.NormalTalk.h00265,modelid=302,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--开启弓箭塔-------------------已用
+{id=307,name=Lang.EntityName.n00307,talk=Lang.NormalTalk.h00265,modelid=302,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--开启弓箭塔-------------------已用
+{id=308,name=Lang.EntityName.n00308,talk=Lang.NormalTalk.h00265,modelid=302,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--开启弓箭塔-------------------已用
+{id=309,name=Lang.EntityName.n00309,talk=Lang.NormalTalk.h00265,modelid=302,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--开启弓箭塔-------------------已用
+{id=310,name=Lang.EntityName.n00310,talk=Lang.NormalTalk.h00265,modelid=282,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--除暴安良
+{id=311,name=Lang.EntityName.n00311,talk=Lang.NormalTalk.h00265,modelid=5,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--行会争霸
+{id=312,name=Lang.EntityName.n00312,talk=Lang.NormalTalk.h00265,modelid=54,icon=11,classId=0,funcId=24,camp=0,idleInterval=120000,script=""},--用闯天关-------------------------------散人传说
+{id=313,name=Lang.EntityName.n00313,talk=Lang.NormalTalk.h00265,modelid=156,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--狂暴之巅--------------------已用
+{id=314,name=Lang.EntityName.n00314,talk=Lang.NormalTalk.h00265,modelid=121,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--争霸管理员
+{id=315,name=Lang.EntityName.n00315,talk="",modelid=25,icon=11,classId=0,funcId=36,camp=0,idleInterval=120000,script=""},--游戏推广员-----------------------------散人传说
+{id=316,name=Lang.EntityName.n00316,talk=Lang.NormalTalk.h00265,modelid=1,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--虹魔接引人
+{id=317,name=Lang.EntityName.n00317,talk=Lang.NormalTalk.h00265,modelid=65,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--玛法大使
+{id=318,name=Lang.EntityName.n00318,talk=Lang.NormalTalk.h00265,modelid=32,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--祖玛大使
+{id=319,name=Lang.EntityName.n00319,talk=Lang.NormalTalk.h00265,modelid=103,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--堕落魔域
+{id=320,name=Lang.EntityName.n00320,talk=Lang.NormalTalk.h00265,modelid=336,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--雷泽四层使者
+{id=321,name=Lang.EntityName.n00321,talk=Lang.NormalTalk.h00265,modelid=336,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--技能大师
+{id=322,name=Lang.EntityName.n00322,talk=Lang.NormalTalk.h00265,modelid=158,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--天机大师
+{id=323,name=Lang.EntityName.n00323,talk="",modelid=18,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--仓库
+{id=324,name=Lang.EntityName.n00324,talk=Lang.NormalTalk.h00301,modelid=7,icon=11,classId=0,funcId=33,camp=0,idleInterval=120000,script=""},--军团使者
+{id=325,name=Lang.EntityName.n00325,talk="",modelid=4,icon=11,classId=0,funcId=3,camp=0,idleInterval=120000,script=""},--传送NPC
+{id=326,name=Lang.EntityName.n00326,talk="",modelid=9,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--单人副本
+
+{id=327,name=Lang.EntityName.n00327,talk="\\    欢迎你勇士,希望你能在这里玩的开心.",modelid=13,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--新手接待员
+{id=328,name=Lang.EntityName.n00328,talk=Lang.NormalTalk.h00305,modelid=14,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--炎龙官员
+{id=329,name=Lang.EntityName.n00329,talk=Lang.NormalTalk.h00306,modelid=14,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--镇海将军
+{id=330,name=Lang.EntityName.n00330,talk="",modelid=30,icon=11,classId=0,funcId=10,camp=0,idleInterval=120000,script=""},--装备回收
+{id=331,name=Lang.EntityName.n00331,talk="",modelid=2,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--捐献排行榜
+{id=332,name=Lang.EntityName.n00332,talk="\\    矿洞历史悠久，虽多年来一直有人闯荡，可不见得有真正踏入的勇士",modelid=24,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--远古矿洞(10级)
+{id=333,name=Lang.EntityName.n00333,talk="\\    虫洞历史悠久，虽多年来一直有人闯荡，可不见得有真正踏入的勇士",modelid=24,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--远古虫洞(20级)
+{id=334,name=Lang.EntityName.n00334,talk="\\    羊窟历史悠久，虽多年来一直有人闯荡，可不见得有真正踏入的勇士",modelid=24,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--远古羊窟(30级)
+{id=335,name=Lang.EntityName.n00335,talk="\\    猪洞历史悠久，虽多年来一直有人闯荡，可不见得有真正踏入的勇士",modelid=24,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--远古猪洞(40级)
+{id=336,name=Lang.EntityName.n00336,talk="\\    寺庙历史悠久，虽多年来一直有人闯荡，可不见得有真正踏入的勇士",modelid=24,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--远古寺庙(50级)
+{id=337,name=Lang.EntityName.n00337,talk="\\    蛮荒历史悠久，虽多年来一直有人闯荡，可不见得有真正踏入的勇士",modelid=24,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--远古蛮荒(60级)
+{id=338,name=Lang.EntityName.n00338,talk="\\    我交代你的事情做好了吗?",modelid=5,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--挑战BOSS
+{id=339,name=Lang.EntityName.n00339,talk="",modelid=70,icon=11,classId=0,funcId=34,camp=0,idleInterval=120000,script=""},--炎龙守卫
+{id=340,name=Lang.EntityName.n00340,talk="",modelid=5,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--密境使者
+{id=341,name=Lang.EntityName.n00341,talk="",modelid=29,icon=11,classId=0,funcId=37,camp=0,idleInterval=120000,script=""},--军团战
+{id=342,name=Lang.EntityName.n00342,talk="",modelid=2,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--城主
+{id=343,name=Lang.EntityName.n00343,talk="",modelid=3,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--武林盟主雕像
+{id=344,name=Lang.EntityName.n00344,talk="",modelid=9,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--红名村NPC
+{id=345,name=Lang.EntityName.n00345,talk="",modelid=3,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--烧猪活动NPC
+{id=346,name=Lang.EntityName.n00346,talk="\\    风月同今昔\\	华夷参吏事",modelid=14,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--
+{id=347,name=Lang.EntityName.n00347,talk="\\    楷模劳梦想\\	瑞景开阴翳",modelid=14,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--
+{id=348,name=Lang.EntityName.n00348,talk="\\    哲兄盛文史\\	瀚海经年到",modelid=14,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--
+{id=349,name=Lang.EntityName.n00349,talk="\\    文姬留此曲\\	昊穹降元宰",modelid=14,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--
+{id=350,name=Lang.EntityName.n00350,talk="\\    睿藻兰英秀\\	渊明遗爱处",modelid=14,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--
+{id=351,name=Lang.EntityName.n00351,talk="\\    旭日消寒翠\\	尧没三千岁",modelid=14,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--
+{id=352,name=Lang.EntityName.n00352,talk="",modelid=68,icon=11,classId=0,funcId=54,camp=0,idleInterval=120000,script=""},--神威入口npc
+{id=353,name=Lang.EntityName.n00353,talk="",modelid=4,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--神威第一层传送员
+{id=354,name=Lang.EntityName.n00354,talk="",modelid=55,icon=11,classId=0,funcId=38,camp=0,idleInterval=120000,script=""},--激情闭关npc
+{id=355,name=Lang.EntityName.n00355,talk="",modelid=68,icon=11,classId=0,funcId=60,camp=0,idleInterval=120000,script=""},--世界bossnpc
+{id=356,name=Lang.EntityName.n00356,talk="",modelid=6,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--高手进阶
+{id=357,name=Lang.EntityName.n00357,talk="",modelid=6,icon=11,classId=0,funcId=40,camp=0,idleInterval=120000,script=""},--天神护体
+{id=358,name=Lang.EntityName.n00358,talk="",modelid=74,icon=11,classId=0,funcId=46,camp=0,idleInterval=120000,script=""},--江湖神医
+
+{id=359,name=Lang.EntityName.n00359,talk="龙门镖局向来以安全，效率，靠谱的核心运营思路，所以放心的来吧~！",modelid=33,icon=11,classId=0,funcId=44,camp=0,idleInterval=120000,script=""},--押镖测试1
+{id=360,name=Lang.EntityName.n00360,talk="我虎门镖局什么都敢接",modelid=33,icon=11,classId=0,funcId=44,camp=0,idleInterval=120000,script=""},--押镖测试2
+
+{id=361,name=Lang.EntityName.n00361,talk="",modelid=77,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--boss之家1层传送员
+{id=362,name=Lang.EntityName.n00362,talk="",modelid=6,icon=11,classId=0,funcId=49,camp=0,idleInterval=120000,script=""},--装备合成
+{id=363,name=Lang.EntityName.n00363,talk="",modelid=42,icon=11,classId=0,funcId=50,camp=0,idleInterval=120000,script=""},--抽取装备箱
+{id=364,name=Lang.EntityName.n00364,talk="",modelid=6,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--奔跑吧老哥奖励NPC
+{id=365,name=Lang.EntityName.n00365,talk="",modelid=66,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--秘境之旅
+{id=366,name=Lang.EntityName.n00366,talk="",modelid=4,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--秘境之旅传送员
+{id=367,name=Lang.EntityName.n00367,talk="",modelid=60,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--神炉
+{id=368,name=Lang.EntityName.n00368,talk="",modelid=67,icon=11,classId=0,funcId=48,camp=0,idleInterval=120000,script=""},--夺宝奇兵
+{id=369,name=Lang.EntityName.n00369,talk="",modelid=6,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--双倍经验
+{id=370,name=Lang.EntityName.n00370,talk="",modelid=69,icon=11,classId=0,funcId=52,camp=0,idleInterval=120000,script=""},--王城专属
+{id=371,name=Lang.EntityName.n00371,talk="",modelid=63,icon=11,classId=0,funcId=53,camp=0,idleInterval=120000,script=""},--暗黑沙漠
+{id=372,name=Lang.EntityName.n00372,talk="",modelid=64,icon=11,classId=0,funcId=51,camp=0,idleInterval=120000,script=""},--秦始皇陵NPC
+{id=373,name=Lang.EntityName.n00373,talk="",modelid=4,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--暗黑沙漠里传送员
+{id=374,name=Lang.EntityName.n00374,talk="",modelid=4,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--秦始皇陵NPC传送
+{id=375,name=Lang.EntityName.n00375,talk="",modelid=69,icon=11,classId=0,funcId=55,camp=0,idleInterval=120000,script=""},--散人乐园
+{id=376,name=Lang.EntityName.n00376,talk="",modelid=45,icon=11,classId=0,funcId=56,camp=0,idleInterval=120000,script=""},--灵石合成
+{id=377,name=Lang.EntityName.n00377,talk="",modelid=52,icon=11,classId=0,funcId=57,camp=0,idleInterval=120000,script=""},--转生地宫
+{id=378,name=Lang.EntityName.n00378,talk="",modelid=69,icon=11,classId=0,funcId=59,camp=0,idleInterval=120000,script=""},--珍宝阁阁主
+{id=379,name=Lang.EntityName.n00379,talk="",modelid=66,icon=11,classId=0,funcId=62,camp=0,idleInterval=120000,script=""},--饕餮神殿
+{id=380,name=Lang.EntityName.n00380,talk="",modelid=44,icon=11,classId=0,funcId=42,camp=0,idleInterval=120000,script=""},--奔跑迷惑
+{id=381,name=Lang.EntityName.n00381,talk="",modelid=69,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--boss公告
+{id=382,name=Lang.EntityName.n00382,talk="",modelid=46,icon=11,classId=0,funcId=63,camp=0,idleInterval=120000,script=""},--行会大乱斗
+{id=383,name=Lang.EntityName.n00383,talk="",modelid=62,icon=11,classId=0,funcId=64,camp=0,idleInterval=120000,script=""},--激情大本营
+{id=384,name=Lang.EntityName.n00384,talk="",modelid=8,icon=11,classId=0,funcId=65,camp=0,idleInterval=120000,script=""},--军火商人
+{id=385,name=Lang.EntityName.n00385,talk="",modelid=51,icon=11,classId=0,funcId=66,camp=0,idleInterval=120000,script=""},--天心道人
+{id=386,name=Lang.EntityName.n00386,talk="",modelid=1,icon=11,classId=0,funcId=66,camp=0,idleInterval=120000,script=""},--九殿下
+{id=387,name=Lang.EntityName.n00387,talk="",modelid=1,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--夺宝传送
+{id=388,name=Lang.EntityName.n00388,talk="",modelid=1,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--矿洞入口
+{id=389,name=Lang.EntityName.n00389,talk="",modelid=74,icon=11,classId=0,funcId=67,camp=0,idleInterval=120000,script=""},--混沌世界
+{id=390,name=Lang.EntityName.n00390,talk="",modelid=34,icon=11,classId=0,funcId=68,camp=0,idleInterval=120000,script=""},--宝石大师
+{id=391,name=Lang.EntityName.n00391,talk="",modelid=34,icon=11,classId=0,funcId=69,camp=0,idleInterval=120000,script=""},--神魂兑换
+{id=392,name=Lang.EntityName.n00392,talk="",modelid=34,icon=11,classId=0,funcId=69,camp=0,idleInterval=120000,script=""},--散人殿堂传送NPC
+{id=393,name=Lang.EntityName.n00393,talk="",modelid=17,icon=11,classId=0,funcId=21,camp=0,idleInterval=120000,script=""},--玛雅神殿
+{id=394,name=Lang.EntityName.n00394,talk="",modelid=76,icon=11,classId=0,funcId=70,camp=0,idleInterval=120000,script=""},--蚩尤结阵
+{id=395,name=Lang.EntityName.n00395,talk="",modelid=75,icon=11,classId=0,funcId=71,camp=0,idleInterval=120000,script=""},--四圣宫
+{id=396,name=Lang.EntityName.n00396,talk="",modelid=72,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--跨服接镖车
+{id=397,name=Lang.EntityName.n00397,talk="",modelid=71,icon=11,classId=0,funcId=0,camp=0,idleInterval=120000,script=""},--跨服押镖车 
+{id=398,name=Lang.EntityName.n00398,talk="",modelid=73,icon=11,classId=0,funcId=72,camp=0,idleInterval=120000,script=""},--生肖宫殿
+{id=399,name=Lang.EntityName.n00399,talk="",modelid=72,icon=11,classId=0,funcId=73,camp=0,idleInterval=120000,script=""},--混乱地界
+{id=400,name=Lang.EntityName.n00400,talk="",modelid=71,icon=11,classId=0,funcId=74,camp=0,idleInterval=120000,script=""},--元神使者
+{id=401,name=Lang.EntityName.n00401,talk="",modelid=71,icon=11,classId=0,funcId=75,camp=0,idleInterval=120000,script=""},--宝鉴地宫
+{id=402,name=Lang.EntityName.n00402,talk="",modelid=78,icon=11,classId=0,funcId=78,camp=0,idleInterval=120000,script=""},--No.1福利官
+{id=403,name=Lang.EntityName.n00403,talk="",modelid=83,icon=11,classId=0,funcId=77,camp=0,idleInterval=120000,script=""},--熊猫林
+{id=404,name=Lang.EntityName.n00404,talk="",modelid=83,icon=11,classId=0,funcId=79,camp=0,idleInterval=120000,script=""},--通天塔
+{id=405,name=Lang.EntityName.n00405,talk="",modelid=83,icon=11,classId=0,funcId=80,camp=0,idleInterval=120000,script=""},--装备换金
+
+
+
+
+
+
+}

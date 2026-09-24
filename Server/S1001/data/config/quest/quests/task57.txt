@@ -1,0 +1,42 @@
+﻿--lua script
+{
+	id = 57,			-- 虚情假意
+	parentid = 56,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name57,
+	content = Lang.Quest.desc57,
+
+	prom = 58,
+	comp = 59,
+	target = {
+		{
+			type = 0, id = 44, count = 6, rewardId = 0,useList = false,
+			location = {
+				sceneid = 182, x= 0,y = 0,entityName = Lang.EntityName.m44,hideFastTransfer = false,
+			},
+		},
+	},
+	conds = {
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 7020000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 5, id = 0, count = 200000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk571,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk571,
+	},
+	CompMsTip = {
+	},
+	PassMsTip = {
+	},
+},

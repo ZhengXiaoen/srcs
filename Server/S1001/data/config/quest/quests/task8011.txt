@@ -1,0 +1,63 @@
+﻿--lua script
+{
+	id = 8011,			-- 金刚巨魔
+	parentid = 0,type = 3,level = 0,circle = 0,entrust = 8,star = 3,guideId = 0,timelimit = 0,interval = 86400,maxcount = 5,
+	cangiveup = true,
+	automount = true,
+	autoRun = false,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = true,
+	name = Lang.Quest.name8011,
+	content = Lang.Quest.desc8011,
+
+	prom = 0,
+	comp = 0,
+	target = {
+		{
+			type = 0, id = 173, count = 100, rewardId = 0,useList = false,
+			location = {
+				sceneid = 30, x= 0,y = 0,entityName = Lang.EntityName.m173,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 174, count = 120, rewardId = 1,useList = false,
+			location = {
+				sceneid = 31, x= 0,y = 0,entityName = Lang.EntityName.m174,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 86, count = 120, rewardId = 2,useList = false,
+			location = {
+				sceneid = 30, x= 0,y = 0,entityName = Lang.EntityName.m15,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 12, id = 32, count = 120, rewardId = 3,useList = false, data = Lang.Quest.data80113,
+		},
+	},
+	conds = {
+		{ type = 0, id = 55, count = 51 },
+	},
+	awards = {
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk80111,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk80111,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip80111,
+	},
+	PassMsTip = {
+	},
+},

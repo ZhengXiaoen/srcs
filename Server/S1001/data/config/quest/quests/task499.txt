@@ -1,0 +1,38 @@
+﻿--lua script
+{
+	id = 499,			-- 命运
+	parentid = 500,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name499,
+	content = Lang.Quest.desc499,
+
+	prom = 0,
+	comp = 0,
+	target = {
+	},
+	conds = {
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 14885, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 0, id = 338, count = 3, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+			{ type = 6, id = 1, count = 500, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk4991,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk4991,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip4991,
+	},
+	PassMsTip = {
+	},
+},

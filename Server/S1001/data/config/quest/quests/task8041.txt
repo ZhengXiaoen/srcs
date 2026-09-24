@@ -1,0 +1,134 @@
+﻿{
+	id = 8041,
+	name = Lang.Quest.q03628,
+	parentid = 0,
+	type = 2,
+	level = 0,
+	cangiveup = true,
+	content = Lang.Quest.q03629,
+
+	prom =
+  {
+    type = 0,
+	scene = Lang.SceneName.s00049,
+	npc = Lang.EntityName.n00491,
+	},
+
+	comp =
+	{
+    type = 0,
+	scene = Lang.SceneName.s00049,
+	npc = Lang.EntityName.n00491,
+  },
+
+  target =
+  {
+    
+    {
+       type = 0, id = 260,count = 4 , useList = true,
+       location =
+       {
+         sceneid=68,entityName=Lang.EntityName.m00260,
+         pass =
+         {
+           {sceneid=49,entityName=Lang.EntityName.n00462,actionDesc =Lang.Talk.t02877},
+         },
+        hideFastTransfer = true,
+       },
+    },
+    
+    {
+       type = 0, id = 312,count = 1 , useList = true,
+       location =
+       {
+         sceneid=68,entityName=Lang.EntityName.m00312,
+         pass =
+         {
+           {sceneid=49,entityName=Lang.EntityName.n00462,actionDesc =Lang.Talk.t02877},
+         },
+        hideFastTransfer = true,
+       },
+    },
+    
+    {
+       type = 0, id = 262,count = 3 , useList = true,
+       location =
+       {
+         sceneid=69,entityName=Lang.EntityName.m00262,
+         pass =
+         {
+           {sceneid=49,entityName=Lang.EntityName.n00462,actionDesc =Lang.Talk.t02877},
+         },
+        hideFastTransfer = true,
+       },
+    },
+    
+    {
+       type = 0, id = 313,count = 1 , useList = true,
+       location =
+       {
+         sceneid=69,entityName=Lang.EntityName.m00313,
+         pass =
+         {
+           {sceneid=49,entityName=Lang.EntityName.n00462,actionDesc =Lang.Talk.t02877},
+         },
+        hideFastTransfer = true,
+       },
+    },
+    
+    {
+       type = 0, id = 264,count = 3 , useList = true,
+       location =
+       {
+         sceneid=70,entityName=Lang.EntityName.m00264,
+         pass =
+         {
+           {sceneid=49,entityName=Lang.EntityName.n00462,actionDesc =Lang.Talk.t02877},
+         },
+        hideFastTransfer = true,
+       },
+    },
+    
+    {
+       type = 0, id = 316,count = 1 , useList = true,
+       location =
+       {
+         sceneid=70,entityName=Lang.EntityName.m00316,
+         pass =
+         {
+           {sceneid=49,entityName=Lang.EntityName.n00462,actionDesc =Lang.Talk.t02877},
+         },
+        hideFastTransfer = true,
+       },
+    },
+ 
+  },
+  --奖励列表
+	awards =
+  {
+    { type = 0, id = 1923, count = 1, group = 0,quality= 1, bind = false, job = 0, sex = -1},
+},
+  --任务条件表
+  conds =
+  {
+
+    { type = 0, id = 0,count = 200 },  --1级可接
+  },
+  timelimit = 0,
+  interval = 86400,
+  maxcount = 4,
+	excludetree = true,
+
+  PromMsTalks = {
+       Lang.Talk.t05436,
+  },
+  
+  CompMsTalks = {
+       Lang.Talk.t05437,
+  },
+  
+  CompMsTip = {
+       Lang.Talk.t05438,
+  }, 
+ 
+},

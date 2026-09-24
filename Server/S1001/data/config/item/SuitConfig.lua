@@ -1,0 +1,1020 @@
+﻿--#include "..\..\language\LangCode.txt"
+--该套装配置文件已废弃 2017.2.7 - 套装配置在data\config\zodiac\ZodiacConfigEx.lua
+SuitConfig = {
+--	{name = Lang.Item.t0,items = {},attrs = {},},
+--	{
+--		--//乌铁A 乌铁A
+--		name = Lang.Item.t1,
+--		items = {
+--			1,
+--			2,
+--			3,
+--			4,
+--			5,
+--			6,
+--			6,
+--			8,
+--			9,
+--		},
+--		attrs = {
+--			{type = 5, value = 100, need = 3},
+--			{type = 7, value = 20, need = 3},
+--			{type = 5, value = 100, need = 5},
+--			{type = 7, value = 20, need = 5},
+--			{type = 5, value = 200, need = 8},
+--			{type = 7, value = 50, need = 8},
+--		},
+--	},
+--	{
+--		--//乌铁B 乌铁B
+--		name = Lang.Item.t2,
+--		items = {
+--			7,
+--			7,
+--		},
+--		attrs = {
+--			{type = 23, value = 5, need = 2},
+--			{type = 27, value = 5, need = 2},
+--		},
+--	},
+--	{
+--		--//青铜A 青铜A
+--		name = Lang.Item.t3,
+--		items = {
+--			10,
+--			11,
+--			12,
+--			13,
+--			14,
+--			15,
+--			15,
+--			17,
+--			18,
+--		},
+--		attrs = {
+--			{type = 5, value = 118, need = 3},
+--			{type = 7, value = 24, need = 3},
+--			{type = 5, value = 118, need = 5},
+--			{type = 7, value = 24, need = 5},
+--			{type = 5, value = 236, need = 8},
+--			{type = 7, value = 59, need = 8},
+--		},
+--	},
+--	{
+--		--//青铜B 青铜B
+--		name = Lang.Item.t4,
+--		items = {
+--			16,
+--			16,
+--		},
+--		attrs = {
+--			{type = 23, value = 6, need = 2},
+--			{type = 27, value = 6, need = 2},
+--		},
+--	},
+--	{
+--		--//白银战A 白银战A
+--		name = Lang.Item.t5,
+--		items = {
+--			19,
+--			20,
+--			21,
+--			22,
+--			23,
+--			24,
+--			24,
+--			26,
+--			27,
+--		},
+--		attrs = {
+--			{type = 5, value = 139, need = 3},
+--			{type = 7, value = 28, need = 3},
+--			{type = 5, value = 139, need = 5},
+--			{type = 7, value = 28, need = 5},
+--			{type = 5, value = 278, need = 8},
+--			{type = 7, value = 70, need = 8},
+--		},
+--	},
+--	{
+--		--//白银战B 白银战B
+--		name = Lang.Item.t6,
+--		items = {
+--			25,
+--			25,
+--		},
+--		attrs = {
+--			{type = 23, value = 7, need = 2},
+--			{type = 27, value = 7, need = 2},
+--		},
+--	},
+--	{
+--		--//白银魔A 白银魔A
+--		name = Lang.Item.t7,
+--		items = {
+--			28,
+--			29,
+--			30,
+--			31,
+--			32,
+--			33,
+--			33,
+--			35,
+--			36,
+--		},
+--		attrs = {
+--			{type = 5, value = 164, need = 3},
+--			{type = 7, value = 33, need = 3},
+--			{type = 5, value = 164, need = 5},
+--			{type = 7, value = 33, need = 5},
+--			{type = 5, value = 328, need = 8},
+--			{type = 7, value = 83, need = 8},
+--		},
+--	},
+--	{
+--		--//白银魔B 白银魔B
+--		name = Lang.Item.t8,
+--		items = {
+--			34,
+--			34,
+--		},
+--		attrs = {
+--			{type = 23, value = 8, need = 2},
+--			{type = 27, value = 8, need = 2},
+--		},
+--	},
+--	{
+--		--//白银道A 白银道A
+--		name = Lang.Item.t9,
+--		items = {
+--			37,
+--			38,
+--			39,
+--			40,
+--			41,
+--			42,
+--			42,
+--			44,
+--			45,
+--		},
+--		attrs = {
+--			{type = 5, value = 194, need = 3},
+--			{type = 7, value = 39, need = 3},
+--			{type = 5, value = 194, need = 5},
+--			{type = 7, value = 39, need = 5},
+--			{type = 5, value = 387, need = 8},
+--			{type = 7, value = 98, need = 8},
+--		},
+--	},
+--	{
+--		--//白银道B 白银道B
+--		name = Lang.Item.t10,
+--		items = {
+--			43,
+--			43,
+--		},
+--		attrs = {
+--			{type = 23, value = 9, need = 2},
+--			{type = 27, value = 9, need = 2},
+--		},
+--	},
+--	{
+--		--//黄金战A 黄金战A
+--		name = Lang.Item.t11,
+--		items = {
+--			46,
+--			47,
+--			48,
+--			49,
+--			50,
+--			51,
+--			51,
+--			53,
+--			54,
+--		},
+--		attrs = {
+--			{type = 5, value = 229, need = 3},
+--			{type = 7, value = 46, need = 3},
+--			{type = 5, value = 229, need = 5},
+--			{type = 7, value = 46, need = 5},
+--			{type = 5, value = 457, need = 8},
+--			{type = 7, value = 116, need = 8},
+--		},
+--	},
+--	{
+--		--//黄金战B 黄金战B
+--		name = Lang.Item.t12,
+--		items = {
+--			52,
+--			52,
+--		},
+--		attrs = {
+--			{type = 23, value = 11, need = 2},
+--			{type = 27, value = 11, need = 2},
+--		},
+--	},
+--	{
+--		--//黄金魔A 黄金魔A
+--		name = Lang.Item.t13,
+--		items = {
+--			55,
+--			56,
+--			57,
+--			58,
+--			59,
+--			60,
+--			60,
+--			62,
+--			63,
+--		},
+--		attrs = {
+--			{type = 5, value = 270, need = 3},
+--			{type = 7, value = 54, need = 3},
+--			{type = 5, value = 270, need = 5},
+--			{type = 7, value = 54, need = 5},
+--			{type = 5, value = 539, need = 8},
+--			{type = 7, value = 137, need = 8},
+--		},
+--	},
+--	{
+--		--//黄金魔B 黄金魔B
+--		name = Lang.Item.t14,
+--		items = {
+--			61,
+--			61,
+--		},
+--		attrs = {
+--			{type = 23, value = 13, need = 2},
+--			{type = 27, value = 13, need = 2},
+--		},
+--	},
+--	{
+--		--//黄金道A 黄金道A
+--		name = Lang.Item.t15,
+--		items = {
+--			64,
+--			65,
+--			66,
+--			67,
+--			68,
+--			69,
+--			69,
+--			71,
+--			72,
+--		},
+--		attrs = {
+--			{type = 5, value = 319, need = 3},
+--			{type = 7, value = 64, need = 3},
+--			{type = 5, value = 319, need = 5},
+--			{type = 7, value = 64, need = 5},
+--			{type = 5, value = 636, need = 8},
+--			{type = 7, value = 162, need = 8},
+--		},
+--	},
+--	{
+--		--//黄金道B 黄金道B
+--		name = Lang.Item.t16,
+--		items = {
+--			70,
+--			70,
+--		},
+--		attrs = {
+--			{type = 23, value = 15, need = 2},
+--			{type = 27, value = 15, need = 2},
+--		},
+--	},
+--	{
+--		--//黑玉A 黑玉A
+--		name = Lang.Item.t17,
+--		items = {
+--			73,
+--			74,
+--			75,
+--			76,
+--			77,
+--			78,
+--			78,
+--			80,
+--			81,
+--		},
+--		attrs = {
+--			{type = 5, value = 376, need = 3},
+--			{type = 7, value = 76, need = 3},
+--			{type = 5, value = 376, need = 5},
+--			{type = 7, value = 76, need = 5},
+--			{type = 5, value = 750, need = 8},
+--			{type = 7, value = 191, need = 8},
+--		},
+--	},
+--	{
+--		--//黑玉B 黑玉B
+--		name = Lang.Item.t18,
+--		items = {
+--			79,
+--			79,
+--		},
+--		attrs = {
+--			{type = 23, value = 18, need = 2},
+--			{type = 27, value = 18, need = 2},
+--		},
+--	},
+--	{
+--		--//红玉A 红玉A
+--		name = Lang.Item.t19,
+--		items = {
+--			82,
+--			83,
+--			84,
+--			85,
+--			86,
+--			87,
+--			87,
+--			89,
+--			90,
+--		},
+--		attrs = {
+--			{type = 5, value = 444, need = 3},
+--			{type = 7, value = 90, need = 3},
+--			{type = 5, value = 444, need = 5},
+--			{type = 7, value = 90, need = 5},
+--			{type = 5, value = 885, need = 8},
+--			{type = 7, value = 225, need = 8},
+--		},
+--	},
+--	{
+--		--//红玉B 红玉B
+--		name = Lang.Item.t20,
+--		items = {
+--			88,
+--			88,
+--		},
+--		attrs = {
+--			{type = 23, value = 21, need = 2},
+--			{type = 27, value = 21, need = 2},
+--		},
+--	},
+--	{
+--		--//蓝玉A 蓝玉A
+--		name = Lang.Item.t21,
+--		items = {
+--			91,
+--			92,
+--			93,
+--			94,
+--			95,
+--			96,
+--			96,
+--			98,
+--			99,
+--		},
+--		attrs = {
+--			{type = 5, value = 524, need = 3},
+--			{type = 7, value = 106, need = 3},
+--			{type = 5, value = 524, need = 5},
+--			{type = 7, value = 106, need = 5},
+--			{type = 5, value = 1044, need = 8},
+--			{type = 7, value = 266, need = 8},
+--		},
+--	},
+--	{
+--		--//蓝玉B 蓝玉B
+--		name = Lang.Item.t22,
+--		items = {
+--			97,
+--			97,
+--		},
+--		attrs = {
+--			{type = 23, value = 25, need = 2},
+--			{type = 27, value = 25, need = 2},
+--		},
+--	},
+--	{
+--		--//乌攻A 乌攻A
+--		name = Lang.Item.t23,
+--		items = {
+--			100,
+--			101,
+--			102,
+--			103,
+--			104,
+--			105,
+--			105,
+--			107,
+--			108,
+--		},
+--		attrs = {
+--			{type = 5, value = 618, need = 3},
+--			{type = 7, value = 125, need = 3},
+--			{type = 5, value = 618, need = 5},
+--			{type = 7, value = 125, need = 5},
+--			{type = 5, value = 1232, need = 8},
+--			{type = 7, value = 314, need = 8},
+--		},
+--	},
+--	{
+--		--//乌攻B 乌攻B
+--		name = Lang.Item.t24,
+--		items = {
+--			106,
+--			106,
+--		},
+--		attrs = {
+--			{type = 23, value = 30, need = 2},
+--			{type = 27, value = 30, need = 2},
+--		},
+--	},
+--	{
+--		--//恶驱A 恶驱A
+--		name = Lang.Item.t25,
+--		items = {
+--			109,
+--			110,
+--			111,
+--			112,
+--			113,
+--			114,
+--			114,
+--			116,
+--			117,
+--		},
+--		attrs = {
+--			{type = 5, value = 729, need = 3},
+--			{type = 7, value = 148, need = 3},
+--			{type = 5, value = 729, need = 5},
+--			{type = 7, value = 148, need = 5},
+--			{type = 5, value = 1454, need = 8},
+--			{type = 7, value = 371, need = 8},
+--		},
+--	},
+--	{
+--		--//恶驱B 恶驱B
+--		name = Lang.Item.t26,
+--		items = {
+--			115,
+--			115,
+--		},
+--		attrs = {
+--			{type = 23, value = 35, need = 2},
+--			{type = 27, value = 35, need = 2},
+--		},
+--	},
+--	{
+--		--//巨儒A 巨儒A
+--		name = Lang.Item.t27,
+--		items = {
+--			118,
+--			119,
+--			120,
+--			121,
+--			122,
+--			123,
+--			123,
+--			125,
+--			126,
+--		},
+--		attrs = {
+--			{type = 5, value = 860, need = 3},
+--			{type = 7, value = 175, need = 3},
+--			{type = 5, value = 860, need = 5},
+--			{type = 7, value = 175, need = 5},
+--			{type = 5, value = 1716, need = 8},
+--			{type = 7, value = 438, need = 8},
+--		},
+--	},
+--	{
+--		--//巨儒B 巨儒B
+--		name = Lang.Item.t28,
+--		items = {
+--			124,
+--			124,
+--		},
+--		attrs = {
+--			{type = 23, value = 41, need = 2},
+--			{type = 27, value = 41, need = 2},
+--		},
+--	},
+--	{
+--		--//天狼A 天狼A
+--		name = Lang.Item.t29,
+--		items = {
+--			127,
+--			128,
+--			129,
+--			130,
+--			131,
+--			132,
+--			132,
+--			134,
+--			135,
+--		},
+--		attrs = {
+--			{type = 5, value = 1015, need = 3},
+--			{type = 7, value = 207, need = 3},
+--			{type = 5, value = 1015, need = 5},
+--			{type = 7, value = 207, need = 5},
+--			{type = 5, value = 2025, need = 8},
+--			{type = 7, value = 517, need = 8},
+--		},
+--	},
+--	{
+--		--//天狼B 天狼B
+--		name = Lang.Item.t30,
+--		items = {
+--			133,
+--			133,
+--		},
+--		attrs = {
+--			{type = 23, value = 48, need = 2},
+--			{type = 27, value = 48, need = 2},
+--		},
+--	},
+--	{
+--		--//幻影A 幻影A
+--		name = Lang.Item.t31,
+--		items = {
+--			136,
+--			137,
+--			138,
+--			139,
+--			140,
+--			141,
+--			141,
+--			143,
+--			144,
+--		},
+--		attrs = {
+--			{type = 5, value = 1198, need = 3},
+--			{type = 7, value = 244, need = 3},
+--			{type = 5, value = 1198, need = 5},
+--			{type = 7, value = 244, need = 5},
+--			{type = 5, value = 2390, need = 8},
+--			{type = 7, value = 610, need = 8},
+--		},
+--	},
+--	{
+--		--//幻影B 幻影B
+--		name = Lang.Item.t32,
+--		items = {
+--			142,
+--			142,
+--		},
+--		attrs = {
+--			{type = 23, value = 57, need = 2},
+--			{type = 27, value = 57, need = 2},
+--		},
+--	},
+--	{
+--		--//花吻A 花吻A
+--		name = Lang.Item.t33,
+--		items = {
+--			145,
+--			146,
+--			147,
+--			148,
+--			149,
+--			150,
+--			150,
+--			152,
+--			153,
+--		},
+--		attrs = {
+--			{type = 5, value = 1414, need = 3},
+--			{type = 7, value = 288, need = 3},
+--			{type = 5, value = 1414, need = 5},
+--			{type = 7, value = 288, need = 5},
+--			{type = 5, value = 2820, need = 8},
+--			{type = 7, value = 720, need = 8},
+--		},
+--	},
+--	{
+--		--//花吻B 花吻B
+--		name = Lang.Item.t34,
+--		items = {
+--			151,
+--			151,
+--		},
+--		attrs = {
+--			{type = 23, value = 67, need = 2},
+--			{type = 27, value = 67, need = 2},
+--		},
+--	},
+--	{
+--		--//杀神A 杀神A
+--		name = Lang.Item.t35,
+--		items = {
+--			154,
+--			155,
+--			156,
+--			157,
+--			158,
+--			159,
+--			159,
+--			161,
+--			162,
+--		},
+--		attrs = {
+--			{type = 5, value = 1669, need = 3},
+--			{type = 7, value = 340, need = 3},
+--			{type = 5, value = 1669, need = 5},
+--			{type = 7, value = 340, need = 5},
+--			{type = 5, value = 3328, need = 8},
+--			{type = 7, value = 850, need = 8},
+--		},
+--	},
+--	{
+--		--//杀神B 杀神B
+--		name = Lang.Item.t36,
+--		items = {
+--			160,
+--			160,
+--		},
+--		attrs = {
+--			{type = 23, value = 79, need = 2},
+--			{type = 27, value = 79, need = 2},
+--		},
+--	},
+--	{
+--		--//斗法A 斗法A
+--		name = Lang.Item.t37,
+--		items = {
+--			163,
+--			164,
+--			165,
+--			166,
+--			167,
+--			168,
+--			168,
+--			170,
+--			171,
+--		},
+--		attrs = {
+--			{type = 5, value = 1969, need = 3},
+--			{type = 7, value = 401, need = 3},
+--			{type = 5, value = 1969, need = 5},
+--			{type = 7, value = 401, need = 5},
+--			{type = 5, value = 3927, need = 8},
+--			{type = 7, value = 1003, need = 8},
+--		},
+--	},
+--	{
+--		--//斗法B 斗法B
+--		name = Lang.Item.t38,
+--		items = {
+--			169,
+--			169,
+--		},
+--		attrs = {
+--			{type = 23, value = 93, need = 2},
+--			{type = 27, value = 93, need = 2},
+--		},
+--	},
+--	{
+--		--//八卦A 八卦A
+--		name = Lang.Item.t39,
+--		items = {
+--			172,
+--			173,
+--			174,
+--			175,
+--			176,
+--			177,
+--			177,
+--			179,
+--			180,
+--		},
+--		attrs = {
+--			{type = 5, value = 2323, need = 3},
+--			{type = 7, value = 473, need = 3},
+--			{type = 5, value = 2323, need = 5},
+--			{type = 7, value = 473, need = 5},
+--			{type = 5, value = 4634, need = 8},
+--			{type = 7, value = 1184, need = 8},
+--		},
+--	},
+--	{
+--		--//八卦B 八卦B
+--		name = Lang.Item.t40,
+--		items = {
+--			178,
+--			178,
+--		},
+--		attrs = {
+--			{type = 23, value = 110, need = 2},
+--			{type = 27, value = 110, need = 2},
+--		},
+--	},
+--	{
+--		--//劫焰A 劫焰A
+--		name = Lang.Item.t41,
+--		items = {
+--			181,
+--			182,
+--			183,
+--			184,
+--			185,
+--			186,
+--			186,
+--			188,
+--			189,
+--		},
+--		attrs = {
+--			{type = 5, value = 2741, need = 3},
+--			{type = 7, value = 558, need = 3},
+--			{type = 5, value = 2741, need = 5},
+--			{type = 7, value = 558, need = 5},
+--			{type = 5, value = 5468, need = 8},
+--			{type = 7, value = 1397, need = 8},
+--		},
+--	},
+--	{
+--		--//劫焰B 劫焰B
+--		name = Lang.Item.t42,
+--		items = {
+--			187,
+--			187,
+--		},
+--		attrs = {
+--			{type = 23, value = 130, need = 2},
+--			{type = 27, value = 130, need = 2},
+--		},
+--	},
+--	{
+--		--//镇龙A 镇龙A
+--		name = Lang.Item.t43,
+--		items = {
+--			190,
+--			191,
+--			192,
+--			193,
+--			194,
+--			195,
+--			195,
+--			197,
+--			198,
+--		},
+--		attrs = {
+--			{type = 5, value = 3234, need = 3},
+--			{type = 7, value = 658, need = 3},
+--			{type = 5, value = 3234, need = 5},
+--			{type = 7, value = 658, need = 5},
+--			{type = 5, value = 6452, need = 8},
+--			{type = 7, value = 1648, need = 8},
+--		},
+--	},
+--	{
+--		--//镇龙B 镇龙B
+--		name = Lang.Item.t44,
+--		items = {
+--			196,
+--			196,
+--		},
+--		attrs = {
+--			{type = 23, value = 153, need = 2},
+--			{type = 27, value = 153, need = 2},
+--		},
+--	},
+--	{
+--		--//圣烨A 圣烨A
+--		name = Lang.Item.t45,
+--		items = {
+--			199,
+--			200,
+--			201,
+--			202,
+--			203,
+--			204,
+--			204,
+--			206,
+--			207,
+--		},
+--		attrs = {
+--			{type = 5, value = 3816, need = 3},
+--			{type = 7, value = 776, need = 3},
+--			{type = 5, value = 3816, need = 5},
+--			{type = 7, value = 776, need = 5},
+--			{type = 5, value = 7613, need = 8},
+--			{type = 7, value = 1945, need = 8},
+--		},
+--	},
+--	{
+--		--//圣烨B 圣烨B
+--		name = Lang.Item.t46,
+--		items = {
+--			205,
+--			205,
+--		},
+--		attrs = {
+--			{type = 23, value = 181, need = 2},
+--			{type = 27, value = 181, need = 2},
+--		},
+--	},
+--	{
+--		--//化渊A 化渊A
+--		name = Lang.Item.t47,
+--		items = {
+--			208,
+--			209,
+--			210,
+--			211,
+--			212,
+--			213,
+--			213,
+--			215,
+--			216,
+--		},
+--		attrs = {
+--			{type = 5, value = 4503, need = 3},
+--			{type = 7, value = 916, need = 3},
+--			{type = 5, value = 4503, need = 5},
+--			{type = 7, value = 916, need = 5},
+--			{type = 5, value = 8983, need = 8},
+--			{type = 7, value = 2295, need = 8},
+--		},
+--	},
+--	{
+--		--//化渊B 化渊B
+--		name = Lang.Item.t48,
+--		items = {
+--			214,
+--			214,
+--		},
+--		attrs = {
+--			{type = 23, value = 214, need = 2},
+--			{type = 27, value = 214, need = 2},
+--		},
+--	},
+--	{
+--		--//云渺A 云渺A
+--		name = Lang.Item.t49,
+--		items = {
+--			217,
+--			218,
+--			219,
+--			220,
+--			221,
+--			222,
+--			222,
+--			224,
+--			225,
+--		},
+--		attrs = {
+--			{type = 5, value = 5314, need = 3},
+--			{type = 7, value = 1081, need = 3},
+--			{type = 5, value = 5314, need = 5},
+--			{type = 7, value = 1081, need = 5},
+--			{type = 5, value = 10600, need = 8},
+--			{type = 7, value = 2708, need = 8},
+--		},
+--	},
+--	{
+--		--//云渺B 云渺B
+--		name = Lang.Item.t50,
+--		items = {
+--			223,
+--			223,
+--		},
+--		attrs = {
+--			{type = 23, value = 253, need = 2},
+--			{type = 27, value = 253, need = 2},
+--		},
+--	},
+--	{
+--		--//神煌A 神煌A
+--		name = Lang.Item.t51,
+--		items = {
+--			226,
+--			227,
+--			228,
+--			229,
+--			230,
+--			231,
+--			231,
+--			233,
+--			234,
+--		},
+--		attrs = {
+--			{type = 5, value = 6271, need = 3},
+--			{type = 7, value = 1276, need = 3},
+--			{type = 5, value = 6271, need = 5},
+--			{type = 7, value = 1276, need = 5},
+--			{type = 5, value = 12508, need = 8},
+--			{type = 7, value = 3195, need = 8},
+--		},
+--	},
+--	{
+--		--//神煌B 神煌B
+--		name = Lang.Item.t52,
+--		items = {
+--			232,
+--			232,
+--		},
+--		attrs = {
+--			{type = 23, value = 299, need = 2},
+--			{type = 27, value = 299, need = 2},
+--		},
+--	},
+--	{
+--		--//盘古开天A 盘古开天A
+--		name = Lang.Item.t53,
+--		items = {
+--			235,
+--			236,
+--			237,
+--			238,
+--			239,
+--			240,
+--			240,
+--			242,
+--			243,
+--		},
+--		attrs = {
+--			{type = 5, value = 7400, need = 3},
+--			{type = 7, value = 1506, need = 3},
+--			{type = 5, value = 7400, need = 5},
+--			{type = 7, value = 1506, need = 5},
+--			{type = 5, value = 14759, need = 8},
+--			{type = 7, value = 3770, need = 8},
+--		},
+--	},
+--	{
+--		--//盘古开天B 盘古开天B
+--		name = Lang.Item.t54,
+--		items = {
+--			241,
+--			241,
+--		},
+--		attrs = {
+--			{type = 23, value = 353, need = 2},
+--			{type = 27, value = 353, need = 2},
+--		},
+--	},
+--	{
+--		--//伏羲镇天A 伏羲镇天A
+--		name = Lang.Item.t55,
+--		items = {
+--			244,
+--			245,
+--			246,
+--			247,
+--			248,
+--			249,
+--			249,
+--			251,
+--			252,
+--		},
+--		attrs = {
+--			{type = 5, value = 8732, need = 3},
+--			{type = 7, value = 1777, need = 3},
+--			{type = 5, value = 8732, need = 5},
+--			{type = 7, value = 1777, need = 5},
+--			{type = 5, value = 17416, need = 8},
+--			{type = 7, value = 4449, need = 8},
+--		},
+--	},
+--	{
+--		--//伏羲镇天B 伏羲镇天B
+--		name = Lang.Item.t56,
+--		items = {
+--			250,
+--			250,
+--		},
+--		attrs = {
+--			{type = 23, value = 417, need = 2},
+--			{type = 27, value = 417, need = 2},
+--		},
+--	},
+--	{
+--		--//轩辕玄天A 轩辕玄天A
+--		name = Lang.Item.t57,
+--		items = {
+--			253,
+--			254,
+--			255,
+--			256,
+--			257,
+--			258,
+--			258,
+--			260,
+--			261,
+--		},
+--		attrs = {
+--			{type = 5, value = 10304, need = 3},
+--			{type = 7, value = 2097, need = 3},
+--			{type = 5, value = 10304, need = 5},
+--			{type = 7, value = 2097, need = 5},
+--			{type = 5, value = 20551, need = 8},
+--			{type = 7, value = 5250, need = 8},
+--		},
+--	},
+--	{
+--		--//轩辕玄天B 轩辕玄天B
+--		name = Lang.Item.t58,
+--		items = {
+--			259,
+--			259,
+--		},
+--		attrs = {
+--			{type = 23, value = 492, need = 2},
+--			{type = 27, value = 492, need = 2},
+--		},
+--	},
+};

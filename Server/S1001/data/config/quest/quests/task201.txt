@@ -1,0 +1,37 @@
+﻿--lua script
+{
+	id = 201,			-- 柔情枫叶
+	parentid = 500,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name201,
+	content = Lang.Quest.desc201,
+
+	prom = 91,
+	comp = 92,
+	target = {
+	},
+	conds = {
+		{ type = 0, id = 0, count = 1 },
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 16000000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk2011,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk2011,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip2011,
+	},
+	PassMsTip = {
+	},
+},

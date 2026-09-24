@@ -1,0 +1,122 @@
+﻿--lua script
+{
+	id = 8016,			-- 幽灵诡秘
+	parentid = 0,type = 10,level = 0,circle = 0,entrust = 7,star = 3,guideId = 0,timelimit = 0,interval = 86400,maxcount = 10,
+	cangiveup = true,
+	automount = true,
+	autoRun = false,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = true,
+	name = Lang.Quest.name8016,
+	content = Lang.Quest.desc8016,
+
+	prom = 0,
+	comp = 0,
+	target = {
+		{
+			type = 9, id = 40, count = 75, rewardId = 0,useList = false,
+			location = {
+				sceneid = 27, x= 0,y = 0,entityName = Lang.EntityName.m77,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 73, count = 75, rewardId = 1,useList = false,
+			location = {
+				sceneid = 26, x= 0,y = 0,entityName = Lang.EntityName.m73,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 40, count = 75, rewardId = 2,useList = false,
+			location = {
+				sceneid = 26, x= 0,y = 0,entityName = Lang.EntityName.m79,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 40, count = 75, rewardId = 3,useList = false,
+			location = {
+				sceneid = 26, x= 0,y = 0,entityName = Lang.EntityName.m78,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 172, count = 75, rewardId = 4,useList = false,
+			location = {
+				sceneid = 29, x= 0,y = 0,entityName = Lang.EntityName.m172,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 1, id = 451, count = 10, rewardId = 5,useList = false,
+			location = {
+				sceneid = 4, x= 0,y = 0,entityName = Lang.EntityName.m262,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 37, id = 2, count = 1, rewardId = 6,useList = false, data = Lang.Quest.data80166,
+		},
+		{
+			type = 37, id = 3, count = 1, rewardId = 7,useList = false, data = Lang.Quest.data80167,
+		},
+		{
+			type = 127, id = 50092, count = 1, rewardId = 8,useList = false, data = Lang.Quest.data80168,
+			location = {
+				sceneid = 8, x= 0,y = 0,entityName = Lang.EntityName.n00024,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50091, count = 1, rewardId = 9,useList = false, data = Lang.Quest.data80169,
+			location = {
+				sceneid = 8, x= 0,y = 0,entityName = Lang.EntityName.n00028,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50037, count = 1, rewardId = 10,useList = false, data = Lang.Quest.data801610,
+			location = {
+				sceneid = 105, x= 0,y = 0,entityName = Lang.EntityName.n00166,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 12, id = 26, count = 100, rewardId = 11,useList = false, data = Lang.Quest.data801611,
+		},
+	},
+	conds = {
+		{ type = 0, id = 50, count = 46 },
+	},
+	awards = {
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk80161,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk80161,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip80161,
+	},
+	PassMsTip = {
+		Lang.Quest.passTip80161,
+	},
+},

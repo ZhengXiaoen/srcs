@@ -1,0 +1,39 @@
+﻿--lua script
+{
+	id = 35,			-- 沃玛传说
+	parentid = 34,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = true,
+	randomTarget = false,
+	name = Lang.Quest.name35,
+	content = Lang.Quest.desc35,
+
+	prom = 25,
+	comp = 40,
+	target = {
+	},
+	conds = {
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 250000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 5, id = 0, count = 100000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 0, id = 169, count = 2, group = 0,strong = 0,quality = 0,job = 1,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+			{ type = 0, id = 175, count = 2, group = 0,strong = 0,quality = 0,job = 2,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+			{ type = 0, id = 181, count = 2, group = 0,strong = 0,quality = 0,job = 3,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk351,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk351,
+	},
+	CompMsTip = {
+	},
+	PassMsTip = {
+	},
+},

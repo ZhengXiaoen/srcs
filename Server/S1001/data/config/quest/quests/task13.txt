@@ -1,0 +1,42 @@
+﻿--lua script
+{
+	id = 13,			-- 柔情翠花
+	parentid = 12,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name13,
+	content = Lang.Quest.desc13,
+
+	prom = 12,
+	comp = 13,
+	target = {
+		{
+			type = 0, id = 11, count = 3, rewardId = 0,useList = false,
+			location = {
+				sceneid = 2, x= 0,y = 0,entityName = Lang.EntityName.m11,hideFastTransfer = false,
+			},
+		},
+	},
+	conds = {
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 6000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 0, id = 680, count = 100, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk131,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk131,
+	},
+	CompMsTip = {
+	},
+	PassMsTip = {
+	},
+},

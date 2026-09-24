@@ -1,0 +1,37 @@
+﻿--lua script
+{
+	id = 69,			-- 大有收获
+	parentid = 68,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name69,
+	content = Lang.Quest.desc69,
+
+	prom = 263,
+	comp = 251,
+	target = {
+	},
+	conds = {
+		{ type = 0, id = 0, count = 1 },
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 27000000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 5, id = 0, count = 200000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk691,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk691,
+	},
+	CompMsTip = {
+	},
+	PassMsTip = {
+	},
+},

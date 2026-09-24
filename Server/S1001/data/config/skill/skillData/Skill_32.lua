@@ -1,0 +1,21 @@
+﻿{
+	id = 32,
+	name = Lang.Skill.s32Name,
+	desc = Lang.Skill.s32Desc,
+	-- = 喷泉技能,
+	vocation = 0,
+	isDelete = true,
+	skillType = 0,
+	skillClass = 11,
+	skillSpellType = 4,
+	commonCd = 0,
+	canbeDefault = true,
+	specialBuffCond = 0,
+	notAutoUse = false,
+	magicLock = false,
+	needCalPassiveProperty = false,
+	priority = 0,
+	skillSubLevel = { 
+--#include "Skill_32_1.lua" 
+	},
+},

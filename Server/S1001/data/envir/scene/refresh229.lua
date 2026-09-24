@@ -1,0 +1,16 @@
+{count=1,time=9999,firstTime=1,mapx=54,mapy=27,range=2,entityid=433,entityLevel=50,progress=0,},--秘境之旅10层-变异骷髅王?十阶
+{count=1,time=9999,firstTime=1,mapx=50,mapy=37,range=2,entityid=443,entityLevel=50,progress=0,},--秘境之旅10层-铁链僵尸皇?十阶
+{count=1,time=9999,firstTime=1,mapx=39,mapy=36,range=2,entityid=453,entityLevel=50,progress=0,},--秘境之旅10层-暗之钳虫皇?十阶
+{count=1,time=9999,firstTime=1,mapx=41,mapy=22,range=2,entityid=463,entityLevel=50,progress=0,},--秘境之旅10层-异教教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=36,mapy=53,range=2,entityid=483,entityLevel=50,progress=0,},--秘境之旅10层-破碎教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=22,mapy=71,range=2,entityid=433,entityLevel=50,progress=0,},--秘境之旅10层-变异骷髅王?十阶
+{count=1,time=9999,firstTime=1,mapx=42,mapy=91,range=2,entityid=443,entityLevel=50,progress=0,},--秘境之旅10层-铁链僵尸皇?十阶
+{count=1,time=9999,firstTime=1,mapx=61,mapy=72,range=2,entityid=463,entityLevel=50,progress=0,},--秘境之旅10层-异教教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=81,mapy=74,range=2,entityid=483,entityLevel=50,progress=0,},--秘境之旅10层-破碎教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=93,mapy=70,range=2,entityid=493,entityLevel=50,progress=0,},--秘境之旅10层-蛮荒大教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=85,mapy=58,range=2,entityid=433,entityLevel=50,progress=0,},--秘境之旅10层-变异骷髅王?十阶
+{count=1,time=9999,firstTime=1,mapx=68,mapy=61,range=2,entityid=453,entityLevel=50,progress=0,},--秘境之旅10层-暗之钳虫皇?十阶
+{count=1,time=9999,firstTime=1,mapx=55,mapy=62,range=2,entityid=483,entityLevel=50,progress=0,},--秘境之旅10层-破碎教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=45,mapy=67,range=2,entityid=433,entityLevel=50,progress=0,},--秘境之旅10层-变异骷髅王?十阶
+{count=1,time=9999,firstTime=1,mapx=36,mapy=73,range=2,entityid=453,entityLevel=50,progress=0,},--秘境之旅10层-暗之钳虫皇?十阶
+{count=1,time=9999,firstTime=1,mapx=28,mapy=81,range=2,entityid=745,entityLevel=50,progress=0,},--秘境之旅10层-冰王[11转]

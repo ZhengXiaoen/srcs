@@ -1,0 +1,80 @@
+﻿--lua script
+{
+	id = 8008,			-- 蚁灾降临
+	parentid = 0,type = 11,level = 0,circle = 0,entrust = 9,star = 2,guideId = 0,timelimit = 0,interval = 86400,maxcount = 5,
+	cangiveup = true,
+	automount = true,
+	autoRun = false,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = true,
+	name = Lang.Quest.name8008,
+	content = Lang.Quest.desc8008,
+
+	prom = 0,
+	comp = 0,
+	target = {
+		{
+			type = 0, id = 170, count = 50, rewardId = 0,useList = false,
+			location = {
+				sceneid = 24, x= 0,y = 0,entityName = Lang.EntityName.m170,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 64, count = 50, rewardId = 1,useList = false,
+			location = {
+				sceneid = 22, x= 0,y = 0,entityName = Lang.EntityName.m64,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 63, count = 50, rewardId = 2,useList = false,
+			location = {
+				sceneid = 23, x= 0,y = 0,entityName = Lang.EntityName.m63,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50043, count = 1, rewardId = 3,useList = false, data = Lang.Quest.data80083,
+			location = {
+				sceneid = 104, x= 0,y = 0,entityName = Lang.EntityName.n00165,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50044, count = 1, rewardId = 4,useList = false, data = Lang.Quest.data80084,
+			location = {
+				sceneid = 106, x= 0,y = 0,entityName = Lang.EntityName.n00167,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 12, id = 23, count = 80, rewardId = 5,useList = false, data = Lang.Quest.data80085,
+		},
+	},
+	conds = {
+		{ type = 0, id = 45, count = 41 },
+	},
+	awards = {
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk80081,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk80081,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip80081,
+	},
+	PassMsTip = {
+		Lang.Quest.passTip80081,
+	},
+},

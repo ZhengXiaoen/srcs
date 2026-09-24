@@ -1,0 +1,44 @@
+﻿--lua script
+{
+	id = 162,			-- 最后通牒
+	parentid = 15,type = 0,level = 44,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name162,
+	content = Lang.Quest.desc162,
+
+	prom = 21,
+	comp = 107,
+	target = {
+		{
+			type = 0, id = 11, count = 4, rewardId = 0,useList = false,
+			location = {
+				sceneid = 8, x= 0,y = 0,entityName = Lang.EntityName.m11,hideFastTransfer = false,
+			},
+		},
+	},
+	conds = {
+		{ type = 0, id = 0, count = 1 },
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 80000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 5, id = 0, count = 100000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk1621,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk1621,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip1621,
+	},
+	PassMsTip = {
+	},
+},

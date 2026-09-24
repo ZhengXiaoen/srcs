@@ -1,0 +1,15 @@
+	{--1转
+		{type=11,value=15},{type=10,value=15},
+	},
+	{--2转
+		{type=11,value=15},
+	},
+	{--3转
+		{type=11,value=15},
+	},
+	{--4转
+		{type=11,value=15},
+	},
+	{--5转
+		{type=11,value=15},
+	},

@@ -1,0 +1,12 @@
+{count=30,time=3,firstTime=1,mapx=68,mapy=70,range=10,entityid=1126,entityLevel=100,progress=0,},--×ÓÊóµî-×ÓÊó1
+{count=30,time=3,firstTime=1,mapx=106,mapy=33,range=10,entityid=1127,entityLevel=100,progress=0,},--×ÓÊóµî-³óÅ£1
+{count=30,time=3,firstTime=1,mapx=144,mapy=71,range=10,entityid=1128,entityLevel=100,progress=0,},--×ÓÊóµî-Òú»¢1
+{count=30,time=3,firstTime=1,mapx=183,mapy=109,range=10,entityid=1129,entityLevel=100,progress=0,},--×ÓÊóµî-Ã®ÍÃ1
+{count=30,time=3,firstTime=1,mapx=144,mapy=147,range=10,entityid=1130,entityLevel=100,progress=0,},--×ÓÊóµî-³½Áú1
+{count=30,time=3,firstTime=1,mapx=105,mapy=186,range=10,entityid=1131,entityLevel=100,progress=0,},--×ÓÊóµî-ËÈÉß1
+{count=30,time=3,firstTime=1,mapx=66,mapy=149,range=10,entityid=1132,entityLevel=100,progress=0,},--×ÓÊóµî-ÎçÂí1
+{count=30,time=3,firstTime=1,mapx=28,mapy=110,range=10,entityid=1133,entityLevel=100,progress=0,},--×ÓÊóµî-Î´Ñò1
+{count=30,time=3,firstTime=1,mapx=31,mapy=35,range=10,entityid=1134,entityLevel=100,progress=0,},--×ÓÊóµî-Éêºï1
+{count=30,time=3,firstTime=1,mapx=182,mapy=33,range=10,entityid=1135,entityLevel=100,progress=0,},--×ÓÊóµî-ÓÏ¼¦1
+{count=30,time=3,firstTime=1,mapx=183,mapy=185,range=10,entityid=1136,entityLevel=100,progress=0,},--×ÓÊóµî-Ğç¹·1
+{count=30,time=3,firstTime=1,mapx=27,mapy=187,range=10,entityid=1137,entityLevel=100,progress=0,},--×ÓÊóµî-º¥Öí1

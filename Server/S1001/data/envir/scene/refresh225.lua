@@ -1,0 +1,16 @@
+{count=1,time=9999,firstTime=1,mapx=75,mapy=35,range=3,entityid=443,entityLevel=50,progress=0,},--秘境之旅6层-铁链僵尸皇?十阶
+{count=1,time=9999,firstTime=1,mapx=85,mapy=37,range=3,entityid=453,entityLevel=50,progress=0,},--秘境之旅6层-暗之钳虫皇?十阶
+{count=1,time=9999,firstTime=1,mapx=69,mapy=41,range=3,entityid=473,entityLevel=50,progress=0,},--秘境之旅6层-虚空大帝?十阶
+{count=1,time=9999,firstTime=1,mapx=58,mapy=45,range=3,entityid=483,entityLevel=50,progress=0,},--秘境之旅6层-破碎教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=60,mapy=55,range=3,entityid=433,entityLevel=50,progress=0,},--秘境之旅6层-变异骷髅王?十阶
+{count=1,time=9999,firstTime=1,mapx=71,mapy=58,range=3,entityid=443,entityLevel=50,progress=0,},--秘境之旅6层-铁链僵尸皇?十阶
+{count=1,time=9999,firstTime=1,mapx=83,mapy=68,range=3,entityid=453,entityLevel=50,progress=0,},--秘境之旅6层-暗之钳虫皇?十阶
+{count=1,time=9999,firstTime=1,mapx=73,mapy=71,range=3,entityid=463,entityLevel=50,progress=0,},--秘境之旅6层-异教教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=75,mapy=79,range=3,entityid=493,entityLevel=50,progress=0,},--秘境之旅6层-蛮荒大教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=75,mapy=92,range=3,entityid=433,entityLevel=50,progress=0,},--秘境之旅6层-变异骷髅王?十阶
+{count=1,time=9999,firstTime=1,mapx=65,mapy=92,range=3,entityid=443,entityLevel=50,progress=0,},--秘境之旅6层-铁链僵尸皇?十阶
+{count=1,time=9999,firstTime=1,mapx=69,mapy=101,range=3,entityid=453,entityLevel=50,progress=0,},--秘境之旅6层-暗之钳虫皇?十阶
+{count=1,time=9999,firstTime=1,mapx=43,mapy=95,range=3,entityid=473,entityLevel=50,progress=0,},--秘境之旅6层-虚空大帝?十阶
+{count=1,time=9999,firstTime=1,mapx=41,mapy=83,range=3,entityid=483,entityLevel=50,progress=0,},--秘境之旅6层-破碎教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=31,mapy=82,range=3,entityid=493,entityLevel=50,progress=0,},--秘境之旅6层-蛮荒大教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=27,mapy=86,range=3,entityid=741,entityLevel=50,progress=0,},--秘境之旅6层-吕祖四脚魔神[5转]

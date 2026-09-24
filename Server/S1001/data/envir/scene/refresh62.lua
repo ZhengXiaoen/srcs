@@ -1,0 +1,13 @@
+{count=8,time=20,firstTime=1,mapx=21,mapy=49,range=10,entityid=85,entityLevel=160,progress=0,},--9转极北之地5-远古战士
+{count=8,time=20,firstTime=1,mapx=33,mapy=58,range=10,entityid=86,entityLevel=160,progress=0,},--9转极北之地5-冰族刀卫
+{count=8,time=20,firstTime=1,mapx=23,mapy=72,range=10,entityid=87,entityLevel=160,progress=0,},--9转极北之地5-冰族骑士
+{count=8,time=20,firstTime=1,mapx=38,mapy=81,range=10,entityid=88,entityLevel=160,progress=0,},--9转极北之地5-冰族巨人
+{count=8,time=20,firstTime=1,mapx=41,mapy=101,range=10,entityid=89,entityLevel=160,progress=0,},--9转极北之地5-大法师
+{count=8,time=20,firstTime=1,mapx=64,mapy=63,range=10,entityid=85,entityLevel=160,progress=0,},--9转极北之地5-远古战士
+{count=8,time=20,firstTime=1,mapx=64,mapy=47,range=10,entityid=86,entityLevel=160,progress=0,},--9转极北之地5-冰族刀卫
+{count=8,time=20,firstTime=1,mapx=54,mapy=45,range=10,entityid=87,entityLevel=160,progress=0,},--9转极北之地5-冰族骑士
+{count=8,time=20,firstTime=1,mapx=58,mapy=25,range=10,entityid=88,entityLevel=160,progress=0,},--9转极北之地5-冰族巨人
+{count=8,time=20,firstTime=1,mapx=45,mapy=37,range=10,entityid=89,entityLevel=160,progress=0,},--9转极北之地5-大法师
+{count=8,time=20,firstTime=1,mapx=82,mapy=56,range=10,entityid=86,entityLevel=160,progress=0,},--9转极北之地5-冰族刀卫
+{count=8,time=20,firstTime=1,mapx=97,mapy=22,range=10,entityid=87,entityLevel=160,progress=0,},--9转极北之地5-冰族骑士
+{count=8,time=20,firstTime=1,mapx=95,mapy=40,range=10,entityid=88,entityLevel=160,progress=0,},--9转极北之地5-冰族巨人

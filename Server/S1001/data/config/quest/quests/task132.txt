@@ -1,0 +1,39 @@
+﻿--lua script
+{
+	id = 132,			-- 扫荡群魔
+	parentid = 131,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = true,
+	randomTarget = false,
+	name = Lang.Quest.name132,
+	content = Lang.Quest.desc132,
+
+	prom = 88,
+	comp = 98,
+	target = {
+		{
+			type = 5, id = 0, count = 77, rewardId = 0,useList = false,
+		},
+	},
+	conds = {
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 22000000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk1321,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk1321,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip1321,
+	},
+	PassMsTip = {
+	},
+},

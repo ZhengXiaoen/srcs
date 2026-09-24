@@ -1,0 +1,15 @@
+{count=8,time=20,firstTime=1,mapx=36,mapy=23,range=10,entityid=57,entityLevel=120,progress=0,},--5×ªÂÀ×æ·å4²ã-ÂÀ×æÅ®Ñı
+{count=8,time=20,firstTime=1,mapx=50,mapy=57,range=10,entityid=58,entityLevel=120,progress=0,},--5×ªÂÀ×æ·å4²ã-ÂÀ×æÎÀÊ¨
+{count=8,time=20,firstTime=1,mapx=57,mapy=36,range=10,entityid=59,entityLevel=120,progress=0,},--5×ªÂÀ×æ·å4²ã-ÂÀ×æÑ×Ê¨
+{count=8,time=20,firstTime=1,mapx=43,mapy=40,range=10,entityid=60,entityLevel=120,progress=0,},--5×ªÂÀ×æ·å4²ã-ÂÀ×æÊØ»¤Õß
+{count=8,time=20,firstTime=1,mapx=25,mapy=33,range=10,entityid=61,entityLevel=120,progress=0,},--5×ªÂÀ×æ·å4²ã-ÂÀ×æËÄ±Û¹Ö
+{count=8,time=20,firstTime=1,mapx=76,mapy=50,range=10,entityid=62,entityLevel=120,progress=0,},--5×ªÂÀ×æ·å4²ã-ÂÀ×æµ¶ÎÀ
+{count=8,time=20,firstTime=1,mapx=90,mapy=55,range=10,entityid=57,entityLevel=120,progress=0,},--5×ªÂÀ×æ·å4²ã-ÂÀ×æÅ®Ñı
+{count=8,time=20,firstTime=1,mapx=91,mapy=66,range=10,entityid=58,entityLevel=120,progress=0,},--5×ªÂÀ×æ·å4²ã-ÂÀ×æÎÀÊ¨
+{count=8,time=20,firstTime=1,mapx=74,mapy=69,range=10,entityid=59,entityLevel=120,progress=0,},--5×ªÂÀ×æ·å4²ã-ÂÀ×æÑ×Ê¨
+{count=8,time=20,firstTime=1,mapx=64,mapy=80,range=10,entityid=60,entityLevel=120,progress=0,},--5×ªÂÀ×æ·å4²ã-ÂÀ×æÊØ»¤Õß
+{count=8,time=20,firstTime=1,mapx=53,mapy=79,range=10,entityid=61,entityLevel=120,progress=0,},--5×ªÂÀ×æ·å4²ã-ÂÀ×æËÄ±Û¹Ö
+{count=8,time=20,firstTime=1,mapx=39,mapy=83,range=10,entityid=62,entityLevel=120,progress=0,},--5×ªÂÀ×æ·å4²ã-ÂÀ×æµ¶ÎÀ
+{count=8,time=20,firstTime=1,mapx=50,mapy=97,range=10,entityid=57,entityLevel=120,progress=0,},--5×ªÂÀ×æ·å4²ã-ÂÀ×æÅ®Ñı
+{count=8,time=20,firstTime=1,mapx=64,mapy=99,range=10,entityid=58,entityLevel=120,progress=0,},--5×ªÂÀ×æ·å4²ã-ÂÀ×æÎÀÊ¨
+{count=8,time=20,firstTime=1,mapx=64,mapy=91,range=10,entityid=59,entityLevel=120,progress=0,},--5×ªÂÀ×æ·å4²ã-ÂÀ×æÑ×Ê¨

@@ -1,0 +1,40 @@
+--16:30-17:30 行会争夺战
+{
+	--活动的名字
+	name =Lang.ActivityName.name00003,
+	--活动的描述
+	desc=Lang.ActivityName.desc00003,
+	--时间的描述,如果是20:30-21:05这样的就不需要记录到语言包，如果是"全天"就需要记录到语言包
+	timeDesc = "12:30-13:30",
+	level = 35, --活动的等级
+	icon = 39,
+	type = 1,  --1是今日活动 2 是每日必做
+	index =0,  --第1场
+	--seckillId = 2,	--秒杀活动Id 对应与表 SecKill (data\config\activity\seckill.lua) 里的ID
+	mainAwardDesc = Lang.ActivityName.mainAward002,    --主要奖励
+	--活动的开启时间
+	openTimes=
+	{
+		{
+			months={}, 
+			days ={},
+			weeks={0},
+			minutes= 
+			{
+				"12:30-13:30",
+			}
+		},
+	},
+	awards=
+	{
+		{type=2,id=0,count=-1,bind=1,strong=0,quality=0}, -- 奖励经验  
+
+	},
+	npc=
+	{
+		{
+			sceneId=3,name=Lang.EntityName.n00124,
+			conds = { },
+		},
+	},
+},

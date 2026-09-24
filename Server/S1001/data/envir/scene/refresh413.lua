@@ -1,0 +1,1 @@
+-- {count=1,time=3600,firstTime=1,mapx=36,mapy=45,range=3,entityid=953,entityLevel=80,progress=0,},--军魂之地-军魂BOSS

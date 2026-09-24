@@ -1,0 +1,44 @@
+﻿--lua script
+{
+	id = 157,			-- 猎人笔记
+	parentid = 156,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name157,
+	content = Lang.Quest.desc157,
+
+	prom = 83,
+	comp = 83,
+	target = {
+		{
+			type = 0, id = 21, count = 8, rewardId = 0,useList = false,
+			location = {
+				sceneid = 185, x= 0,y = 0,entityName = Lang.EntityName.m21,hideFastTransfer = false,
+			},
+		},
+	},
+	conds = {
+		{ type = 0, id = 0, count = 1 },
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 750000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 5, id = 0, count = 100000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk1571,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk1571,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip1571,
+	},
+	PassMsTip = {
+	},
+},

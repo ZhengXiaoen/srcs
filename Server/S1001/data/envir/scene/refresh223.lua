@@ -1,0 +1,11 @@
+{count=1,time=9999,firstTime=1,mapx=39,mapy=44,range=3,entityid=433,entityLevel=50,progress=0,},--秘境之旅4层-变异骷髅王?十阶
+{count=1,time=9999,firstTime=1,mapx=22,mapy=54,range=3,entityid=453,entityLevel=52,progress=0,},--秘境之旅4层-暗之钳虫皇?十阶
+{count=1,time=9999,firstTime=1,mapx=34,mapy=72,range=3,entityid=473,entityLevel=54,progress=0,},--秘境之旅4层-虚空大帝?十阶
+{count=1,time=9999,firstTime=1,mapx=55,mapy=71,range=3,entityid=493,entityLevel=56,progress=0,},--秘境之旅4层-蛮荒大教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=64,mapy=50,range=3,entityid=443,entityLevel=58,progress=0,},--秘境之旅4层-铁链僵尸皇?十阶
+{count=1,time=9999,firstTime=1,mapx=47,mapy=22,range=3,entityid=453,entityLevel=59,progress=0,},--秘境之旅4层-暗之钳虫皇?十阶
+{count=1,time=9999,firstTime=1,mapx=72,mapy=79,range=3,entityid=483,entityLevel=62,progress=0,},--秘境之旅4层-破碎教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=79,mapy=98,range=3,entityid=493,entityLevel=63,progress=0,},--秘境之旅4层-蛮荒大教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=96,mapy=90,range=3,entityid=433,entityLevel=64,progress=0,},--秘境之旅4层-变异骷髅王?十阶
+{count=1,time=9999,firstTime=1,mapx=64,mapy=26,range=3,entityid=443,entityLevel=65,progress=0,},--秘境之旅4层-铁链僵尸皇?十阶
+{count=1,time=9999,firstTime=1,mapx=52,mapy=54,range=3,entityid=739,entityLevel=65,progress=0,},--秘境之旅4层-妖蛮大圣[3转]

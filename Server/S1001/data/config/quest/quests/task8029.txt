@@ -1,0 +1,87 @@
+﻿--lua script
+{
+	id = 8029,			-- 海族复国
+	parentid = 0,type = 11,level = 0,circle = 0,entrust = 15,star = 4,guideId = 0,timelimit = 0,interval = 86400,maxcount = 5,
+	cangiveup = true,
+	automount = true,
+	autoRun = false,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = true,
+	name = Lang.Quest.name8029,
+	content = Lang.Quest.desc8029,
+
+	prom = 0,
+	comp = 0,
+	target = {
+		{
+			type = 0, id = 571, count = 120, rewardId = 0,useList = false,
+			location = {
+				sceneid = 122, x= 0,y = 0,entityName = Lang.EntityName.m571,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 60, count = 120, rewardId = 1,useList = false,
+			location = {
+				sceneid = 122, x= 0,y = 0,entityName = Lang.EntityName.m575,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 567, count = 120, rewardId = 2,useList = false,
+			location = {
+				sceneid = 122, x= 0,y = 0,entityName = Lang.EntityName.m567,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 568, count = 120, rewardId = 3,useList = false,
+			location = {
+				sceneid = 122, x= 0,y = 0,entityName = Lang.EntityName.m568,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 9, id = 60, count = 120, rewardId = 4,useList = false,
+			location = {
+				sceneid = 122, x= 0,y = 0,entityName = Lang.EntityName.m572,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 1, id = 1363, count = 10, rewardId = 5,useList = false,
+			location = {
+				sceneid = 121, x= 0,y = 0,entityName = Lang.EntityName.m582,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 12, id = 122, count = 120, rewardId = 6,useList = false, data = Lang.Quest.data80296,
+		},
+	},
+	conds = {
+		{ type = 0, id = 90, count = 71 },
+	},
+	awards = {
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+		{
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk80291,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk80291,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip80291,
+	},
+	PassMsTip = {
+	},
+},

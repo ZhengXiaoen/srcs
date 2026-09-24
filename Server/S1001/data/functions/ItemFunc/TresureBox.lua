@@ -1,0 +1,323 @@
+--#include "data\config\item\TresureBoxCfg.lua"
+
+function CheckTresureJobAndSex(job,sex,jobex,sexex)
+    if jobex == nil and sexex == nil then 
+        return true
+    end
+    if (sexex == 0 and jobex == 0) or (jobex == job and sex ==sexex) then
+        return true
+    end
+    if sexex == 0 and jobex == job then return true end
+
+    if job == 0 and sexex == sex then return true end
+    
+    return false
+end
+--初始化珍宝箱
+function OnTresureBoxInit(sysarg,debug)
+--    local dVar = Actor.getDyanmicVar(sysarg)
+--    dVar.tresureBox = {}
+--    dVar.tresureBox.giveindex= 0 --第几次领取
+--    dVar.tresureBox.free = nil
+----    if dVar.tresurecount == nil then
+----        dVar.tresurecount = 0
+----    end
+--    --免费的随机道具
+--    local nIndex= 0
+--    local nJob = Actor.getIntProperty(sysarg,PROP_ACTOR_VOCATION)
+--    local nSex = Actor.getIntProperty(sysarg,PROP_ACTOR_SEX)+1
+--
+--    while true do
+--        for i = 1,table.getn(TresureBoxCfg.free) do
+--         
+--             if CheckTresureJobAndSex(nJob,nSex,TresureBoxCfg.free[i].job,TresureBoxCfg.free[i].sex) then
+--                
+--                if System.getRandomNumber(10000) <= TresureBoxCfg.free[i].rate then
+--                    dVar.tresureBox.freeindex =i
+--
+--                    break
+--                end
+--            end
+--        end
+--        if dVar.tresureBox.freeindex ~= nil then break end
+--        nIndex = nIndex + 1
+--        if nIndex == 10000 then 
+--            dVar.tresureBox = {}
+--       
+--            return false 
+--        end
+--    end
+--
+--    --其余八个格子的道具
+--    dVar.tresureBox.grid = {}
+--    local nLoopIndex = 0
+--    nIndex = 1
+--    local nLoopIndex =0
+--    local give = false
+--    dVar.tresureBox.grid = {}
+--    local list_index= {}
+--    local sort_list = {}
+--    local f = function(a, b)
+--		return a.rate > b.rate
+--	end
+--    while true do
+--        local nRand = 1
+--        while true do
+--            nRand = System.getRandomNumber(table.getn(TresureBoxCfg.low))+1
+--            local bFind = false
+--            for j = 1,table.getn(list_index) do
+--                if list_index[j] == nRand then
+--                    bFind = true
+--                end
+--            end
+--            if bFind == false then 
+--                table.insert(list_index,nRand)
+--                
+--                break 
+--             end
+--        end
+--
+--        
+--        local cfg = TresureBoxCfg.low[nRand]
+--        give = false
+--
+--        if CheckTresureJobAndSex(nJob,nSex,cfg.job,cfg.sex) then
+--            table.insert(sort_list,TresureBoxCfg.low[nRand])
+--            nIndex = nIndex+ 1
+--            if nIndex > 5 then break end
+--        end
+--        
+--        nLoopIndex = nLoopIndex + 1
+--        if nLoopIndex >= 10000 then
+--             dVar.tresureBox = {}
+--            return false
+--        end
+--    end
+--    table.sort(sort_list,f)
+--    for nIndex=1,table.getn(sort_list) do
+--        cfg = sort_list[nIndex]
+--         dVar.tresureBox.grid[nIndex]={}
+--        dVar.tresureBox.grid[nIndex].id = cfg.id
+--        dVar.tresureBox.grid[nIndex].rate = cfg.rate
+--        dVar.tresureBox.grid[nIndex].bind = cfg.bind
+--        dVar.tresureBox.grid[nIndex].count = cfg.count
+--        dVar.tresureBox.grid[nIndex].notice = 0
+--        nIndex = nIndex+ 1
+--    end
+--    nIndex= 5
+--    list_index  = {}
+--    nLoopIndex = 0
+--    sort_list = {}
+--    while true do
+--        local nRand = 1
+--        while true do
+--            nRand = System.getRandomNumber(table.getn(TresureBoxCfg.high))+1
+--            local bFind = false
+--            for j = 1,table.getn(list_index) do
+--                if list_index[j] == nRand then
+--                    bFind = true
+--                end
+--            end
+--            if bFind == false then 
+--                table.insert(list_index,nRand)
+--                
+--                break 
+--             end
+--        end
+--
+--        local cfg = TresureBoxCfg.high[nRand]
+--        if CheckTresureJobAndSex(nJob,nSex,cfg.job,cfg.sex) then
+--             table.insert(sort_list,TresureBoxCfg.high[nRand])
+--            if nIndex > 9 then break end
+--            nIndex = nIndex+ 1
+--        end
+--        if nLoopIndex >= 10000 then
+--            dVar.tresureBox = {}
+--            return false
+--        end
+--    end
+--    table.sort(sort_list,f)
+--    for nIndex = 5,9 do
+--        cfg = sort_list[nIndex - 4]
+--            dVar.tresureBox.grid[nIndex]={}
+--            dVar.tresureBox.grid[nIndex].id = cfg.id
+--            dVar.tresureBox.grid[nIndex].rate = cfg.rate
+--            dVar.tresureBox.grid[nIndex].bind = cfg.bind
+--            dVar.tresureBox.grid[nIndex].count = cfg.count
+--            dVar.tresureBox.grid[nIndex].notice = 1
+--            nIndex = nIndex + 1
+--
+--    end
+--   if debug == nil then
+--        local netPack= DataPack.allocPacket(sysarg,139,221)
+--        DataPack.writeByte(netPack,table.getn(TresureBoxCfg.shake))
+--        for i = 1,table.getn(TresureBoxCfg.shake) do
+--            DataPack.writeInt(netPack,TresureBoxCfg.shake[i])
+--        end
+--        DataPack.writeByte(netPack,TresureBoxCfg.gridcount + 1)
+--        DataPack.writeInt(netPack,TresureBoxCfg.free[dVar.tresureBox.freeindex].count)
+--        DataPack.writeWord(netPack,TresureBoxCfg.free[dVar.tresureBox.freeindex].id)
+--        for i =1,TresureBoxCfg.gridcount do
+--         
+--            DataPack.writeWord(netPack,dVar.tresureBox.grid[i].id)
+--            DataPack.writeByte(netPack,dVar.tresureBox.grid[i].count)
+--        end
+--        DataPack.flush(netPack)
+--   end
+-- 
+--    return true
+end
+
+function GetTresureBoxNum(sysarg,count)
+--    local table_list = {}
+--    for i =1,table.getn(TresureBoxCfg.low) do
+--        if TresureBoxCfg.low[i].num ~= nil and TresureBoxCfg.low[i].num > 0 then
+--            table.insert(table_list,TresureBoxCfg.low[i])
+--        end
+--    end
+--    for i =1,table.getn(TresureBoxCfg.high) do
+--        if TresureBoxCfg.high[i].num ~= nil and TresureBoxCfg.high[i].num > 0 then
+--            table.insert(table_list,TresureBoxCfg.high[i])
+--        end
+--    end
+--    local f = function(a, b)
+--		return a.num > b.num;
+--	end
+--   
+--    table.sort(table_list,f)
+--    for i = 1,table.getn(table_list) do
+--        if table_list[i].rate % count == 0 then
+--            return table_list[i]
+--        end
+--    end
+--    return nil
+end
+function YaoTresureBoxItem(sysarg,debug)
+--    
+--    local dVar = Actor.getDyanmicVar(sysarg)
+--    if  dVar.tresureBox.free ~= nil then
+--        Actor.sendTipmsg(sysarg, "已经领取过一次了，无法摇奖！",ttFlyTip)
+--        return false
+--    end
+--    if dVar.tresureBox.giveindex >= table.getn(TresureBoxCfg.shake) then
+--            Actor.sendTipmsg(sysarg, "摇奖次数已满！",ttFlyTip)
+--            return false
+--    end
+--    local needMoney = TresureBoxCfg.shake[ dVar.tresureBox.giveindex + 1]
+--    if Actor.getMoneyCount(sysarg,mtYuanbao) < needMoney then
+--        Actor.sendTipmsg(sysarg, "元宝不足"..needMoney.."，无法摇奖！",ttFlyTip)
+--        return false
+--    end
+--    Actor.changeMoney(sysarg,mtYuanbao,-needMoney,LogIds.zhenbaobox,"珍宝箱")
+----    local cfg = GetTresureBoxNum(sysarg,dVar.tresurecount)
+----    if  cfg ~= nil  then
+----        dVar.tresureBox.getindex = {}
+----        dVar.tresureBox.getindex.id = cfg.id
+----        dVar.tresureBox.getindex.count = cfg.count
+----        dVar.tresureBox.getindex.bind = cfg.bind
+----        dVar.tresureBox.getindex.notice = cfg.notice
+----    else
+--        local itemid = 1
+--        local nIndex = 1
+--        local nLoopIndex = 0
+--        while true do
+--            for i  =1,TresureBoxCfg.gridcount do
+--                if dVar.tresureBox.grid[i] ~= nil and System.getRandomNumber(dVar.tresureBox.grid[i].rate) == 0 then
+--                     itemid = dVar.tresureBox.grid[i].id
+--                      nIndex = i
+--                      nLoopIndex = -1
+--                      break
+--                end
+--            end
+--            if nLoopIndex == -1 then break end
+--            nLoopIndex = nLoopIndex + 1
+--            if nLoopIndex >= 100000 then 
+--                Actor.sendTipmsg(sysarg, "随机次数用完了，好奇怪！",ttFlyTip)
+--                return false
+--            end
+--        end
+--        dVar.tresureBox.getindex = {}
+--        dVar.tresureBox.getindex.id = dVar.tresureBox.grid[nIndex].id
+--        dVar.tresureBox.getindex.count = dVar.tresureBox.grid[nIndex].count
+--        dVar.tresureBox.getindex.bind = dVar.tresureBox.grid[nIndex].bind
+--        dVar.tresureBox.getindex.notice = dVar.tresureBox.grid[nIndex].notice
+--    --end
+--
+--    if debug == nil then
+--        local netPack = DataPack.allocPacket(sysarg,139,223)
+--        DataPack.writeWord(netPack,dVar.tresureBox.getindex.id)
+--        DataPack.flush(netPack)
+--    end
+--   -- dVar.tresurecount = dVar.tresurecount + 1
+--
+end
+function GetTresureBoxItem(sysarg,type,debug)
+--   --免费领取
+--   local ret = 0
+--   local bagIdxs = Item.getBagEmptyGridCount( sysarg )
+--   if bagIdxs <= 0 then
+--        Actor.sendTipmsg(sysarg, "背包不足，请清理包裹！",ttFlyTip)
+--        return false
+--   end
+--   --包裹不足-清理包裹
+--   local cfg = nil
+--   local dVar = Actor.getDyanmicVar(sysarg)
+--   if type == 0 then
+--       if  dVar.tresureBox.free ~= nil then
+--           Actor.sendTipmsg(sysarg, "已经领取过一次了，无法再次领取！",ttFlyTip)
+--           return false
+--       end
+--
+--       if debug == nil then
+--           cfg = TresureBoxCfg.free[dVar.tresureBox.freeindex]
+--           if cfg.id == 65535 then
+--               Actor.changeMoney(sysarg,mtCoin,cfg.count,LogIds.zhenbaobox,"珍宝箱")
+--           else
+--               Actor.addItem(sysarg,cfg.id,0,0,cfg.count,cfg.bind,0,"珍宝箱")
+--           end
+--       end
+--       dVar.tresureBox.free =1 
+--
+--       return TresureBoxCfg.free[dVar.tresureBox.freeindex].id
+--   else
+--
+--       cfg = dVar.tresureBox.getindex
+--       if cfg == nil then
+--           Actor.sendTipmsg(sysarg, "请先摇奖，无法领取！",ttFlyTip)
+--           return false
+--       end
+---        local needMoney = TresureBoxCfg.shake[ dVar.tresureBox.giveindex + 1]
+---        if Actor.getMoneyCount(sysarg,mtYuanbao) < needMoney then
+---            Actor.sendTipmsg(sysarg, "元宝不足"..needMoney.."，无法领取！",ttFlyTip)
+---            return false
+---        end
+--       if debug == nil then
+--           
+--           Actor.addItem(sysarg, cfg.id,0,0,cfg.count, cfg.bind,0,"珍宝箱")
+--           
+--       end        
+--       ret = cfg.id
+--       dVar.tresureBox.giveindex = dVar.tresureBox.giveindex +1
+--       
+--   end
+--
+--   --if cfg.notice == 1 then
+--       local str = string.format("<(n%s)>在%s中获得了%s<x%d>",Actor.getName(sysarg),Item.getItemLinkMsg(TresureBoxCfg.itemid), Item.getItemLinkMsg(cfg.id),cfg.count)
+--       System.broadcastTipmsg(str, ttChatWindow)
+--   --end
+--
+--   for i =1,TresureBoxCfg.gridcount do
+--       if dVar.tresureBox.grid[i] ~= nil and dVar.tresureBox.grid[i].id == dVar.tresureBox.getindex.id then
+--           dVar.tresureBox.grid[i] = nil
+--           break
+--       end
+--   end
+--   --dVar.tresureBox.grid[dVar.tresureBox.getindex] = nil
+--   if debug == nil then
+--       local netPack = DataPack.allocPacket(sysarg,139,222)
+--       DataPack.writeByte(netPack,type)
+--       DataPack.writeByte(netPack,dVar.tresureBox.giveindex)
+--       DataPack.flush(netPack)
+--   end
+--   return ret
+end

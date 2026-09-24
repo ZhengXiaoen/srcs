@@ -1,0 +1,42 @@
+﻿--lua script
+{
+	id = 39,			-- 身怀绝技
+	parentid = 38,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name39,
+	content = Lang.Quest.desc39,
+
+	prom = 43,
+	comp = 44,
+	target = {
+		{
+			type = 0, id = 39, count = 5, rewardId = 0,useList = false,
+			location = {
+				sceneid = 10, x= 0,y = 0,entityName = Lang.EntityName.m39,hideFastTransfer = false,
+			},
+		},
+	},
+	conds = {
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 450000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 5, id = 0, count = 100000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk391,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk391,
+	},
+	CompMsTip = {
+	},
+	PassMsTip = {
+	},
+},

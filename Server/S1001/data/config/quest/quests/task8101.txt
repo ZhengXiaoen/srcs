@@ -1,0 +1,46 @@
+﻿--lua script
+{
+	id = 8101,			-- 黑脸恶魔
+	parentid = 0,type = 8,level = 0,circle = 0,entrust = 7,star = 2,guideId = 0,timelimit = 0,interval = 86400,maxcount = 3,
+	cangiveup = true,
+	automount = true,
+	autoRun = false,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name8101,
+	content = Lang.Quest.desc8101,
+
+	prom = 0,
+	comp = 0,
+	target = {
+		{
+			type = 0, id = 301, count = 15, rewardId = 0,useList = false,
+			location = {
+				sceneid = 24, x= 0,y = 0,entityName = Lang.EntityName.m270,hideFastTransfer = false,
+			},
+		},
+	},
+	conds = {
+		{ type = 0, id = 50, count = 40 },
+		{ type = 7, id = 8100, count = 8102 },
+	},
+	awards = {
+		{
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk81011,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk81011,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip81011,
+	},
+	PassMsTip = {
+	},
+	PromCheck = "CheckInTeam",
+	PromCheckArg = {
+	},
+},

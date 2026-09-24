@@ -1,0 +1,37 @@
+﻿--lua script
+{
+	id = 368,			-- 天赐预言
+	parentid = 500,type = 0,level = 0,circle = 0,entrust = 20,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = false,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name368,
+	content = Lang.Quest.desc368,
+
+	prom = 0,
+	comp = 0,
+	target = {
+	},
+	conds = {
+		{ type = 0, id = 0, count = 1 },
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 500000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk3681,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk3681,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip3681,
+	},
+	PassMsTip = {
+	},
+},

@@ -1,0 +1,42 @@
+﻿--lua script
+{
+	id = 801,			-- 膜拜城主
+	parentid = 801,type = 1,level = 0,circle = 0,entrust = 0,star = 0,guideId = 1,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = true,
+	automount = true,
+	autoRun = true,
+	excludetree = false,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name801,
+	content = Lang.Quest.desc801,
+
+	prom = 21,
+	comp = 21,
+	target = {
+		{
+			type = 127, id = 50090, count = 1, rewardId = 0,useList = false, data = Lang.Quest.data8010,
+			location = {
+				sceneid = 2, x= 0,y = 0,entityName = Lang.EntityName.n00239,hideFastTransfer = false,
+			},
+		},
+	},
+	conds = {
+		{ type = 0, id = 0, count = 51 },
+	},
+	awards = {
+		{
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk8011,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk8011,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip8011,
+	},
+	PassMsTip = {
+	},
+},

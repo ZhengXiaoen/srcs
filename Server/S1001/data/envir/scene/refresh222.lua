@@ -1,0 +1,11 @@
+{count=1,time=9999,firstTime=1,mapx=37,mapy=89,range=2,entityid=433,entityLevel=50,progress=0,},--秘境之旅3层-变异骷髅王?十阶
+{count=1,time=9999,firstTime=1,mapx=28,mapy=76,range=2,entityid=453,entityLevel=50,progress=0,},--秘境之旅3层-暗之钳虫皇?十阶
+{count=1,time=9999,firstTime=1,mapx=51,mapy=96,range=2,entityid=473,entityLevel=50,progress=0,},--秘境之旅3层-虚空大帝?十阶
+{count=1,time=9999,firstTime=1,mapx=63,mapy=80,range=2,entityid=483,entityLevel=50,progress=0,},--秘境之旅3层-破碎教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=43,mapy=62,range=2,entityid=493,entityLevel=50,progress=0,},--秘境之旅3层-蛮荒大教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=58,mapy=66,range=2,entityid=443,entityLevel=50,progress=0,},--秘境之旅3层-铁链僵尸皇?十阶
+{count=1,time=9999,firstTime=1,mapx=78,mapy=48,range=2,entityid=453,entityLevel=50,progress=0,},--秘境之旅3层-暗之钳虫皇?十阶
+{count=1,time=9999,firstTime=1,mapx=74,mapy=30,range=2,entityid=463,entityLevel=50,progress=0,},--秘境之旅3层-异教教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=85,mapy=36,range=2,entityid=473,entityLevel=50,progress=0,},--秘境之旅3层-虚空大帝?十阶
+{count=1,time=9999,firstTime=1,mapx=96,mapy=48,range=2,entityid=483,entityLevel=50,progress=0,},--秘境之旅3层-破碎教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=67,mapy=57,range=2,entityid=738,entityLevel=50,progress=0,},--秘境之旅3层-赤月老魔[2转]

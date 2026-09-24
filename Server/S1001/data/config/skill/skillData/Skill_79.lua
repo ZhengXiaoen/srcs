@@ -1,0 +1,21 @@
+﻿{
+	id = 79,
+	name = Lang.Skill.s79Name,
+	desc = Lang.Skill.s79Desc,
+	-- = 青龙加血怪,
+	vocation = 0,
+	isDelete = true,
+	skillType = 5,
+	skillClass = 4,
+	skillSpellType = 0,
+	commonCd = 500,
+	canbeDefault = true,
+	specialBuffCond = 0,
+	notAutoUse = false,
+	magicLock = false,
+	needCalPassiveProperty = false,
+	priority = 0,
+	skillSubLevel = { 
+--#include "Skill_79_1.lua" 
+	},
+},

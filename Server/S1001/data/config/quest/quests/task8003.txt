@@ -1,0 +1,123 @@
+﻿--lua script
+{
+	id = 8003,			-- 诛魔卫道
+	parentid = 0,type = 10,level = 0,circle = 0,entrust = 4,star = 1,guideId = 0,timelimit = 0,interval = 86400,maxcount = 10,
+	cangiveup = true,
+	automount = true,
+	autoRun = false,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = true,
+	name = Lang.Quest.name8003,
+	content = Lang.Quest.desc8003,
+
+	prom = 30,
+	comp = 30,
+	target = {
+		{
+			type = 0, id = 39, count = 30, rewardId = 0,useList = false,
+			location = {
+				sceneid = 14, x= 0,y = 0,entityName = Lang.EntityName.m39,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 29, count = 30, rewardId = 1,useList = false,
+			location = {
+				sceneid = 14, x= 0,y = 0,entityName = Lang.EntityName.m154,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 179, count = 30, rewardId = 2,useList = false,
+			location = {
+				sceneid = 14, x= 0,y = 0,entityName = Lang.EntityName.m179,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50024, count = 1, rewardId = 3,useList = false, data = Lang.Quest.data80033,
+			location = {
+				sceneid = 8, x= 0,y = 0,entityName = Lang.EntityName.n00011,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50025, count = 1, rewardId = 4,useList = false, data = Lang.Quest.data80034,
+			location = {
+				sceneid = 8, x= 0,y = 0,entityName = Lang.EntityName.n00010,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50026, count = 1, rewardId = 5,useList = false, data = Lang.Quest.data80035,
+			location = {
+				sceneid = 8, x= 0,y = 0,entityName = Lang.EntityName.n00009,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50027, count = 1, rewardId = 6,useList = false, data = Lang.Quest.data80036,
+			location = {
+				sceneid = 8, x= 0,y = 0,entityName = Lang.EntityName.n00013,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 127, id = 50028, count = 1, rewardId = 7,useList = false, data = Lang.Quest.data80037,
+			location = {
+				sceneid = 8, x= 0,y = 0,entityName = Lang.EntityName.n00042,hideFastTransfer = false,
+			},
+		},
+	},
+	conds = {
+		{ type = 0, id = 35, count = 32 },
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 62444, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.10},
+			{ type = 28, id = 0, count = 15, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.10},
+			{ type = 0, id = 855, count = 1, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+		},
+		{
+			{ type = 2, id = 0, count = 62444, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.10},
+			{ type = 28, id = 0, count = 15, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.10},
+			{ type = 0, id = 855, count = 1, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+		},
+		{
+			{ type = 2, id = 0, count = 62444, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.10},
+			{ type = 28, id = 0, count = 15, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.10},
+			{ type = 0, id = 855, count = 1, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+		},
+		{
+			{ type = 2, id = 0, count = 62444, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.10},
+			{ type = 28, id = 0, count = 15, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.10},
+			{ type = 0, id = 855, count = 1, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+		},
+		{
+			{ type = 2, id = 0, count = 62444, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.10},
+			{ type = 28, id = 0, count = 15, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.10},
+			{ type = 0, id = 855, count = 1, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+		},
+		{
+			{ type = 2, id = 0, count = 62444, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.10},
+			{ type = 28, id = 0, count = 15, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.10},
+			{ type = 0, id = 855, count = 1, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+		},
+		{
+			{ type = 2, id = 0, count = 62444, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.10},
+			{ type = 28, id = 0, count = 15, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.10},
+			{ type = 0, id = 855, count = 1, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+		},
+		{
+			{ type = 2, id = 0, count = 62444, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.10},
+			{ type = 28, id = 0, count = 15, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.10},
+			{ type = 0, id = 855, count = 1, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk80031,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk80031,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip80031,
+	},
+	PassMsTip = {
+		Lang.Quest.passTip80031,
+	},
+},

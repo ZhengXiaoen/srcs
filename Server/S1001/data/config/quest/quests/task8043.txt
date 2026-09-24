@@ -1,0 +1,107 @@
+﻿{
+	id = 8043,
+	name = Lang.Quest.q03632,
+	parentid = 0,
+	type = 2,
+	level = 0,
+	cangiveup = true,
+	content = Lang.Quest.q03633,
+
+	prom =
+  {
+    type = 0,
+	scene = Lang.SceneName.s00049,
+	npc = Lang.EntityName.n00491,
+	},
+
+	comp =
+	{
+    type = 0,
+	scene = Lang.SceneName.s00049,
+	npc = Lang.EntityName.n00491,
+  },
+
+  target =
+  {
+    {
+       type = 0, id = 412,count = 20 , useList = true,
+       location =
+       {
+         sceneid=91,entityName=Lang.EntityName.m00412,
+         pass =
+         {
+           {sceneid=49,entityName=Lang.EntityName.n00467,actionDesc =Lang.Talk.t02882},
+         },
+        hideFastTransfer = true,
+       },
+    },
+    
+    {
+       type = 0, id = 413,count = 7 , useList = true,
+       location =
+       {
+         sceneid=91,entityName=Lang.EntityName.m00413,
+         pass =
+         {
+           {sceneid=49,entityName=Lang.EntityName.n00467,actionDesc =Lang.Talk.t02882},
+         },
+        hideFastTransfer = true,
+       },
+    },
+    
+    {
+       type = 0, id = 414,count = 4 , useList = true,
+       location =
+       {
+         sceneid=92,entityName=Lang.EntityName.m00414,
+         pass =
+         {
+           {sceneid=49,entityName=Lang.EntityName.n00467,actionDesc =Lang.Talk.t02882},
+         },
+        hideFastTransfer = true,
+       },
+    },
+    
+    {
+       type = 0, id = 399,count = 1 , useList = true,
+       location =
+       {
+         sceneid=92,entityName=Lang.EntityName.m00399,
+         pass =
+         {
+           {sceneid=49,entityName=Lang.EntityName.n00467,actionDesc =Lang.Talk.t02882},
+         },
+        hideFastTransfer = true,
+       },
+    },
+    
+  },
+  --奖励列表
+	awards =
+  {
+    { type = 0, id = 1925, count = 1, group = 0,quality= 3, bind = false, job = 0, sex = -1},
+},
+  --任务条件表
+  conds =
+  {
+
+    { type = 0, id = 0,count = 200 },  --1级可接
+  },
+  timelimit = 0,
+  interval = 86400,
+  maxcount = 4,
+	excludetree = true,
+
+  PromMsTalks = {
+       Lang.Talk.t05442,
+  },
+  
+  CompMsTalks = {
+       Lang.Talk.t05443,
+  },
+  
+  CompMsTip = {
+       Lang.Talk.t05444,
+  }, 
+ 
+},

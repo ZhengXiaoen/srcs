@@ -1,0 +1,12 @@
+﻿MobMonsterTips = {}
+MobMonsterTips[190] = "<(c0xFFff0000)第一波怪即将发起猛烈冲击，勇士做好战斗准备！>"
+MobMonsterTips[191] = "<(c0xFFff0000)第二波怪即将发起猛烈冲击，勇士做好战斗准备！>"
+MobMonsterTips[192] = "<(c0xFFff0000)第三波怪即将发起猛烈冲击，勇士做好战斗准备！>"
+MobMonsterTips[193] = "<(c0xFFff0000)第四波怪即将发起猛烈冲击，勇士做好战斗准备！>"
+MobMonsterTips[223] = "<(c0xFFff0000)第五波怪即将发起猛烈冲击，勇士做好战斗准备！>"
+MobMonsterTips[224] = "<(c0xFFff0000)第六波怪即将发起猛烈冲击，勇士做好战斗准备！>"
+MobMonsterTips[225] = "<(c0xFFff0000)第七波怪即将发起猛烈冲击，勇士做好战斗准备！>"
+MobMonsterTips[226] = "<(c0xFFff0000)第八波怪即将发起猛烈冲击，勇士做好战斗准备！>"
+MobMonsterTips[194] = "<(c0xFFff0000)第九波怪即将发起猛烈冲击，勇士做好战斗准备！>"
+MobMonsterTips[184] = "<(c0xFFff0000)最后一波怪即将发起猛烈冲击，勇士做好战斗准备！>"
+MobMonsterTips[338] = "<(c0xFFff0000)最后一只恶魔已经出现,将其击杀后找屠魔指挥领取经验！>"

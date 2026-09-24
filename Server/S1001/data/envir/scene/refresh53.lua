@@ -1,0 +1,17 @@
+{count=8,time=20,firstTime=1,mapx=43,mapy=33,range=10,entityid=71,entityLevel=140,progress=0,},--7转炽焰山1层-炽焰狐师
+{count=8,time=20,firstTime=1,mapx=39,mapy=47,range=10,entityid=72,entityLevel=140,progress=0,},--7转炽焰山1层-炽焰魅影
+{count=8,time=20,firstTime=1,mapx=53,mapy=51,range=10,entityid=73,entityLevel=140,progress=0,},--7转炽焰山1层-炽焰护卫
+{count=8,time=20,firstTime=1,mapx=63,mapy=37,range=10,entityid=74,entityLevel=140,progress=0,},--7转炽焰山1层-炽焰力士
+{count=8,time=20,firstTime=1,mapx=80,mapy=33,range=10,entityid=75,entityLevel=140,progress=0,},--7转炽焰山1层-炽焰勇士
+{count=8,time=20,firstTime=1,mapx=65,mapy=47,range=10,entityid=76,entityLevel=140,progress=0,},--7转炽焰山1层-炽焰战士
+{count=8,time=20,firstTime=1,mapx=93,mapy=28,range=10,entityid=71,entityLevel=140,progress=0,},--7转炽焰山1层-炽焰狐师
+{count=8,time=20,firstTime=1,mapx=99,mapy=42,range=10,entityid=72,entityLevel=140,progress=0,},--7转炽焰山1层-炽焰魅影
+{count=8,time=20,firstTime=1,mapx=104,mapy=58,range=10,entityid=73,entityLevel=140,progress=0,},--7转炽焰山1层-炽焰护卫
+{count=8,time=20,firstTime=1,mapx=103,mapy=85,range=10,entityid=74,entityLevel=140,progress=0,},--7转炽焰山1层-炽焰力士
+{count=8,time=20,firstTime=1,mapx=92,mapy=98,range=10,entityid=75,entityLevel=140,progress=0,},--7转炽焰山1层-炽焰勇士
+{count=8,time=20,firstTime=1,mapx=75,mapy=87,range=10,entityid=76,entityLevel=140,progress=0,},--7转炽焰山1层-炽焰战士
+{count=8,time=20,firstTime=1,mapx=44,mapy=93,range=10,entityid=72,entityLevel=140,progress=0,},--7转炽焰山1层-炽焰魅影
+{count=4,time=3,firstTime=1,mapx=45,mapy=26,range=3,entityid=74,entityLevel=140,progress=0,},--7转炽焰山1层-炽焰力士
+{count=3,time=3,firstTime=1,mapx=45,mapy=26,range=3,entityid=75,entityLevel=140,progress=0,},--7转炽焰山1层-炽焰勇士
+{count=2,time=3,firstTime=1,mapx=45,mapy=26,range=3,entityid=76,entityLevel=140,progress=0,},--7转炽焰山1层-炽焰战士
+{count=3,time=3,firstTime=1,mapx=45,mapy=26,range=3,entityid=72,entityLevel=140,progress=0,},--7转炽焰山1层-炽焰魅影

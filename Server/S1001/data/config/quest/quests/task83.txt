@@ -1,0 +1,78 @@
+﻿--lua script
+{
+	id = 83,			-- 寻求猎技
+	parentid = 82,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name83,
+	content = Lang.Quest.desc83,
+
+	prom = 81,
+	comp = 82,
+	target = {
+		{
+			type = 0, id = 312, count = 2, rewardId = 0,useList = false,
+			location = {
+				sceneid = 172, x= 0,y = 0,entityName = Lang.EntityName.m312,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 236, count = 1, rewardId = 0,useList = false,
+			location = {
+				sceneid = 172, x= 0,y = 0,entityName = Lang.EntityName.m236,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 235, count = 1, rewardId = 0,useList = false,
+			location = {
+				sceneid = 172, x= 0,y = 0,entityName = Lang.EntityName.m235,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 234, count = 1, rewardId = 0,useList = false,
+			location = {
+				sceneid = 172, x= 0,y = 0,entityName = Lang.EntityName.m234,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 233, count = 1, rewardId = 0,useList = false,
+			location = {
+				sceneid = 172, x= 0,y = 0,entityName = Lang.EntityName.m233,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 232, count = 1, rewardId = 0,useList = false,
+			location = {
+				sceneid = 172, x= 0,y = 0,entityName = Lang.EntityName.m232,hideFastTransfer = false,
+			},
+		},
+		{
+			type = 0, id = 231, count = 1, rewardId = 0,useList = false,
+			location = {
+				sceneid = 172, x= 0,y = 0,entityName = Lang.EntityName.m231,hideFastTransfer = false,
+			},
+		},
+	},
+	conds = {
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 45000000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 5, id = 0, count = 200000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk831,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk831,
+	},
+	CompMsTip = {
+	},
+	PassMsTip = {
+	},
+},

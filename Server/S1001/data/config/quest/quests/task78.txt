@@ -1,0 +1,42 @@
+﻿--lua script
+{
+	id = 78,			-- 前世姻缘
+	parentid = 77,type = 0,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = false,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name78,
+	content = Lang.Quest.desc78,
+
+	prom = 79,
+	comp = 80,
+	target = {
+		{
+			type = 0, id = 64, count = 8, rewardId = 0,useList = false,
+			location = {
+				sceneid = 185, x= 0,y = 0,entityName = Lang.EntityName.m64,hideFastTransfer = false,
+			},
+		},
+	},
+	conds = {
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 35200000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 5, id = 0, count = 200000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk781,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk781,
+	},
+	CompMsTip = {
+	},
+	PassMsTip = {
+	},
+},

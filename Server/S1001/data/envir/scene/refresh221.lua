@@ -1,0 +1,11 @@
+{count=1,time=9999,firstTime=1,mapx=93,mapy=82,range=3,entityid=433,entityLevel=50,progress=0,},--秘境之旅2层-变异骷髅王?十阶
+{count=1,time=9999,firstTime=1,mapx=69,mapy=82,range=3,entityid=443,entityLevel=50,progress=0,},--秘境之旅2层-铁链僵尸皇?十阶
+{count=1,time=9999,firstTime=1,mapx=20,mapy=87,range=3,entityid=453,entityLevel=50,progress=0,},--秘境之旅2层-暗之钳虫皇?十阶
+{count=1,time=9999,firstTime=1,mapx=46,mapy=80,range=3,entityid=463,entityLevel=50,progress=0,},--秘境之旅2层-异教教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=34,mapy=59,range=3,entityid=473,entityLevel=50,progress=0,},--秘境之旅2层-虚空大帝?十阶
+{count=1,time=9999,firstTime=1,mapx=39,mapy=35,range=3,entityid=483,entityLevel=50,progress=0,},--秘境之旅2层-破碎教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=23,mapy=22,range=3,entityid=493,entityLevel=50,progress=0,},--秘境之旅2层-蛮荒大教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=72,mapy=33,range=3,entityid=433,entityLevel=50,progress=0,},--秘境之旅2层-变异骷髅王?十阶
+{count=1,time=9999,firstTime=1,mapx=92,mapy=24,range=3,entityid=443,entityLevel=50,progress=0,},--秘境之旅2层-铁链僵尸皇?十阶
+{count=1,time=9999,firstTime=1,mapx=83,mapy=58,range=3,entityid=453,entityLevel=50,progress=0,},--秘境之旅2层-暗之钳虫皇?十阶
+{count=1,time=9999,firstTime=1,mapx=59,mapy=57,range=3,entityid=737,entityLevel=50,progress=0,},--秘境之旅2层-迷失圣主[1转]

@@ -1,0 +1,16 @@
+{count=1,time=9999,firstTime=1,mapx=41,mapy=105,range=4,entityid=433,entityLevel=50,progress=0,},--秘境之旅8层-变异骷髅王?十阶
+{count=1,time=9999,firstTime=1,mapx=55,mapy=113,range=4,entityid=473,entityLevel=50,progress=0,},--秘境之旅8层-虚空大帝?十阶
+{count=1,time=9999,firstTime=1,mapx=77,mapy=115,range=4,entityid=433,entityLevel=50,progress=0,},--秘境之旅8层-变异骷髅王?十阶
+{count=1,time=9999,firstTime=1,mapx=83,mapy=99,range=4,entityid=453,entityLevel=50,progress=0,},--秘境之旅8层-暗之钳虫皇?十阶
+{count=1,time=9999,firstTime=1,mapx=61,mapy=85,range=4,entityid=473,entityLevel=50,progress=0,},--秘境之旅8层-虚空大帝?十阶
+{count=1,time=9999,firstTime=1,mapx=47,mapy=75,range=4,entityid=483,entityLevel=50,progress=0,},--秘境之旅8层-破碎教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=31,mapy=50,range=4,entityid=453,entityLevel=50,progress=0,},--秘境之旅8层-暗之钳虫皇?十阶
+{count=1,time=9999,firstTime=1,mapx=17,mapy=62,range=4,entityid=463,entityLevel=50,progress=0,},--秘境之旅8层-异教教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=80,mapy=79,range=4,entityid=473,entityLevel=50,progress=0,},--秘境之旅8层-虚空大帝?十阶
+{count=1,time=9999,firstTime=1,mapx=94,mapy=67,range=4,entityid=493,entityLevel=50,progress=0,},--秘境之旅8层-蛮荒大教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=131,mapy=52,range=4,entityid=463,entityLevel=50,progress=0,},--秘境之旅8层-异教教皇?十阶
+{count=1,time=9999,firstTime=1,mapx=143,mapy=40,range=4,entityid=473,entityLevel=50,progress=0,},--秘境之旅8层-虚空大帝?十阶
+{count=1,time=9999,firstTime=1,mapx=113,mapy=54,range=4,entityid=433,entityLevel=50,progress=0,},--秘境之旅8层-变异骷髅王?十阶
+{count=1,time=9999,firstTime=1,mapx=87,mapy=50,range=4,entityid=453,entityLevel=50,progress=0,},--秘境之旅8层-暗之钳虫皇?十阶
+{count=1,time=9999,firstTime=1,mapx=81,mapy=69,range=4,entityid=473,entityLevel=50,progress=0,},--秘境之旅8层-虚空大帝?十阶
+{count=1,time=9999,firstTime=1,mapx=95,mapy=64,range=4,entityid=743,entityLevel=50,progress=0,},--秘境之旅8层-炽焰狐王[7转]

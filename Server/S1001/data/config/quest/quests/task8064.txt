@@ -1,0 +1,42 @@
+﻿--lua script
+{
+	id = 8064,			-- 每日贡献
+	parentid = 0,type = 9,level = 0,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 86400,maxcount = 1,
+	cangiveup = true,
+	automount = true,
+	autoRun = false,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name8064,
+	content = Lang.Quest.desc8064,
+
+	prom = 0,
+	comp = 0,
+	target = {
+		{
+			type = 127, id = 50104, count = 1, rewardId = 0,useList = false, data = Lang.Quest.data80640,
+			location = {
+				sceneid = 8, x= 0,y = 0,entityName = Lang.EntityName.n00095,hideFastTransfer = false,
+			},
+		},
+	},
+	conds = {
+		{ type = 0, id = 70, count = 40 },
+	},
+	awards = {
+		{
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk80641,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk80641,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip80641,
+	},
+	PassMsTip = {
+	},
+},

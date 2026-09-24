@@ -1,0 +1,802 @@
+﻿{
+	--副本id
+	--副本id如果是0，表示是常规副本
+	fbid = 0,
+	--副本的适合等级(推荐等级)，
+	recommandLevel = 20,
+	isAutoActive = false,
+	--这个副本需要用到的场景列表
+	scenes =
+	{
+----#include "scene0.lua"	--场景0是测试场景，在游戏中是不出现的，在副本里，如果指定的场景id不存在，默认就会进入副本的第一个场景，所以场景0不放到第一位置
+--#include "scene1.lua"--炎龙桃源
+--#include "scene2.lua"--峡谷
+----#include "scene3.lua"--远古矿洞 10级主线
+----#include "scene4.lua"--远古虫洞 20级主线
+----#include "scene5.lua"--远古羊窟 30级主线
+--#include "scene6.lua"--远古猪洞 40级主线
+--#include "scene7.lua"--远古寺庙 50级主线
+--#include "scene8.lua"--远古荒蛮 60级主线
+--#include "scene9.lua"--炎龙城 
+--#include "scene10.lua"--热血王城（攻城地图）
+--#include "scene11.lua"--王城皇宫
+--#include "scene12.lua"--变异洞窟一层 65级地图
+--#include "scene13.lua"--变异洞窟二层
+--#include "scene14.lua"--幽冥矿区一层 70级地图
+--#include "scene15.lua"--幽冥矿区二层 
+--#include "scene16.lua"--死亡棺材一层 75级地图
+--#include "scene17.lua"--死亡棺材二层
+--#include "scene18.lua"--死亡棺材三层
+--#include "scene19.lua"--异教宫殿一层 80级地图
+--#include "scene20.lua"--异教宫殿二层
+--#include "scene21.lua"--虚空古墓一层
+--#include "scene22.lua"--虚空古墓二层
+--#include "scene23.lua"--虚空古墓三层
+--#include "scene24.lua"--破碎寺庙一层 1转地图
+--#include "scene25.lua"--破碎寺庙二层
+--#include "scene26.lua"--破碎寺庙三层
+--#include "scene27.lua"--蛮荒禁地一层 2转地图
+--#include "scene28.lua"--荒蛮禁地二层 
+--#include "scene29.lua"--荒蛮禁地三层
+--#include "scene30.lua"--荒蛮禁地四层
+--#include "scene31.lua"--迷失宫殿一层 2转地图
+--#include "scene32.lua"--迷失宫殿二层 
+--#include "scene33.lua"--迷失宫殿三层
+--#include "scene34.lua"--赤月洞窟一层 3转地图
+--#include "scene35.lua"--赤月洞窟二层
+--#include "scene36.lua"--赤月洞窟三层
+--#include "scene37.lua"--赤月洞窟四层
+--#include "scene38.lua"--妖族幻境一层
+--#include "scene39.lua"--妖族幻境二层
+--#include "scene40.lua"--妖族幻境三层
+--#include "scene41.lua"--修罗地宫一层 4转地图
+--#include "scene42.lua"--修罗地宫二层
+--#include "scene43.lua"--修罗地宫三层
+--#include "scene44.lua"--修罗地宫四层
+--#include "scene45.lua"--吕祖峰一层 4转地图
+--#include "scene46.lua"--吕祖峰二层
+--#include "scene47.lua"--吕祖峰三层
+--#include "scene48.lua"--吕祖峰四层
+--#include "scene49.lua"--龙王湾一层 5转地图
+--#include "scene50.lua"--龙王湾二层
+--#include "scene51.lua"--龙王湾三层
+--#include "scene52.lua"--龙王湾四层
+--#include "scene53.lua"--炽焰山一层 6转地图
+--#include "scene54.lua"--炽焰山二层 6转地图
+--#include "scene55.lua"--炽焰山三层 6转地图
+--#include "scene56.lua"--雷炎魔窟一层 7转地图
+--#include "scene57.lua"--雷炎魔窟二层 7转地图
+--#include "scene58.lua"--极北之地一层 8转地图
+--#include "scene59.lua"--极北之地二层 8转地图
+--#include "scene60.lua"--极北之地三层 8转地图
+--#include "scene61.lua"--极北之地四层 8转地图
+--#include "scene62.lua"--极北之地五层 8转地图
+--#include "scene63.lua"--极北之地六层 8转地图
+--#include "scene64.lua"--极北之地七层 8转地图
+--#include "scene65.lua"--极北之地八层 8转地图
+--#include "scene66.lua"--真天宫一层 9转地图
+--#include "scene67.lua"--真天宫二层 9转地图
+--#include "scene68.lua"--真天宫三层 9转地图
+--#include "scene69.lua"--个人BOSS副本
+--#include "scene70.lua"--斗笠副本
+--#include "scene71.lua"--个人羽毛副本
+----#include "scene72.lua"--魔罗神殿(暂未用)
+----#include "scene73.lua"--魔罗神殿(暂未用)
+----#include "scene74.lua"--魔罗神殿(暂未用)
+----#include "scene75.lua"--魔罗神殿(暂未用)
+----#include "scene76.lua"--魔罗神殿(暂未用)
+--#include "scene77.lua"--viP专用BOSS一层
+--#include "scene78.lua"--viP专用BOSS二层
+--#include "scene79.lua"--viP专用BOSS三层
+--#include "scene80.lua"--武林争霸 
+----#include "scene81.lua"--军团战场
+--#include "scene82.lua"--世界BOSS地图
+--#include "scene83.lua"--土城
+--#include "scene84.lua"--勇闯天关
+----#include "scene85.lua"--炎龙守卫战
+----#include "scene86.lua"--无双殿堂(日常战无双经验任务地图)
+----#include "scene87.lua"
+----#include "scene88.lua"
+----#include "scene89.lua"
+--#include "scene90.lua"
+--#include "scene91.lua"
+--#include "scene92.lua"
+--#include "scene93.lua"
+--#include "scene94.lua"
+--#include "scene95.lua"
+--#include "scene96.lua"
+--#include "scene97.lua"
+--#include "scene98.lua"
+--#include "scene99.lua"
+--#include "scene100.lua"
+--#include "scene101.lua"
+--#include "scene102.lua"
+----#include "scene103.lua"
+--#include "scene104.lua"
+--#include "scene105.lua"
+----#include "scene106.lua"
+----#include "scene107.lua" --军团战
+--#include "scene108.lua" --红名村
+--#include "scene109.lua"
+--#include "scene110.lua"
+--#include "scene111.lua"
+--#include "scene112.lua"
+--#include "scene113.lua"
+--#include "scene114.lua"
+--#include "scene115.lua"
+--#include "scene116.lua"
+--#include "scene117.lua"
+--#include "scene118.lua"
+--#include "scene119.lua"
+--#include "scene120.lua"
+--#include "scene121.lua"
+----#include "scene122.lua"
+----#include "scene123.lua"
+----#include "scene124.lua"
+----#include "scene125.lua"
+----#include "scene126.lua"
+----#include "scene127.lua"
+----#include "scene128.lua"
+----#include "scene129.lua"
+----#include "scene130.lua"
+----#include "scene131.lua"
+----#include "scene132.lua"
+----#include "scene133.lua"
+----#include "scene134.lua"
+----#include "scene135.lua"
+----#include "scene136.lua"
+----#include "scene137.lua"
+----#include "scene138.lua"
+----#include "scene139.lua"
+----#include "scene140.lua"
+---#include "scene141.lua"
+----#include "scene142.lua"
+----#include "scene143.lua"
+----#include "scene144.lua"
+----#include "scene145.lua"
+----#include "scene146.lua"
+----#include "scene147.lua"
+----#include "scene148.lua"
+----#include "scene149.lua"
+----#include "scene150.lua"
+----#include "scene151.lua"
+----#include "scene152.lua"
+--#include "scene153.lua"
+--#include "scene154.lua"
+-- --#include "scene155.lua"
+-- --#include "scene156.lua"
+-- --#include "scene157.lua"
+-- --#include "scene158.lua"
+-- --#include "scene159.lua"
+-- --#include "scene160.lua"
+-- --#include "scene161.lua"
+-- --#include "scene162.lua"
+-- --#include "scene163.lua"
+--#include "scene164.lua" 
+--#include "scene165.lua"
+--#include "scene166.lua"
+--#include "scene167.lua"
+--#include "scene168.lua"
+--#include "scene169.lua"
+-- --#include "scene170.lua"
+-- --#include "scene171.lua"
+-- --#include "scene172.lua"
+-- --#include "scene173.lua"
+-- --#include "scene175.lua"
+-- --#include "scene176.lua"
+-- ----#include "scene177.lua"
+-- ----#include "scene178.lua"
+-- ----#include "scene179.lua"
+-- ----#include "scene180.lua"
+-- ----#include "scene181.lua"
+-- --#include "scene182.lua"
+-- --#include "scene183.lua"
+-- --#include "scene184.lua"
+-- --#include "scene185.lua"
+-- --#include "scene186.lua"
+-- --#include "scene187.lua"
+-- --#include "scene188.lua"
+-- --#include "scene189.lua"
+-- --#include "scene190.lua"
+-- ----#include "scene191.lua"
+-- ----#include "scene192.lua"
+-- ----#include "scene193.lua"
+-- ----#include "scene194.lua"
+-- --#include "scene195.lua"
+-- --#include "scene196.lua"
+-- --#include "scene197.lua"
+-- --#include "scene198.lua"
+-- --#include "scene199.lua"
+-- --#include "scene200.lua"
+-- --#include "scene201.lua"
+-- --#include "scene202.lua"
+----#include "scene203.lua"
+----#include "scene204.lua"
+---#include "scene205.lua"
+----#include "scene206.lua"
+----#include "scene207.lua"
+----#include "scene208.lua"
+----#include "scene209.lua"
+----#include "scene210.lua"
+----#include "scene211.lua"
+----#include "scene212.lua"
+----#include "scene213.lua"
+----#include "scene214.lua"
+----#include "scene215.lua"
+--#include "scene216.lua"--奔跑吧老哥
+--#include "scene217.lua"--奔跑吧老哥
+--#include "scene218.lua"--奔跑吧老哥
+----#include "scene219.lua"--抵御入侵
+----#include "scene220.lua"--秘境之旅1层
+----#include "scene221.lua"--秘境之旅2层
+----#include "scene222.lua"--秘境之旅3层
+----#include "scene223.lua"--秘境之旅4层
+----#include "scene224.lua"--秘境之旅5层
+----#include "scene225.lua"--秘境之旅6层
+----#include "scene226.lua"--秘境之旅7层
+----#include "scene227.lua"--秘境之旅8层
+----#include "scene228.lua"--秘境之旅9层
+----#include "scene229.lua"--秘境之旅10层
+----#include "scene230.lua"--散人殿堂7层 --废弃
+----#include "scene231.lua"--散人殿堂8层--废弃
+----#include "scene232.lua"--散人殿堂9层--废弃
+----#include "scene233.lua"--散人殿堂10层--废弃
+--#include "scene234.lua"--夺宝奇兵
+
+--#include "scene235.lua"--新版个人BOSS挑战
+--#include "scene236.lua"--新版个人BOSS挑战
+--#include "scene237.lua"--新版个人BOSS挑战
+--#include "scene238.lua"--新版个人BOSS挑战
+--#include "scene239.lua"--新版个人BOSS挑战
+--#include "scene240.lua"--新版个人BOSS挑战
+----#include "scene241.lua"--新版个人BOSS挑战
+----#include "scene242.lua"--新版个人BOSS挑战
+--#include "scene243.lua"--新版个人BOSS挑战
+----#include "scene244.lua"--新版个人BOSS挑战
+----#include "scene245.lua"--新版个人BOSS挑战
+----#include "scene246.lua"--新版个人BOSS挑战
+--#include "scene247.lua"--新版个人BOSS挑战
+
+--#include "scene248.lua"--新版个人BOSS挑战
+--#include "scene249.lua"--新版个人BOSS挑战
+--#include "scene250.lua"--新版个人BOSS挑战
+
+--#include "scene251.lua"--新版个人BOSS挑战
+--#include "scene252.lua"--新版个人BOSS挑战
+--#include "scene253.lua"--新版个人BOSS挑战
+--#include "scene254.lua"--新版个人BOSS挑战
+--#include "scene255.lua"--新版个人BOSS挑战
+----#include "scene256.lua"--暗黑猪洞
+----#include "scene257.lua"--暗黑寺庙
+----#include "scene258.lua"--暗黑洞窟
+----#include "scene259.lua"--暗黑矿区
+----#include "scene260.lua"--暗黑棺材
+----#include "scene261.lua"--暗黑宫殿
+----#include "scene262.lua"--暗黑古墓
+----#include "scene263.lua"--暗黑祭坛
+----#include "scene264.lua"--暗黑禁地
+----#include "scene265.lua"--暗黑沙漠
+--#include "scene266.lua"--秦始皇陵1层
+--#include "scene267.lua"--秦始皇陵2层
+--#include "scene268.lua"--秦始皇陵3层
+----#include "scene269.lua"--沙巴克专属
+
+--#include "scene270.lua"--散人镇2线
+--#include "scene271.lua"--散人镇3线
+--#include "scene272.lua"--散人镇4线
+--#include "scene273.lua"--散人镇5线
+--#include "scene274.lua"--散人镇6线
+--#include "scene275.lua"--散人镇7线
+--#include "scene276.lua"--散人镇8线
+--#include "scene277.lua"--散人镇9线
+--#include "scene278.lua"--散人镇10线
+
+--#include "scene279.lua"--散人乐园1层
+--#include "scene280.lua"--散人乐园1层
+--#include "scene281.lua"--散人乐园1层
+--#include "scene282.lua"--散人乐园1层
+--#include "scene283.lua"--散人乐园1层
+--#include "scene284.lua"--散人乐园1层
+--#include "scene285.lua"--散人乐园1层
+--#include "scene286.lua"--散人乐园1层
+
+--#include "scene287.lua"--转生地宫1层
+--#include "scene288.lua"--转生地宫1层
+--#include "scene289.lua"--转生地宫1层
+--#include "scene290.lua"--转生地宫1层
+--#include "scene291.lua"--转生地宫1层
+--#include "scene292.lua"--转生地宫1层
+--#include "scene293.lua"--转生地宫1层
+--#include "scene294.lua"--转生地宫1层
+--#include "scene295.lua"--转生地宫1层
+--#include "scene296.lua"--转生地宫1层
+--#include "scene297.lua"--转生地宫1层
+
+----#include "scene298.lua"--珍宝阁1层
+----#include "scene299.lua"--珍宝阁2层
+----#include "scene300.lua"--珍宝阁3层
+----#include "scene301.lua"--珍宝阁4层
+----#include "scene302.lua"--珍宝阁5层
+
+--#include "scene303.lua"--散人殿堂1层1线
+--#include "scene304.lua"--散人殿堂1层2线
+--#include "scene305.lua"--散人殿堂1层3线
+--#include "scene306.lua"--散人殿堂1层4线
+--#include "scene307.lua"--散人殿堂1层5线
+--#include "scene308.lua"--散人殿堂2层1线
+--#include "scene309.lua"--散人殿堂2层2线
+--#include "scene310.lua"--散人殿堂2层3线
+--#include "scene311.lua"--散人殿堂2层4线
+--#include "scene312.lua"--散人殿堂2层5线
+--#include "scene313.lua"--散人殿堂3层1线
+--#include "scene314.lua"--散人殿堂3层2线
+--#include "scene315.lua"--散人殿堂3层3线
+--#include "scene316.lua"--散人殿堂3层4线
+--#include "scene317.lua"--散人殿堂3层5线
+--#include "scene318.lua"--饕餮神殿
+----#include "scene319.lua"--练级广场
+
+
+--#include "scene320.lua"--1转暗之神殿
+--#include "scene321.lua"--2转暗之神殿
+--#include "scene322.lua"--3转暗之神殿
+--#include "scene323.lua"--4转暗之神殿
+--#include "scene324.lua"--5转暗之神殿
+--#include "scene325.lua"--6转暗之神殿
+--#include "scene326.lua"--7转暗之神殿
+--#include "scene327.lua"--9转暗之神殿
+--#include "scene328.lua"--11转暗之神殿
+--#include "scene329.lua"--1转重装神殿
+--#include "scene330.lua"--2转重装神殿
+--#include "scene331.lua"--3转重装神殿
+--#include "scene332.lua"--4转重装神殿
+--#include "scene333.lua"--5转重装神殿
+--#include "scene334.lua"--6转重装神殿
+--#include "scene335.lua"--7转重装神殿
+--#include "scene336.lua"--9转重装神殿
+--#include "scene337.lua"--11转重装神殿
+----#include "scene338.lua"--至尊领地
+----#include "scene339.lua"--行会乐园
+----#include "scene340.lua"--激情大本营
+----#include "scene341.lua"--主线任务地图
+--#include "scene342.lua"--奔跑四层
+--#include "scene343.lua"--矿洞
+--#include "scene344.lua"--混沌世界1
+--#include "scene345.lua"--混沌世界2
+--#include "scene346.lua"--混沌世界3
+
+--#include "scene347.lua"--狐王领地
+
+--#include "scene348.lua"--天关1层
+--#include "scene349.lua"--天关2层
+--#include "scene350.lua"--天关3层
+--#include "scene351.lua"--天关4层
+--#include "scene352.lua"--天关5层
+--#include "scene353.lua"--天关6层
+--#include "scene354.lua"--天关7层
+--#include "scene355.lua"--天关8层
+--#include "scene356.lua"--天关9层
+--#include "scene357.lua"--天关10层
+--#include "scene358.lua"--天关11层
+--#include "scene359.lua"--天关12层
+--#include "scene360.lua"--天关13层
+--#include "scene361.lua"--天关14层
+--#include "scene362.lua"--天关15层
+--#include "scene363.lua"--天关16层
+--#include "scene364.lua"--天关17层
+--#include "scene365.lua"--天关18层
+--#include "scene366.lua"--天关19层
+--#include "scene367.lua"--天关20层
+--#include "scene368.lua"--天关21层
+--#include "scene369.lua"--天关22层
+--#include "scene370.lua"--天关23层
+--#include "scene371.lua"--天关24层
+--#include "scene372.lua"--天关25层
+--#include "scene373.lua"--天关26层
+--#include "scene374.lua"--天关27层
+--#include "scene375.lua"--天关28层
+--#include "scene376.lua"--天关29层
+--#include "scene377.lua"--天关30层
+--#include "scene378.lua"--散人殿堂4层1线
+--#include "scene379.lua"--散人殿堂4层2线
+--#include "scene380.lua"--散人殿堂4层3线
+--#include "scene381.lua"--散人殿堂4层4线
+--#include "scene382.lua"--散人殿堂4层5线
+--#include "scene383.lua"--散人殿堂5层1线
+--#include "scene384.lua"--散人殿堂5层2线
+--#include "scene385.lua"--散人殿堂5层3线
+--#include "scene386.lua"--散人殿堂5层4线
+--#include "scene387.lua"--散人殿堂5层5线
+--#include "scene388.lua"--散人殿堂1层6线
+--#include "scene389.lua"--散人殿堂1层7线
+--#include "scene390.lua"--散人殿堂1层8线
+--#include "scene391.lua"--散人殿堂1层9线
+--#include "scene392.lua"--散人殿堂1层10线
+--#include "scene393.lua"--散人殿堂2层6线
+--#include "scene394.lua"--散人殿堂2层7线
+--#include "scene395.lua"--散人殿堂2层8线
+--#include "scene396.lua"--散人殿堂2层9线
+--#include "scene397.lua"--散人殿堂2层10线
+--#include "scene398.lua"--散人殿堂3层6线
+--#include "scene399.lua"--散人殿堂3层7线
+--#include "scene400.lua"--散人殿堂3层8线
+--#include "scene401.lua"--散人殿堂3层9线
+--#include "scene402.lua"--散人殿堂3层10线
+--#include "scene403.lua"--远古三转战场
+--#include "scene404.lua"--远古四转战场
+--#include "scene405.lua"--远古五转战场
+--#include "scene406.lua"--远古六转战场
+--#include "scene407.lua"--远古七转战场
+--#include "scene408.lua"--远古八转战场
+--#include "scene409.lua"--远古九转战场
+--#include "scene410.lua"--远古十转战场
+--#include "scene411.lua"--远古11转战场
+--#include "scene412.lua"--远古12转战场
+--#include "scene413.lua"--军魂之地
+
+--#include "scene414.lua"--
+--#include "scene415.lua"--
+--#include "scene416.lua"--
+--#include "scene417.lua"--
+--#include "scene418.lua"--
+--#include "scene419.lua"--
+--#include "scene420.lua"--
+--#include "scene421.lua"--
+--#include "scene422.lua"--
+--#include "scene423.lua"--
+
+--#include "scene424.lua"--玛雅神殿1
+--#include "scene425.lua"--玛雅神殿2
+--#include "scene426.lua"--玛雅神殿3
+--#include "scene427.lua"--面巾副本
+
+--#include "scene428.lua"--74-82boss试练
+--#include "scene429.lua"--74-82boss试练
+--#include "scene430.lua"--74-82boss试练
+--#include "scene431.lua"--74-82boss试练
+--#include "scene432.lua"--74-82boss试练
+
+--#include "scene433.lua"--雪域冰宫
+
+--#include "scene434.lua"--恐怖BOSS
+--#include "scene435.lua"--恐怖BOSS
+--#include "scene436.lua"--恐怖BOSS
+--#include "scene437.lua"--恐怖BOSS
+--#include "scene438.lua"--恐怖BOSS
+--#include "scene439.lua"--恐怖BOSS
+--#include "scene440.lua"--恐怖BOSS
+--#include "scene441.lua"--恐怖BOSS
+
+--#include "scene442.lua"--战场分流
+--#include "scene443.lua"--战场分流
+--#include "scene444.lua"--战场分流
+--#include "scene445.lua"--战场分流
+--#include "scene446.lua"--战场分流
+
+--#include "scene447.lua"--战场分流
+--#include "scene448.lua"--战场分流
+--#include "scene449.lua"--战场分流
+--#include "scene450.lua"--战场分流
+--#include "scene451.lua"--战场分流
+
+--#include "scene452.lua"--战场分流
+--#include "scene453.lua"--战场分流
+--#include "scene454.lua"--战场分流
+--#include "scene455.lua"--战场分流
+--#include "scene456.lua"--战场分流
+--#include "scene457.lua"--战场分流
+--#include "scene458.lua"--战场分流
+--#include "scene459.lua"--战场分流
+--#include "scene460.lua"--战场分流
+--#include "scene461.lua"--战场分流
+
+--#include "scene462.lua"--战场分流
+--#include "scene463.lua"--战场分流
+--#include "scene464.lua"--战场分流
+--#include "scene465.lua"--战场分流
+--#include "scene466.lua"--战场分流
+--#include "scene467.lua"--战场分流
+--#include "scene468.lua"--战场分流
+--#include "scene469.lua"--战场分流
+--#include "scene470.lua"--战场分流
+--#include "scene471.lua"--战场分流
+--#include "scene472.lua"--战场分流
+--#include "scene473.lua"--战场分流
+--#include "scene474.lua"--战场分流
+--#include "scene475.lua"--战场分流
+--#include "scene476.lua"--战场分流
+--#include "scene477.lua"--战场分流
+--#include "scene478.lua"--战场分流
+--#include "scene479.lua"--战场分流
+--#include "scene480.lua"--战场分流
+--#include "scene481.lua"--战场分流
+--#include "scene482.lua"--战场分流
+--#include "scene483.lua"--战场分流
+--#include "scene484.lua"--战场分流
+--#include "scene485.lua"--战场分流
+--#include "scene486.lua"--战场分流
+--#include "scene487.lua"--战场分流
+--#include "scene488.lua"--战场分流
+--#include "scene489.lua"--战场分流
+--#include "scene490.lua"--战场分流
+--#include "scene491.lua"--战场分流
+--#include "scene492.lua"--战场分流
+--#include "scene493.lua"--战场分流
+--#include "scene494.lua"--战场分流
+--#include "scene495.lua"--战场分流
+--#include "scene496.lua"--战场分流
+--#include "scene497.lua"--战场分流
+--#include "scene498.lua"--战场分流
+--#include "scene499.lua"--战场分流
+--#include "scene500.lua"--战场分流
+--#include "scene501.lua"--战场分流
+--#include "scene502.lua"--战场分流
+--#include "scene503.lua"--战场分流
+--#include "scene504.lua"--战场分流
+--#include "scene505.lua"--战场分流
+--#include "scene506.lua"--战场分流
+--#include "scene507.lua"--战场分流
+--#include "scene508.lua"--战场分流
+--#include "scene509.lua"--战场分流
+--#include "scene510.lua"--战场分流
+--#include "scene511.lua"--战场分流
+--#include "scene512.lua"--战场分流
+--#include "scene513.lua"--战场分流
+--#include "scene514.lua"--战场分流
+--#include "scene515.lua"--战场分流
+--#include "scene516.lua"--战场分流
+--#include "scene517.lua"--战场分流
+--#include "scene518.lua"--战场分流
+--#include "scene519.lua"--战场分流
+--#include "scene520.lua"--战场分流
+--#include "scene521.lua"--战场分流
+--#include "scene522.lua"--战场分流
+--#include "scene523.lua"--战场分流
+--#include "scene524.lua"--战场分流
+--#include "scene525.lua"--战场分流
+--#include "scene526.lua"--战场分流
+--#include "scene527.lua"--战场分流
+--#include "scene528.lua"--战场分流
+--#include "scene529.lua"--战场分流
+--#include "scene530.lua"--战场分流
+--#include "scene531.lua"--战场分流
+--#include "scene532.lua"--战场分流
+--#include "scene533.lua"--战场分流
+--#include "scene534.lua"--战场分流
+--#include "scene535.lua"--战场分流
+--#include "scene536.lua"--战场分流
+--#include "scene537.lua"--战场分流
+--#include "scene538.lua"--战场分流
+--#include "scene539.lua"--战场分流
+--#include "scene540.lua"--战场分流
+--#include "scene541.lua"--战场分流
+--#include "scene542.lua"--战场分流
+--#include "scene543.lua"--战场分流
+--#include "scene544.lua"--战场分流
+--#include "scene545.lua"--战场分流
+--#include "scene546.lua"--战场分流
+--#include "scene547.lua"--战场分流
+--#include "scene548.lua"--战场分流
+--#include "scene549.lua"--战场分流
+--#include "scene550.lua"--战场分流
+--#include "scene551.lua"--战场分流
+--#include "scene552.lua"--战场分流
+--#include "scene553.lua"--战场分流
+--#include "scene554.lua"--战场分流
+--#include "scene555.lua"--战场分流
+--#include "scene556.lua"--战场分流
+--#include "scene557.lua"--战场分流
+--#include "scene558.lua"--战场分流
+--#include "scene559.lua"--战场分流
+--#include "scene560.lua"--战场分流
+--#include "scene561.lua"--战场分流
+--#include "scene562.lua"--战场分流
+
+--#include "scene563.lua"--3v3竞技
+
+--#include "scene564.lua"--生肖宫殿
+--#include "scene565.lua"--110副本
+--#include "scene566.lua"--115副本
+
+--#include "scene567.lua"--115副本
+
+--#include "scene568.lua"--混乱地界
+
+--#include "scene569.lua"--出世之境
+--#include "scene570.lua"--练气之境
+--#include "scene571.lua"--固本之境
+--#include "scene572.lua"--培元之境
+--#include "scene573.lua"--红尘之境
+--#include "scene574.lua"--明心之境
+--#include "scene575.lua"--皇宫大乱斗
+
+--#include "scene576.lua"--
+--#include "scene577.lua"--
+--#include "scene578.lua"--
+--#include "scene579.lua"--
+--#include "scene580.lua"--
+--#include "scene581.lua"--
+--#include "scene582.lua"--
+--#include "scene583.lua"--
+--#include "scene584.lua"--
+--#include "scene585.lua"--
+--#include "scene586.lua"--
+--#include "scene587.lua"--
+--#include "scene588.lua"--
+--#include "scene589.lua"--
+--#include "scene590.lua"--
+--#include "scene591.lua"--
+--#include "scene592.lua"--
+--#include "scene593.lua"--
+--#include "scene594.lua"--
+--#include "scene595.lua"--
+--#include "scene596.lua"--
+--#include "scene597.lua"--
+--#include "scene598.lua"--
+--#include "scene599.lua"--
+--#include "scene600.lua"--
+
+--#include "scene601.lua"--发现BOSS
+--#include "scene602.lua"--发现BOSS
+--#include "scene603.lua"--发现BOSS
+--#include "scene604.lua"--发现BOSS
+--#include "scene605.lua"--发现BOSS
+--#include "scene606.lua"--发现BOSS
+--#include "scene607.lua"--发现BOSS
+--#include "scene608.lua"--发现BOSS
+--#include "scene609.lua"--发现BOSS
+--#include "scene610.lua"--发现BOSS
+--#include "scene611.lua"--发现BOSS
+--#include "scene612.lua"--发现BOSS
+--#include "scene613.lua"--发现BOSS
+--#include "scene614.lua"--发现BOSS
+--#include "scene615.lua"--发现BOSS
+--#include "scene616.lua"--发现BOSS
+--#include "scene617.lua"--发现BOSS
+--#include "scene618.lua"--发现BOSS
+--#include "scene619.lua"--发现BOSS
+--#include "scene620.lua"--发现BOSS
+--#include "scene621.lua"--发现BOSS
+--#include "scene622.lua"--发现BOSS
+--#include "scene623.lua"--发现BOSS
+
+--#include "scene624.lua"
+--#include "scene625.lua"
+--#include "scene626.lua"
+--#include "scene627.lua"
+--#include "scene628.lua"
+--#include "scene629.lua"
+
+--#include "scene630.lua"
+----#include "scene631.lua"
+--#include "scene632.lua"
+--#include "scene633.lua"
+--#include "scene634.lua"
+--#include "scene635.lua"
+--#include "scene636.lua"
+--#include "scene637.lua"
+
+--#include "scene638.lua"
+--#include "scene639.lua"
+--#include "scene640.lua"
+--#include "scene641.lua"
+--#include "scene642.lua"
+--#include "scene643.lua"
+
+--#include "scene644.lua"
+--#include "scene645.lua"
+--#include "scene646.lua"
+--#include "scene647.lua"
+--#include "scene648.lua"
+--#include "scene649.lua"
+
+--#include "scene650.lua"--行会BOSS(1层)
+--#include "scene651.lua"--行会BOSS(2层)
+--#include "scene652.lua"--行会BOSS(3层)
+--#include "scene653.lua"--行会BOSS(4层)
+--#include "scene654.lua"--行会BOSS(5层)
+--#include "scene655.lua"--行会BOSS(6层)
+--#include "scene656.lua"--行会BOSS(7层)
+--#include "scene657.lua"--行会BOSS(8层)
+--#include "scene658.lua"--行会BOSS(9层)
+--#include "scene659.lua"--行会BOSS(10层)
+--#include "scene660.lua"--行会BOSS(11层)
+--#include "scene661.lua"--行会BOSS(12层)
+--#include "scene662.lua"--行会BOSS(13层)
+--#include "scene663.lua"--行会BOSS(14层)
+--#include "scene664.lua"--行会BOSS(15层)
+
+--#include "scene665.lua"--血炼副本
+--#include "scene666.lua"--小悟之境
+--#include "scene667.lua"--大悟之境
+--#include "scene668.lua"--熊猫林
+--#include "scene669.lua"--水晶冰宫
+--#include "scene670.lua"--1v1竞技
+--#include "scene671.lua"--行会竞技
+--#include "scene672.lua"--行会竞技
+--#include "scene673.lua"--行会竞技
+--#include "scene674.lua"--行会竞技
+--#include "scene675.lua"--行会竞技
+--#include "scene676.lua"--行会竞技
+--#include "scene677.lua"--行会竞技
+--#include "scene678.lua"--行会竞技
+--#include "scene679.lua"--行会竞技
+--#include "scene680.lua"--行会竞技
+--#include "scene681.lua"--行会竞技
+
+--#include "scene682.lua"
+--#include "scene683.lua"
+--#include "scene684.lua"
+--#include "scene685.lua"
+--#include "scene686.lua"
+--#include "scene687.lua"
+--#include "scene688.lua"
+--#include "scene689.lua"
+--#include "scene690.lua"
+--#include "scene691.lua"
+
+--#include "scene692.lua"
+--#include "scene693.lua"
+--#include "scene694.lua"
+--#include "scene695.lua"
+
+--#include "scene696.lua"
+
+--#include "scene697.lua"
+--#include "scene698.lua"
+--#include "scene699.lua"
+--#include "scene700.lua"
+--#include "scene701.lua"
+--#include "scene702.lua"
+--#include "scene703.lua"
+--#include "scene704.lua"
+--#include "scene705.lua"
+--#include "scene706.lua"
+--#include "scene707.lua"
+--#include "scene708.lua"
+--#include "scene709.lua"
+--#include "scene710.lua"
+--#include "scene711.lua"
+--#include "scene712.lua"
+--#include "scene713.lua"
+--#include "scene714.lua"
+--#include "scene715.lua"
+--#include "scene716.lua"
+--#include "scene717.lua"
+--#include "scene718.lua"
+--#include "scene719.lua"
+--#include "scene720.lua"
+--#include "scene721.lua"
+--#include "scene722.lua"
+--#include "scene723.lua"
+--#include "scene724.lua"
+--#include "scene725.lua"
+--#include "scene726.lua"
+
+--#include "scene727.lua"
+--#include "scene728.lua"
+--#include "scene729.lua"
+--#include "scene730.lua"
+--#include "scene731.lua"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	},
+},

@@ -1,0 +1,237 @@
+﻿--lua script
+--#include "..\language\LangCode.txt"
+
+FuBen =
+{
+	--fbid为副本的id,这里需要连续的数字（现在已经不需要连续了）
+	--fbname为副本的名字，具体名字在语言包里包含。
+	--fbDesc副本描述,这个也是要语言包里面定义。--名称和描述的文字主要用于客户端显示
+	--minLevel是进入副本的最低等级要求。
+	--minPlayCount和maxPlayCount这个变量是进入队伍副本的最少人数和最多人数，如果是单人副本就都为1。
+	--type是副本类型，0表示普通副本，1表示英雄副本，如果以后再有其他类型，也是在这里配置
+	--hardLevel 和maxPoint都用于副本通关分计算,maxExp用于计算给用户的经验,maxSw表示奖励的声望
+	--fbtype:普通副本还是特殊副本，针对vip蓝钻只针对副本副本用增加的变量
+	--itemId:通过物品可以再进一次副本
+	--itemNum:物品数量
+	--enterTimes:每天通过物品能进入的次数，目前次数不能超过9
+	--quests={1111,1112},	这个副本关联的任务列表
+	--noaward = true		--默认是有奖励，配置这个不会出现奖励
+
+--	[1] = {fbid = 1 ,fbname = "尸王殿",fbDesc = "",minLevel = 30,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 1,fbTime = 1800},		--主线任务过度副本
+--	[2] = {fbid = 2 ,fbname = "钳虫老巢",fbDesc = "",minLevel = 30,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 2,fbTime = 1800},		--主线任务过度副本
+--	[3] = {fbid = 3 ,fbname = "血色殿",fbDesc = "",minLevel = 30,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 3,fbTime = 1800},		--主线任务过度副本
+--	[4] = {fbid = 4 ,fbname = "白猪王洞",fbDesc = "",minLevel = 30,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 4,fbTime = 1800},		--主线任务过度副本
+--	[5] = {fbid = 5 ,fbname = "祭祀寺庙",fbDesc = "",minLevel = 35,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 5,fbTime = 1800},		--主线任务过度副本
+	[6] = {fbid = 6 ,fbname = "诸神黄昏",fbDesc = "",minLevel = 10,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 6,fbTime = 600},		--主线任务过度副本
+	[7] = {fbid = 7 ,fbname = "铁链僵尸王",fbDesc = "",minLevel = 10,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 7,fbTime = 600},		
+	[8] = {fbid = 8 ,fbname = "黑色钳虫王",fbDesc = "",minLevel = 20,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 8,fbTime = 600},		
+	[9] = {fbid = 9 ,fbname = "血色教主",fbDesc = "",minLevel = 30,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 9,fbTime = 600},	
+	[10] = {fbid = 10 ,fbname = "白色猪王",fbDesc = "",minLevel = 40,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 10,fbTime = 600},	
+	[11] = {fbid = 11 ,fbname = "羊族族长",fbDesc = "",minLevel = 50,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 11,fbTime = 600},	
+	[12] = {fbid = 12 ,fbname = "蛮荒教主",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 12,fbTime = 600},	
+	[13] = {fbid = 13 ,fbname = "变异骷髅王",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 13,fbTime = 600},		
+	[14] = {fbid = 14 ,fbname = "铁链僵尸皇",fbDesc = "",minLevel = 70,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 14,fbTime = 600},	
+	[15] = {fbid = 15 ,fbname = "暗之钳虫皇",fbDesc = "",minLevel = 75,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 15,fbTime = 600},		
+	[16] = {fbid = 16 ,fbname = "异教教皇",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 16,fbTime = 600},	
+	[17] = {fbid = 17 ,fbname = "虚空大帝",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 17,fbTime = 600},	
+	[18] = {fbid = 18 ,fbname = "破碎教皇",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 18,fbTime = 600},	
+--
+	[19] = {fbid = 19 ,fbname = "护符副本",fbDesc = "",minLevel = 65,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 19,fbTime = 600},	--护符副本
+	[20] = {fbid = 20 ,fbname = "护盾副本",fbDesc = "",minLevel = 65,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 20,fbTime = 600},	--护盾副本
+	[21] = {fbid = 21 ,fbname = "宝石副本",fbDesc = "",minLevel = 65,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 21,fbTime = 600},	--宝石副本
+	[22] = {fbid = 22 ,fbname = "圣珠副本",fbDesc = "",minLevel = 65,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 22,fbTime = 600},	--圣珠副本
+	[23] = {fbid = 23 ,fbname = "强化副本",fbDesc = "",minLevel = 65,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 23,fbTime = 600},	--强化副本
+	[24] = {fbid = 24 ,fbname = "羽毛副本",fbDesc = "",minLevel = 65,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 24,fbTime = 600},	--羽毛副本
+	[25] = {fbid = 25 ,fbname = "功勋副本",fbDesc = "",minLevel = 65,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 25,fbTime = 600},	--功勋副本
+	[26] = {fbid = 26 ,fbname = "斗笠副本",fbDesc = "",minLevel = 65,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 26,fbTime = 600},	--面巾副本
+	[27] = {fbid = 27 ,fbname = "勇者闯关",fbDesc = "",minLevel = 1,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 27,fbTime = 2592000},	--勇者闯关副本
+--
+--	[28] = {fbid = 28 ,fbname = "虚拟红名村",fbDesc = "",minLevel = 40,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 28,fbTime = 1800},	--主线任务过度副本
+
+
+	[65] = {fbid = 65 ,fbname = Lang.FubenName.fname0065,fbDesc = Lang.FubenName.fdesc0065,minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 12,noaward=true,fbTime = 1200},	--恶魔岭
+--	[68] = {fbid = 68 ,fbname = Lang.FubenName.fname0068,fbDesc = Lang.FubenName.fdesc0068,minLevel = 55,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 12,fbTime = 180,quests={409}, itemId=815,itemNum=5,enterTimes=1},	--勇者闯关
+
+--  [69] = {fbid = 69 ,fbname = "镇妖塔1关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 69,fbTime = 60},	--镇妖塔1关
+--	[70] = {fbid = 70 ,fbname = "镇妖塔2关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 70,fbTime = 60},	--镇妖塔2关
+--	[71] = {fbid = 71 ,fbname = "镇妖塔3关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 71,fbTime = 60},	--镇妖塔3关
+--	[72] = {fbid = 72 ,fbname = "镇妖塔4关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 72,fbTime = 60},	--镇妖塔4关
+--	[73] = {fbid = 73 ,fbname = "镇妖塔5关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 73,fbTime = 60},	--镇妖塔5关
+--	[74] = {fbid = 74 ,fbname = "镇妖塔6关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 74,fbTime = 60},	--镇妖塔6关
+--	[75] = {fbid = 75 ,fbname = "镇妖塔7关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 75,fbTime = 60},	--镇妖塔7关
+--	[76] = {fbid = 76 ,fbname = "镇妖塔8关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 76,fbTime = 60},	--镇妖塔8关
+--	[77] = {fbid = 77 ,fbname = "镇妖塔9关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 77,fbTime = 60},	--镇妖塔9关
+--	[78] = {fbid = 78 ,fbname = "镇妖塔10关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 78,fbTime = 60},	--镇妖塔10关
+--	[79] = {fbid = 79 ,fbname = "镇妖塔11关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 79,fbTime = 60},	--镇妖塔11关
+--	[80] = {fbid = 80 ,fbname = "镇妖塔12关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 80,fbTime = 60},	--镇妖塔12关
+--	[81] = {fbid = 81 ,fbname = "镇妖塔13关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 81,fbTime = 60},	--镇妖塔13关
+--	[82] = {fbid = 82 ,fbname = "镇妖塔14关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 82,fbTime = 60},	--镇妖塔14关
+--	[83] = {fbid = 83 ,fbname = "镇妖塔15关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 83,fbTime = 60},	--镇妖塔15关
+--	[84] = {fbid = 84 ,fbname = "镇妖塔16关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 84,fbTime = 60},	--镇妖塔16关
+--	[85] = {fbid = 85 ,fbname = "镇妖塔17关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 85,fbTime = 60},	--镇妖塔17关
+--	[86] = {fbid = 86 ,fbname = "镇妖塔18关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 86,fbTime = 60},	--镇妖塔18关
+--	[87] = {fbid = 87 ,fbname = "镇妖塔19关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 87,fbTime = 60},	--镇妖塔19关
+--	[88] = {fbid = 88 ,fbname = "镇妖塔20关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 88,fbTime = 60},	--镇妖塔20关
+--	[89] = {fbid = 89 ,fbname = "镇妖塔21关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 89,fbTime = 60},	--镇妖塔21关
+--	[90] = {fbid = 90 ,fbname = "镇妖塔22关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 90,fbTime = 60},	--镇妖塔22关
+--	[91] = {fbid = 91 ,fbname = "镇妖塔23关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 91,fbTime = 60},	--镇妖塔23关
+--	[92] = {fbid = 92 ,fbname = "镇妖塔24关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 92,fbTime = 60},	--镇妖塔24关
+--	[93] = {fbid = 93 ,fbname = "镇妖塔25关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 93,fbTime = 60},	--镇妖塔25关
+--	[94] = {fbid = 94 ,fbname = "镇妖塔26关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 94,fbTime = 60},	--镇妖塔26关
+--	[95] = {fbid = 95 ,fbname = "镇妖塔27关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 95,fbTime = 60},	--镇妖塔27关
+--	[96] = {fbid = 96 ,fbname = "镇妖塔28关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 96,fbTime = 60},	--镇妖塔28关
+--	[97] = {fbid = 97 ,fbname = "镇妖塔29关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 97,fbTime = 60},	--镇妖塔29关
+--	[98] = {fbid = 98 ,fbname = "镇妖塔30关",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 98,fbTime = 60},	--镇妖塔30关
+	[99] = {fbid = 99 ,fbname = "抵御入侵",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 9999,type = 0,fbtype=0,groupId = 99,fbTime = 3600},	--抵御入侵
+
+	[100] = {fbid = 100 ,fbname = "尸王[副本]",fbDesc = "",minLevel = 50,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 100,fbTime = 3600},	--
+	[101] = {fbid = 101 ,fbname = "邪恶钳虫[副本]",fbDesc = "",minLevel = 50,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 101,fbTime = 3600},	--
+	[102] = {fbid = 102 ,fbname = "沃玛教主[副本]",fbDesc = "",minLevel = 55,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 102,fbTime = 3600},	--
+	[103] = {fbid = 103 ,fbname = "幻影沃玛教主",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 103,fbTime = 3600},	--
+	[104] = {fbid = 104 ,fbname = "幻影白野猪",fbDesc = "",minLevel = 65,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 104,fbTime = 3600},	--
+	[105] = {fbid = 105 ,fbname = "赤月恶魔[副本]",fbDesc = "",minLevel = 70,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 105,fbTime = 3600},	--
+	[106] = {fbid = 106 ,fbname = "未用",fbDesc = "",minLevel = 75,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 106,fbTime = 3600},	--
+	[107] = {fbid = 107 ,fbname = "未用",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 107,fbTime = 3600},	--
+	[108] = {fbid = 108 ,fbname = "幻影魔龙教主",fbDesc = "",minLevel = 75,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 108,fbTime = 3600},	--
+	[109] = {fbid = 109 ,fbname = "未用",fbDesc = "",minLevel = 100,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 109,fbTime = 3600},	--
+	[110] = {fbid = 110 ,fbname = "未用",fbDesc = "",minLevel = 110,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 110,fbTime = 3600},	--
+	[111] = {fbid = 111 ,fbname = "未用",fbDesc = "",minLevel = 120,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 111,fbTime = 3600},	--
+	[112] = {fbid = 112 ,fbname = "祖玛教主[副本]",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 112,fbTime = 3600},	--
+	[113] = {fbid = 113 ,fbname = "黄铜BOSS",fbDesc = "",minLevel = 1,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 113,fbTime = 3600},	--
+	[114] = {fbid = 114 ,fbname = "白银BOSS",fbDesc = "",minLevel = 1,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 114,fbTime = 3600},	--
+	[115] = {fbid = 115 ,fbname = "黄金BOSS",fbDesc = "",minLevel = 1,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 115,fbTime = 3600},	--
+	--
+	[116] = {fbid = 116 ,fbname = "牛魔王[副本]",fbDesc = "",minLevel = 82,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 116,fbTime = 3600},	--
+	[117] = {fbid = 117 ,fbname = "玛雅教主[副本]",fbDesc = "",minLevel = 85,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 117,fbTime = 3600},	--
+	[118] = {fbid = 118 ,fbname = "魔龙教主[副本]",fbDesc = "",minLevel = 90,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 118,fbTime = 3600},	--
+	[119] = {fbid = 119 ,fbname = "炼狱教主[副本]",fbDesc = "",minLevel = 95,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 119,fbTime = 3600},	--
+	[120] = {fbid = 120 ,fbname = "神龙教主[副本]",fbDesc = "",minLevel = 100,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 120,fbTime = 3600},	--
+	[121] = {fbid = 121 ,fbname = "九尾狐妖[副本]",fbDesc = "",minLevel = 105,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 121,fbTime = 3600},
+    --
+    [122]= {fbid =122,fbname = "勇闯天关1层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =122,fbTime = 600},--勇闯天关1层
+	[123]= {fbid =123,fbname = "勇闯天关2层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =123,fbTime = 600},--勇闯天关2层
+	[124]= {fbid =124,fbname = "勇闯天关3层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =124,fbTime = 600},--勇闯天关3层
+	[125]= {fbid =125,fbname = "勇闯天关4层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =125,fbTime = 600},--勇闯天关4层
+	[126]= {fbid =126,fbname = "勇闯天关5层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =126,fbTime = 600},--勇闯天关5层
+	[127]= {fbid =127,fbname = "勇闯天关6层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =127,fbTime = 600},--勇闯天关6层
+	[128]= {fbid =128,fbname = "勇闯天关7层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =128,fbTime = 600},--勇闯天关7层
+	[129]= {fbid =129,fbname = "勇闯天关8层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =129,fbTime = 600},--勇闯天关8层
+	[130]= {fbid =130,fbname = "勇闯天关9层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =130,fbTime = 600},--勇闯天关9层
+	[131]= {fbid =131,fbname = "勇闯天关10层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =131,fbTime = 600},--勇闯天关10层
+	[132]= {fbid =132,fbname = "勇闯天关11层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =132,fbTime = 600},--勇闯天关11层
+	[133]= {fbid =133,fbname = "勇闯天关12层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =133,fbTime = 600},--勇闯天关12层
+	[134]= {fbid =134,fbname = "勇闯天关13层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =134,fbTime = 600},--勇闯天关13层
+	[135]= {fbid =135,fbname = "勇闯天关14层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =135,fbTime = 600},--勇闯天关14层
+	[136]= {fbid =136,fbname = "勇闯天关15层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =136,fbTime = 600},--勇闯天关15层
+	[137]= {fbid =137,fbname = "勇闯天关16层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =137,fbTime = 600},--勇闯天关16层
+	[138]= {fbid =138,fbname = "勇闯天关17层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =138,fbTime = 600},--勇闯天关17层
+	[139]= {fbid =139,fbname = "勇闯天关18层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =139,fbTime = 600},--勇闯天关18层
+	[140]= {fbid =140,fbname = "勇闯天关19层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =140,fbTime = 600},--勇闯天关19层
+	[141]= {fbid =141,fbname = "勇闯天关20层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =141,fbTime = 600},--勇闯天关20层
+	[142]= {fbid =142,fbname = "勇闯天关21层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =142,fbTime = 600},--勇闯天关21层
+	[143]= {fbid =143,fbname = "勇闯天关22层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =143,fbTime = 600},--勇闯天关22层
+	[144]= {fbid =144,fbname = "勇闯天关23层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =144,fbTime = 600},--勇闯天关23层
+	[145]= {fbid =145,fbname = "勇闯天关24层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =145,fbTime = 600},--勇闯天关24层
+	[146]= {fbid =146,fbname = "勇闯天关25层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =146,fbTime = 600},--勇闯天关25层
+	[147]= {fbid =147,fbname = "勇闯天关26层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =147,fbTime = 600},--勇闯天关26层
+	[148]= {fbid =148,fbname = "勇闯天关27层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =148,fbTime = 600},--勇闯天关27层
+	[149]= {fbid =149,fbname = "勇闯天关28层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =149,fbTime = 600},--勇闯天关28层
+	[150]= {fbid =150,fbname = "勇闯天关29层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =150,fbTime = 600},--勇闯天关29层
+	[151]= {fbid =151,fbname = "勇闯天关30层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =151,fbTime = 600},--勇闯天关30层
+
+	[152]= {fbid =152,fbname = "骷髅王",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =152,fbTime = 600},--祖玛教主
+	[153]= {fbid =153,fbname = "僵尸王",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =153,fbTime = 600},--黄泉教主
+	[154]= {fbid =154,fbname = "野猪王",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =154,fbTime = 600},--牛魔王
+	[155]= {fbid =155,fbname = "双面魔",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =155,fbTime = 600},--魔龙教主
+	[156]= {fbid =156,fbname = "祖玛教主",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =156,fbTime = 600},--雪域教主
+
+	[157] = {fbid =157,fbname = "3v3竞技",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =157,fbTime = 1000},--3v3竞技
+	[158] = {fbid = 158 ,fbname = "雪域魔王[副本]",fbDesc = "",minLevel = 110,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 158,fbTime = 3600},
+	[159] = {fbid = 159 ,fbname = "镇狱龙王[副本]",fbDesc = "",minLevel = 115,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 159,fbTime = 3600},
+
+	[160]= {fbid =160,fbname = "血色教主",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =160,fbTime = 600},--祖玛教主
+	[161]= {fbid =161,fbname = "蛮荒教主",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =161,fbTime = 600},--黄泉教主
+	[162]= {fbid =162,fbname = "黄泉教主",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =162,fbTime = 600},--牛魔王
+	[163]= {fbid =163,fbname = "赤月教主",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =163,fbTime = 600},--魔龙教主
+	[164]= {fbid =164,fbname = "迷失圣主",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =164,fbTime = 600},--雪域教主
+	[165]= {fbid =165,fbname = "幽灵猎手",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =165,fbTime = 600},--祖玛教主
+	[166]= {fbid =166,fbname = "恶灵之影",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =166,fbTime = 600},--黄泉教主
+	[167]= {fbid =167,fbname = "黑翼魔王",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =167,fbTime = 600},--牛魔王
+	[168]= {fbid =168,fbname = "牛魔王",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =168,fbTime = 600},--魔龙教主
+	[169]= {fbid =169,fbname = "赤月恶魔",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =169,fbTime = 600},--雪域教主
+	[170]= {fbid =170,fbname = "四脚兽",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =170,fbTime = 600},--祖玛教主
+	[171]= {fbid =171,fbname = "炽焰狐王",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =171,fbTime = 600},--黄泉教主
+	[172]= {fbid =172,fbname = "魔龙教主",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =172,fbTime = 600},--牛魔王
+	[173]= {fbid =173,fbname = "大力魔",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =173,fbTime = 600},--魔龙教主
+	[174]= {fbid =174,fbname = "矛盾将军",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =174,fbTime = 600},--雪域教主
+	[175]= {fbid =175,fbname = "铁甲将军",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =175,fbTime = 600},--祖玛教主
+	[176]= {fbid =176,fbname = "铁甲骑士",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =176,fbTime = 600},--黄泉教主
+	[177]= {fbid =177,fbname = "雪域教主",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =177,fbTime = 600},--牛魔王
+	[178]= {fbid =178,fbname = "奔波儿灞",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =178,fbTime = 600},--魔龙教主
+	[179]= {fbid =179,fbname = "红衣魔女",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =179,fbTime = 600},--雪域教主
+	[180]= {fbid =180,fbname = "马脸将军",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =180,fbTime = 600},--祖玛教主
+	[181]= {fbid =181,fbname = "鳄鱼头领",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =181,fbTime = 600},--黄泉教主
+	[182]= {fbid =182,fbname = "死亡骑士",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =182,fbTime = 600},--牛魔王
+	[183] = {fbid = 183 ,fbname = "符文BOSS",fbDesc = "",minLevel = 1,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 183,fbTime = 3600},	--
+	[184] = {fbid = 184 ,fbname = "符文BOSS1",fbDesc = "",minLevel = 1,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 184,fbTime = 3600},	--
+	[185] = {fbid = 185 ,fbname = "符文BOSS2",fbDesc = "",minLevel = 1,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 185,fbTime = 3600},	--
+	[186] = {fbid = 186 ,fbname = "符文BOSS3",fbDesc = "",minLevel = 1,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 186,fbTime = 3600},	--
+	[187] = {fbid = 187 ,fbname = "符文BOSS4",fbDesc = "",minLevel = 1,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 187,fbTime = 3600},	--
+	[188] = {fbid = 188 ,fbname = "修真副本",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 188,fbTime = 600},	--修真副本
+	[189] = {fbid = 189 ,fbname = "坐骑副本",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 189,fbTime = 600},	--坐骑副本
+
+	[190] = {fbid = 190 ,fbname = "行会Boss(1层)",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 200,type = 0,fbtype=0,groupId = 190,fbTime = 2592000},	--行会BOSS1
+	[191] = {fbid = 191 ,fbname = "行会Boss(2层)",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 200,type = 0,fbtype=0,groupId = 191,fbTime = 2592000},	--行会BOSS2
+	[192] = {fbid = 192 ,fbname = "行会Boss(3层)",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 200,type = 0,fbtype=0,groupId = 192,fbTime = 2592000},	--行会BOSS3
+	[193] = {fbid = 193 ,fbname = "行会Boss(4层)",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 200,type = 0,fbtype=0,groupId = 193,fbTime = 2592000},	--行会BOSS4
+	[194] = {fbid = 194 ,fbname = "行会Boss(5层)",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 200,type = 0,fbtype=0,groupId = 194,fbTime = 2592000},	--行会BOSS5
+	[195] = {fbid = 195 ,fbname = "行会Boss(6层)",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 200,type = 0,fbtype=0,groupId = 195,fbTime = 2592000},	--行会BOSS6
+	[196] = {fbid = 196 ,fbname = "行会Boss(7层)",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 200,type = 0,fbtype=0,groupId = 196,fbTime = 2592000},	--行会BOSS7
+	[197] = {fbid = 197 ,fbname = "行会Boss(8层)",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 200,type = 0,fbtype=0,groupId = 197,fbTime = 2592000},	--行会BOSS8
+	[198] = {fbid = 198 ,fbname = "行会Boss(9层)",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 200,type = 0,fbtype=0,groupId = 198,fbTime = 2592000},	--行会BOSS9
+	[199] = {fbid = 199 ,fbname = "行会Boss(10层)",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 200,type = 0,fbtype=0,groupId = 199,fbTime = 2592000},	--行会BOSS10
+	[200] = {fbid = 200 ,fbname = "行会Boss(11层)",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 200,type = 0,fbtype=0,groupId = 200,fbTime = 2592000},	--行会BOSS11
+	[201] = {fbid = 201 ,fbname = "行会Boss(12层)",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 200,type = 0,fbtype=0,groupId = 201,fbTime = 2592000},	--行会BOSS12
+	[202] = {fbid = 202 ,fbname = "行会Boss(13层)",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 200,type = 0,fbtype=0,groupId = 202,fbTime = 2592000},	--行会BOSS13
+	[203] = {fbid = 203 ,fbname = "行会Boss(14层)",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 200,type = 0,fbtype=0,groupId = 203,fbTime = 2592000},	--行会BOSS14
+	[204] = {fbid = 204 ,fbname = "行会Boss(15层)",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 200,type = 0,fbtype=0,groupId = 204,fbTime = 2592000},	--行会BOSS15
+	[205] = {fbid = 205 ,fbname = "血炼副本",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 205,fbTime = 600},	--血炼副本
+	[206] = {fbid = 206 ,fbname = "1v1竞技",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =206,fbTime = 1800},--1v1竞技
+	[207] = {fbid = 207 ,fbname = "戒灵副本",fbDesc = "",minLevel = 80,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId = 207,fbTime = 600},	--戒灵副本
+
+
+
+	[208]= {fbid =208,fbname = "通天塔1层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =208,fbTime = 600},--勇闯天关1层
+	[209]= {fbid =209,fbname = "通天塔2层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =209,fbTime = 600},--勇闯天关2层
+	[210]= {fbid =210,fbname = "通天塔3层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =210,fbTime = 600},--勇闯天关3层
+	[211]= {fbid =211,fbname = "通天塔4层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =211,fbTime = 600},--勇闯天关4层
+	[212]= {fbid =212,fbname = "通天塔5层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =212,fbTime = 600},--勇闯天关5层
+	[213]= {fbid =213,fbname = "通天塔6层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =213,fbTime = 600},--勇闯天关6层
+	[214]= {fbid =214,fbname = "通天塔7层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =214,fbTime = 600},--勇闯天关7层
+	[215]= {fbid =215,fbname = "通天塔8层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =215,fbTime = 600},--勇闯天关8层
+	[216]= {fbid =216,fbname = "通天塔9层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =216,fbTime = 600},--勇闯天关9层
+	[217]= {fbid =217,fbname = "通天塔10层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =217,fbTime = 600},--勇闯天关10层
+	[218]= {fbid =218,fbname = "通天塔11层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =218,fbTime = 600},--勇闯天关11层
+	[219]= {fbid =219,fbname = "通天塔12层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =219,fbTime = 600},--勇闯天关12层
+	[220]= {fbid =220,fbname = "通天塔13层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =220,fbTime = 600},--勇闯天关13层
+	[221]= {fbid =221,fbname = "通天塔14层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =221,fbTime = 600},--勇闯天关14层
+	[222]= {fbid =222,fbname = "通天塔15层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =222,fbTime = 600},--勇闯天关15层
+	[223]= {fbid =223,fbname = "通天塔16层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =223,fbTime = 600},--勇闯天关16层
+	[224]= {fbid =224,fbname = "通天塔17层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =224,fbTime = 600},--勇闯天关17层
+	[225]= {fbid =225,fbname = "通天塔18层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =225,fbTime = 600},--勇闯天关18层
+	[226]= {fbid =226,fbname = "通天塔19层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =226,fbTime = 600},--勇闯天关19层
+	[227]= {fbid =227,fbname = "通天塔20层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =227,fbTime = 600},--勇闯天关20层
+	[228]= {fbid =228,fbname = "通天塔21层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =228,fbTime = 600},--勇闯天关21层
+	[229]= {fbid =229,fbname = "通天塔22层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =229,fbTime = 600},--勇闯天关22层
+	[230]= {fbid =230,fbname = "通天塔23层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =230,fbTime = 600},--勇闯天关23层
+	[231]= {fbid =231,fbname = "通天塔24层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =231,fbTime = 600},--勇闯天关24层
+	[232]= {fbid =232,fbname = "通天塔25层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =232,fbTime = 600},--勇闯天关25层
+	[233]= {fbid =233,fbname = "通天塔26层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =233,fbTime = 600},--勇闯天关26层
+	[234]= {fbid =234,fbname = "通天塔27层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =234,fbTime = 600},--勇闯天关27层
+	[235]= {fbid =235,fbname = "通天塔28层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =235,fbTime = 600},--勇闯天关28层
+	[236]= {fbid =236,fbname = "通天塔29层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =236,fbTime = 600},--勇闯天关29层
+	[237]= {fbid =237,fbname = "通天塔30层",fbDesc = "",minLevel = 60,minPlayCount = 1,maxPlayCount = 1,type = 0,fbtype=0,groupId =237,fbTime = 600},--勇闯天关30层
+
+
+
+}

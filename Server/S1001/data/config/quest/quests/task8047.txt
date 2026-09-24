@@ -1,0 +1,80 @@
+﻿{
+	id = 8047,
+	name = Lang.Quest.q03726,
+	parentid = 0,
+	type = 3,
+	level = 0,
+	cangiveup = true,
+	content = Lang.Quest.q03727,
+
+	prom =
+  {
+    type = 0,
+	scene = Lang.SceneName.s00049,
+	npc = Lang.EntityName.n00496,
+	},
+
+	comp =
+	{
+    type = 0,
+	scene = Lang.SceneName.s00049,
+	npc = Lang.EntityName.n00496,
+  },
+
+  target =
+  {
+    {
+       type = 0, id = 272,count = 10 , useList = true,
+       location =
+       {
+         sceneid=80,entityName=Lang.EntityName.m00272,
+         pass =
+         {
+           {sceneid=49,entityName=Lang.EntityName.n00461,actionDesc =Lang.Talk.t02879},
+         },
+        hideFastTransfer = true,
+       },
+    },
+
+    {
+       type = 0, id = 274,count = 10 ,useList = true,
+       location =
+       {
+         sceneid=81,entityName=Lang.EntityName.m00274,
+         pass =
+         {
+           {sceneid=49,entityName=Lang.EntityName.n00461,actionDesc =Lang.Talk.t02879},
+         },
+        hideFastTransfer = true,
+       },
+    },
+  },
+  --奖励列表
+	awards =
+  {
+    { type = 0, id = 1002, count = 1, group = 0, bind = true, job = 0, sex = -1},
+},
+  --任务条件表
+  conds =
+  {
+
+    { type = 0, id = 0,count = 200 },  --1级可接
+  },
+  timelimit = 0,
+  interval = 86400,
+  maxcount = 4,
+	excludetree = true,
+
+  PromMsTalks = {
+       Lang.Talk.t05583,
+  },
+  
+  CompMsTalks = {
+       Lang.Talk.t05584,
+  },
+  
+  CompMsTip = {
+       Lang.Talk.t05585,
+  }, 
+ 
+},

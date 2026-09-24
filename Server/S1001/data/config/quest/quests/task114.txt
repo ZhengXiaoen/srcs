@@ -1,0 +1,40 @@
+﻿--lua script
+{
+	id = 114,			-- 段式剑术
+	parentid = 113,type = 0,level = 38,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name114,
+	content = Lang.Quest.desc114,
+
+	prom = 290,
+	comp = 38,
+	target = {
+		{
+			type = 5, id = 0, count = 77, rewardId = 0,useList = false,
+		},
+	},
+	conds = {
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 70000000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+			{ type = 5, id = 0, count = 500000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk1141,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk1141,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip1141,
+	},
+	PassMsTip = {
+	},
+},

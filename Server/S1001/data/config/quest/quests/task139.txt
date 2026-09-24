@@ -1,0 +1,43 @@
+﻿--lua script
+{
+	id = 139,			-- 大发神威
+	parentid = 500,type = 0,level = 41,circle = 0,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 0,maxcount = 1,
+	cangiveup = false,
+	automount = true,
+	autoRun = true,
+	excludetree = true,
+	showTimerBox = false,
+	randomTarget = false,
+	name = Lang.Quest.name139,
+	content = Lang.Quest.desc139,
+
+	prom = 87,
+	comp = 87,
+	target = {
+		{
+			type = 0, id = 42, count = 5, rewardId = 0,useList = false,
+			location = {
+				sceneid = 20, x= 0,y = 0,entityName = Lang.EntityName.m42,hideFastTransfer = false,
+			},
+		},
+	},
+	conds = {
+		{ type = 0, id = 0, count = 1 },
+	},
+	awards = {
+		{
+			{ type = 2, id = 0, count = 30240000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,levelRate = 0.00, ringRate = 0.00},
+		},
+	},
+	PromMsTalks = {
+		Lang.Quest.promTlk1391,
+	},
+	CompMsTalks = {
+		Lang.Quest.compTlk1391,
+	},
+	CompMsTip = {
+		Lang.Quest.compTip1391,
+	},
+	PassMsTip = {
+	},
+},

@@ -1,0 +1,56 @@
+﻿--lua script
+{
+	id = 8074,
+	parentid = 0,type = 2,level = 0,circle = 2,entrust = 0,star = 0,guideId = 0,timelimit = 0,interval = 86400,maxcount = 1,
+	cangiveup = true,
+	automount = false,
+	autoRun = false,
+	excludetree = true,
+	randomTarget = false,
+	name = Lang.Quest.q04002,
+	content = Lang.Quest.q04003,
+
+	prom = { type = 0, scene = Lang.SceneName.s00049, npc = Lang.EntityName.n00367 },
+	comp = { type = 0, scene = Lang.SceneName.s00049, npc = Lang.EntityName.n00367 },
+	target = {
+		{
+			type = 0, id = 295, count = 5, rewardId = 0,useList = true,
+			location = {
+				sceneid = 86, x= 0,y = 0,entityName = Lang.EntityName.m00295,hideFastTransfer = true,
+				pass = {
+					{ sceneid=49,entityName = Lang.EntityName.n00464, actionDesc = Lang.Talk.t02880,},
+				},
+			},
+		},
+		{
+			type = 0, id = 324, count = 1, rewardId = 0,useList = true,
+			location = {
+				sceneid = 87, x= 0,y = 0,entityName = Lang.EntityName.m00324,hideFastTransfer = true,
+				pass = {
+					{ sceneid=49,entityName = Lang.EntityName.n00464, actionDesc = Lang.Talk.t02880,},
+				},
+			},
+		},
+	},
+	conds = {
+		{ type = 7, id = 8073, count = 0 },
+	},
+	awards = {
+		{
+			{ type = 5, id = 0, count = 6000, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,},
+			{ type = 12, id = 0, count = 30, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = false,},
+			{ type = 0, id = 2285, count = 1, group = 0,strong = 0,quality = 0,job = 0,sex = -1,bind = true,},
+		},
+	},
+	PromMsTalks = {
+		Lang.Talk.t05910,
+	},
+	CompMsTalks = {
+		Lang.Talk.t05911,
+	},
+	CompMsTip = {
+		Lang.Talk.t05912,
+	},
+	PassMsTip = {
+	},
+},

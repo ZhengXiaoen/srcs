@@ -636,7 +636,7 @@ function Invoke-GameStop {
         Save-InterruptedStop $Paths $clockState
         throw '电脑时间在游戏期间发生跳变；服务器已关闭且异常记录已保留。请根据游戏日志中的最后时间手动恢复记录。'
     }
-    $nextStart = $virtualNow.AddHours(4)
+    $nextStart = $virtualNow.AddHours(2)
     if ($nextStart -le (Parse-ClockTime ([string]$clockState.sessionStart))) {
         throw '下次游戏时间不大于本次启动时间；未写入时间记录。'
     }
@@ -659,7 +659,7 @@ function Invoke-GamePreview {
     if ($null -ne $clockState -and @('preparing', 'launching', 'logic_attempted', 'running') -contains $clockState.phase) {
         Write-Host "记录中的本次启动时间：$($clockState.sessionStart)"
         Write-Host "当前电脑时间：$(Format-ClockTime (Get-Date))"
-        Write-Host '正常关服后会把停服时的游戏时间加 4 小时，作为下次启动时间。'
+        Write-Host '正常关服后会把停服时的游戏时间加 2 小时，作为下次启动时间。'
         return
     }
     if ($null -ne $clockState -and $clockState.phase -eq 'interrupted') {
@@ -788,7 +788,7 @@ function Invoke-GameRecover {
         throw '无法自动还原现实时间。请先用 Windows 校准电脑时间，再加 -ClockIsReal 恢复记录。'
     }
     $clockState.phase = 'stopped'
-    $clockState.nextStart = Format-ClockTime ($last.AddHours(4))
+    $clockState.nextStart = Format-ClockTime ($last.AddHours(2))
     $clockState.needsRestore = [bool]$canRestore
     Write-ClockState $Paths.State $clockState
     if ($canRestore) {

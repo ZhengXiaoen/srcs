@@ -192,30 +192,30 @@ try {
     Invoke-GameStop $paths
     $stoppedState = Read-ClockState $paths.State
     Assert-Equal 'stopped' $stoppedState.phase 'stopped state'
-    Assert-Equal '2026-09-26 03:30:00' $stoppedState.nextStart 'four hours across midnight'
+    Assert-Equal '2026-09-26 01:30:00' $stoppedState.nextStart 'two hours across midnight'
     Assert-Equal 1 $script:RestoreCalls 'real time restoration'
     Assert-Throws { Invoke-GameRestartDB $paths } 'DB restart requires running session'
     Invoke-GameStop $paths
-    Assert-Equal '2026-09-26 03:30:00' (Read-ClockState $paths.State).nextStart 'repeated stop'
+    Assert-Equal '2026-09-26 01:30:00' (Read-ClockState $paths.State).nextStart 'repeated stop'
 
     $script:FakeNow = Parse-ClockTime '2026-09-26 08:00:00'
     $script:FakeUptime = [UInt64]50000000
     Invoke-GameStart $paths 'RestoreReal'
-    Assert-Equal '2026-09-26 03:30:00' (Format-ClockTime $script:FakeNow) 'saved time used on restart'
+    Assert-Equal '2026-09-26 01:30:00' (Format-ClockTime $script:FakeNow) 'saved time used on restart'
     Assert-Equal '2026-09-25 10:00:00' (Format-ClockTime (Read-OpenConfig $paths.Config).OpenTime) 'open time stays fixed'
     Assert-BytesEqual $original ([IO.File]::ReadAllBytes($paths.Backup)) 'backup not overwritten'
     $script:FakeRunning = @()
     Assert-Throws { Invoke-GameStop $paths } 'vanished server cannot advance automatically'
     Assert-Equal 'interrupted' (Read-ClockState $paths.State).phase 'crashed session remains pending'
     Assert-Throws {
-        Invoke-GameRecover $paths '2026-09-26 02:00:00'
+        Invoke-GameRecover $paths '2026-09-26 01:00:00'
     } 'recovery cannot precede crashed session start'
     Invoke-GameRecover $paths '2026-09-26 05:00:00'
-    Assert-Equal '2026-09-26 09:00:00' (Read-ClockState $paths.State).nextStart 'explicit crash recovery'
+    Assert-Equal '2026-09-26 07:00:00' (Read-ClockState $paths.State).nextStart 'explicit crash recovery'
     Assert-Throws {
         Invoke-GameRecover $paths '2026-09-26 01:00:00' $true
     } 'normal stopped time cannot be overwritten'
-    Assert-Equal '2026-09-26 09:00:00' (Read-ClockState $paths.State).nextStart 'recovery keeps stopped record'
+    Assert-Equal '2026-09-26 07:00:00' (Read-ClockState $paths.State).nextStart 'recovery keeps stopped record'
 
     $restoreState = [pscustomobject]@{
         uptimeMs = '100000'
@@ -331,7 +331,7 @@ try {
     Assert-Equal '2026-09-25 10:00:00' $jumpState.nextStart 'clock jump does not invent next time'
     Assert-Equal 0 $script:FakeRunning.Count 'clock jump still closes server'
     Invoke-GameRecover $jumpPaths '2026-09-25 17:00:00'
-    Assert-Equal '2026-09-25 21:00:00' (Read-ClockState $jumpPaths.State).nextStart 'recovery uses last log time'
+    Assert-Equal '2026-09-25 19:00:00' (Read-ClockState $jumpPaths.State).nextStart 'recovery uses last log time'
 
     $preparingPaths = New-TestRoot $testRoot 'interrupted-before-clock'
     $preparing = [pscustomobject][ordered]@{

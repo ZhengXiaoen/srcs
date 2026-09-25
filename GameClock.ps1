@@ -376,6 +376,22 @@ function Get-ExpectedExecutablePath {
     throw "未知服务器进程：$Name"
 }
 
+function Test-ServerProcessStillRunning {
+    param([int]$Id, [string]$Name)
+    try {
+        $current = Get-Process -Id $Id -ErrorAction Stop
+        if ($null -eq $current) {
+            return $false
+        }
+        return [string]::Equals($current.ProcessName, $Name, [StringComparison]::OrdinalIgnoreCase)
+    } catch {
+        if ($_.FullyQualifiedErrorId -like 'NoProcessFoundForGivenId*') {
+            return $false
+        }
+        throw "无法复查进程 $Name ($Id) 是否仍在运行：$($_.Exception.Message)"
+    }
+}
+
 function Get-ServerInventory {
     param($Paths)
     $ours = @()
@@ -383,13 +399,40 @@ function Get-ServerInventory {
     foreach ($name in $script:StopNames) {
         $expected = Get-ExpectedExecutablePath $Paths $name
         foreach ($process in @(Get-Process -Name $name -ErrorAction SilentlyContinue)) {
+            $actual = $null
+            $pathFailure = 'Path 属性为空'
             try {
                 $actual = $process.Path
             } catch {
-                throw "无法确认进程 $name ($($process.Id)) 的程序路径；未操作电脑时间或进程。"
+                $pathFailure = $_.Exception.Message
             }
             if ([string]::IsNullOrWhiteSpace($actual)) {
-                throw "无法确认进程 $name ($($process.Id)) 的程序路径；未操作电脑时间或进程。"
+                $processById = $null
+                $lookupFailure = $null
+                try {
+                    $processById = Get-CimInstance -ClassName Win32_Process -Filter "ProcessId = $($process.Id)" -ErrorAction Stop
+                } catch {
+                    $lookupFailure = $_.Exception.Message
+                }
+                # An enumerated process can exit before its Path is read. A reused PID
+                # must only be ignored after a second live-process check.
+                if ($null -ne $processById -and $processById.ProcessId -eq $process.Id -and
+                    $processById.Name -ieq "$name.exe") {
+                    $actual = $processById.ExecutablePath
+                }
+                if ([string]::IsNullOrWhiteSpace($actual)) {
+                    if (-not (Test-ServerProcessStillRunning $process.Id $name)) {
+                        continue
+                    }
+                    $lookupDetail = if ($null -ne $lookupFailure) {
+                        "系统查询失败：$lookupFailure"
+                    } elseif ($null -eq $processById) {
+                        '系统查询未找到该进程'
+                    } else {
+                        '系统查询的程序路径也为空或进程身份不一致'
+                    }
+                    throw "无法确认进程 $name ($($process.Id)) 的程序路径（$pathFailure；$lookupDetail）；未操作电脑时间或进程。"
+                }
             }
             if ([string]::Equals(
                 [IO.Path]::GetFullPath($actual), [IO.Path]::GetFullPath($expected),

@@ -476,26 +476,149 @@ try {
     Assert-Equal '2026-09-26 03:30:00' $restoredState.nextStart 'manual real clock confirmation preserves next time'
     Assert-True (-not $restoredState.needsRestore) 'manual real clock confirmation clears restoration flag'
 
+    $ownLogicPath = [IO.Path]::Combine($paths.Root, 'Server', 'S1001', 'x64', 'LogicServerCQ64_R.exe')
+    $foreignLogicPath = 'C:\OtherServer\LogicServerCQ64_R.exe'
     $script:FakeProcessList = @(
         [pscustomobject]@{
-            Path = [IO.Path]::Combine($paths.Root, 'Server', 'S1001', 'x64', 'LogicServerCQ64_R.exe')
+            Path = $ownLogicPath
             ProcessName = 'LogicServerCQ64_R'
             Id = 101
         },
         [pscustomobject]@{
-            Path = 'C:\OtherServer\LogicServerCQ64_R.exe'
+            Path = $foreignLogicPath
             ProcessName = 'LogicServerCQ64_R'
             Id = 102
         }
     )
+    $script:FakeCimProcessList = @()
+    $script:FakeExitedIds = @()
+    $script:FakeProcessByIdOverrides = @{}
+    $script:FakeCimFails = $false
     function Get-Process {
         [CmdletBinding()]
         param([string]$Name, [int]$Id)
-        $script:FakeProcessList | Where-Object { $_.ProcessName -eq $Name }
+        if ($PSBoundParameters.ContainsKey('Id')) {
+            if ($script:FakeProcessByIdOverrides.ContainsKey($Id)) {
+                return $script:FakeProcessByIdOverrides[$Id]
+            }
+            $script:FakeProcessList | Where-Object {
+                $_.Id -eq $Id -and $script:FakeExitedIds -notcontains $_.Id
+            }
+        } else {
+            $script:FakeProcessList | Where-Object { $_.ProcessName -eq $Name }
+        }
+    }
+    function Get-CimInstance {
+        [CmdletBinding()]
+        param([string]$ClassName, [string]$Filter)
+        if ($script:FakeCimFails) {
+            throw 'simulated CIM access failure'
+        }
+        Assert-Equal 'Win32_Process' $ClassName 'CIM class for process path'
+        if ($Filter -match '^ProcessId\s*=\s*(\d+)$') {
+            $queriedId = [int]$Matches[1]
+        } else {
+            throw "CIM query did not specify one process ID: $Filter"
+        }
+        $script:FakeCimProcessList | Where-Object { $_.ProcessId -eq $queriedId }
     }
     $inventory = Get-ServerInventory $paths
     Assert-Equal 1 $inventory.Ours.Count 'own process identified by path'
     Assert-Equal 1 $inventory.Foreign.Count 'other installation identified by path'
+
+    $script:FakeProcessList = @(
+        [pscustomobject]@{ Path = $null; ProcessName = 'LogicServerCQ64_R'; Id = 30696 }
+    )
+    $script:FakeCimProcessList = @(
+        [pscustomobject]@{
+            ProcessId = 30696
+            Name = 'LogicServerCQ64_R.exe'
+            ExecutablePath = $ownLogicPath
+        }
+    )
+    $inventory = Get-ServerInventory $paths
+    Assert-Equal 1 $inventory.Ours.Count 'missing Get-Process path recovered from same PID'
+    Assert-Equal 0 $inventory.Foreign.Count 'recovered own process is not foreign'
+
+    $script:FakeCimProcessList[0].ExecutablePath = $foreignLogicPath
+    $inventory = Get-ServerInventory $paths
+    Assert-Equal 0 $inventory.Ours.Count 'foreign CIM path is not owned'
+    Assert-Equal 1 $inventory.Foreign.Count 'foreign CIM path remains foreign'
+
+    $script:FakeCimProcessList = @()
+    $pathFailure = $null
+    try {
+        Get-ServerInventory $paths | Out-Null
+    } catch {
+        $pathFailure = $_.Exception.Message
+    }
+    Assert-True ($pathFailure -like '*LogicServerCQ64_R (30696)*') 'CIM omission cannot hide a live server process'
+
+    $script:FakeExitedIds = @(30696)
+    $inventory = Get-ServerInventory $paths
+    Assert-Equal 0 $inventory.Ours.Count 'process that exited during enumeration is ignored'
+    Assert-Equal 0 $inventory.Foreign.Count 'exited process is not foreign'
+
+    $script:FakeProcessList = @(
+        [pscustomobject]@{ Path = $null; ProcessName = 'LogicServerCQ64_R'; Id = 30697 }
+    )
+    $script:FakeExitedIds = @()
+    $script:FakeCimProcessList = @(
+        [pscustomobject]@{
+            ProcessId = 30697
+            Name = 'LogicServerCQ64_R.exe'
+            ExecutablePath = $null
+        }
+    )
+    $pathFailure = $null
+    try {
+        Get-ServerInventory $paths | Out-Null
+    } catch {
+        $pathFailure = $_.Exception.Message
+    }
+    Assert-True ($pathFailure -like '*LogicServerCQ64_R (30697)*') 'live process without either path source still blocks operation'
+
+    $script:FakeCimProcessList[0].Name = 'UnrelatedProgram.exe'
+    $pathFailure = $null
+    try {
+        Get-ServerInventory $paths | Out-Null
+    } catch {
+        $pathFailure = $_.Exception.Message
+    }
+    Assert-True ($pathFailure -like '*LogicServerCQ64_R (30697)*') 'CIM name change alone cannot dismiss a live server'
+
+    $script:FakeProcessByIdOverrides[30697] = [pscustomobject]@{
+        ProcessName = 'UnrelatedProgram'
+        Path = 'C:\Tools\UnrelatedProgram.exe'
+        Id = 30697
+    }
+    $inventory = Get-ServerInventory $paths
+    Assert-Equal 0 $inventory.Ours.Count 'reused PID with another process name is ignored'
+    Assert-Equal 0 $inventory.Foreign.Count 'reused PID is not treated as foreign server'
+    $script:FakeProcessByIdOverrides = @{}
+
+    $throwingPath = [pscustomobject]@{ ProcessName = 'LogicServerCQ64_R'; Id = 30698 }
+    $throwingPath | Add-Member -MemberType ScriptProperty -Name Path -Value { throw 'simulated Path access failure' }
+    $script:FakeProcessList = @($throwingPath)
+    $script:FakeCimProcessList = @(
+        [pscustomobject]@{
+            ProcessId = 30698
+            Name = 'LogicServerCQ64_R.exe'
+            ExecutablePath = $ownLogicPath
+        }
+    )
+    $inventory = Get-ServerInventory $paths
+    Assert-Equal 1 $inventory.Ours.Count 'Path getter failure recovered from same PID'
+
+    $script:FakeCimFails = $true
+    $queryFailure = $null
+    try {
+        Get-ServerInventory $paths | Out-Null
+    } catch {
+        $queryFailure = $_.Exception.Message
+    }
+    Assert-True ($queryFailure -like '*simulated CIM access failure*') 'failed fallback query still blocks operation'
+    $script:FakeCimFails = $false
 
     Write-Host 'GameClock tests passed (clock and process operations were simulated).'
 } finally {

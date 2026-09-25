@@ -4,6 +4,9 @@
 !/.gitattributes
 !/GameClock.ps1
 !/GameClock.Tests.ps1
+!/Clean-TestData.ps1
+!/5.一键清理测试数据.bat
+!/清理数据.使用说明.md
 !/GameClock.使用说明.md
 !/2.一键启动.bat
 !/2-1.DB掉线启动.bat

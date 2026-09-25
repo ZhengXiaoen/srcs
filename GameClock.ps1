@@ -542,7 +542,7 @@ function Invoke-GameStart {
                 $pending.phase = 'logic_attempted'
                 Write-ClockState $Paths.State $pending
             }
-            $null = Start-Process -FilePath $exe -WorkingDirectory $directory -WindowStyle Hidden -PassThru -ErrorAction Stop
+            $null = Start-Process -FilePath $exe -WorkingDirectory $directory -WindowStyle Normal -PassThru -ErrorAction Stop
         }
         Start-Sleep -Seconds 3
         $running = @(Get-RunningServerNames $Paths)
@@ -765,7 +765,7 @@ function Invoke-GameRestartDB {
     if (-not [IO.File]::Exists($exe)) {
         throw "找不到数据库服务器程序：$exe"
     }
-    $null = Start-Process -FilePath $exe -WorkingDirectory $directory -WindowStyle Hidden -PassThru -ErrorAction Stop
+    $null = Start-Process -FilePath $exe -WorkingDirectory $directory -WindowStyle Normal -PassThru -ErrorAction Stop
     Start-Sleep -Seconds 2
     if (@(Get-RunningServerNames $Paths) -notcontains 'DBServer64_R') {
         throw '数据库服务启动后没有保持运行。'

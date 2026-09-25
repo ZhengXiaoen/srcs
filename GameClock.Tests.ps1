@@ -46,6 +46,7 @@ $script:FailToStart = ''
 $script:FailAfterLaunch = $false
 $script:RestoreCalls = 0
 $script:FakeBootId = 'test-boot'
+$script:LaunchedWindows = @()
 
 function Get-Date {
     return $script:FakeNow
@@ -113,6 +114,7 @@ function Start-Process {
     if ($name -eq $script:FailToStart) {
         throw 'simulated launch failure'
     }
+    $script:LaunchedWindows += [pscustomobject]@{ Name = $name; WindowStyle = $WindowStyle }
     $script:FakeRunning += $name
     return [pscustomobject]@{ Name = $name }
 }
@@ -157,6 +159,9 @@ try {
     Assert-Equal '2026-09-25 10:00:00' (Format-ClockTime $fixedTenPlan.Target) 'first target ignores old hour'
 
     Invoke-GameStart $paths 'RestoreReal'
+    Assert-Equal $script:Launchers.Count $script:LaunchedWindows.Count 'all startup consoles launched'
+    Assert-Equal 0 @($script:LaunchedWindows | Where-Object { $_.WindowStyle -ne 'Normal' }).Count 'all startup consoles visible'
+    Assert-Equal 'Normal' @($script:LaunchedWindows | Where-Object { $_.Name -eq 'LogicServerCQ64_R' })[0].WindowStyle 'Lua server console visible'
     $runningState = Read-ClockState $paths.State
     Assert-Equal 'running' $runningState.phase 'running state'
     Assert-Equal '2026-09-25 10:00:00' $runningState.openTime 'open time'
@@ -180,6 +185,7 @@ try {
     Assert-Throws { Invoke-GameRestartDB $paths } 'DB restart rejects shifted clock'
     $script:FakeNow = Parse-ClockTime '2026-09-25 10:00:00'
     Invoke-GameRestartDB $paths
+    Assert-Equal 'Normal' $script:LaunchedWindows[-1].WindowStyle 'restarted database console visible'
     Assert-Equal 1 @($script:FakeRunning | Where-Object { $_ -eq 'DBServer64_R' }).Count 'DB service restarts once'
     Assert-Equal 'running' (Read-ClockState $paths.State).phase 'DB restart keeps time state'
 

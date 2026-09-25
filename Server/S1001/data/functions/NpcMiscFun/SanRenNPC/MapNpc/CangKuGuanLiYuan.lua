@@ -1,4 +1,5 @@
 ﻿--仓库管理员
+--#include "data\config\item\BagConfig.lua" once
 
 local t = {}
 
@@ -49,6 +50,12 @@ t.main = function(sysarg)
 ]];
 	end
 
+	local current = Item.getBagItemCount(sysarg) + Item.getBagEmptyGridCount(sysarg)
+	if current >= 72 and current < BagConfig.max then
+		local count = math.min(8, BagConfig.max - current)
+		local price = count * BagConfig.growPrice.default[2]
+		echo = echo .. string.format("\n<#BL扩容背包%d格/@expandBag|消耗%d元宝，当前%d/%d格>", count, price, current, BagConfig.max)
+	end
 	return echo;
 end
 
@@ -89,6 +96,33 @@ t.onYinCangRW = function(sysarg,idx)
 --		System.broadcastTipmsg(string.format("<%s>帮助<仓库管理员>获得<%s>金币任务奖励.", Actor.getName(sysarg), 1000008), ttChatWindow);
 		return t.main(sysarg);
 	end
+end
+
+t.expandBag = function(sysarg)
+	local current = Item.getBagItemCount(sysarg) + Item.getBagEmptyGridCount(sysarg)
+	if current < 72 then
+		Actor.sendTipmsg(sysarg, "请先通过原有方式开启背包至72格", 4)
+		return t.main(sysarg)
+	end
+	if current >= BagConfig.max then
+		Actor.sendTipmsg(sysarg, "背包已达到256格上限", 4)
+		return t.main(sysarg)
+	end
+
+	local count = math.min(8, BagConfig.max - current)
+	local price = count * BagConfig.growPrice.default[2]
+	if Actor.getMoneyCount(sysarg, 3) < price or
+		not Actor.changeMoney(sysarg, 3, -price, GameLog.clStoreBuyMoney, "背包扩容") then
+		Actor.sendTipmsg(sysarg, string.format("扩容需要%d元宝", price), 4)
+		return t.main(sysarg)
+	end
+	if not Actor.enlargeBag(sysarg, count) then
+		Actor.changeMoney(sysarg, 3, price, GameLog.clStoreBuyMoney, "背包扩容失败退款")
+		Actor.sendTipmsg(sysarg, "背包扩容失败，元宝已退回", 4)
+		return t.main(sysarg)
+	end
+	Actor.sendTipmsg(sysarg, string.format("背包已扩容至%d格", current + count), 4)
+	return t.main(sysarg)
 end
 
 t.jt = function(sysarg,idx)

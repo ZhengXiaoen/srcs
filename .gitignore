@@ -1,7 +1,14 @@
-# This repository tracks core server Lua and its static text dependencies only.
+# Track core server Lua, static text dependencies, and game clock scripts.
 /*
 !/.gitignore
 !/.gitattributes
+!/GameClock.ps1
+!/GameClock.Tests.ps1
+!/GameClock.使用说明.md
+!/2.一键启动.bat
+!/2-1.DB掉线启动.bat
+!/3.一键停止.bat
+!/4.查看游戏时间.bat
 !/GIT使用说明.md
 !/目录索引.md
 !/代码索引.md

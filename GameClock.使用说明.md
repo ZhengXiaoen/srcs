@@ -2,8 +2,8 @@
 
 日常使用以下入口：
 
-1. 双击 2.一键启动.bat。首次启动把电脑时间和 Server/S1001/LogicServer.txt 的开服时间设为启动当天 10:00；以后使用你手动填写的 `nextStart`。需要同意 Windows 的管理员权限提示。启动后各服务器窗口会显示出来，可查看逻辑服载入 Lua 时的输出。
-2. 游玩结束后双击 3.一键停止.bat。脚本关闭游戏服务器、记录最后游戏时间，并恢复电脑的现实时间。它不自动决定下次启动时间。
+1. 双击 2.一键启动.bat。首次启动把电脑时间和 Server/S1001/LogicServer.txt 的开服时间设为启动当天 10:00；以后使用时间记录中的 `nextStart`，默认从上次停止的游戏时间继续。需要同意 Windows 的管理员权限提示。启动后各服务器窗口会显示出来，可查看逻辑服载入 Lua 时的输出。
+2. 游玩结束后双击 3.一键停止.bat。脚本关闭游戏服务器、记录最后游戏时间，并恢复电脑的现实时间。下次启动时间默认等于这次停止的游戏时间，不会自动推进。
 3. 双击 4.查看游戏时间.bat 可只读查看当前记录。
 4. 游戏运行时如果只有数据库服务掉线，双击 2-1.DB掉线启动.bat。脚本会检查逻辑服和时间记录，不会重复启动已经运行的数据库服务。
 
@@ -13,7 +13,7 @@
 
 ## 手动填写下次时间
 
-正常关服后，`GameClock.state.json` 会写入 `lastStopGameTime`（最后游戏时间），并把 `nextStart` 留为 `null`。确认服务器已关闭、电脑时间已恢复后，先复制这个文件留作备份，再只把 `nextStart` 改为你希望下次启动使用的时间，格式为 `yyyy-MM-dd HH:mm:ss`。填写的时间不能早于 `lastStopGameTime`；如果不想额外推进，可以填成相同时间。未填写时启动脚本会拒绝启动。
+正常关服后，`GameClock.state.json` 会写入 `lastStopGameTime`（最后游戏时间），并默认把 `nextStart` 设为相同时间。下次启动会从这个游戏时间继续，不会自动推进。如果希望额外推进，确认服务器已关闭、电脑时间已恢复后，先复制这个文件留作备份，再只把 `nextStart` 改为你希望下次启动使用的时间，格式为 `yyyy-MM-dd HH:mm:ss`。填写的时间不能早于 `lastStopGameTime`。
 
 不要修改 `Server/S1001/LogicServer.txt` 中的 `ServerOpenTime`，也不要修改时间记录中的 `openTime`、`configHash` 或 `lastStopGameTime`。
 
@@ -25,4 +25,4 @@
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File "D:\SRCS\GameClock.ps1" -Action Recover -LastGameTime "2026-09-25 18:30:00"
 ```
 
-把示例时间换成日志中的实际时间。恢复脚本只会把它保存为 `lastStopGameTime`，并把 `nextStart` 留空，等待你按上节手动填写。如果电脑在游戏期间重启或脚本提示无法自动还原现实时间，先在 Windows 设置中校准电脑时间，再在上述命令末尾加 `-ClockIsReal`。如果停服记录已保存、但电脑时间尚未恢复，校准后仅运行 `-Action Recover -ClockIsReal`。时间记录和原始配置备份都应保留。
+把示例时间换成日志中的实际时间。恢复脚本会把它保存为 `lastStopGameTime`，并默认把 `nextStart` 设为相同时间；需要额外推进时，可按上节手动修改。如果电脑在游戏期间重启或脚本提示无法自动还原现实时间，先在 Windows 设置中校准电脑时间，再在上述命令末尾加 `-ClockIsReal`。如果停服记录已保存、但电脑时间尚未恢复，校准后仅运行 `-Action Recover -ClockIsReal`。时间记录和原始配置备份都应保留。

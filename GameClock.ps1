@@ -661,16 +661,20 @@ function Invoke-GameStop {
         return
     }
     if ($null -ne $clockState -and $clockState.phase -eq 'stopped' -and $running.Count -eq 0) {
+        $stateChanged = $false
         if ($clockState.needsRestore) {
             Restore-RealClock $clockState $Paths
             $clockState.needsRestore = $false
-            Write-ClockState $Paths.State $clockState
+            $stateChanged = $true
         }
         if ([string]::IsNullOrWhiteSpace([string]$clockState.nextStart)) {
-            Write-Host "服务器已关闭；最后游戏时间为 $($clockState.lastStopGameTime)。请手动填写 GameClock.state.json 的 nextStart。"
-        } else {
-            Write-Host "服务器已关闭；下次游戏时间仍为 $($clockState.nextStart)。"
+            $clockState.nextStart = [string]$clockState.lastStopGameTime
+            $stateChanged = $true
         }
+        if ($stateChanged) {
+            Write-ClockState $Paths.State $clockState
+        }
+        Write-Host "服务器已关闭；下次游戏时间为 $($clockState.nextStart)。"
         return
     }
     if ($null -ne $clockState -and $clockState.phase -eq 'interrupted' -and $running.Count -eq 0) {
@@ -736,8 +740,9 @@ function Invoke-GameStop {
     }
     $clockState.schema = 4
     $clockState.phase = 'stopped'
-    $clockState.nextStart = $null
-    $clockState | Add-Member -NotePropertyName lastStopGameTime -NotePropertyValue (Format-ClockTime $lastGameTime) -Force
+    $lastGameStamp = Format-ClockTime $lastGameTime
+    $clockState.nextStart = $lastGameStamp
+    $clockState | Add-Member -NotePropertyName lastStopGameTime -NotePropertyValue $lastGameStamp -Force
     $clockState.needsRestore = ($clockState.mode -eq 'RestoreReal')
     Write-ClockState $Paths.State $clockState
     if ($clockState.needsRestore) {
@@ -745,7 +750,7 @@ function Invoke-GameStop {
         $clockState.needsRestore = $false
         Write-ClockState $Paths.State $clockState
     }
-    Write-Host "服务器已关闭；最后游戏时间：$(Format-ClockTime $lastGameTime)。请手动填写 GameClock.state.json 的 nextStart。"
+    Write-Host "服务器已关闭；最后游戏时间：$lastGameStamp。下次默认从这个时间继续，可手动修改 nextStart。"
 }
 
 function Invoke-GamePreview {
@@ -755,7 +760,7 @@ function Invoke-GamePreview {
     if ($null -ne $clockState -and @('preparing', 'launching', 'logic_attempted', 'running') -contains $clockState.phase) {
         Write-Host "记录中的本次启动时间：$($clockState.sessionStart)"
         Write-Host "当前电脑时间：$(Format-ClockTime (Get-Date))"
-        Write-Host '正常关服后只保存最后游戏时间；请在关服后手动填写 nextStart。'
+        Write-Host '正常关服后，nextStart 默认等于最后游戏时间；可在关服后手动修改。'
         return
     }
     if ($null -ne $clockState -and $clockState.phase -eq 'interrupted') {
@@ -771,7 +776,7 @@ function Invoke-GamePreview {
     }
     if ($null -ne $clockState -and $clockState.phase -eq 'stopped' -and
         [string]::IsNullOrWhiteSpace([string]$clockState.nextStart)) {
-        Write-Host "最后游戏时间：$($clockState.lastStopGameTime)。请在 GameClock.state.json 中手动填写 nextStart。"
+        Write-Host "最后游戏时间：$($clockState.lastStopGameTime)。旧记录的 nextStart 尚为空，运行“3.一键停止.bat”可补写默认值。"
         return
     }
     $plan = Get-StartPlan $config $clockState (Get-Date)
@@ -831,17 +836,15 @@ function Invoke-GameRecover {
         }
         if ($RealClockConfirmed) {
             $clockState.needsRestore = $false
-            Write-ClockState $Paths.State $clockState
         } else {
             Restore-RealClock $clockState $Paths
             $clockState.needsRestore = $false
-            Write-ClockState $Paths.State $clockState
         }
         if ([string]::IsNullOrWhiteSpace([string]$clockState.nextStart)) {
-            Write-Host '电脑时间恢复状态已处理；请手动填写 GameClock.state.json 的 nextStart。'
-        } else {
-            Write-Host "电脑时间恢复状态已处理；下次游戏时间仍为 $($clockState.nextStart)。"
+            $clockState.nextStart = [string]$clockState.lastStopGameTime
         }
+        Write-ClockState $Paths.State $clockState
+        Write-Host "电脑时间恢复状态已处理；下次游戏时间为 $($clockState.nextStart)。"
         return
     }
     if (@('preparing', 'launching') -contains $clockState.phase) {
@@ -894,8 +897,9 @@ function Invoke-GameRecover {
     }
     $clockState.phase = 'stopped'
     $clockState.schema = 4
-    $clockState.nextStart = $null
-    $clockState | Add-Member -NotePropertyName lastStopGameTime -NotePropertyValue (Format-ClockTime $last) -Force
+    $lastStamp = Format-ClockTime $last
+    $clockState.nextStart = $lastStamp
+    $clockState | Add-Member -NotePropertyName lastStopGameTime -NotePropertyValue $lastStamp -Force
     $clockState.needsRestore = [bool]$canRestore
     Write-ClockState $Paths.State $clockState
     if ($canRestore) {
@@ -903,7 +907,7 @@ function Invoke-GameRecover {
         $clockState.needsRestore = $false
         Write-ClockState $Paths.State $clockState
     }
-    Write-Host "最后游戏时间已记录为 $(Format-ClockTime $last)；请手动填写 GameClock.state.json 的 nextStart。"
+    Write-Host "最后游戏时间已记录为 $lastStamp；下次默认从这个时间继续，可手动修改 nextStart。"
 }
 
 if (-not [string]::IsNullOrEmpty($Action)) {

@@ -1,1 +1,4 @@
-start /d"D:\SRCS\Server\common\x64" DBServer64_R.exe
+@echo off
+cd /d "%~dp0"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0GameClock.ps1" -Action RestartDB
+pause

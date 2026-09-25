@@ -16,14 +16,6 @@
 !/目录索引.md
 !/代码索引.md
 !/Server/
-!/web/
-!/tools/
-
-/web/*
-!/web/GameFrame.swf
-
-/tools/*
-!/tools/patch_gameframe_bag256.py
 
 /Server/*
 !/Server/S1001/

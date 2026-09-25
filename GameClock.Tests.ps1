@@ -191,17 +191,34 @@ try {
     $script:FakeStopFails = $false
     Invoke-GameStop $paths
     $stoppedState = Read-ClockState $paths.State
+    Assert-Equal 4 $stoppedState.schema 'manual time state version'
     Assert-Equal 'stopped' $stoppedState.phase 'stopped state'
-    Assert-Equal '2026-09-26 01:30:00' $stoppedState.nextStart 'two hours across midnight'
+    Assert-True ($null -eq $stoppedState.nextStart) 'stop leaves next start for manual entry'
+    Assert-Equal '2026-09-25 23:30:00' $stoppedState.lastStopGameTime 'last game time is saved'
     Assert-Equal 1 $script:RestoreCalls 'real time restoration'
     Assert-Throws { Invoke-GameRestartDB $paths } 'DB restart requires running session'
     Invoke-GameStop $paths
-    Assert-Equal '2026-09-26 01:30:00' (Read-ClockState $paths.State).nextStart 'repeated stop'
+    Assert-True ($null -eq (Read-ClockState $paths.State).nextStart) 'repeated stop leaves manual entry pending'
+    Assert-Throws {
+        Get-StartPlan (Read-OpenConfig $paths.Config) $stoppedState $script:FakeNow
+    } 'start waits for manual entry'
+    $stoppedState.nextStart = '2026-09-25 23:29:59'
+    Assert-Throws {
+        Get-StartPlan (Read-OpenConfig $paths.Config) $stoppedState $script:FakeNow
+    } 'manual edit cannot go earlier than last stop'
+    $stoppedState.nextStart = '2026-09-25 23:30:00'
+    Assert-Equal '2026-09-25 23:30:00' (Format-ClockTime (Get-StartPlan (Read-OpenConfig $paths.Config) $stoppedState $script:FakeNow).Target) 'manual entry may resume at stop time'
+    $stoppedState.PSObject.Properties.Remove('lastStopGameTime')
+    Write-ClockState $paths.State $stoppedState
+    Assert-Throws { Read-ClockState $paths.State } 'manual state requires last stop lower bound'
+    $stoppedState | Add-Member -NotePropertyName lastStopGameTime -NotePropertyValue '2026-09-25 23:30:00'
+    $stoppedState.nextStart = '2026-09-26 01:30:00'
+    Write-ClockState $paths.State $stoppedState
 
     $script:FakeNow = Parse-ClockTime '2026-09-26 08:00:00'
     $script:FakeUptime = [UInt64]50000000
     Invoke-GameStart $paths 'RestoreReal'
-    Assert-Equal '2026-09-26 01:30:00' (Format-ClockTime $script:FakeNow) 'saved time used on restart'
+    Assert-Equal '2026-09-26 01:30:00' (Format-ClockTime $script:FakeNow) 'manually edited time used on restart'
     Assert-Equal '2026-09-25 10:00:00' (Format-ClockTime (Read-OpenConfig $paths.Config).OpenTime) 'open time stays fixed'
     Assert-BytesEqual $original ([IO.File]::ReadAllBytes($paths.Backup)) 'backup not overwritten'
     $script:FakeRunning = @()
@@ -211,11 +228,41 @@ try {
         Invoke-GameRecover $paths '2026-09-26 01:00:00'
     } 'recovery cannot precede crashed session start'
     Invoke-GameRecover $paths '2026-09-26 05:00:00'
-    Assert-Equal '2026-09-26 07:00:00' (Read-ClockState $paths.State).nextStart 'explicit crash recovery'
+    Assert-True ($null -eq (Read-ClockState $paths.State).nextStart) 'recovery requires manual next start'
+    Assert-Equal '2026-09-26 05:00:00' (Read-ClockState $paths.State).lastStopGameTime 'recovery saves last confirmed game time'
     Assert-Throws {
         Invoke-GameRecover $paths '2026-09-26 01:00:00' $true
     } 'normal stopped time cannot be overwritten'
-    Assert-Equal '2026-09-26 07:00:00' (Read-ClockState $paths.State).nextStart 'recovery keeps stopped record'
+    Assert-True ($null -eq (Read-ClockState $paths.State).nextStart) 'recovery keeps manual entry pending'
+
+    $secondBoundary = (Parse-ClockTime '2026-09-25 23:59:59').AddMilliseconds(999)
+    Assert-Equal '2026-09-26 00:00:00' (Format-ClockTime (Ceiling-ClockSecond $secondBoundary)) 'last game time rounds up across midnight'
+
+    $retryPaths = New-TestRoot $testRoot 'failed-restart-keeps-manual-bound'
+    Set-OpenConfig (Read-OpenConfig $retryPaths.Config) (Parse-ClockTime '2026-09-25 10:00:00') $retryPaths.Backup
+    $retryState = $stoppedState | ConvertTo-Json | ConvertFrom-Json
+    Write-ClockState $retryPaths.State $retryState
+    $script:FakeNow = Parse-ClockTime '2026-09-26 08:00:00'
+    $script:FakeUptime = [UInt64]85000000
+    $script:FakeRunning = @()
+    $script:FailToStart = 'GateServer64_R'
+    Assert-Throws { Invoke-GameStart $retryPaths 'RestoreReal' } 'failed restart rolls back'
+    $script:FailToStart = ''
+    $rolledBackState = Read-ClockState $retryPaths.State
+    Assert-Equal 4 $rolledBackState.schema 'failed restart keeps manual schema'
+    Assert-Equal '2026-09-25 23:30:00' $rolledBackState.lastStopGameTime 'failed restart keeps last stop bound'
+    Assert-Equal '2026-09-26 01:30:00' $rolledBackState.nextStart 'failed restart keeps manual time'
+
+    $driftPaths = New-TestRoot $testRoot 'small-backward-clock-drift'
+    $script:FakeNow = Parse-ClockTime '2026-09-25 08:00:00'
+    $script:FakeUptime = [UInt64]90000000
+    $script:FakeRunning = @()
+    Invoke-GameStart $driftPaths 'RestoreReal'
+    $script:FakeNow = Parse-ClockTime '2026-09-25 09:59:30'
+    $script:FakeUptime = [UInt64]90060000
+    Invoke-GameStop $driftPaths
+    Assert-Equal '2026-09-25 10:01:00' (Read-ClockState $driftPaths.State).lastStopGameTime 'small backward drift uses monotonic lower bound'
+    Assert-True ($null -eq (Read-ClockState $driftPaths.State).nextStart) 'drift stop still waits for manual time'
 
     $restoreState = [pscustomobject]@{
         uptimeMs = '100000'
@@ -331,7 +378,8 @@ try {
     Assert-Equal '2026-09-25 10:00:00' $jumpState.nextStart 'clock jump does not invent next time'
     Assert-Equal 0 $script:FakeRunning.Count 'clock jump still closes server'
     Invoke-GameRecover $jumpPaths '2026-09-25 17:00:00'
-    Assert-Equal '2026-09-25 19:00:00' (Read-ClockState $jumpPaths.State).nextStart 'recovery uses last log time'
+    Assert-True ($null -eq (Read-ClockState $jumpPaths.State).nextStart) 'clock jump recovery awaits manual entry'
+    Assert-Equal '2026-09-25 17:00:00' (Read-ClockState $jumpPaths.State).lastStopGameTime 'clock jump recovery saves last log time'
 
     $preparingPaths = New-TestRoot $testRoot 'interrupted-before-clock'
     $preparing = [pscustomobject][ordered]@{

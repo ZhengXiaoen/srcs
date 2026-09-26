@@ -269,15 +269,15 @@ function GetBrotherOnLineTimeAward(sysarg)
 	var.days.BrotherOnLineTime = var.days.BrotherOnLineTime +1
 	
 	
-	System.sendCommonLog(LogIds.tishenjieyigongxiandu,Actor.getIntProperty(sysarg,PROP_ENTITY_ID),Actor.getName(sysarg),0,Actor.getIntProperty(sysarg,PROP_BROTHER_CONTRIBUTE),Actor.getIntProperty(sysarg,PROP_BROTHER_CONTRIBUTE)+200,'','','','','','','',"领取在线奖励")
+	System.sendCommonLog(LogIds.tishenjieyigongxiandu,Actor.getIntProperty(sysarg,PROP_ENTITY_ID),Actor.getName(sysarg),0,Actor.getIntProperty(sysarg,PROP_BROTHER_CONTRIBUTE),Actor.getIntProperty(sysarg,PROP_BROTHER_CONTRIBUTE)+2000,'','','','','','','',"领取在线奖励")
 	--给奖励（我的个人贡献也写在里面）
-	Actor.AwardtBrotherIntimacy(sysarg,200)
+	Actor.AwardtBrotherIntimacy(sysarg,2000)
 	
 
-	Actor.sendTipmsg(sysarg,Actor.getName(sysarg).."玩家领取在线奖励,亲密度提升200",ttFlyTip)
+	Actor.sendTipmsg(sysarg,Actor.getName(sysarg).."玩家领取在线奖励,亲密度提升2000",ttFlyTip)
 	local pActor = System.getEntityPtrByActorID(myBrotherId)
 	if pActor~=nil then 
-		Actor.sendTipmsg(pActor,Actor.getName(sysarg).."玩家领取在线奖励,亲密度提升200",ttFlyTip)
+		Actor.sendTipmsg(pActor,Actor.getName(sysarg).."玩家领取在线奖励,亲密度提升2000",ttFlyTip)
 	end
 end
 

@@ -4,6 +4,7 @@
 --大吉大利协议派发
 handleDaJiDaLi = function (sysarg, sysid, packet)
 	--是否在开关时间内
+	if not RepairDaJiDaLiOpenDate() then return end
 	local svar = System.getStaticVar()
 	if svar.isDringDaJiDaLi ==nil or svar.isDringDaJiDaLi<1 or svar.isDringDaJiDaLi>3 then 
 		return 
@@ -1204,8 +1205,56 @@ end
 
 
 
+-- 旧存档可能在正式开服前启动了活动；按开服日修正活动日期和天数。
+function RepairDaJiDaLiOpenDate()
+	local svar = System.getStaticVar()
+	local now = System.getCurrMiniTime()
+	local openTime = System.getServerOpenTime()
+	if now < openTime then
+		if svar.isDringDaJiDaLi ~= nil then EndDaJiDaLi() end
+		return false
+	end
+	if svar.isDringDaJiDaLi == nil or svar.isDringDaJiDaLi < 1 or svar.isDringDaJiDaLi > 3 then
+		return true
+	end
+
+	local oy, om, od = System.GetSystemTimeInMiniTime(openTime)
+	local openDate = System.encodeNumTime(oy, om, od, 0, 0, 0)
+	local sy, sm, sd = svar.StartDaJiDaLiYear, svar.SpringDaJiDaLiMonth, svar.StartDaJiDaLiDay
+	local startDate = nil
+	if sy ~= nil and sm ~= nil and sd ~= nil then
+		startDate = System.encodeNumTime(sy, sm, sd, 0, 0, 0)
+	end
+	local rebased = startDate == nil or startDate < openDate
+	if rebased then
+		svar.StartDaJiDaLiYear = oy
+		svar.SpringDaJiDaLiMonth = om
+		svar.StartDaJiDaLiDay = od
+		startDate = openDate
+	end
+
+	local y, m, d = System.GetSystemTimeInMiniTime(now)
+	local today = System.encodeNumTime(y, m, d, 0, 0, 0)
+	local expectedDay = math.floor((today - startDate) / 86400) + 1
+	if expectedDay < 1 or expectedDay > 3 then
+		EndDaJiDaLi()
+	elseif rebased or expectedDay ~= svar.isDringDaJiDaLi then
+		-- 只校正活动日期和天数，保留已产生的玩家领取记录。
+		svar.isDringDaJiDaLi = expectedDay
+		System.saveStaticVar()
+		local playerList = LuaHelp.getAllActorList()
+		for _, player in ipairs(playerList or {}) do
+			local netPack = DataPack.allocPacket(player, 151, LogicCmd.miscSysEx.sub.sDaJiDaLi_isOpen)
+			DataPack.writeByte(netPack, expectedDay)
+			DataPack.flush(netPack)
+		end
+	end
+	return true
+end
+
 --开始大吉大利活动
 StartDaJiDaLi = function(nowOpenday) --开几天，当前是第几天
+	if System.getCurrMiniTime() < System.getServerOpenTime() then return end
 	--print("111111")
 	--以免活动期间挂机了，这个挺麻烦的。。
 	local svar = System.getStaticVar()
@@ -1266,6 +1315,7 @@ end
 	
 --是否是春节活动中
 handleDaJiDaLiIsOpen = function (sysarg, sysid, packet)
+	RepairDaJiDaLiOpenDate()
 	local svar = System.getStaticVar()
 
 	local netPack = DataPack.allocPacket(sysarg,151,LogicCmd.miscSysEx.sub.sDaJiDaLi_isOpen)
@@ -1294,8 +1344,10 @@ function backcmd_DaJiDaLiActs(args)
 		--local openDay = tonumber(args[5])
 		local openDay = 3
 
-		if Year~=nil and Month~=nil and Day~=nil and openDay~=nil then 
+		if Year~=nil and Month~=nil and Day~=nil and openDay~=nil then
 			local refreshTime = System.encodeNumTime(Year,Month,Day,0,0,0) --写当天的更新日期
+			local oy, om, od = System.GetSystemTimeInMiniTime(System.getServerOpenTime())
+			if refreshTime < System.encodeNumTime(oy,om,od,0,0,0) then return end
 			
 			local y,m,d,nHour,nMinute,nSecond = System.GetSystemTimeInMiniTime(System.getCurrMiniTime())	
 			local nNowDt = System.encodeNumTime(y,m,d,0,0,0)

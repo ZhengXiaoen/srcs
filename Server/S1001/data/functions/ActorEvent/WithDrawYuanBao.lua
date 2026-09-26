@@ -538,7 +538,8 @@ function GetPeyYuanBaoHandlerEx(sysarg, args)
 	--在国庆活动里面
 	local dayIndex = GetNationalIndexDay()
 	if dayIndex>=1 and dayIndex<=7 then
-		if var.days.PeyNum>=NationalDayActivityCfg.NationalDayNew[dayIndex].needYB then 
+		EnsureNationalDayRewardCycle(sysarg)
+		if var.days.PeyNum>=NationalDayActivityCfg.NationalDayNew[dayIndex].needYB then
 			if var.nationalDayInfoNew==nil then 
 				var.nationalDayInfoNew=0
 			end

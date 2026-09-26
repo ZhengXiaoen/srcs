@@ -462,7 +462,10 @@ function OnPlayerCrossDay(sysarg)
 	local svar = System.getStaticVar()
 	if svar.isDringNational ~= nil and svar.isDringNational > 0 then
 		if SentNationalDayIndex ~= nil then
-			SentNationalDayIndex(sysarg) 
+			SentNationalDayIndex(sysarg)
+		end
+		if SentNationalDayInfoNew ~= nil then
+			SentNationalDayInfoNew(sysarg)
 		end
 	end
 end

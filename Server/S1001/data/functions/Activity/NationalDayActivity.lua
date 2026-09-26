@@ -338,7 +338,7 @@ end
 
 
 --开始国庆活动
-SatrtNationalDayActivity = function(openday , nowOpenday)
+SatrtNationalDayActivity = function(openday , nowOpenday, startTime)
 	local svar = System.getStaticVar()
 	if nowOpenday == nil or nowOpenday == 0 then
 		svar.isDringNational = 1
@@ -347,16 +347,16 @@ SatrtNationalDayActivity = function(openday , nowOpenday)
 		svar.isDringNational = nowOpenday or 1
 	end
 
-	if openday ~= nil then
-		openday = tonumber(openday)
-		svar.National_openDay = openday or 8
-	end
-	if svar.National_openDay == nil or svar.National_openDay < 1 then --默认开启为8天
-		svar.National_openDay = 8
-	end
+	-- 国庆送礼只有七档奖励，每轮固定七天。
+	svar.National_openDay = #NationalDayActivityCfg.NationalDayNew
 
-	if svar.isDringNational <= 1 or svar.StartNational_Year == nil or svar.StartNational_Month == nil or svar.StartNational_Day == nil then
-		local y, m, d = System.getDate()
+	if startTime ~= nil or svar.isDringNational <= 1 or svar.StartNational_Year == nil or svar.StartNational_Month == nil or svar.StartNational_Day == nil then
+		local y, m, d
+		if startTime ~= nil then
+			y, m, d = System.GetSystemTimeInMiniTime(startTime)
+		else
+			y, m, d = System.getDate()
+		end
 		svar.StartNational_Year = y
 		svar.StartNational_Month = m
 		svar.StartNational_Day = d
@@ -383,9 +383,7 @@ EndNationalDayActivity = function()
 	svar.StartNational_Year = nil
 	svar.StartNational_Month = nil
 	svar.StartNational_Day = nil
-	if svar.National_openDay == nil or svar.National_openDay < 1 then
-		svar.National_openDay = 8
-	end
+	svar.National_openDay = #NationalDayActivityCfg.NationalDayNew
 	System.saveStaticVar()
 
 	local playerList = LuaHelp.getAllActorList()
@@ -410,6 +408,54 @@ NationalDayActivityIsOpen = function (sysarg)
 	DataPack.flush(netPack)
 end
 
+-- 按自然日推进七天一轮；停服跨过多天时仍保持原有轮次节奏。
+EnsureNationalDayActivity = function()
+	if System.getCurrMiniTime() < System.getServerOpenTime() then return 0 end
+
+	local svar = System.getStaticVar()
+	local y, m, d = System.getDate()
+	local today = System.encodeNumTime(y, m, d, 0, 0, 0)
+	local startDate
+	local hasStart = svar.StartNational_Year ~= nil and svar.StartNational_Month ~= nil and svar.StartNational_Day ~= nil
+	if hasStart then
+		startDate = System.encodeNumTime(svar.StartNational_Year, svar.StartNational_Month, svar.StartNational_Day, 0, 0, 0)
+	end
+	local resetStart = not hasStart or startDate > today or svar.isDringNational == nil or svar.isDringNational == 0
+	if resetStart then
+		startDate = today
+	end
+
+	local duration = #NationalDayActivityCfg.NationalDayNew
+	local elapsedDays = math.floor((today - startDate) / 86400)
+	local cycleStart = startDate + math.floor(elapsedDays / duration) * duration * 86400
+	local day = elapsedDays % duration + 1
+	if resetStart or svar.isDringNational < 1 or cycleStart ~= startDate then
+		SatrtNationalDayActivity(duration, day, cycleStart)
+	elseif svar.isDringNational ~= day or svar.National_openDay ~= duration then
+		svar.isDringNational = day
+		svar.National_openDay = duration
+		System.saveStaticVar()
+	end
+	return day
+end
+
+-- 领取位按活动轮次保存，避免上一轮的达标和已领取状态挡住新一轮。
+EnsureNationalDayRewardCycle = function(sysarg)
+	local svar = System.getStaticVar()
+	if svar.StartNational_Year == nil or svar.StartNational_Month == nil or svar.StartNational_Day == nil then return end
+	local cycleStart = System.encodeNumTime(svar.StartNational_Year, svar.StartNational_Month, svar.StartNational_Day, 0, 0, 0)
+	local var = Actor.getStaticVar(sysarg)
+	if var.nationalDayInfoNewCycle ~= cycleStart then
+		var.nationalDayInfoNew = 0
+		var.nationalDayInfoNewCycle = cycleStart
+		local day = svar.isDringNational
+		if day ~= nil and day >= 1 and day <= #NationalDayActivityCfg.NationalDayNew and
+			var.days ~= nil and (var.days.PeyNum or 0) >= NationalDayActivityCfg.NationalDayNew[day].needYB then
+			var.nationalDayInfoNew = System.setIntBit(var.nationalDayInfoNew, day, true)
+		end
+	end
+end
+
 --MiscsImplementEx.registerMsgHandler(LogicCmd.miscSysEx.sub.cNatDayActivity, NationalDayActivitys)
 
 
@@ -430,9 +476,10 @@ end
 --领取第几天的奖励
 function GetNationalDayAwardNew(sysarg,index)
 	local NowDayIndex = GetNationalIndexDay()
-	if NowDayIndex<0 or NowDayIndex>7 then 
-		return 
+	if NowDayIndex<1 or NowDayIndex>7 then
+		return
 	end
+	EnsureNationalDayRewardCycle(sysarg)
 	
 	if index<1 or index>7 then 
 		return 
@@ -494,6 +541,8 @@ end
 
 --请求国庆节数据
 function SentNationalDayInfoNew(sysarg)
+	GetNationalIndexDay()
+	EnsureNationalDayRewardCycle(sysarg)
 	local var = Actor.getStaticVar(sysarg)
 	local netPack = DataPack.allocPacket(sysarg,151,LogicCmd.miscSysEx.sub.sNationalDayActivityNew)
 	DataPack.writeByte(netPack,2)
@@ -509,28 +558,7 @@ end
 
 --当前的国庆节的第几天
 GetNationalIndexDay = function()
-	local svar = System.getStaticVar()
-	if svar.isDringNational == nil or svar.isDringNational == 0 then
-		return 0
-	end
-	
-	local y2, m2, d2 = System.getDate()
-	local Year = svar.StartNational_Year
-	local Month = svar.StartNational_Month
-	local Day = svar.StartNational_Day
-	if Year ~= nil and Month ~= nil and Day ~= nil then
-		local startDt = System.encodeNumTime(Year, Month, Day, 0, 0, 0)
-		local curDt = System.encodeNumTime(y2, m2, d2, 0, 0, 0)
-		local diffTime = curDt - startDt
-		if diffTime >= 0 then
-			local day = math.floor(diffTime / 86400) + 1
-			if day > (svar.National_openDay or 8) then
-				return 0
-			end
-			return day
-		end
-	end
-	return 0
+	return EnsureNationalDayActivity()
 end
 
 

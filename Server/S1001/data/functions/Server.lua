@@ -49,6 +49,7 @@ function OnStartedLogicServer()
 		DisableJingJiCompetition() -- 清理升级前已开启或已排期的竞技大赛
 		svar = System.getStaticVar()
 	end
+	EnsureNationalDayActivity() -- 启动时恢复国庆送礼的七天轮次
 
 	CheckCombineServerStatus()	
 	
@@ -282,6 +283,7 @@ function OnServerNewDayArrive()
 	svar.bpbxdRank = nil	 -- 奔跑吧兄弟活动排行榜清0
 	
 	svar.days = {}
+	EnsureNationalDayActivity() -- 跨天推进国庆送礼，七天后直接进入下一轮
 
 	--OnNationalDayServerNewDayArrive() -- 国庆活动
 	OnInjectExpRankingNewDayArrive()
@@ -363,22 +365,6 @@ function OnServerNewDayArrive()
 		end
 	end
 	
-	--国庆活动，默认8天
-	local svar = System.getStaticVar()
-	if svar.National_openDay ==nil then 
-		svar.National_openDay=8
-	end
-	if svar.isDringNational ~=nil and svar.isDringNational ~=0 then 
-		if svar.isDringNational<svar.National_openDay then 
-			svar.isDringNational = svar.isDringNational+1
-			System.saveStaticVar()
-		else --第8日自动关闭
-			--svar.isDringNational =nil 
-			--System.saveStaticVar()
-			EndNationalDayActivity()
-		end
-	end
-	
     --矿石
     local sdVar = System.getDyanmicVar()
     sdVar.Mineral = nil
@@ -427,19 +413,6 @@ function OnServerNewDayArrive()
 			StartEndMonthActivity(svar.EndMonth_openDay,1)
 		end
 	end
-	
-	--国庆活动开启
-	local y,m,d = System.getDate( 0, 0, 0 )
-	if canStartOpenActivities and svar.NAL_DAY_Year~=nil and svar.NAL_DAY_Month~=nil and svar.NAL_DAY_Day~=nil then
-		if svar.NAL_DAY_Year==y and svar.NAL_DAY_Month==m and svar.NAL_DAY_Day==d then 
-			if svar.NAL_DAY_openDay==nil then 
-				svar.NAL_DAY_openDay=8
-			end
-			SatrtNationalDayActivity(svar.NAL_DAY_openDay,1)
-		end
-	end
-	
-	
 	
 	-- 按实际活动起始日计算天数，避免跨天或时钟调整后提前一天。
 	if RepairDaJiDaLiOpenDate ~= nil then

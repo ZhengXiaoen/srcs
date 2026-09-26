@@ -316,16 +316,9 @@ function OnPlayerLogin(sysarg, isCrossDay)
 		svar = System.getStaticVar()
 	end
 
-	-- 7. 国庆日活动自启动与首日修复
-	if canStartOpenActivities and (svar.NAL_DAY_Year == nil or svar.NAL_DAY_Month == nil or svar.NAL_DAY_Day == nil) then
-		local y, m, d = System.getDate()
-		svar.NAL_DAY_Year = y
-		svar.NAL_DAY_Month = m
-		svar.NAL_DAY_Day = d
-		svar.NAL_DAY_openDay = svar.NAL_DAY_openDay or 8
-		if SatrtNationalDayActivity ~= nil then
-			SatrtNationalDayActivity(svar.NAL_DAY_openDay, 1)
-		end
+	-- 7. 国庆送礼按七天轮次自动开启并重置玩家本轮领奖状态
+	if canStartOpenActivities then
+		EnsureNationalDayActivity()
 		svar = System.getStaticVar()
 	end
 
@@ -346,26 +339,6 @@ function OnPlayerLogin(sysarg, isCrossDay)
 		end
 	end
 
-	-- 9. 国庆活动自启动与首日修复
-	local nationalIndexDay = 0
-	if GetNationalIndexDay ~= nil then
-		nationalIndexDay = GetNationalIndexDay()
-	end
-	if canStartOpenActivities and (svar.isDringNational == nil or svar.isDringNational < 1 or (svar.National_openDay ~= nil and svar.isDringNational > svar.National_openDay) or (nationalIndexDay == 0 and svar.StartNational_Year ~= nil and svar.StartNational_Month ~= nil and svar.StartNational_Day ~= nil)) then
-		svar.National_openDay = svar.National_openDay or 8
-		if SatrtNationalDayActivity ~= nil then
-			SatrtNationalDayActivity(svar.National_openDay, 1)
-		else
-			local y, m, d = System.getDate()
-			svar.StartNational_Year = y
-			svar.StartNational_Month = m
-			svar.StartNational_Day = d
-			svar.isDringNational = 1
-			System.saveStaticVar()
-		end
-		svar = System.getStaticVar()
-	end
-	
 	if type(var.zkillmon)=='number' then 
 		var.zkillmon=nil
 		var.zkillmon={}
@@ -420,6 +393,13 @@ function OnPlayerLogin(sysarg, isCrossDay)
 	
 	if var.newdays == nil then
 		var.newdays = {}
+	end
+	if canStartOpenActivities then
+		EnsureNationalDayRewardCycle(sysarg)
+		if isCrossDay == 0 then
+			SentNationalDayIndex(sysarg)
+			SentNationalDayInfoNew(sysarg)
+		end
 	end
 	
 	SynchDataWhenLoginOrCrossDay(sysarg)		
@@ -2483,25 +2463,9 @@ function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nL
 
 		-- 5. 国庆送礼
 		if NationalDayActivityCfg ~= nil and NationalDayActivityCfg.NationalDayNew ~= nil then
-			local dayIndex = 0
-			if GetNationalIndexDay ~= nil then
-				dayIndex = GetNationalIndexDay()
-			else
-				local y2, m2, d2 = System.getDate()
-				if svar.isDringNational ~= nil and svar.isDringNational > 0 and svar.StartNational_Year ~= nil and svar.StartNational_Month ~= nil and svar.StartNational_Day ~= nil then
-					local startDt = System.encodeNumTime(svar.StartNational_Year, svar.StartNational_Month, svar.StartNational_Day, 0, 0, 0)
-					local curDt = System.encodeNumTime(y2, m2, d2, 0, 0, 0)
-					local diffTime = curDt - startDt
-					if diffTime >= 0 then
-						local maxOpenDay = svar.National_openDay or 8
-						local idx = math.floor(diffTime / 86400) + 1
-						if idx >= 1 and idx <= maxOpenDay then
-							dayIndex = idx
-						end
-					end
-				end
-			end
+			local dayIndex = GetNationalIndexDay()
 			if dayIndex >= 1 and dayIndex <= 7 then
+				EnsureNationalDayRewardCycle(sysarg)
 				if var.days.PeyNum >= NationalDayActivityCfg.NationalDayNew[dayIndex].needYB then
 					if var.nationalDayInfoNew == nil then var.nationalDayInfoNew = 0 end
 					if System.getIntBit(var.nationalDayInfoNew, dayIndex) == 0 then

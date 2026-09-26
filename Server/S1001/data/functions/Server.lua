@@ -595,11 +595,8 @@ function OnActorExactNewDayArrive(sysarg)
 	--这个可以精确点的代替days
 	var.newdays = {}
 	
-	local xycmTimecfg = 5
-	if IsSpeciaTitleVip(sysarg,2) ==true then 
-		xycmTimecfg = 5+3
-	end
-	var.newdays.Guild_xycmTime =xycmTimecfg
+	var.newdays.Guild_xycmTime = GuildXiangYaoChuMo_Cfg.DailyCount
+	var.newdays.Guild_xycmSingleTask = 1
 	
 	on_spring_festival_online_cross_day(sysarg)
 	

@@ -1673,14 +1673,8 @@ taskstr=taskstr.."\\<(idecoLine9#195)>"
 				var.newdays={}	
 			end
 			
-			--行会除魔初始化
-			if var.newdays.Guild_xycmTime==nil then 
-				local xycmTimecfg = 5
-				if IsSpeciaTitleVip(sysarg,2) ==true then 
-					xycmTimecfg = 5+3
-				end
-				var.newdays.Guild_xycmTime =xycmTimecfg
-			end
+			--行会除魔每天只可领取一次
+			GuildXiangYaoChuMoRemaining(sysarg)
 				
 			if var.newdays.Guild_xycmTime ~=nil and var.newdays.Guild_xycmTime>=0 then --剩余次数不为0
 				if var.Guild_xycmFlag~=nil and var.Guild_xycmFlag==1 and var.newdays.Guild_xycmTime>0 then--没接任务
@@ -1726,6 +1720,13 @@ taskstr=taskstr.."\\<(idecoLine9#195)>"
 							end
 							taskstr = taskstr .. "<(c0xFF4ba0de)[行会]> <(c0xFFe19f21)行会除魔><(c0xFFf55c95a)(进行中)>\\<(c0xFFdce0cb)- 消灭> <"..monsterName.."/@@GetbranchAward,richangchumo><(c0xFFf55c95a)("..var.Guild_xycmKillC.."/"..monsterNum..")>"..string.format("<(x%s:%s:%s:%s)>",mapname,x,y,"").."\\"
 						end
+					end
+				end
+				if var.newdays.Guild_xycmTime > 0 and (var.Guild_xycmFlag == 1 or var.Guild_xycmFlag == 2) then
+					local cfg = GuildXiangYaoChuMo_Cfg.ForClient[var.Guild_xycmIndex or 1]
+					if cfg then
+						local flagExp, lingli = GuildXiangYaoChuMoReward(sysarg, cfg)
+						taskstr = taskstr .. string.format("<(c0xFFdce0cb)- 基础奖励> 战旗值 +%d 灵力值 +%d\\", flagExp, lingli)
 					end
 				end
 			end

@@ -700,21 +700,6 @@ function OnPlayerLogin(sysarg, isCrossDay)
 
 --    end
 
-	--白银特权补偿(,之后可以删除的)
-	local y,m,d = System.getDate( 0, 0, 0 )
-	if (m==12 and d==16 and y==2017) then 
-		if var.newdays==nil then var.newdays={} end
-		
-		if IsSpeciaTitleVip(sysarg,2)==true and var.newdays.GiveGuild_xycmTime==nil then 
-			local var = Actor.getStaticVar(sysarg)
-			if var.newdays.Guild_xycmTime ==nil then 
-				var.newdays.Guild_xycmTime=5
-			end
-			var.newdays.Guild_xycmTime =var.newdays.Guild_xycmTime+3
-			var.newdays.GiveGuild_xycmTime =1
-		end
-	end
-	
 	
 	--计算总的离线时间
 	if logoutTime~=0 then 

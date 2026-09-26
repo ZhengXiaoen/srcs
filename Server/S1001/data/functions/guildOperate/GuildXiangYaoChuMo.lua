@@ -69,16 +69,7 @@ SendGuildXiangYaoChuMoInfo = function(sysarg)
 	DataPack.writeByte(pack,0) --总的信息
 		
 	--今天剩余任务的次数
-	if var.newdays.Guild_xycmTime ==nil then 
-		local xycmTimecfg = 5
-		if IsSpeciaTitleVip(sysarg,2) ==true then 
-			xycmTimecfg = 5+3
-		end
-		var.newdays.Guild_xycmTime =xycmTimecfg
-	elseif var.newdays.Guild_xycmTime<0 then 
-		var.newdays.Guild_xycmTime=0
-	end
-	DataPack.writeByte(pack,var.newdays.Guild_xycmTime) --次数
+	DataPack.writeByte(pack,GuildXiangYaoChuMoRemaining(sysarg)) --次数
 	--print("var.newdays.Guild_xycmTime="..var.newdays.Guild_xycmTime)
 		
 	DataPack.writeByte(pack,var.Guild_xycmFlag)--任务的状态
@@ -117,23 +108,11 @@ JieShouRenWuGuildxycm = function(sysarg)
 	end
 	if var.Guild_xycmFlag~=1 then --接受任务状态
 		Actor.sendTipmsg(sysarg,"不能重复接受任务",ttFlyTip)
+		return
 	end
-	
-	if var.newdays==nil then 
-		var.newdays={}
-	end
-		
-	if var.newdays.Guild_xycmTime ==nil then 
-		local xycmTimecfg = 5
-		if IsSpeciaTitleVip(sysarg,2) ==true then 
-			xycmTimecfg = 5+3
-		end
-	
-		var.newdays.Guild_xycmTime =xycmTimecfg
-	elseif var.newdays.Guild_xycmTime<=0 then 
-		var.newdays.Guild_xycmTime=0
+	if GuildXiangYaoChuMoRemaining(sysarg) <= 0 then
 		Actor.sendTipmsg(sysarg,"今天的次数已经用完了",ttFlyTip)
-		return 
+		return
 	end
 	
 	--改变杀怪数量
@@ -149,6 +128,13 @@ end
 WanChengRenWuGuildxycm = function(sysarg,index)
 	index = tonumber(index)
 	local var = Actor.getStaticVar(sysarg)
+	if GuildXiangYaoChuMoRemaining(sysarg) <= 0 then
+		Actor.sendTipmsg(sysarg,"今天的次数已经用完了",ttFlyTip)
+		return
+	end
+	if index ~= 1 and index ~= 2 and index ~= 3 then
+		return
+	end
 	if var.Guild_xycmFlag==nil then 
 		var.Guild_xycmFlag=1 
 	end
@@ -193,13 +179,14 @@ WanChengRenWuGuildxycm = function(sysarg,index)
 		local myGuildId = Actor.getGuildId(sysarg)
 		if myGuildId ~= 0 then 
 			--Actor.sendTipmsg(sysarg,"完成任务给奖励",ttFlyTip)
-			local flagExp = cfg2[var.Guild_xycmIndex].zhanLiZhi*index --这个要记录下来，显示用的
+			local baseFlagExp, baseLingli = GuildXiangYaoChuMoReward(sysarg, cfg2[var.Guild_xycmIndex])
+			local flagExp = baseFlagExp*index --这个要记录下来，显示用的
 			Guild.setFlagExp(myGuildId,Guild.getFlagExp(myGuildId) +flagExp)  --设置行会旗帜经验
 			Actor.sendTipmsg(sysarg, string.format("<(c0xFFb90303)获得> <(c0xFF0090ff)%s%s>", flagExp, "战旗值"), 1);
 			--做记录
 			DoGuildFlagExpLog(sysarg,myGuildId,flagExp,index)
 			
-			local lingli  =cfg2[var.Guild_xycmIndex].lingLi*index
+			local lingli = baseLingli*index
 			System.sendCommonLog(LogIds.guildxycmAwrdsone,Actor.getIntProperty(sysarg,PROP_ENTITY_ID),Actor.getName(sysarg),0,Actor.getUIntProperty(sysarg, PROP_ACTOR_LINGLI_VALUE),Actor.getUIntProperty(sysarg, PROP_ACTOR_LINGLI_VALUE)+lingli,"行会除魔领取")
 			Actor.setUIntProperty(sysarg, PROP_ACTOR_LINGLI_VALUE,Actor.getUIntProperty(sysarg, PROP_ACTOR_LINGLI_VALUE)+lingli) --给灵力值
 			Actor.sendTipmsg(sysarg, string.format("<(c0xFFb90303)获得> <(c0xFF0090ff)%s%s>", lingli, "灵力值"), 1);
@@ -208,14 +195,6 @@ WanChengRenWuGuildxycm = function(sysarg,index)
 		var.Guild_xycmFlag=1  --没有接受任务
 		var.Guild_xycmIndex = 1 --index为1
 		--扣除次数
-		if var.newdays.Guild_xycmTime ==nil then 
-			local xycmTimecfg = 5
-			if IsSpeciaTitleVip(sysarg,2) ==true then 
-				xycmTimecfg = 5+3
-			end
-	
-			var.newdays.Guild_xycmTime =xycmTimecfg
-		end
 		var.newdays.Guild_xycmTime = var.newdays.Guild_xycmTime -1
 		
 		Quest_ShuaXin(sysarg)

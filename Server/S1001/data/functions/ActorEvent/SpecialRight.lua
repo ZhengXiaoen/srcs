@@ -63,22 +63,14 @@ function BuySpecialRight(sysarg, sysid,packet)
 			var.days.EDspecialR1=1
 		end		
 		System.broadcastTipmsg(string.format("%s购买了%s,每日可免费领取丰厚奖励<我也要购买/@@showWin,187>",Actor.getName(sysarg),"黄铜特权"), ttChatWindow)
-	elseif  TypeID == 2 then 
-		if isEnoughtMoney(sysarg,2)==false then 
-			return 
+	elseif  TypeID == 2 then
+		if isEnoughtMoney(sysarg,2)==false then
+			return
 		end
-		
-		---------------------白银特权增加行会除魔次数--------------------
-		if var.newdays==nil then 
-			var.newdays={}
-		end
-		
-		if var.newdays.Guild_xycmTime~=nil and var.days.EDspecialR2 ==nil and IsSpeciaTitleVip(sysarg,2) ==false then --要是行会除魔次数已经初始化了，在今天第一次开通特权，需要增加次数,续费的没有
-			var.newdays.Guild_xycmTime =var.newdays.Guild_xycmTime+3
-		end
-		---------------------白银特权增加行会除魔次数--------------------
-		
+
+		GuildXiangYaoChuMoRemaining(sysarg)
 		AddSpecialTitleTime(sysarg,2,addTimes)
+		Quest_ShuaXin(sysarg)
 		
 		local actorID = Actor.getIntProperty(sysarg, PROP_ENTITY_ID);
 		-- 不分是否首次购买了
@@ -123,25 +115,17 @@ function BuySpecialRight(sysarg, sysid,packet)
 			var.days.EDspecialR3=1
 		end
 		System.broadcastTipmsg(string.format("%s购买了%s,每日可免费领取丰厚奖励<我也要购买/@@showWin,187>",Actor.getName(sysarg),"黄金特权"), ttChatWindow)
-	elseif  TypeID == 4 then 
+	elseif  TypeID == 4 then
        
-		if isEnoughtMoney(sysarg,4) == false then 
-			return 
+		if isEnoughtMoney(sysarg,4) == false then
+			return
 		end
-		
-		---------------------白银特权增加行会除魔次数--------------------
-		if var.newdays==nil then 
-			var.newdays={}
-		end
-		
-		if var.newdays.Guild_xycmTime~=nil and var.days.EDspecialR2 ==nil and IsSpeciaTitleVip(sysarg,2) ==false then --要是行会除魔次数已经初始化了，在今天第一次开通特权，需要增加次数
-			var.newdays.Guild_xycmTime =var.newdays.Guild_xycmTime+3
-		end
-		---------------------白银特权增加行会除魔次数--------------------
-		
+
+		GuildXiangYaoChuMoRemaining(sysarg)
 		AddSpecialTitleTime(sysarg,1,addTimes)
 		AddSpecialTitleTime(sysarg,2,addTimes)
 		AddSpecialTitleTime(sysarg,3,addTimes)
+		Quest_ShuaXin(sysarg)
         --格子奖励2017.5.23
         if var.isGiveDepotGrid == nil then
              local nCount = Actor.getUserDepotGridCount(sysarg)
@@ -202,7 +186,7 @@ function BuySpecialRight(sysarg, sysid,packet)
 		end
 		
 		
-		System.broadcastTipmsg(string.format("<(n%s)>一次性购买了<全部特权/@@showWin,187>,享受了折扣价并可每日可免费领取丰厚奖励以及特权:个人副本一键通关,个人副本<3>倍领取打<8>折,杀怪经验增加<20％>,死亡掉落装备机率降低<20％>,炼狱获得经验增加<10％>,每日押镖奖励按原<4次>合并发放,行会除魔任务次数每日额外增加<3次>,享受自动回收装备功能(装备回收或随身回收处开启).<我也要购买/@@showWin,187>",Actor.getName(sysarg)), ttChatWindow)
+		System.broadcastTipmsg(string.format("<(n%s)>一次性购买了<全部特权/@@showWin,187>,享受了折扣价并可每日可免费领取丰厚奖励以及特权:个人副本一键通关,个人副本<3>倍领取打<8>折,杀怪经验增加<20％>,死亡掉落装备机率降低<20％>,炼狱获得经验增加<10％>,每日押镖奖励按原<4次>合并发放,行会除魔奖励按原<8次>合并发放,享受自动回收装备功能(装备回收或随身回收处开启).<我也要购买/@@showWin,187>",Actor.getName(sysarg)), ttChatWindow)
 		System.broadcastTipmsg(string.format("<(n%s)>玩家财大气粗一次性购买了全部特权,从此享受多项福利,荣获各种特权,从此走上人生巅峰",Actor.getName(sysarg)), ttScreenCenter)
 	else 
 		return 
@@ -298,20 +282,3 @@ end
 
 MiscsImplement.registerMsgHandler(LogicCmd.miscSys.sub.cSpecialRightInfo, GetSpecialRightInfo)
 MiscsImplement.registerMsgHandler(LogicCmd.miscSys.sub.cBuySpecialRight, BuySpecialRight)
-
-function addXiangMoTime(sysarg,name)
-	local name = tostring(name)
-	local pActor = Actor.getActorByName(name)
-	if pActor then
-		local var = Actor.getStaticVar(pActor)
-		if var.newdays.Guild_xycmTime~=nil then 
-			var.newdays.Guild_xycmTime = var.newdays.Guild_xycmTime +3
-		else 
-			var.newdays.Guild_xycmTime = 8
-		end
-		Actor.sendTipmsg(sysarg,"次数增加3次",ttFlyTip)
-	else 
-		Actor.sendTipmsg(sysarg,"没有这人",ttFlyTip)
-	end
-	
-end

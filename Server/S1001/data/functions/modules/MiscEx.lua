@@ -1069,15 +1069,37 @@ function MiscExSendRedPacket(sysarg,msgid,packet)
 end
 
 function MiscExGetSuperLuckStarInfo(sysarg,msgid,packet)
+    if SuperLuckStarDisabled then
+        local info = DataPack.allocPacket(sysarg,151,LogicCmd.miscSysEx.sub.sGetSuperLuckStarInfo)
+        DataPack.writeUInt(info,0)
+        DataPack.writeWord(info,0)
+        for i = 1,#SuperLuckStarCfg.Level do
+            DataPack.writeByte(info,0)
+            DataPack.writeByte(info,0)
+        end
+        DataPack.flush(info)
+        local log = DataPack.allocPacket(sysarg,151,LogicCmd.miscSysEx.sub.sSuperLuckStarLogInfo)
+        DataPack.writeByte(log,0)
+        DataPack.flush(log)
+        return
+    end
     HandSendSuperStarPlayerInfo(sysarg)
     HandSendSuperLuckStarLogInfo(sysarg)
 end
 
 function MiscExDrawSuperLuckStarInfo(sysarg,msgid,packet)
+    if SuperLuckStarDisabled then
+        Actor.sendTipmsg(sysarg,"超级幸运星活动已关闭",ttFlyTip)
+        local result = DataPack.allocPacket(sysarg,151,LogicCmd.miscSysEx.sub.sDrawSuperLuckStarInfo)
+        DataPack.writeByte(result,0)
+        DataPack.flush(result)
+        return
+    end
     HandSuperLuckStarLuckDraw(sysarg)
 end
 
 function MiscExGiveSuperLuckStar(sysarg,msgid,packet)
+    if SuperLuckStarDisabled then return end
     HandSuperLuckStarGive(sysarg)
 
 end

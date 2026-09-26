@@ -2322,9 +2322,6 @@ function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nL
 		var.days.PeyNum = (var.days.PeyNum or 0) + nYuanBao
 		var.lastPeyTime = nowTime
 
-		if HandSuperLuckStarPayYuanBao ~= nil then
-			HandSuperLuckStarPayYuanBao(sysarg)
-		end
 
 		local svar = System.getStaticVar()
 

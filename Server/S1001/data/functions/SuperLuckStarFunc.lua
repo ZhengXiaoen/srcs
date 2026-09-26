@@ -1,9 +1,11 @@
 --#include "data\config\SuperLuckStarCfg.lua" once
 --超级幸运星活动实现
+SuperLuckStarDisabled = true -- 永久关闭超级幸运星活动
 
 
 --发送玩家超级幸运星信息
 function HandSendSuperStarPlayerInfo(sysarg)
+    if SuperLuckStarDisabled then return end
     HandlInitSuperLuckStarInfo(sysarg)
     local var = Actor.getStaticVar(sysarg)
     local pack = DataPack.allocPacket(sysarg,151,62)
@@ -19,6 +21,7 @@ end
 --
 --初始化玩家超级幸运星信息
 function HandlInitSuperLuckStarInfo(sysarg)
+    if SuperLuckStarDisabled then return end
     local var = Actor.getStaticVar(sysarg)
     if var.superstar == nil then
         var.superstar = {}
@@ -41,6 +44,7 @@ function HandlInitSuperLuckStarInfo(sysarg)
 end
 --玩家跨天
 function HandSuperLuckStarPlayerCrossDay(sysarg)
+    if SuperLuckStarDisabled then return end
     local var = Actor.getStaticVar(sysarg)
     HandlInitSuperLuckStarInfo(sysarg)
 
@@ -61,6 +65,7 @@ end
 
 --玩家充值
 function HandSuperLuckStarPayYuanBao(sysarg)
+    if SuperLuckStarDisabled then return end
     HandlInitSuperLuckStarInfo(sysarg)
     
     local nAddValue = 0
@@ -88,6 +93,7 @@ function HandSuperLuckStarPayYuanBao(sysarg)
 end
 
 function setAAA(sysarg,name,count)
+    if SuperLuckStarDisabled then return end
 
     local pActor = Actor.getActorPtrByName(name)
     if pActor ~= nil then
@@ -99,6 +105,7 @@ function setAAA(sysarg,name,count)
     end
 end
 function setPlayLuckValue(sysarg,count)
+    if SuperLuckStarDisabled then return end
     local var = Actor.getStaticVar(sysarg)
     var.superstar.luckvalue = tonumber(count)
 end
@@ -106,6 +113,7 @@ end
  
 --发送超级幸运星抽奖日志
 function HandSendSuperLuckStarLogInfo(sysarg)
+    if SuperLuckStarDisabled then return end
     if g_SuperLuckStarLog == nil then g_SuperLuckStarLog = {} end
     local pack = DataPack.allocPacket(sysarg,151,64)
     DataPack.writeByte(pack,#g_SuperLuckStarLog)
@@ -118,6 +126,7 @@ function HandSendSuperLuckStarLogInfo(sysarg)
 end
 --增加超级幸运星抽奖日志
 function AddSuperLuckStarLog(sysarg)
+    if SuperLuckStarDisabled then return end
     if g_SuperLuckStarLog == nil then g_SuperLuckStarLog = {} end
 
     local var = Actor.getStaticVar(sysarg)
@@ -143,6 +152,7 @@ end
 
 --载入超级幸运星抽奖日志
 function LoadSuperLuckStarLog()
+    if SuperLuckStarDisabled then return end
     if g_SuperLuckStarLog == nil then g_SuperLuckStarLog = {} end
     local file = io.open("data/runtime/SuperLuckStarLog.txt", "r")
 	if not file then
@@ -166,6 +176,7 @@ end
 
 --保存超级幸运星抽奖日志
 function SaveSuperLuckStarLog()
+    if SuperLuckStarDisabled then return end
     if g_SuperLuckStarLog == nil then g_SuperLuckStarLog = {} end
     local file = io.open("data/runtime/SuperLuckStarLog.txt", "w")
 	if not file then
@@ -179,6 +190,7 @@ function SaveSuperLuckStarLog()
     file:close()
 end
 function HandSuperLuckStarGive(sysarg)
+    if SuperLuckStarDisabled then return end
     local var = Actor.getStaticVar(sysarg)
     if var.givesuperstar ~= nil then
         if Item.getBagEmptyGridCount( sysarg ) < 1 then
@@ -201,6 +213,7 @@ function HandSuperLuckStarGive(sysarg)
 end
 --抽奖
 function HandSuperLuckStarLuckDraw(sysarg)
+    if SuperLuckStarDisabled then return end
     local var = Actor.getStaticVar(sysarg)
     
     HandlInitSuperLuckStarInfo(sysarg)

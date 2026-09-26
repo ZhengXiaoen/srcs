@@ -177,7 +177,6 @@ function OnStopLogicServer()
 	 SaveYouXiTuiGuangYuanInfo()
 	 YbConsumeRanking_save()
      Pay_Rank_StopServer()
-     SaveSuperLuckStarLog() --保存超级幸运星日志文件
      
      if LuaStaticData_is_dirty then
 		save_static_data()
@@ -625,7 +624,6 @@ function OnPreReloadScript()
 	 
 	 YbConsumeRanking_save() -- 先保存，否则 @rsf 后 YbConsumeRanking 将会是空	 
 
-     SaveSuperLuckStarLog() --保存超级幸运星日志
      
      OnLuaEvent(LuaEventId.PreReloadScript)
 
@@ -639,7 +637,6 @@ function OnReloadScriptFinish()
 	load_static_data_from_file() -- 装载 LuaStaticData
 	load_dyanmic_data_from_file() -- 装载 LuaDyanmicData
 
-    LoadSuperLuckStarLog() --装载超级幸运星日志
     
 end
 

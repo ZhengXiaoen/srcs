@@ -355,8 +355,6 @@ function OnPlayerCrossDay(sysarg)
         var.platformaward[2].day = 0 
     end
 
-    --超级幸运星
-    HandSuperLuckStarPlayerCrossDay(sysarg)
     --51工资进度 跨月清零
      local nLast = Actor.getLastLogoutTime(sysarg)
      local year,month,day,nHour,nMinute,nSecond = System.GetSystemTimeInMiniTime(nLast)	

@@ -49,8 +49,6 @@ EventCallDispatcher.WithDrawYuanBaoHandler = function (sysarg, args)
 	
 	ht_OnWithDrawYuanBao(sysarg, nYuanBao)
 
-    --超级幸运星
-    HandSuperLuckStarPayYuanBao(sysarg)
      local actorID = Actor.getIntProperty(sysarg, PROP_ENTITY_ID);
     
     Pay_Rank_UpdateItem(actorID,Actor.getName(sysarg),nYuanBao)

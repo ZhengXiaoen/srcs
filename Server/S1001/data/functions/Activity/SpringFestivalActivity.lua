@@ -1,6 +1,8 @@
 --#include "data\config\activity\SpringFestivalCfg.lua" once
 
 -- 春节活动
+SpringFestivalActivityDisabled = true -- 永久关闭新春活动
+
 -- func(sysarg, packet)
 g_spring_festival_funcs = {}
 
@@ -126,7 +128,8 @@ function register_spring_festival_online_cross_day_func(func)
 end
 
 -- 是否在春节活动时间内
-function is_spring_festival_time()	
+function is_spring_festival_time()
+	if SpringFestivalActivityDisabled then return false end
 	local time = get_spring_festival_time(false)
 	if time == nil or time[1] == nil then
 		return false
@@ -150,7 +153,10 @@ end
 
 --登陆
 function on_spring_festival_player_login(sysarg, isCrossDay)
-	if not is_spring_festival_time() then return end
+	if not is_spring_festival_time() then
+		AllActivityButtonState(sysarg,84,0) -- 隐藏已有的新春活动入口
+		return
+	end
 	
 	if isCrossDay ~= 0 then isCrossDay = true
 	else isCrossDay = false end
@@ -185,7 +191,14 @@ function on_spring_festival_online_cross_day(sysarg)
 	
 end
 
-function on_spring_festival_started_logic_server()	
+function on_spring_festival_started_logic_server()
+	if SpringFestivalActivityDisabled then
+		local dvar = System.getDyanmicVar()
+		if dvar.start_spring_festival_activity == 1 then
+			end_spring_festival_activity()
+		end
+		return
+	end
 	get_spring_festival_time(false)
 	if is_spring_festival_time() then
 		start_spring_festival_activity(true)
@@ -194,7 +207,14 @@ end
 
 -- 春节活动跨天
 function on_spring_festival_new_day_arrive()
-	local y,m,d = System.getDate()		
+	if SpringFestivalActivityDisabled then
+		local dvar = System.getDyanmicVar()
+		if dvar.start_spring_festival_activity == 1 then
+			end_spring_festival_activity()
+		end
+		return
+	end
+	local y,m,d = System.getDate()
 	local _time = get_spring_festival_time(false)
 	if _time ~= nil and _time[1] ~= nil and y == _time[1] and m == _time[2] and d == _time[3] then
 		start_spring_festival_activity(false)
@@ -209,6 +229,7 @@ function on_spring_festival_new_day_arrive()
 end
 
 function start_spring_festival_activity(is_started_server)
+	if SpringFestivalActivityDisabled then return end
 	print("----春节活动开始----")
 	
 	local dvar = System.getDyanmicVar()

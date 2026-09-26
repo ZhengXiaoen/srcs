@@ -4,6 +4,10 @@
 --#include "data\config\item\RecycledItems.lua" once	--装备回收配置
 --#include "data\functions\ShieldAndTalismanRecory.lua" once
 local HuiShouData = {};
+local AutoUseFragmentOptions = {
+	[21] = {title = "宝石碎片", flag = "autoUseGemFragments", itemIds = {[537] = true, [538] = true, [539] = true}},
+	[22] = {title = "圣珠碎片", flag = "autoUseHolyPearlFragments", itemIds = {[572] = true, [573] = true, [574] = true}},
+}
 function VipRecoveryInit(sysarg)
 	local e = "<title/VIP随身回收特权>\\  <(c0xFFeabc78)点击对应的套装名按钮即可回收包裹内对应的套装.>\\\\";
 	local d = RecycledItems;
@@ -148,7 +152,7 @@ function onVipAutomaticHs(sysarg)
     end
 	local e = [[
 <title/VIP自动回收设置>
-  <(c0xFFeabc78)请选择您要自动回收的套装:>\
+  <(c0xFFeabc78)请选择要自动回收或自动使用的项目:>\
 ]];
 	local str = "  <#c0xFFFFFF00#自动回收%s/@onVipAutomaticHsEx,%s>%s ";--%s
     local n = 0
@@ -200,13 +204,24 @@ function onVipAutomaticHs(sysarg)
 			n = n + 1
 		end
 	end
-    e = e..showShieldAndTalismanAutoRecoryTips(sysarg,1)
+	e = e .. showShieldAndTalismanAutoRecoryTips(sysarg,1) .. "\\\\"
+	local var = Actor.getStaticVar(sysarg)
+	for i = 21, 22 do
+		local option = AutoUseFragmentOptions[i]
+		local status = "<未开启>"
+		if var[option.flag] == 1 then
+			status = "<(c0xFF00FF00)已开启>"
+		end
+		e = e .. string.format("  <#c0xFFFFFF00#自动使用%s/@onVipAutomaticHsEx,%s>%s ", option.title, i, status)
+	end
 	return e;
 end
 
 function onVipAutomaticHsEx(sysarg,i)
 	if not i then return; end
+	if IsSpeciaTitleVip(sysarg,3) == false then return end
 	i = tonumber(i);
+	if not i then return end
 	if i>=2 and i<=12 then 
 		local v = 117 + i;
 		if get_d_val(sysarg,v) == 1 then
@@ -227,8 +242,53 @@ function onVipAutomaticHsEx(sysarg,i)
 		else
 			var.dealAutoSell[v]=1
 		end
+	elseif AutoUseFragmentOptions[i] then
+		local var = Actor.getStaticVar(sysarg)
+		local flag = AutoUseFragmentOptions[i].flag
+		if var[flag] == 1 then
+			var[flag] = nil
+		else
+			var[flag] = 1
+		end
 	end
 	return onVipAutomaticHs(sysarg);
+end
+
+-- 沿用手动使用碎片的消耗、属性增长、排行和日志逻辑。
+function VipAutoUseFragments(sysarg)
+	if IsSpeciaTitleVip(sysarg,3) == false then return end
+	local var = Actor.getStaticVar(sysarg)
+	local selectedIds = {}
+	for i = 21, 22 do
+		local option = AutoUseFragmentOptions[i]
+		if var[option.flag] == 1 then
+			for itemId in pairs(option.itemIds) do
+				selectedIds[itemId] = true
+			end
+		end
+	end
+	if next(selectedIds) == nil then return end
+
+	local itemConfigs = {}
+	for _, config in ipairs(zJuanZhouAdd) do
+		if selectedIds[config.item_id] then
+			itemConfigs[config.item_id] = config
+		end
+	end
+
+	for index = Item.getBagItemCount(sysarg) - 1, 0, -1 do
+		local itemPtr = Item.getItemPtrByIndex(sysarg, index)
+		if itemPtr then
+			local itemId = Item.getItemId(itemPtr)
+			local config = itemConfigs[itemId]
+			if config then
+				local count = Item.getItemProperty(sysarg, itemPtr, Item.ipItemCount, 0)
+				if count and count > 0 then
+					onJuanZhouAdd(sysarg, itemId, itemPtr, config, 0, count)
+				end
+			end
+		end
+	end
 end
 
 function onVipItemHuiShouFunc(sysarg,i) --装备回收 2017/1/5 zer

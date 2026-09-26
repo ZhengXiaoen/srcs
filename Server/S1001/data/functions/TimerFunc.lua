@@ -602,6 +602,7 @@ TimerFunc[27] = function(sysarg)
     if var.autorecoyhufu ~= nil then
         onShieldAndTalismanRecory(sysarg,1,4)
     end
+	VipAutoUseFragments(sysarg)
 end
 
 --地图定时器

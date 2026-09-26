@@ -149,36 +149,54 @@ function OnPlayerLogin(sysarg, isCrossDay)
   
 	local var = Actor.getStaticVar(sysarg);
 	local svar = System.getStaticVar()
+	local serverOpenTime = System.getServerOpenTime()
+	local canStartOpenActivities = System.getCurrMiniTime() >= serverOpenTime
 
-	if svar.isDringQingDianActivity == nil or svar.isDringQingDianActivity < 1 or (svar.QingDian_openDay ~= nil and svar.isDringQingDianActivity > svar.QingDian_openDay) then
+	if canStartOpenActivities and (svar.isDringQingDianActivity == nil or svar.isDringQingDianActivity < 1 or (svar.QingDian_openDay ~= nil and svar.isDringQingDianActivity > svar.QingDian_openDay)) then
 		qdhdkq(sysarg)
 		svar = System.getStaticVar()
 	end
 
-	if svar.isDringShenMiSD == nil or svar.isDringShenMiSD < 1 or (svar.SHENMISTORE_openDay ~= nil and svar.isDringShenMiSD > svar.SHENMISTORE_openDay) then
+	if canStartOpenActivities and (svar.isDringShenMiSD == nil or svar.isDringShenMiSD < 1 or (svar.SHENMISTORE_openDay ~= nil and svar.isDringShenMiSD > svar.SHENMISTORE_openDay)) then
 		StartShenMiActivity(svar.SHENMISTORE_openDay or 3, 1)
 		svar = System.getStaticVar()
 	end
 
-	if svar.isDringSanRenHongLi == nil or svar.isDringSanRenHongLi < 1 or svar.isDringSanRenHongLi > 3 then
+	if canStartOpenActivities and (svar.isDringSanRenHongLi == nil or svar.isDringSanRenHongLi < 1 or svar.isDringSanRenHongLi > 3) then
 		srhlkq(sysarg)
 		svar = System.getStaticVar()
 	end
 
 	-- 3. 大吉大利活动自启动与首日修复
-	if svar.isDringDaJiDaLi == nil or svar.isDringDaJiDaLi < 1 or svar.isDringDaJiDaLi > 3 then
-		local y, m, d = System.getDate()
-		svar.StartDaJiDaLiYear = y
-		svar.SpringDaJiDaLiMonth = m
-		svar.StartDaJiDaLiDay = d
-		if StartDaJiDaLi ~= nil then
-			StartDaJiDaLi(1)
-		end
+	if RepairDaJiDaLiOpenDate ~= nil then
+		RepairDaJiDaLiOpenDate()
 		svar = System.getStaticVar()
+	end
+	if canStartOpenActivities and
+		(svar.isDringDaJiDaLi == nil or svar.isDringDaJiDaLi < 1 or svar.isDringDaJiDaLi > 3) and
+		(svar.StartDJDL_MiNitime == nil or svar.StartDJDL_MiNitime < serverOpenTime) then
+		local oy, om, od = System.GetSystemTimeInMiniTime(serverOpenTime)
+		local openDate = System.encodeNumTime(oy, om, od, 0, 0, 0)
+		local y, m, d = System.getDate()
+		local today = System.encodeNumTime(y, m, d, 0, 0, 0)
+		local activityDay = math.floor((today - openDate) / 86400) + 1
+		local scheduledDate = openDate
+		if svar.StartDaJiDaLiYear ~= nil and svar.SpringDaJiDaLiMonth ~= nil and svar.StartDaJiDaLiDay ~= nil then
+			scheduledDate = System.encodeNumTime(svar.StartDaJiDaLiYear, svar.SpringDaJiDaLiMonth, svar.StartDaJiDaLiDay, 0, 0, 0)
+		end
+		if activityDay >= 1 and activityDay <= 3 and scheduledDate <= openDate then
+			svar.StartDaJiDaLiYear = oy
+			svar.SpringDaJiDaLiMonth = om
+			svar.StartDaJiDaLiDay = od
+			if StartDaJiDaLi ~= nil then
+				StartDaJiDaLi(activityDay)
+			end
+			svar = System.getStaticVar()
+		end
 	end
 
 	-- 4. 周年庆典活动自启动与首日修复
-	if svar.isDringOneYearAct == nil or svar.isDringOneYearAct < 1 or (svar.StartOneYear_OpenDay ~= nil and svar.isDringOneYearAct > svar.StartOneYear_OpenDay) then
+	if canStartOpenActivities and (svar.isDringOneYearAct == nil or svar.isDringOneYearAct < 1 or (svar.StartOneYear_OpenDay ~= nil and svar.isDringOneYearAct > svar.StartOneYear_OpenDay)) then
 		local y, m, d = System.getDate()
 		svar.StartOneYear_Year = y
 		svar.StartOneYear_Month = m
@@ -191,7 +209,13 @@ function OnPlayerLogin(sysarg, isCrossDay)
 	end
 
 	-- 5. 竞技活动自启动与首日修复
-	if svar.isDringJingJi == nil or svar.isDringJingJi < 1 or (svar.JingJiOpenDay ~= nil and svar.isDringJingJi > svar.JingJiOpenDay) then
+	if JingJiCompetitionDisabled == true and DisableJingJiCompetition ~= nil then
+		DisableJingJiCompetition()
+		svar = System.getStaticVar()
+	end
+	if canStartOpenActivities and (JingJiCompetitionDisabled ~= true or svar.JingJiActivityTypes == 1) and
+		(svar.isDringJingJi == nil or svar.isDringJingJi < 1 or
+		 (svar.JingJiOpenDay ~= nil and svar.isDringJingJi > svar.JingJiOpenDay)) then
 		local y, m, d = System.getDate()
 		svar.StartJingJIYear = y
 		svar.StartJingjiMonth = m
@@ -204,7 +228,7 @@ function OnPlayerLogin(sysarg, isCrossDay)
 	end
 
 	-- 6. 月末活动自启动与首日修复
-	if EndMonthActivityDisabled ~= true and (svar.isDringEndMonth == nil or svar.isDringEndMonth < 1 or (svar.EndMonth_openDay ~= nil and svar.isDringEndMonth > svar.EndMonth_openDay)) then
+	if canStartOpenActivities and EndMonthActivityDisabled ~= true and (svar.isDringEndMonth == nil or svar.isDringEndMonth < 1 or (svar.EndMonth_openDay ~= nil and svar.isDringEndMonth > svar.EndMonth_openDay)) then
 		local y, m, d = System.getDate()
 		svar.EMActivityYear = y
 		svar.EMActivityMonth = m
@@ -221,7 +245,7 @@ function OnPlayerLogin(sysarg, isCrossDay)
 	end
 
 	-- 7. 国庆日活动自启动与首日修复
-	if svar.NAL_DAY_Year == nil or svar.NAL_DAY_Month == nil or svar.NAL_DAY_Day == nil then
+	if canStartOpenActivities and (svar.NAL_DAY_Year == nil or svar.NAL_DAY_Month == nil or svar.NAL_DAY_Day == nil) then
 		local y, m, d = System.getDate()
 		svar.NAL_DAY_Year = y
 		svar.NAL_DAY_Month = m
@@ -234,7 +258,7 @@ function OnPlayerLogin(sysarg, isCrossDay)
 	end
 
 	-- 8. 新春活动自启动与动态时间对齐
-	if SpringFestivalCfg ~= nil then
+	if canStartOpenActivities and SpringFestivalActivityDisabled ~= true and SpringFestivalCfg ~= nil then
 		if get_spring_festival_time ~= nil then
 			get_spring_festival_time(true)
 			svar = System.getStaticVar()
@@ -255,7 +279,7 @@ function OnPlayerLogin(sysarg, isCrossDay)
 	if GetNationalIndexDay ~= nil then
 		nationalIndexDay = GetNationalIndexDay()
 	end
-	if svar.isDringNational == nil or svar.isDringNational < 1 or (svar.National_openDay ~= nil and svar.isDringNational > svar.National_openDay) or (nationalIndexDay == 0 and svar.StartNational_Year ~= nil and svar.StartNational_Month ~= nil and svar.StartNational_Day ~= nil) then
+	if canStartOpenActivities and (svar.isDringNational == nil or svar.isDringNational < 1 or (svar.National_openDay ~= nil and svar.isDringNational > svar.National_openDay) or (nationalIndexDay == 0 and svar.StartNational_Year ~= nil and svar.StartNational_Month ~= nil and svar.StartNational_Day ~= nil)) then
 		svar.National_openDay = svar.National_openDay or 8
 		if SatrtNationalDayActivity ~= nil then
 			SatrtNationalDayActivity(svar.National_openDay, 1)

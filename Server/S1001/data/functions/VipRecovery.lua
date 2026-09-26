@@ -4,7 +4,7 @@
 --#include "data\config\item\RecycledItems.lua" once	--装备回收配置
 --#include "data\functions\ShieldAndTalismanRecory.lua" once
 local HuiShouData = {};
-local AutoUseFragmentOptions = {
+LocalDT.VipRecoveryAutoUseFragmentOptions = {
 	[21] = {title = "宝石碎片", flag = "autoUseGemFragments", itemIds = {[537] = true, [538] = true, [539] = true}},
 	[22] = {title = "圣珠碎片", flag = "autoUseHolyPearlFragments", itemIds = {[572] = true, [573] = true, [574] = true}},
 }
@@ -207,7 +207,7 @@ function onVipAutomaticHs(sysarg)
 	e = e .. showShieldAndTalismanAutoRecoryTips(sysarg,1) .. "\\\\"
 	local var = Actor.getStaticVar(sysarg)
 	for i = 21, 22 do
-		local option = AutoUseFragmentOptions[i]
+		local option = LocalDT.VipRecoveryAutoUseFragmentOptions[i]
 		local status = "<未开启>"
 		if var[option.flag] == 1 then
 			status = "<(c0xFF00FF00)已开启>"
@@ -242,9 +242,9 @@ function onVipAutomaticHsEx(sysarg,i)
 		else
 			var.dealAutoSell[v]=1
 		end
-	elseif AutoUseFragmentOptions[i] then
+	elseif LocalDT.VipRecoveryAutoUseFragmentOptions[i] then
 		local var = Actor.getStaticVar(sysarg)
-		local flag = AutoUseFragmentOptions[i].flag
+		local flag = LocalDT.VipRecoveryAutoUseFragmentOptions[i].flag
 		if var[flag] == 1 then
 			var[flag] = nil
 		else
@@ -260,7 +260,7 @@ function VipAutoUseFragments(sysarg)
 	local var = Actor.getStaticVar(sysarg)
 	local selectedIds = {}
 	for i = 21, 22 do
-		local option = AutoUseFragmentOptions[i]
+		local option = LocalDT.VipRecoveryAutoUseFragmentOptions[i]
 		if var[option.flag] == 1 then
 			for itemId in pairs(option.itemIds) do
 				selectedIds[itemId] = true

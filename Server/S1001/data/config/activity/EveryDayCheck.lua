@@ -7,98 +7,91 @@ EveryDayCheck =
 	-- 每月天数
 	monthDays = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 	
-	rewardList = {--要改数量，count和countOnce一起改
-		{ reward = {type = 0, id = 507, count = 1, bind = 1, countOnce = 1}},---金条
-		{ reward = {type = 0, id = 678, count = 40, bind = 1, countOnce = 40}},---副本传送卷
-		{ reward = {type = 0, id = 537, count = 1, bind = 1, countOnce = 1}},---宝石结晶
-		{ reward = {type = 0, id = 678, count = 40, bind = 1, countOnce = 40}},---副本传送卷
-		{ reward = {type = 0, id = 463, count = 1, bind = 1, countOnce = 1}},---战将附体令
-
-		{ reward = {type = 0, id = 535, count = 2, bind = 1, countOnce = 2}},---护符碎片(1000颗)
-		{ reward = {type = 0, id = 507, count = 2, bind = 1, countOnce = 2}},---金条
-		{ reward = {type = 0, id = 678, count = 40, bind = 1, countOnce = 40}},---副本传送卷
-		{ reward = {type = 0, id = 569, count = 2, bind = 1, countOnce = 2}},---护盾碎片(1000颗)
-		{ reward = {type = 0, id = 537, count = 1, bind = 1, countOnce = 50}},---宝石结晶
-
-		{ reward = {type = 0, id = 459, count = 100, bind = 1, countOnce = 100}},---星纹强化石
-		{ reward = {type = 0, id = 464, count = 50, bind = 1, countOnce = 50}},---1级羽毛
-		{ reward = {type = 0, id = 551, count = 1, bind = 1, countOnce = 1}},---战将灵力丹
-		{ reward = {type = 0, id = 507, count = 3, bind = 1, countOnce = 3}},---金条
-        { reward = {type = 0, id = 560, count = 1, bind = 1, countOnce = 1}},---天山雪莲
-
-		{ reward = {type = 0, id = 463, count = 3, bind = 1, countOnce = 3}},---战将附体令
-		{ reward = {type = 0, id = 537, count = 1, bind = 1, countOnce = 1}},---宝石结晶
-		{ reward = {type = 0, id = 678, count = 40, bind = 1, countOnce = 40}},---副本传送卷
-		{ reward = {type = 0, id = 537, count = 1, bind = 1, countOnce = 1}},---宝石结晶
-		{ reward = {type = 0, id = 507, count = 1, bind = 1, countOnce = 1}},---金条
-		{ reward = {type = 0, id = 572, count = 1, bind = 1, countOnce = 1}},---圣珠结晶
-		{ reward = {type = 0, id = 682, count = 1, bind = 1, countOnce = 1}},---复活丹
-		{ reward = {type = 0, id = 507, count = 1, bind = 1, countOnce = 1}},---金条
-		
-		{ reward = {type = 0, id = 507, count = 2, bind = 1, countOnce = 2}},---金条
-		{ reward = {type = 0, id = 464, count = 20, bind = 1, countOnce = 20}},---1级羽毛
-		{ reward = {type = 0, id = 463, count = 1, bind = 1, countOnce = 1}},---战将附体令
-		{ reward = {type = 0, id = 459, count = 20, bind = 1, countOnce = 20}},---星纹强化石
-		{ reward = {type = 0, id = 510, count = 1, bind = 1, countOnce = 1}},---赎罪药水
-		{ reward = {type = 0, id = 459, count = 100, bind = 1, countOnce = 100}},---星纹强化石
-		{ reward = {type = 0, id = 464, count = 50, bind = 1, countOnce = 50}},---1级羽毛
-		{ reward = {type = 0, id = 507, count = 1, bind = 1, countOnce = 1}},---金条
-
-
+	rewardList = { -- count and countOnce must match
+		{ reward = {type = 0, id = 538, count = 2, bind = 1, countOnce = 2}}, -- Day 1: Gem crystal (1000)
+		{ reward = {type = 0, id = 573, count = 2, bind = 1, countOnce = 2}}, -- Day 2: Holy pearl crystal (1000)
+		{ reward = {type = 0, id = 553, count = 5, bind = 1, countOnce = 5}}, -- Day 3: Warrior spirit pill (large)
+		{ reward = {type = 0, id = 509, count = 5, bind = 1, countOnce = 5}}, -- Day 4: Bound gold brick (large)
+		{ reward = {type = 0, id = 538, count = 2, bind = 1, countOnce = 2}}, -- Day 5: Gem crystal (1000)
+		{ reward = {type = 0, id = 573, count = 2, bind = 1, countOnce = 2}}, -- Day 6: Holy pearl crystal (1000)
+		{ reward = {type = 0, id = 553, count = 5, bind = 1, countOnce = 5}}, -- Day 7: Warrior spirit pill (large)
+		{ reward = {type = 0, id = 509, count = 5, bind = 1, countOnce = 5}}, -- Day 8: Bound gold brick (large)
+		{ reward = {type = 0, id = 538, count = 2, bind = 1, countOnce = 2}}, -- Day 9: Gem crystal (1000)
+		{ reward = {type = 0, id = 573, count = 2, bind = 1, countOnce = 2}}, -- Day 10: Holy pearl crystal (1000)
+		{ reward = {type = 0, id = 553, count = 5, bind = 1, countOnce = 5}}, -- Day 11: Warrior spirit pill (large)
+		{ reward = {type = 0, id = 509, count = 5, bind = 1, countOnce = 5}}, -- Day 12: Bound gold brick (large)
+		{ reward = {type = 0, id = 538, count = 2, bind = 1, countOnce = 2}}, -- Day 13: Gem crystal (1000)
+		{ reward = {type = 0, id = 573, count = 2, bind = 1, countOnce = 2}}, -- Day 14: Holy pearl crystal (1000)
+		{ reward = {type = 0, id = 553, count = 5, bind = 1, countOnce = 5}}, -- Day 15: Warrior spirit pill (large)
+		{ reward = {type = 0, id = 509, count = 5, bind = 1, countOnce = 5}}, -- Day 16: Bound gold brick (large)
+		{ reward = {type = 0, id = 538, count = 2, bind = 1, countOnce = 2}}, -- Day 17: Gem crystal (1000)
+		{ reward = {type = 0, id = 573, count = 2, bind = 1, countOnce = 2}}, -- Day 18: Holy pearl crystal (1000)
+		{ reward = {type = 0, id = 553, count = 5, bind = 1, countOnce = 5}}, -- Day 19: Warrior spirit pill (large)
+		{ reward = {type = 0, id = 509, count = 5, bind = 1, countOnce = 5}}, -- Day 20: Bound gold brick (large)
+		{ reward = {type = 0, id = 538, count = 2, bind = 1, countOnce = 2}}, -- Day 21: Gem crystal (1000)
+		{ reward = {type = 0, id = 573, count = 2, bind = 1, countOnce = 2}}, -- Day 22: Holy pearl crystal (1000)
+		{ reward = {type = 0, id = 553, count = 5, bind = 1, countOnce = 5}}, -- Day 23: Warrior spirit pill (large)
+		{ reward = {type = 0, id = 509, count = 5, bind = 1, countOnce = 5}}, -- Day 24: Bound gold brick (large)
+		{ reward = {type = 0, id = 538, count = 2, bind = 1, countOnce = 2}}, -- Day 25: Gem crystal (1000)
+		{ reward = {type = 0, id = 573, count = 2, bind = 1, countOnce = 2}}, -- Day 26: Holy pearl crystal (1000)
+		{ reward = {type = 0, id = 553, count = 5, bind = 1, countOnce = 5}}, -- Day 27: Warrior spirit pill (large)
+		{ reward = {type = 0, id = 509, count = 5, bind = 1, countOnce = 5}}, -- Day 28: Bound gold brick (large)
+		{ reward = {type = 0, id = 538, count = 2, bind = 1, countOnce = 2}}, -- Day 29: Gem crystal (1000)
+		{ reward = {type = 0, id = 573, count = 2, bind = 1, countOnce = 2}}, -- Day 30: Holy pearl crystal (1000)
+		{ reward = {type = 0, id = 553, count = 5, bind = 1, countOnce = 5}}, -- Day 31: Warrior spirit pill (large)
 	},
-	
-	-- 签到累积天数的奖励
-	AccumulatedDaysAward = 
+
+	-- Cumulative sign-in rewards
+	AccumulatedDaysAward =
 	{
-		--签到两天
 		{
 			days = 2,
-			--普通奖励
-			reward =--要改数量，count和countOnce一起改
+			reward =
 			{
-				{type = 0, id = 464, count = 100, quality = 0, strong = 0, bind = 1, countOnce = 100},--1级羽毛
-				{type = 0, id = 511, count = 1, quality = 0, strong = 0, bind = 1, countOnce = 1},--经验丹(小)X2
-				{type = 0, id = 507, count = 1, quality = 0, strong = 0, bind = 1, countOnce = 1},--金条
+				{type = 0, id = 464, count = 400, quality = 0, strong = 0, bind = 1, countOnce = 400}, -- Level 1 feather
+				{type = 0, id = 459, count = 400, quality = 0, strong = 0, bind = 1, countOnce = 400}, -- Star pattern enhancement stone
+				{type = 0, id = 509, count = 40, quality = 0, strong = 0, bind = 1, countOnce = 40}, -- Bound gold brick (large)
+				{type = 0, id = 553, count = 10, quality = 0, strong = 0, bind = 1, countOnce = 10}, -- Warrior spirit pill (large)
 			},
 		},
-		--签到5天
 		{
 			days = 5,
-			reward = --要改数量，count和countOnce一起改
+			reward =
 			{
-				{type = 0, id = 464, count = 200, quality = 0, strong = 0, bind = 1, countOnce = 200},--1级羽毛
-				{type = 0, id = 511, count = 1, quality = 0, strong = 0, bind = 1 , countOnce = 1 },--经验丹(中)X2
-				{type = 0, id = 507, count = 1,  quality = 0, strong = 0, bind = 1, countOnce = 1 },--金条
+				{type = 0, id = 464, count = 1000, quality = 0, strong = 0, bind = 1, countOnce = 1000}, -- Level 1 feather
+				{type = 0, id = 459, count = 1000, quality = 0, strong = 0, bind = 1, countOnce = 1000}, -- Star pattern enhancement stone
+				{type = 0, id = 509, count = 100, quality = 0, strong = 0, bind = 1, countOnce = 100}, -- Bound gold brick (large)
+				{type = 0, id = 553, count = 25, quality = 0, strong = 0, bind = 1, countOnce = 25}, -- Warrior spirit pill (large)
 			},
 		},
-		--签到10天
 		{
 			days = 10,
-			reward = --要改数量，count和countOnce一起改
+			reward =
 			{
-			    {type = 0, id = 459, count = 1000, quality = 0, strong = 0, bind = 1, countOnce = 1000},--星纹强化石
-				{type = 0, id = 511, count = 1, quality = 0, strong = 0, bind = 1, countOnce = 1},--经验丹(大)X2
-				{type = 0, id = 507, count = 1,  quality = 0, strong = 0, bind = 1, countOnce = 1},--金条
+				{type = 0, id = 464, count = 2000, quality = 0, strong = 0, bind = 1, countOnce = 2000}, -- Level 1 feather
+				{type = 0, id = 459, count = 2000, quality = 0, strong = 0, bind = 1, countOnce = 2000}, -- Star pattern enhancement stone
+				{type = 0, id = 509, count = 200, quality = 0, strong = 0, bind = 1, countOnce = 200}, -- Bound gold brick (large)
+				{type = 0, id = 553, count = 50, quality = 0, strong = 0, bind = 1, countOnce = 50}, -- Warrior spirit pill (large)
 			},
 		},
-		--签到17天
 		{
 			days = 17,
-			reward = --要改数量，count和countOnce一起改
+			reward =
 			{
-				{type = 0, id = 459, count = 1500, quality = 0, strong = 0, bind = 1, countOnce = 1500},--星纹强化石
-				{type = 0, id = 511, count = 1, quality = 0, strong = 0, bind = 1, countOnce = 1},--经验丹(大)X4
-				{type = 0, id = 507, count = 1,  quality = 0, strong = 0, bind = 1, countOnce = 1},--金条
+				{type = 0, id = 464, count = 3400, quality = 0, strong = 0, bind = 1, countOnce = 3400}, -- Level 1 feather
+				{type = 0, id = 459, count = 3400, quality = 0, strong = 0, bind = 1, countOnce = 3400}, -- Star pattern enhancement stone
+				{type = 0, id = 509, count = 340, quality = 0, strong = 0, bind = 1, countOnce = 340}, -- Bound gold brick (large)
+				{type = 0, id = 553, count = 85, quality = 0, strong = 0, bind = 1, countOnce = 85}, -- Warrior spirit pill (large)
 			},
 		},
-		--签到26天
 		{
 			days = 26,
-			reward = --要改数量，count和countOnce一起改
+			reward =
 			{
-				{type = 0, id = 459, count = 3000, quality = 0, strong = 0, bind = 1, countOnce = 3000},--星纹强化石
-				{type = 0, id = 511, count = 1, quality = 0, strong = 0, bind = 1, countOnce = 1},--经验丹(大)X5
-				{type = 0, id = 507, count = 1,  quality = 0, strong = 0, bind = 1, countOnce = 1},--金条
+				{type = 0, id = 464, count = 5200, quality = 0, strong = 0, bind = 1, countOnce = 5200}, -- Level 1 feather
+				{type = 0, id = 459, count = 5200, quality = 0, strong = 0, bind = 1, countOnce = 5200}, -- Star pattern enhancement stone
+				{type = 0, id = 509, count = 520, quality = 0, strong = 0, bind = 1, countOnce = 520}, -- Bound gold brick (large)
+				{type = 0, id = 553, count = 130, quality = 0, strong = 0, bind = 1, countOnce = 130}, -- Warrior spirit pill (large)
 			},
 		},
 	}

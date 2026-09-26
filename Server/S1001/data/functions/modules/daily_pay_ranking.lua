@@ -56,7 +56,8 @@ function daily_pay_ranking_isDringSanRenHongLi(svar)
 end
 
 -- 是否是在竞技活动中
-function daily_pay_ranking_isDringJingjiActivity(svar)	
+function daily_pay_ranking_isDringJingjiActivity(svar)
+	if JingJiCompetitionDisabled == true then return false end
 	if svar.JingJiOpenDay==nil then return false end
 	
 	if svar.isDringJingJi ==nil or svar.isDringJingJi<1 or svar.isDringJingJi>svar.JingJiOpenDay then 
@@ -76,6 +77,7 @@ end
 -- openNDay: 活动共开几天
 -- actType: 0散人红利；1竞技大赛；
 function daily_pay_ranking_start(curDay, openNDay, actType)
+	if JingJiCompetitionDisabled == true and actType == 1 then return end
 	if curDay == nil or openNDay == nil or curDay < 1 or curDay > openNDay then
 		print("error, daily_pay_ranking_start args error")
 		return -- 活动已经结束
@@ -250,6 +252,9 @@ function daily_pay_ranking_OnActorPayMoney(sysarg, args)
 end
 
 function daily_pay_ranking_ScriptRankingNewDayArrive()
+	if DisableJingJiCompetition ~= nil then
+		DisableJingJiCompetition()
+	end
 	local svar = System.getStaticVar()
 	local day_data = svar.daily_pay_ranking_day_data
 	if day_data == nil then return end -- 活动还没有开始

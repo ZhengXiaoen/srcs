@@ -98,6 +98,19 @@
 --#include "data\functions\IdentifyCodeFunc.lua" once
 --#include "data\config\NpcMiscCfg\EquipRecyclingCfg.lua" once
 
+-- 清除旧神戒宝盒误写到可叠加戒指材料上的随机属性。
+local function NormalizeSkyRingMaterialStacks(sysarg)
+	for index = 0, Item.getBagItemCount(sysarg) - 1 do
+		local itemPtr = Item.getItemPtrByIndex(sysarg, index)
+		if itemPtr then
+			local itemId = Item.getItemId(itemPtr)
+			if itemId >= 7697 and itemId <= 7700 and Item.getItemProperty(sysarg, itemPtr, Item.ipTaoStrong, 0) > 0 then
+				Item.setItemProperty(sysarg, itemPtr, Item.ipTaoStrong, 0)
+			end
+		end
+	end
+end
+
 --//登录游戏触发
 function OnPlayerLogin(sysarg, isCrossDay)	
 
@@ -105,6 +118,7 @@ function OnPlayerLogin(sysarg, isCrossDay)
 	--TransformZengZhiKaData(sysarg)
 	
 	local actorName = Actor.getName(sysarg)
+	NormalizeSkyRingMaterialStacks(sysarg)
 	
 	-- 变态版一上线就是VIP5，开服清档后关闭
 	-- if Actor.getIntProperty(sysarg, PROP_ACTOR_VIP_GRADE) < 5 then

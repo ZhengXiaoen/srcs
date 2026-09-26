@@ -1854,7 +1854,11 @@ function onItemBoxFor2017(sysarg,itemidx,itemPtr,ItemTable,delType,itemUserNum)
 			if Actor.removeItemByPtr(sysarg,itemPtr,1,true,itemName) ~= 1 then
 				return false
 			end
-			Actor.addItem(sysarg, additemid, 0, 0, 1, bind, 0, "开启装备箱" ,1,-1, 0, -1, 1, System.getRandomNumber(6)+1);
+			if item_id == 7827 then -- 神戒宝盒产出的是可叠加的戒指材料，不应附加随机装备属性
+				Actor.addItem(sysarg, additemid, 0, 0, 1, bind, 0, "开启装备箱", 1);
+			else
+				Actor.addItem(sysarg, additemid, 0, 0, 1, bind, 0, "开启装备箱" ,1,-1, 0, -1, 1, System.getRandomNumber(6)+1);
+			end
 			--Actor.addItem(sysarg,additemid,0,0,1,bind,"ItemBoxFor2017");
 			
 			if item_id == 373 or item_id == 374 then  --高阶，中阶宝箱

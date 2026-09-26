@@ -2196,35 +2196,35 @@ QingDianXunBaoF = --周年庆寻宝
 			{
 				needPay = 150000,
 				award={
-						{type = 0, id = 6929, count = 1,bind = 1,txt="周年庆礼盒②"},
+						{type = 0, id = 6932, count = 1,bind = 1,txt="周年庆礼盒①"},
 				},
 			},
 			--第3挡
 			{
 				needPay = 300000,
 				award={
-						{type = 0, id = 6930, count = 1,bind = 1,txt="周年庆礼盒③"},
+						{type = 0, id = 6929, count = 1,bind = 1,txt="周年庆礼盒②"},
 				},
 			},
 			--第4挡
 			{
 				needPay = 600000,
 				award={
-						{type = 0, id = 6931, count = 1,bind = 1,txt="周年庆礼盒④"},
+						{type = 0, id = 6930, count = 1,bind = 1,txt="周年庆礼盒③"},
 				},
 			},
 			--第5挡
 			{
 				needPay = 900000,
 				award={
-					{type = 0, id = 6367, count = 1,bind = 1,txt="五转装备箱"},
+					{type = 0, id = 6931, count = 1,bind = 1,txt="周年庆礼盒④"},
 				},
 			},
 			--第6挡
 			{
 				needPay = 1200000,
 				award={
-						{type = 0, id = 6887, count = 1,bind = 1,txt="龍装Ⅰ首饰箱"},
+						{type = 0, id = 6818, count = 3,bind = 1,txt="元神装备箱"},
 				},
 			},
 			
@@ -2232,7 +2232,7 @@ QingDianXunBaoF = --周年庆寻宝
 			{
 				needPay = 1500000,
 				award={
-						{type = 0, id = 6365, count = 1,bind = 1,txt="七转装备箱"},
+						{type = 0, id = 6887, count = 1,bind = 1,txt="龍装Ⅰ首饰箱"},
 				},
 			},
 			
@@ -2240,14 +2240,14 @@ QingDianXunBaoF = --周年庆寻宝
 			{
 				needPay = 2000000,
 				award={
-						{type = 0, id = 6820, count = 1,bind = 1,txt="龍装Ⅱ装备箱"},
+						{type = 0, id = 6365, count = 1,bind = 1,txt="七转装备箱"},
 				},
 			},
 			--第9挡
 			{
 				needPay = 2500000,
 				award={
-						{type = 0, id = 6364, count = 1,bind = 1,txt="九转装备箱"},
+						{type = 0, id = 6820, count = 1,bind = 1,txt="龍装Ⅱ装备箱"},
 				},
 			},
 			
@@ -2255,7 +2255,7 @@ QingDianXunBaoF = --周年庆寻宝
 			{
 				needPay = 3000000,
 				award={
-						{type = 0, id = 393, count = 1,bind = 1,txt="11转首饰箱"},
+						{type = 0, id = 6364, count = 1,bind = 1,txt="九转装备箱"},
 				},
 			},
 			--第11挡

@@ -5,87 +5,76 @@ LivenessActivityCfg =
 	livenessLevels = {
 		--1级
 		{
-			--前3天给的东西不一样
 			liveness = 30,
-			awardbefore4 = { 
-					  {type = 0, id = 678, count = 2, bind = 1},--副本传送卷*2  --前三天的配置
-					  {type = 0, id = 1778, count = 5, bind = 1},--火炎神
-					  {type = 0, id = 532, count = 10, bind = 1}, --护符碎片(5)
-					},
-					
-			award = { {type = 0, id = 678, count = 2, bind = 1},--副本传送卷*2
-			          {type = 0, id = 1778, count = 5, bind = 1},--火炎神
-			      	  {type = 0, id = 5453, count = 1, bind = 1}, --军魂瓶
-					},
+			awardbefore4 = {
+				{type = 0, id = 511, count = 3, bind = 1}, --100万经验丹*3
+				{type = 0, id = 537, count = 3, bind = 1}, --宝石结晶(100)*3
+				{type = 0, id = 572, count = 3, bind = 1}, --圣珠结晶(100)*3
+			},
+			award = {
+				{type = 0, id = 511, count = 3, bind = 1}, --100万经验丹*3
+				{type = 0, id = 537, count = 3, bind = 1}, --宝石结晶(100)*3
+				{type = 0, id = 572, count = 3, bind = 1}, --圣珠结晶(100)*3
+			},
 		},
 		--2级
 		{
-			--前3天给的东西不一样
 			liveness = 80,
-			awardbefore4 = { 
-					  {type = 0, id = 678, count = 5, bind = 1},--副本传送卷*5			          
-			          {type = 0, id = 1777, count = 5, bind = 1},---冰法神*5}
-			          {type = 0, id = 532, count = 20, bind = 1},--护符碎片(5)
-
-			         }, 
-			award = { {type = 0, id = 678, count = 5, bind = 1},--副本传送卷*5			          
-			          {type = 0, id = 1777, count = 5, bind = 1},---冰法神*5}
-			          {type = 0, id = 5453, count = 1, bind = 1},--军魂瓶
-
-			         }, 
-					 
+			awardbefore4 = {
+				{type = 0, id = 511, count = 5, bind = 1}, --100万经验丹*5
+				{type = 0, id = 537, count = 5, bind = 1}, --宝石结晶(100)*5
+				{type = 0, id = 572, count = 5, bind = 1}, --圣珠结晶(100)*5
+			},
+			award = {
+				{type = 0, id = 511, count = 5, bind = 1}, --100万经验丹*5
+				{type = 0, id = 537, count = 5, bind = 1}, --宝石结晶(100)*5
+				{type = 0, id = 572, count = 5, bind = 1}, --圣珠结晶(100)*5
+			},
 		},
 		--3级
 		{
-			--前3天给的东西不一样
 			liveness = 150,
-			awardbefore4 = { 
-					 {type = 0, id = 678, count = 10, bind = 1},--副本传送卷*10		       
-				 	 {type = 0, id = 1779, count = 5, bind = 1},--冰法神*5}
-				 	 {type = 0, id = 566, count = 30, bind = 1}, --护盾碎片(5)
-					},
-			award = { 
-					 {type = 0, id = 678, count = 10, bind = 1},--副本传送卷*10		       
-				 	 {type = 0, id = 1779, count = 5, bind = 1},--冰法神*5}
-				 	 {type = 0, id = 5453, count = 1, bind = 1}, --军魂瓶
-					},
+			awardbefore4 = {
+				{type = 0, id = 511, count = 10, bind = 1}, --100万经验丹*10
+				{type = 0, id = 537, count = 10, bind = 1}, --宝石结晶(100)*10
+				{type = 0, id = 572, count = 10, bind = 1}, --圣珠结晶(100)*10
+			},
+			award = {
+				{type = 0, id = 511, count = 10, bind = 1}, --100万经验丹*10
+				{type = 0, id = 537, count = 10, bind = 1}, --宝石结晶(100)*10
+				{type = 0, id = 572, count = 10, bind = 1}, --圣珠结晶(100)*10
+			},
 		},
 		--4级
 		{
-			--前3天给的东西不一样
 			liveness = 240,
-			awardbefore4 = { 
-						{type = 0, id = 511, count = 1, bind = 1}, --100W经验丹
-						{type = 0, id = 537, count = 5, bind = 1},--宝石结晶*3
-			            {type = 0, id = 572, count = 5, bind = 1},--圣珠结晶*3
-						
-			         },
-			award = { 
-						{type = 0, id = 537, count = 5, bind = 1},--宝石结晶*3
-						{type = 0, id = 572, count = 5, bind = 1},--圣珠结晶*3
-						{type = 0, id = 5453, count = 1, bind = 1}, --军魂瓶
-					},
-				  
+			awardbefore4 = {
+				{type = 0, id = 6731, count = 500, bind = 1}, --培元丹*500
+				{type = 0, id = 6914, count = 50, bind = 1}, --血炼精华(10颗)*50
+				{type = 0, id = 6862, count = 50, bind = 1}, --坐骑丹*50
+			},
+			award = {
+				{type = 0, id = 6731, count = 500, bind = 1}, --培元丹*500
+				{type = 0, id = 6914, count = 50, bind = 1}, --血炼精华(10颗)*50
+				{type = 0, id = 6862, count = 50, bind = 1}, --坐骑丹*50
+			},
 		},
 		--5级
 		{
-			--前3天给的东西不一样
 			liveness = 350,
-			awardbefore4 = { 	
-					 {type = 0, id = 511, count = 2, bind = 1},--100W经验丹		 
-					 {type = 0, id = 537, count = 10, bind = 1},--宝石结晶*5
-			         {type = 0, id = 572, count = 10, bind = 1},--圣珠结晶*3
-					 
-			         },
-			award = { 			 
-					 {type = 0, id = 537, count = 10, bind = 1},--宝石结晶*5
-			         {type = 0, id = 572, count = 10, bind = 1},--圣珠结晶*3
-					 {type = 0, id = 5453, count = 1, bind = 1},--军魂瓶
-			         },
-	
-		},			
+			awardbefore4 = {
+				{type = 0, id = 6731, count = 1000, bind = 1}, --培元丹*1000
+				{type = 0, id = 6914, count = 100, bind = 1}, --血炼精华(10颗)*100
+				{type = 0, id = 6862, count = 100, bind = 1}, --坐骑丹*100
+			},
+			award = {
+				{type = 0, id = 6731, count = 1000, bind = 1}, --培元丹*1000
+				{type = 0, id = 6914, count = 100, bind = 1}, --血炼精华(10颗)*100
+				{type = 0, id = 6862, count = 100, bind = 1}, --坐骑丹*100
+			},
+		},
 	},
-	
+
 	--活跃度任务
 	livenessTask = {
 		--每日签到

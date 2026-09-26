@@ -1,7 +1,8 @@
 --#include "data\config\new_activity\festival\activity_jingji.lua" once --竞技活动
 
 --消费转盘
-handJingjiZhuanPan =function(sysarg,msgid,packet)	
+handJingjiZhuanPan =function(sysarg,msgid,packet)
+	if GetJingjiActivityType() == 0 then return end
 
 	local optType = DataPack.readByte(packet) --操作类型
 	if optType==1 then --请求抽奖次数
@@ -326,4 +327,3 @@ function AskJJZP_RefawardInfo(sysarg)
 	--把奖品信息发给前端
 	AskJJZP_awardInfo(sysarg)
 end
-	

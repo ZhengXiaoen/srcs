@@ -1,11 +1,13 @@
 --#include "data\config\new_activity\festival\activity_jingji.lua" once --竞技活动
 --#include "data\functions\new_activity\festival\ActivityRankFunc.lua" once 
 --#include "data\functions\modules\daily_pay_ranking.lua" once -- 活动:每日充值排行榜
+JingJiCompetitionDisabled = true -- 永久关闭竞技大赛；圣诞活动仍可使用共用协议
 
 --竞技协议派发
 handleJingjiActivity = function (sysarg, sysid, packet)
 	--是否在开关时间内
 	local svar = System.getStaticVar()
+	if GetJingjiActivityType() == 0 then return end
 	
 	if svar.JingJiOpenDay==nil then return end
 	
@@ -276,8 +278,48 @@ end
 
 
 
+-- 清除旧的竞技大赛状态及排行剩余天数，保留散人红利和圣诞活动。
+function DisableJingJiCompetition()
+	if JingJiCompetitionDisabled ~= true then return end
+	local svar = System.getStaticVar()
+	local hasCompetitionState = svar.JingJiActivityTypes ~= 1 and
+		(svar.isDringJingJi ~= nil or svar.JingJiOpenDay ~= nil or
+		 svar.StartJingJIYear ~= nil or svar.StartJingjiMonth ~= nil or
+		 svar.StartJingJiDay ~= nil or svar.JingJiActivityTypes == 2)
+	local dayData = svar.daily_pay_ranking_day_data
+	local hasCompetitionRanking = dayData ~= nil and System.getIntByte(dayData, 1) ~= 0
+	if not hasCompetitionState and not hasCompetitionRanking then return end
+
+	if hasCompetitionState then
+		svar.isDringJingJi = nil
+		svar.JingJiOpenDay = nil
+		svar.JingJiActivityTypes = nil
+		svar.StartJingJIYear = nil
+		svar.StartJingjiMonth = nil
+		svar.StartJingJiDay = nil
+		svar.StartJingJi_MiNitime = nil
+	end
+	if hasCompetitionRanking then
+		dayData = System.setIntByte(dayData, 1, 0)
+		svar.daily_pay_ranking_day_data = dayData ~= 0 and dayData or nil
+	end
+	System.saveStaticVar()
+
+	if hasCompetitionState then
+		local playerList = LuaHelp.getAllActorList()
+		for _, player in ipairs(playerList or {}) do
+			local netPack = DataPack.allocPacket(player, 151, LogicCmd.miscSysEx.sub.sJingJI_isOpen)
+			DataPack.writeByte(netPack, 0)
+			DataPack.writeByte(netPack, 0)
+			DataPack.writeByte(netPack, 0)
+			DataPack.flush(netPack)
+		end
+	end
+end
+
 --开始竞技还是圣诞活动
 StartJingJi = function(openday,nowOpenday,activityType) --开几天，当前是第几天
+	if JingJiCompetitionDisabled == true and activityType ~= 1 then return end
 	--print("111111")
 	--以免活动期间挂机了，这个挺麻烦的。。
 	local svar = System.getStaticVar()
@@ -372,6 +414,13 @@ handleJingJiOpen = function (sysarg, sysid, packet)
 	local svar = System.getStaticVar()
 
 	local netPack = DataPack.allocPacket(sysarg,151,LogicCmd.miscSysEx.sub.sJingJI_isOpen)
+	if GetJingjiActivityType() == 0 then
+		DataPack.writeByte(netPack, 0)
+		DataPack.writeByte(netPack, 0)
+		DataPack.writeByte(netPack, 0)
+		DataPack.flush(netPack)
+		return
+	end
 	
 	--开的是哪一个活动
 	if svar.JingJiActivityTypes==nil then 
@@ -413,6 +462,7 @@ function GetJingjiActivityType()
 	end
 	
 	local activityType = svar.JingJiActivityTypes
+	if JingJiCompetitionDisabled == true and activityType == 2 then return 0 end
 	if activityType == nil then
 		return 0
 	end
@@ -500,6 +550,10 @@ function backcmd_JingJiActs(args)
 	-- 1为开启圣诞活动，2为开启竞技活动
 	local svar = System.getStaticVar()
 	local activityType =tonumber(args[1])
+	if JingJiCompetitionDisabled == true and activityType == 2 then
+		DisableJingJiCompetition()
+		return
+	end
 	if activityType==1 then 
 		svar.JingJiActivityTypes =1
 	elseif  activityType==2 then 

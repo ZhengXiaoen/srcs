@@ -69,9 +69,8 @@ NpcDialog[381].onCkBoss = function(sysarg,a,b)
 				if s[k] == 1 then
 					MonsterZt = "<(c0xFF00FF00)已刷新>";
 				else
-					local h,_ = math.modf(svar.srRefreshMonsterTime / RefreshMonsterData[i].rsftime);
-					local syt = RefreshMonsterData[i].rsftime - ( svar.srRefreshMonsterTime - RefreshMonsterData[i].rsftime * h );
-					if syt == nil then syt = 0; end
+					local remaining = svar.srrmRemaining or {}
+					local syt = remaining[k] or 0
 					MonsterZt = "<"..syt.."分钟后刷新>";
 				end
 				--<(c0xFF888888)(刷新时间为%s分钟)>  d.rsftime
@@ -101,9 +100,8 @@ NpcDialog[381].onCkBoss1 = function(a,b)
 				if s[k] == 1 then
 					MonsterZt = "&00FF00&已刷新";
 				else
-					local h,_ = math.modf(svar.srRefreshMonsterTime / RefreshMonsterData[i].rsftime);
-					local syt = RefreshMonsterData[i].rsftime - ( svar.srRefreshMonsterTime - RefreshMonsterData[i].rsftime * h );
-					if syt == nil then syt = 0; end
+					local remaining = svar.srrmRemaining or {}
+					local syt = remaining[k] or 0
 					MonsterZt = ""..syt.."分钟后刷新";
 				end
 				--<(c0xFF888888)(刷新时间为%s分钟)>  d.rsftime

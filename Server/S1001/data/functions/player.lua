@@ -111,6 +111,64 @@ LocalDT.NormalizeSkyRingMaterialStacks = function(sysarg)
 	end
 end
 
+-- 定时 BOSS 的截止时间和当前怪物写入服务器持久变量，重启后可恢复。
+local function GetSRRefreshMonsterSave()
+	local svar = System.getStaticVar()
+	if svar.srRefreshMonsterSave == nil then
+		svar.srRefreshMonsterSave = {}
+	end
+	return svar.srRefreshMonsterSave
+end
+
+local function GetSRRefreshMonsterRecord(save, bj)
+	if save[bj] == nil then
+		save[bj] = {}
+	end
+	return save[bj]
+end
+
+local function GetSRRefreshMonsterLiveId(scene, ref)
+	if scene == nil then return 0, 0 end
+	if Fuben.getLiveMonsterCount(scene, ref.monid) > 0 then
+		return ref.monid, 0
+	end
+	if ref.nextboss ~= nil then
+		for i = 1, #ref.nextboss do
+			if Fuben.getLiveMonsterCount(scene, ref.nextboss[i].monid) > 0 then
+				return ref.nextboss[i].monid, i
+			end
+		end
+	end
+	return 0, 0
+end
+
+local function GetSRRefreshMonsterActiveId(ref, record)
+	local activeId = tonumber(record.activeId)
+	if ref.nextboss ~= nil then
+		for i = 1, #ref.nextboss do
+			if activeId == ref.nextboss[i].monid then
+				return activeId, i
+			end
+		end
+	end
+	return ref.monid, 0
+end
+
+local function CreateSRRefreshMonster(scene, ref, monid, randomPosition)
+	if scene == nil then return nil end
+	if not randomPosition then
+		return Fuben.createMonster(scene, monid, ref.x, ref.y, 0)
+	end
+	for i = 1, 20 do
+		local x = ref.x + System.getRandomNumber(20)
+		local y = ref.y + System.getRandomNumber(20)
+		if i == 20 then x, y = ref.x, ref.y end
+		local monster = Fuben.createMonster(scene, monid, x, y, 0)
+		if monster ~= nil then return monster end
+	end
+	return nil
+end
+
 --//登录游戏触发
 function OnPlayerLogin(sysarg, isCrossDay)	
 
@@ -2645,20 +2703,23 @@ function OnMonsterByKilled(monster, sysarg, monId, fubenId, sceneId,fuBenPtr)
 ---------------------------------------------------------------------------击杀定时刷的BOSS处理
 
    local bIdentCode = false
+	local refreshSave = GetSRRefreshMonsterSave()
 	for i = 1,#RefreshMonsterData do
 		local ref = RefreshMonsterData[i];
+        local refreshRecord = refreshSave[ref.bj]
         local svar = System.getDyanmicVar(sysarg);
 		local s = svar.srRefreshMonster;		--记录是否存活,1为存活,0为没有
         local nextboss = svar.srRefreshMonsterBoss;--记录下一级boss
         if nextboss == nil then svar.srRefreshMonsterBoss = {} end
         nextboss = svar.srRefreshMonsterBoss
-        if nextboss[ref.bj] == nil then nextboss[ref.bj] = 0 end
+        if nextboss[ref.bj] == nil then nextboss[ref.bj] = tonumber(refreshRecord and refreshRecord.nextIndex) or 0 end
 
         --验证码
         if ref.monid == monId then
             bIdentCode = true
         end
-		if (ref.monid == monId or (ref.nextboss ~= nil and nextboss[ref.bj] > 0 and nextboss[ref.bj] ~= nil and ref.nextboss[nextboss[ref.bj]].monid == monId)) and nBossSceneId == ref.mapid then
+		if (ref.monid == monId or (ref.nextboss ~= nil and nextboss[ref.bj] > 0 and nextboss[ref.bj] <= #ref.nextboss and ref.nextboss[nextboss[ref.bj]].monid == monId)) and nBossSceneId == ref.mapid then
+			refreshRecord = GetSRRefreshMonsterRecord(refreshSave, ref.bj)
 			local remaining = svar.srrmRemaining;	--记录刷怪剩余时间,如果等于0就刷
 			if s == nil then svar.srRefreshMonster = {}; s = svar.srRefreshMonster; end
 			if remaining == nil then svar.srrmRemaining = {}; remaining = svar.srrmRemaining; end
@@ -2676,6 +2737,9 @@ function OnMonsterByKilled(monster, sysarg, monId, fubenId, sceneId,fuBenPtr)
                         local SceneHandle = Fuben.getSceneHandleById(ref.mapid);
                         local MonsterPtr = Fuben.createMonster(SceneHandle, ref.nextboss[nextboss[ref.bj]].monid,ref.x, ref.y, 0);
                         if MonsterPtr ~= nil then
+							refreshRecord.activeId = ref.nextboss[nextboss[ref.bj]].monid
+							refreshRecord.nextIndex = nextboss[ref.bj]
+							refreshRecord.nextTime = 0
                             local str ="恭喜 <(n%s)>玩家在%s地图，打死%sBOSS，惹得它爸爸出现了！击杀后有更大几率获得高转武器衣服！"
                             str = string.format(str,Actor.getName(sysarg),Fuben.getSceneNameById(ref.mapid),System.getMonsterNameById(monId))
                             System.broadcastTipmsg(str,ttChatWindow)
@@ -2693,12 +2757,16 @@ function OnMonsterByKilled(monster, sysarg, monId, fubenId, sceneId,fuBenPtr)
                
             end
             if bNext == false then
-            	s[ref.bj] = 0;
+				s[ref.bj] = 0;
 			    remaining[ref.bj] = ref.rsftime;
+			    nextboss[ref.bj] = 0
+			    refreshRecord.activeId = 0
+			    refreshRecord.nextIndex = 0
+			    refreshRecord.nextTime = System.getCurrMiniTime() + ref.rsftime * 60
 			    --HandlePlayerEnterSceneBossTips(sysarg,sceneId);
 			    --给当前地图的玩家广播
 			    local playerList = LuaHelp.getSceneActorListById(nBossSceneId)
-			    if playerList ~= nil then  
+			    if playerList ~= nil then
 				    for i, v in ipairs(playerList) do
 					    if v~=nil then 
 						    HandlePlayerEnterSceneBossTips(v,nBossSceneId)
@@ -2706,6 +2774,7 @@ function OnMonsterByKilled(monster, sysarg, monId, fubenId, sceneId,fuBenPtr)
 				    end
 			    end
             end
+			System.saveStaticVar()
 
 			--Actor.sendTipmsg(sysarg, string.format("BOSSID:%s,BOSS:%s,BJ:%s,remaining:%s", monId, System.getMonsterNameById(monId), ref.bj, remaining[ref.bj]),128);
 			break;
@@ -3049,6 +3118,10 @@ function OnMonsterByKilled(monster, sysarg, monId, fubenId, sceneId,fuBenPtr)
 					if svar.qmBossisKill == nil then svar.qmBossisKill={} end --0为生存，1为被杀
 					svar.qmBossTime[v.id]=v.times
 					svar.qmBossisKill[v.id]=1
+					local bossSave = System.getStaticVar()
+					if bossSave.qmBossNextTime == nil then bossSave.qmBossNextTime = {} end
+					bossSave.qmBossNextTime[v.id] = System.getCurrMiniTime() + v.times * 60
+					System.saveStaticVar()
 				end
 			end
 		end
@@ -5699,168 +5772,150 @@ end
 --SRRefreshMonsterEx是运行是刷新,只会运行1次
 --SRRefreshMonster是正常根据时间刷新
 function SRRefreshMonsterEx()
-	local svar = System.getDyanmicVar(sysarg);
-	local s = svar.srRefreshMonster;		--记录是否存活,1为存活,0为没有
-	local remaining = svar.srrmRemaining;	--记录刷怪剩余时间,如果等于0就刷
-	if s == nil then svar.srRefreshMonster = {}; s = svar.srRefreshMonster; end
-	if remaining == nil then svar.srrmRemaining = {}; remaining = svar.srrmRemaining; end
+	local svar = System.getDyanmicVar()
+	if svar.srRefreshMonster == nil then svar.srRefreshMonster = {} end
+	if svar.srrmRemaining == nil then svar.srrmRemaining = {} end
+	if svar.srRefreshMonsterBoss == nil then svar.srRefreshMonsterBoss = {} end
+	local s = svar.srRefreshMonster
+	local remaining = svar.srrmRemaining
+	local nextboss = svar.srRefreshMonsterBoss
+	local refreshSave = GetSRRefreshMonsterSave()
+	local now = System.getCurrMiniTime()
 	for i = 1,#RefreshMonsterData do
-		local r = RefreshMonsterData[i];
-		local SceneHandle = Fuben.getSceneHandleById(r.mapid);
-		local MonName = System.getMonsterNameById(r.monid);
-		local MonsterPtr = Fuben.createMonster(SceneHandle, r.monid, r.x, r.y, 0);
-       -- System.trace("SRRefreshMonsterEx monsterid:"..r.monid.."sceneid:"..r.mapid)
-		s[r.bj] = 1;
+		local r = RefreshMonsterData[i]
+		local record = GetSRRefreshMonsterRecord(refreshSave, r.bj)
+		local scene = Fuben.getSceneHandleById(r.mapid)
+		local liveId, liveIndex = GetSRRefreshMonsterLiveId(scene, r)
+		local nextTime = tonumber(record.nextTime) or 0
+		if nextTime > 0 then
+			-- 启动恢复只执行一次，已死亡 BOSS 的截止时间额外提前 30 分钟。
+			nextTime = nextTime - 30 * 60
+			record.nextTime = nextTime
+		end
+		if liveId ~= 0 then
+			s[r.bj], remaining[r.bj], nextboss[r.bj] = 1, 0, liveIndex
+			record.activeId, record.nextIndex, record.nextTime = liveId, liveIndex, 0
+		elseif nextTime > now then
+			s[r.bj] = 0
+			remaining[r.bj] = math.ceil((nextTime - now) / 60)
+			nextboss[r.bj] = 0
+		else
+			local activeId, activeIndex = GetSRRefreshMonsterActiveId(r, record)
+			if nextTime > 0 then activeId, activeIndex = r.monid, 0 end
+			local monster = CreateSRRefreshMonster(scene, r, activeId, false)
+			if monster ~= nil then
+				s[r.bj], remaining[r.bj], nextboss[r.bj] = 1, 0, activeIndex
+				record.activeId, record.nextIndex, record.nextTime = activeId, activeIndex, 0
+			else
+				s[r.bj], remaining[r.bj], nextboss[r.bj] = 0, 0, activeIndex
+			end
+		end
 	end
+
+	-- 开服全民 BOSS 的击杀状态也按持久截止时间恢复。
+	local bossSave = System.getStaticVar()
+	if bossSave.qmBossNextTime == nil then bossSave.qmBossNextTime = {} end
+	if svar.qmBossTime == nil then svar.qmBossTime = {} end
+	if svar.qmBossisKill == nil then svar.qmBossisKill = {} end
+	for _, boss in pairs(OpenServerAward[7].list[1].boss) do
+		local nextTime = tonumber(bossSave.qmBossNextTime[boss.id]) or 0
+		if nextTime > 0 then
+			nextTime = nextTime - 30 * 60
+			bossSave.qmBossNextTime[boss.id] = nextTime
+		end
+		if nextTime > now then
+			svar.qmBossisKill[boss.id] = 1
+			svar.qmBossTime[boss.id] = math.ceil((nextTime - now) / 60)
+		else
+			svar.qmBossisKill[boss.id] = 0
+			svar.qmBossTime[boss.id] = 0
+		end
+	end
+	System.saveStaticVar()
 end
 
 function SRRefreshMonster()
-	local svar = System.getDyanmicVar(sysarg);
-	if svar.srRefreshMonsterTime == nil then
-		svar.srRefreshMonsterTime = 0;
-	end
-	svar.srRefreshMonsterTime = svar.srRefreshMonsterTime + 1; --\\加1分钟
+    local svar = System.getDyanmicVar()
+    if svar.srRefreshMonsterTime == nil then svar.srRefreshMonsterTime = 0 end
+    svar.srRefreshMonsterTime = svar.srRefreshMonsterTime + 1
+    if svar.srRefreshMonster == nil then svar.srRefreshMonster = {} end
+    if svar.srrmRemaining == nil then svar.srrmRemaining = {} end
+    if svar.srRefreshMonsterBoss == nil then svar.srRefreshMonsterBoss = {} end
+    local s = svar.srRefreshMonster
+    local remaining = svar.srrmRemaining
+    local nextboss = svar.srRefreshMonsterBoss
+    local refreshSave = GetSRRefreshMonsterSave()
+    local now = System.getCurrMiniTime()
+    local openday = System.getDaysSinceOpenServer()
+    local staticChanged = false
 
-	local s = svar.srRefreshMonster;		--记录是否存活,1为存活,0为没有
-	local remaining = svar.srrmRemaining;	--记录刷怪剩余时间,如果等于0就刷
-	if s == nil then svar.srRefreshMonster = {}; s = svar.srRefreshMonster; end
-	if remaining == nil then svar.srrmRemaining = {}; remaining = svar.srrmRemaining; end
-
-	local openday = System.getDaysSinceOpenServer();
-     local nextboss = svar.srRefreshMonsterBoss;--记录下一级boss
-        if nextboss == nil then nextboss = {} end
-	for i = 1,#RefreshMonsterData do
-		local r = RefreshMonsterData[i];
-		local bj = r.bj;
-		if s[bj] == nil then s[bj] = 0; end
-		if remaining[bj] == nil then remaining[bj] = 0; end
-		local SceneHandle = Fuben.getSceneHandleById(r.mapid);
-
-		if Fuben.getLiveMonsterCount(SceneHandle,r.monid) == 0 then	--加了个判断,如果当前地图没这个BOSS,就把刷新状态给重置
-            if r.nextboss == nil  then
-                s[bj] = 0;
+    for i = 1, #RefreshMonsterData do
+        local r = RefreshMonsterData[i]
+        local record = GetSRRefreshMonsterRecord(refreshSave, r.bj)
+        local scene = Fuben.getSceneHandleById(r.mapid)
+        local liveId, liveIndex = GetSRRefreshMonsterLiveId(scene, r)
+        local nextTime = tonumber(record.nextTime) or 0
+        if liveId ~= 0 then
+            s[r.bj], remaining[r.bj], nextboss[r.bj] = 1, 0, liveIndex
+            if record.activeId ~= liveId or record.nextIndex ~= liveIndex or nextTime ~= 0 then
+                record.activeId, record.nextIndex, record.nextTime = liveId, liveIndex, 0
+                staticChanged = true
+            end
+        elseif nextTime > now then
+            s[r.bj] = 0
+            remaining[r.bj] = math.ceil((nextTime - now) / 60)
+            nextboss[r.bj] = 0
+        else
+            local activeId, activeIndex = GetSRRefreshMonsterActiveId(r, record)
+            if nextTime > 0 then activeId, activeIndex = r.monid, 0 end
+            local monster = CreateSRRefreshMonster(scene, r, activeId, true)
+            if monster == nil then
+                s[r.bj], remaining[r.bj], nextboss[r.bj] = 0, 0, activeIndex
             else
-                local isLive = false
-                for j =1,#r.nextboss do
-                    if Fuben.getLiveMonsterCount(SceneHandle,r.nextboss[j].monid) > 0 then 
-                        isLive = true
-                        break
+                s[r.bj], remaining[r.bj], nextboss[r.bj] = 1, 0, activeIndex
+                record.activeId, record.nextIndex, record.nextTime = activeId, activeIndex, 0
+                staticChanged = true
+                if openday <= r.ts then
+                    if System.isCrossServer() ~= true then
+                        local MonName = System.getMonsterNameById(activeId)
+                        local SceneName = Fuben.getSceneNameById(r.mapid)
+                        System.broadcastTipmsg(string.format("<%s>出现在<%s(%s,%s)>.", MonName, SceneName, r.x, r.y), ttChatWindow);
                     end
-                end
-                if isLive == false then
-                    s[bj] = 0
-                    System.trace("SRRefreshMonster monid:"..r.monid)
+                    local playerList = LuaHelp.getSceneActorListById(r.mapid)
+                    if playerList ~= nil then
+                        for _, player in ipairs(playerList) do
+                            if player ~= nil then
+                                HandlePlayerEnterSceneBossTips(player, r.mapid)
+                            end
+                        end
+                    end
                 end
             end
-			
-		end
+        end
+    end
 
-		if s[bj] == 0 then
-			if remaining[bj] <= 1 then
-				local MonName = System.getMonsterNameById(r.monid);
-                local nRange = 10
-                local nX = r.x - nRange
-                local nY = r.y - nRange
-                local nLoop = 1
-                local MonsterPtr = nil
-                while true do
-                    nX = r.x + System.getRandomNumber(nRange * 2)
-                    nY = r.y + System.getRandomNumber(nRange * 2)
-                    if nLoop >= nRange * 2 then 
-                        nX= r.x
-                        nY = r.y
-                    end
-                     MonsterPtr = Fuben.createMonster(SceneHandle, r.monid, nX, nY, 0);
-                     if MonsterPtr ~= nil then break end
-                     nLoop = nLoop + 1
-                     if nLoop >= nRange * 2 then 
-                        break
-                     end
-                end
-
-				--只有BOSS真正被创建出来的那一刻,才标记为存活并播报刷新公告;
-				--创建失败(例如分线场景未加载)时保持待刷新状态,下一次循环再尝试,避免重复播报与批量虚假刷新.
-				if MonsterPtr ~= nil then
-					local SceneName = Fuben.getSceneNameById(r.mapid);
-					--System.trace("SRRefreshMonster sceneid:"..r.mapid.."monsterid:"..r.monid)
-					s[bj] = 1;
-					remaining[bj] = 0;
-					if openday <= r.ts then
-						--跨服的时候不能广播
-						if System.isCrossServer() ~=true then
-							System.broadcastTipmsg(string.format("<%s>出现在<%s(%s,%s)>.", MonName, SceneName, r.x, r.y), ttChatWindow);
-						end
-						--给当前地图的玩家广播
-						local playerList = LuaHelp.getSceneActorListById(r.mapid)
-						if playerList ~= nil then  
-							for i, v in ipairs(playerList) do
-								if v~=nil then 
-									HandlePlayerEnterSceneBossTips(v,r.mapid)
-								end
-							end
-						end
-					end
-				end
+	--全服活动 BOSS 的显示状态也使用绝对截止时间。
+	if svar.qmBossTime == nil then svar.qmBossTime = {} end
+	if svar.qmBossisKill == nil then svar.qmBossisKill = {} end
+	local bossSave = System.getStaticVar()
+	if bossSave.qmBossNextTime == nil then bossSave.qmBossNextTime = {} end
+	if openday <= 7 then
+		for _, boss in pairs(OpenServerAward[7].list[1].boss) do
+			local nextTime = tonumber(bossSave.qmBossNextTime[boss.id]) or 0
+			if nextTime > now then
+				svar.qmBossisKill[boss.id] = 1
+				svar.qmBossTime[boss.id] = math.ceil((nextTime - now) / 60)
 			else
-				remaining[bj] = remaining[bj] - 1;
-			end
-		end
-
-	end
-
-
-
-
-	-- local svar = System.getDyanmicVar(sysarg);
-	-- if svar.srRefreshMonsterTime == nil then
-	-- 	svar.srRefreshMonsterTime = 0;
-	-- end
-	-- local s = svar.srRefreshMonster;
-	-- if s == nil then svar.srRefreshMonster = {}; s = svar.srRefreshMonster; end
-	-- for i = 1,#RefreshMonsterData do
-	-- 	if s[RefreshMonsterData[i].bj] == nil then s[RefreshMonsterData[i].bj] = 0; end
-	-- end
-	-- svar.srRefreshMonsterTime = svar.srRefreshMonsterTime + 1; --\\加1分钟
-	-- for i = 1,#RefreshMonsterData do
-	-- 	if s[RefreshMonsterData[i].bj] == 0 then
-	-- 		local a,b = math.modf(svar.srRefreshMonsterTime / RefreshMonsterData[i].rsftime);
-	-- 		if b == 0 then
-	-- 			local SceneHandle = Fuben.getSceneHandleById(RefreshMonsterData[i].mapid);
-	-- 			local SceneName = Fuben.getSceneNameById(RefreshMonsterData[i].mapid);
-	-- 			local MonName = "";
-	-- 			--if Fuben.getLiveMonsterCount(SceneHandle,RefreshMonsterData[i].monid) <= 0 then
-	-- 				s[RefreshMonsterData[i].bj] = 1;
-	-- 				MonName = System.getMonsterNameById(RefreshMonsterData[i].monid);
-	-- 				local openday = System.getDaysSinceOpenServer();
-	-- 				if openday <= RefreshMonsterData[i].ts then
-	-- 					System.broadcastTipmsg(string.format("<%s>出现在<%s(%s,%s)>.", MonName, SceneName, RefreshMonsterData[i].x, RefreshMonsterData[i].y), ttChatWindow);
-	-- 				end
-	-- 				local MonsterPtr = Fuben.createMonster(SceneHandle, RefreshMonsterData[i].monid, RefreshMonsterData[i].x, RefreshMonsterData[i].y, 0);
-	-- 			--end
-	-- 		end
-	-- 	end
-	-- end
-
-	
-	--全服活动的boss
-	if svar.qmBossTime == nil then svar.qmBossTime={} end
-	if svar.qmBossisKill == nil then svar.qmBossisKill={} end --0为生存，1为被杀
-	local openServerDay = System.getDaysSinceOpenServer()
-	local itemCfg = OpenServerAward[7].list[1].boss
-	if openServerDay<=7 then 
-		for _,v in pairs(itemCfg) do 
-			if svar.qmBossisKill[v.id]==1 then
-				if svar.qmBossTime[v.id]==nil then 
-					svar.qmBossTime[v.id]=v.times
-				end
-				svar.qmBossTime[v.id]=svar.qmBossTime[v.id]-1
-				if svar.qmBossTime[v.id]==0 then 
-					svar.qmBossisKill[v.id] = 0 --改为存活
-					--print(v.id.."全民boss复活了")
+				svar.qmBossisKill[boss.id] = 0
+				svar.qmBossTime[boss.id] = 0
+				if nextTime > 0 then
+					bossSave.qmBossNextTime[boss.id] = 0
+					staticChanged = true
 				end
 			end
 		end
 	end
+	if staticChanged then System.saveStaticVar() end
 	
 end
 

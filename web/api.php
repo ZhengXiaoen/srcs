@@ -16,7 +16,7 @@ $LANGUAGE='zh-cn';
 $webUrl='http://127.0.0.1';
 $client=1;
 $dlq=$_GET['dlq'];
-$ver= max(filemtime(dirname(__FILE__).'/GameFrame.swf'), filemtime(dirname(__FILE__).'/v2/lang/zh-cn/zh-cn.dat'));
+$ver= hexdec(substr(md5(md5_file(dirname(__FILE__).'/GameFrame.swf') . md5_file(dirname(__FILE__).'/v2/lang/zh-cn/zh-cn.dat')), 0, 7));
 $payUrl='http://www.2021gm.com';
 $ip='127.0.0.1';
 //分区端口，每区一行

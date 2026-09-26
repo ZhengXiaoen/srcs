@@ -1,7 +1,7 @@
 --战将炼体配置
 HeroExerciseCfg =
     {
-        maxlev = 200,
+        maxlev = 250,
         upgradecfg =
         {
             
@@ -204,7 +204,57 @@ HeroExerciseCfg =
 {leve=197,mana=37600000,Attrs={{type=143,value=3760,},{type=144,value=197500,},},},--197
 {leve=198,mana=37800000,Attrs={{type=143,value=3770,},{type=144,value=198995,},},},--198
 {leve=199,mana=38000000,Attrs={{type=143,value=3780,},{type=144,value=200495,},},},--199
-{leve=200,mana=38200000,Attrs={{type=143,value=3790,},{type=144,value=202000,},},},--200
+{leve=200,mana=488627640,Attrs={{type=143,value=3790,},{type=144,value=202000,},},},--200
+{leve=201,mana=519478920,Attrs={{type=143,value=3914,},{type=144,value=221109,},},},--201
+{leve=202,mana=550330200,Attrs={{type=143,value=4038,},{type=144,value=240989,},},},--202
+{leve=203,mana=581181480,Attrs={{type=143,value=4163,},{type=144,value=261640,},},},--203
+{leve=204,mana=612032760,Attrs={{type=143,value=4287,},{type=144,value=283063,},},},--204
+{leve=205,mana=642884040,Attrs={{type=143,value=4411,},{type=144,value=305257,},},},--205
+{leve=206,mana=673735320,Attrs={{type=143,value=4535,},{type=144,value=328222,},},},--206
+{leve=207,mana=704586600,Attrs={{type=143,value=4659,},{type=144,value=351958,},},},--207
+{leve=208,mana=735437880,Attrs={{type=143,value=4784,},{type=144,value=376466,},},},--208
+{leve=209,mana=766289160,Attrs={{type=143,value=4908,},{type=144,value=401745,},},},--209
+{leve=210,mana=797140440,Attrs={{type=143,value=5032,},{type=144,value=427796,},},},--210
+{leve=211,mana=827991720,Attrs={{type=143,value=5156,},{type=144,value=454617,},},},--211
+{leve=212,mana=858843000,Attrs={{type=143,value=5280,},{type=144,value=482210,},},},--212
+{leve=213,mana=889694280,Attrs={{type=143,value=5405,},{type=144,value=510574,},},},--213
+{leve=214,mana=920545560,Attrs={{type=143,value=5529,},{type=144,value=539710,},},},--214
+{leve=215,mana=951396840,Attrs={{type=143,value=5653,},{type=144,value=569616,},},},--215
+{leve=216,mana=982248120,Attrs={{type=143,value=5777,},{type=144,value=600294,},},},--216
+{leve=217,mana=1013099400,Attrs={{type=143,value=5901,},{type=144,value=631744,},},},--217
+{leve=218,mana=1043950680,Attrs={{type=143,value=6026,},{type=144,value=663964,},},},--218
+{leve=219,mana=1074801960,Attrs={{type=143,value=6150,},{type=144,value=696956,},},},--219
+{leve=220,mana=1105653240,Attrs={{type=143,value=6274,},{type=144,value=730719,},},},--220
+{leve=221,mana=1136504520,Attrs={{type=143,value=6398,},{type=144,value=765254,},},},--221
+{leve=222,mana=1167355800,Attrs={{type=143,value=6522,},{type=144,value=800560,},},},--222
+{leve=223,mana=1198207080,Attrs={{type=143,value=6647,},{type=144,value=836637,},},},--223
+{leve=224,mana=1229058360,Attrs={{type=143,value=6771,},{type=144,value=873485,},},},--224
+{leve=225,mana=1259909640,Attrs={{type=143,value=6895,},{type=144,value=911104,},},},--225
+{leve=226,mana=1290760920,Attrs={{type=143,value=7019,},{type=144,value=949495,},},},--226
+{leve=227,mana=1321612200,Attrs={{type=143,value=7143,},{type=144,value=988657,},},},--227
+{leve=228,mana=1352463480,Attrs={{type=143,value=7268,},{type=144,value=1028591,},},},--228
+{leve=229,mana=1383314760,Attrs={{type=143,value=7392,},{type=144,value=1069295,},},},--229
+{leve=230,mana=1414166040,Attrs={{type=143,value=7516,},{type=144,value=1110771,},},},--230
+{leve=231,mana=1445017320,Attrs={{type=143,value=7640,},{type=144,value=1153019,},},},--231
+{leve=232,mana=1475868600,Attrs={{type=143,value=7764,},{type=144,value=1196037,},},},--232
+{leve=233,mana=1506719880,Attrs={{type=143,value=7889,},{type=144,value=1239827,},},},--233
+{leve=234,mana=1537571160,Attrs={{type=143,value=8013,},{type=144,value=1284388,},},},--234
+{leve=235,mana=1568422440,Attrs={{type=143,value=8137,},{type=144,value=1329720,},},},--235
+{leve=236,mana=1599273720,Attrs={{type=143,value=8261,},{type=144,value=1375824,},},},--236
+{leve=237,mana=1630125000,Attrs={{type=143,value=8385,},{type=144,value=1422699,},},},--237
+{leve=238,mana=1660976280,Attrs={{type=143,value=8510,},{type=144,value=1470345,},},},--238
+{leve=239,mana=1691827560,Attrs={{type=143,value=8634,},{type=144,value=1518763,},},},--239
+{leve=240,mana=1722678840,Attrs={{type=143,value=8758,},{type=144,value=1567952,},},},--240
+{leve=241,mana=1753530120,Attrs={{type=143,value=8882,},{type=144,value=1617912,},},},--241
+{leve=242,mana=1784381400,Attrs={{type=143,value=9006,},{type=144,value=1668643,},},},--242
+{leve=243,mana=1815232680,Attrs={{type=143,value=9131,},{type=144,value=1720146,},},},--243
+{leve=244,mana=1846083960,Attrs={{type=143,value=9255,},{type=144,value=1772420,},},},--244
+{leve=245,mana=1876935240,Attrs={{type=143,value=9379,},{type=144,value=1825465,},},},--245
+{leve=246,mana=1907786520,Attrs={{type=143,value=9503,},{type=144,value=1879281,},},},--246
+{leve=247,mana=1938637800,Attrs={{type=143,value=9627,},{type=144,value=1933869,},},},--247
+{leve=248,mana=1969489080,Attrs={{type=143,value=9752,},{type=144,value=1989228,},},},--248
+{leve=249,mana=2000340360,Attrs={{type=143,value=9876,},{type=144,value=2045358,},},},--249
+{leve=250,mana=2031191640,Attrs={{type=143,value=10000,},{type=144,value=2102260,},},},--250
 
 
             

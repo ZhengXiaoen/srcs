@@ -224,6 +224,7 @@ HeroOpFuncList[5] = function (sysarg, args)
 	level = level + 1;
 	Hero.setHeroMana(sysarg, nCurrMana);
 	Hero.setHeroExerciseLevel(sysarg, level);
+	Hero.SendHeroProperty(sysarg, 0);
 	
 	System.sendCommonLog(LogIds.zhanJiangLianTiShengji,Actor.getIntProperty(sysarg,PROP_ENTITY_ID),Actor.getName(sysarg),0,0,0,level.."战将炼体升级")
 	

@@ -24,6 +24,7 @@
 
 /tools/*
 !/tools/patch_bag_client.py
+!/tools/patch_top_icons.py
 
 /Server/*
 !/Server/S1001/

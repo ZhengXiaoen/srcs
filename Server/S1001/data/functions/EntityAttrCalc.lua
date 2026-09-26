@@ -146,18 +146,5 @@ end
 --nAttackSpeed  攻击速度
 function OnHeroRerestProperty(sysarg,heroPtr,nMaxHp,nMaxMp,nPhysicalAttackMin,nPhysicalAttackMax,nMagicAttackMin,nMagicAttackMax,nTaoAttackMin,nTaoAttackMax,nDefenseMin,nDefenseMax,nMagixDefenseMin,nMacgicDefenseMax,nMoveSpeed,nAttackSpeed)
 
-    -- 练体201至250级为战将增加生命和物理、魔法防御
-    if sysarg ~= nil and heroPtr ~= nil then
-        local exerciseLevel = Hero.getHeroExerciseLevel(sysarg) or 0
-        local bonusLevels = math.min(math.max(exerciseLevel - 200, 0), 50)
-        if bonusLevels > 0 then
-            nMaxHp = nMaxHp + bonusLevels * 50000
-            nDefenseMin = nDefenseMin + bonusLevels * 100
-            nDefenseMax = nDefenseMax + bonusLevels * 200
-            nMagixDefenseMin = nMagixDefenseMin + bonusLevels * 100
-            nMacgicDefenseMax = nMacgicDefenseMax + bonusLevels * 200
-        end
-    end
-
     return nMaxHp,nMaxMp,nPhysicalAttackMin,nPhysicalAttackMax,nMagicAttackMin,nMagicAttackMax,nTaoAttackMin,nTaoAttackMax,nDefenseMin,nDefenseMax,nMagixDefenseMin,nMacgicDefenseMax
 end

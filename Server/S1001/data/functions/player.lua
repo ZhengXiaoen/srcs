@@ -295,7 +295,7 @@ function OnPlayerLogin(sysarg, isCrossDay)
 	end
 
 	-- 7. 国庆送礼按七天轮次自动开启并重置玩家本轮领奖状态
-	if canStartOpenActivities then
+	if canStartOpenActivities and EnsureNationalDayActivity ~= nil then
 		EnsureNationalDayActivity()
 		svar = System.getStaticVar()
 	end
@@ -361,9 +361,9 @@ function OnPlayerLogin(sysarg, isCrossDay)
 	if var.newdays == nil then
 		var.newdays = {}
 	end
-	if canStartOpenActivities then
+	if canStartOpenActivities and EnsureNationalDayRewardCycle ~= nil then
 		EnsureNationalDayRewardCycle(sysarg)
-		if isCrossDay == 0 then
+		if isCrossDay == 0 and SentNationalDayIndex ~= nil and SentNationalDayInfoNew ~= nil then
 			SentNationalDayIndex(sysarg)
 			SentNationalDayInfoNew(sysarg)
 		end
@@ -2428,24 +2428,7 @@ function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nL
 			end
 		end
 
-		-- 5. 国庆送礼
-		if NationalDayActivityCfg ~= nil and NationalDayActivityCfg.NationalDayNew ~= nil then
-			local dayIndex = GetNationalIndexDay()
-			if dayIndex >= 1 and dayIndex <= 7 then
-				EnsureNationalDayRewardCycle(sysarg)
-				if var.days.PeyNum >= NationalDayActivityCfg.NationalDayNew[dayIndex].needYB then
-					if var.nationalDayInfoNew == nil then var.nationalDayInfoNew = 0 end
-					if System.getIntBit(var.nationalDayInfoNew, dayIndex) == 0 then
-						var.nationalDayInfoNew = System.setIntBit(var.nationalDayInfoNew, dayIndex, true)
-						if SentNationalDayInfoNew ~= nil then
-							SentNationalDayInfoNew(sysarg)
-						end
-					end
-				end
-			end
-		end
-
-		-- 6. 新春活动/新春送礼
+		-- 5. 新春活动/新春送礼
 		if is_spring_festival_time ~= nil and is_spring_festival_time() == true then
 			if ClearAllSpringData ~= nil then ClearAllSpringData(sysarg) end
 			if SpringFestivalCfg ~= nil and SpringFestivalCfg.EveryTotalPay ~= nil and get_spring_festival_day_count ~= nil then
@@ -2476,7 +2459,7 @@ function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nL
 			end
 		end
 
-		-- 7. 百服活动
+		-- 6. 百服活动
 		if System.getHundredServerStatus ~= nil and System.getHundredServerStatus() == 1 and OneHundredActivityCfg ~= nil and OneHundredActivityCfg.MissionStepGift ~= nil then
 			local config = OneHundredActivityCfg.MissionStepGift[1]
 			if var.MissionStep == nil then var.MissionStep = 0 end
@@ -2492,7 +2475,7 @@ function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nL
 			end
 		end
 
-		-- 8. 劳动节活动
+		-- 7. 劳动节活动
 		if IsOpenActivity ~= nil and LaborActivityCfg ~= nil and LaborActivityCfg.SinglePay ~= nil and IsOpenActivity(LaborActivityCfg) == 5 then
 			if var.LaborSinglePayValue == nil then var.LaborSinglePayValue = 0 end
 			if var.LaborSinglePayValue == 0 then

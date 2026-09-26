@@ -47,7 +47,9 @@ function OnStartedLogicServer()
 		DisableJingJiCompetition() -- 关闭开关启用时清理旧活动状态
 		svar = System.getStaticVar()
 	end
-	EnsureNationalDayActivity() -- 启动时恢复国庆送礼的七天轮次
+	if EnsureNationalDayActivity ~= nil then
+		EnsureNationalDayActivity() -- 启动时恢复国庆送礼的七天轮次
+	end
 
 	CheckCombineServerStatus()	
 	
@@ -281,7 +283,9 @@ function OnServerNewDayArrive()
 	svar.bpbxdRank = nil	 -- 奔跑吧兄弟活动排行榜清0
 	
 	svar.days = {}
-	EnsureNationalDayActivity() -- 跨天推进国庆送礼，七天后直接进入下一轮
+	if EnsureNationalDayActivity ~= nil then
+		EnsureNationalDayActivity() -- 跨天推进国庆送礼，七天后直接进入下一轮
+	end
 
 	--OnNationalDayServerNewDayArrive() -- 国庆活动
 	OnInjectExpRankingNewDayArrive()

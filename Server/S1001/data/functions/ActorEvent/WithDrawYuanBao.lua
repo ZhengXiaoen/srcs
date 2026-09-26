@@ -536,17 +536,20 @@ function GetPeyYuanBaoHandlerEx(sysarg, args)
 	UpdateQingDianEveryTotalPayProgressByDailyPay(sysarg, var, svar)
 	
 	--在国庆活动里面
-	local dayIndex = GetNationalIndexDay()
-	if dayIndex>=1 and dayIndex<=7 then
-		EnsureNationalDayRewardCycle(sysarg)
-		if var.days.PeyNum>=NationalDayActivityCfg.NationalDayNew[dayIndex].needYB then
-			if var.nationalDayInfoNew==nil then 
-				var.nationalDayInfoNew=0
-			end
-			if System.getIntBit(var.nationalDayInfoNew,dayIndex)==0 then 
-				var.nationalDayInfoNew = System.setIntBit(var.nationalDayInfoNew,dayIndex,true)
-				--给前端发协议
-				SentNationalDayInfoNew(sysarg)
+	if GetNationalIndexDay ~= nil and EnsureNationalDayRewardCycle ~= nil and
+		NationalDayActivityCfg ~= nil and NationalDayActivityCfg.NationalDayNew ~= nil then
+		local dayIndex = GetNationalIndexDay()
+		if dayIndex>=1 and dayIndex<=7 then
+			EnsureNationalDayRewardCycle(sysarg)
+			if var.days.PeyNum>=NationalDayActivityCfg.NationalDayNew[dayIndex].needYB then
+				if var.nationalDayInfoNew==nil then
+					var.nationalDayInfoNew=0
+				end
+				if System.getIntBit(var.nationalDayInfoNew,dayIndex)==0 then
+					var.nationalDayInfoNew = System.setIntBit(var.nationalDayInfoNew,dayIndex,true)
+					--给前端发协议
+					if SentNationalDayInfoNew ~= nil then SentNationalDayInfoNew(sysarg) end
+				end
 			end
 		end
 	end

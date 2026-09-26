@@ -8,7 +8,7 @@ OnlineTimeAward =
 		online = 1800,	--当天累积在线时间（秒）30分钟
 		awards = 
 		{				
-			{type = 0, id = 507, count = 1,quality = 0, strong = 0,bind = 1},--20万绑定金币
+			{type = 0, id = 509, count = 1,quality = 0, strong = 0,bind = 1},--大金砖(绑金)
 		},		
 	},
 	--第2次
@@ -16,7 +16,7 @@ OnlineTimeAward =
 		online = 3600,	--当天累积在线时间（秒）60分钟
 		awards = 
 		{				
-			{type = 0, id = 507, count = 1,quality = 0, strong = 0,bind = 1},--20万绑定金币
+			{type = 0, id = 509, count = 2,quality = 0, strong = 0,bind = 1},--大金砖(绑金)
 		},	
 	},
 	--第3次
@@ -24,7 +24,7 @@ OnlineTimeAward =
 		online = 7200,	--当天累积在线时间（秒）120分钟
 		awards = 
 		{				
-			{type = 0, id = 507, count = 1,quality = 0, strong = 0,bind = 1},--20万绑定金币
+			{type = 0, id = 509, count = 3,quality = 0, strong = 0,bind = 1},--大金砖(绑金)
 		},	
 	},
 	--第4次
@@ -32,7 +32,7 @@ OnlineTimeAward =
 		online = 10800,	--当天累积在线时间（秒）180分钟
 		awards = 
 		{				
-			{type = 0, id = 507, count = 2,quality = 0, strong = 0,bind = 1},--40万绑定金币
+			{type = 0, id = 509, count = 5,quality = 0, strong = 0,bind = 1},--大金砖(绑金)
 		},		
 	},
 	--第5次
@@ -40,7 +40,7 @@ OnlineTimeAward =
 		online = 18000,	--当天累积在线时间（秒）300分钟
 		awards = 
 		{				
-			{type = 0, id = 507, count = 2,quality = 0, strong = 0,bind = 1},--40万绑定金币
+			{type = 0, id = 509, count = 8,quality = 0, strong = 0,bind = 1},--大金砖(绑金)
 		},		
 	},
 ---------------------------------------------------

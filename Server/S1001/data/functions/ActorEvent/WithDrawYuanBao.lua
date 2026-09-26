@@ -440,7 +440,8 @@ function GetPeyYuanBaoHandlerEx(sysarg, args)
 	local loginTime = System.getCurrMiniTime()
 	local lastPeyTime = var.lastPeyTime
 	if not lastPeyTime then
-		var.lastPeyTime = System.getCurrMiniTime()
+		lastPeyTime = loginTime
+		var.lastPeyTime = loginTime
 	end
 
 	--检查是否同一天

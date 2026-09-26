@@ -2315,7 +2315,7 @@ function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nL
 
 		local svar = System.getStaticVar()
 
-		-- 直接更新散人福利/万服庆典/大吉大利/国庆送礼/新春活动/百服活动/劳动节等累计充值相关变量
+		-- 直接更新散人福利/万服庆典/大吉大利/新春活动/百服活动/劳动节等累计充值相关变量
 		-- 1. 散人福利/散人红利
 		if SanRenHongLiCfg ~= nil and SanRenHongLiCfg.EveryTotalPay ~= nil then
 			if (svar.isDringSanRenHongLi == nil or svar.isDringSanRenHongLi < 1 or svar.isDringSanRenHongLi > 3) == false then
@@ -2430,7 +2430,17 @@ function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nL
 
 		-- 5. 新春活动/新春送礼
 		if is_spring_festival_time ~= nil and is_spring_festival_time() == true then
-			if ClearAllSpringData ~= nil then ClearAllSpringData(sysarg) end
+			if ClearAllSpringData ~= nil then
+				ClearAllSpringData(sysarg)
+			elseif System.isCrossServer() == false and svar.SpringTime ~= nil and var.SpringTime ~= svar.SpringTime then
+				-- 怪物脚本未包含春节模块时，仍按活动轮次清理上一轮记录。
+				var.SpringTime = svar.SpringTime
+				var.Spring_Data = {}
+				var.spring_redpacket_totalCount = 0
+				var.spring_flags = 0
+				var.spring_login_count = 0
+				var.spring_login_flags = 0
+			end
 			if SpringFestivalCfg ~= nil and SpringFestivalCfg.EveryTotalPay ~= nil and get_spring_festival_day_count ~= nil then
 				local cfg = SpringFestivalCfg.EveryTotalPay
 				if var.Spring_Data == nil then var.Spring_Data = {} end
@@ -2499,15 +2509,33 @@ function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nL
 
 		if daily_pay_ranking_sync_pay ~= nil then
 			daily_pay_ranking_sync_pay(sysarg)
+		else
+			-- 怪物脚本未包含排行榜模块时，仍同步充值额和活动榜。
+			if var.newdays == nil then var.newdays = {} end
+			var.newdays.daily_pay_ranking_yb = var.days.PeyNum
+			local dayData = svar.daily_pay_ranking_day_data
+			local rankingCfg = SanRenHongLiCfg and SanRenHongLiCfg.DailyPayRanking
+			if dayData ~= nil and rankingCfg ~= nil and rankingCfg.awardList ~= nil and rankingCfg.awardList[4] ~= nil and
+				var.days.PeyNum >= rankingCfg.awardList[4].minPay and
+				(System.getIntByte(dayData, 0) ~= 0 or System.getIntByte(dayData, 1) ~= 0) then
+				Ranking.update_value(4, sysarg, var.days.PeyNum)
+			end
 		end
 
 		if foot_print_add_weekly_pay_money_by_killboss ~= nil then
 			foot_print_add_weekly_pay_money_by_killboss(sysarg, nYuanBao)
 		else
-			-- 兜底：避免模块加载顺序导致函数未定义时，足迹/神盾周累充不累计
+			-- 怪物脚本未包含足迹模块时，直接累计并同步客户端。
 			var.FootPrintPayMoney = (var.FootPrintPayMoney or 0) + nYuanBao
 			if send_foot_print_pay_data ~= nil then
 				send_foot_print_pay_data(sysarg)
+			else
+				local footPack = DataPack.allocPacket(sysarg, 151, LogicCmd.miscSysEx.sub.sFootPrint)
+				DataPack.writeByte(footPack, 1)
+				DataPack.writeUInt(footPack, var.FootPrintPayMoney)
+				DataPack.writeUInt(footPack, var.footPrintGiftFlags or 0)
+				DataPack.writeUInt(footPack, var.shendunGiftFlags or 0)
+				DataPack.flush(footPack)
 			end
 		end
 
@@ -2554,11 +2582,24 @@ function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nL
 		if Pay_Rank_UpdateItem ~= nil then
 			local actorID = Actor.getIntProperty(sysarg, PROP_ENTITY_ID)
 			Pay_Rank_UpdateItem(actorID, Actor.getName(sysarg), nYuanBao)
+		elseif svar.pay_ranking ~= nil then
+			-- 怪物脚本未包含开服充值榜模块，按相同规则更新共享排行榜。
+			local rank = Ranking.getRanking("pay_rank")
+			if rank ~= nil then
+				local actorID = Actor.getIntProperty(sysarg, PROP_ENTITY_ID)
+				local item = Ranking.getItemPtrFromId(rank, actorID)
+				if item == nil then
+					item = Ranking.addItem(rank, actorID, nYuanBao)
+					if item ~= nil then
+						Ranking.setSub(item, 0, tostring(actorID))
+						Ranking.setSub(item, 1, Actor.getName(sysarg))
+					end
+				else
+					Ranking.updateItem(rank, actorID, nYuanBao)
+				end
+			end
 		end
 
-		if OnLuaEvent ~= nil and LuaEventId ~= nil and LuaEventId.ActorPayMoney ~= nil then
-			OnLuaEvent(LuaEventId.ActorPayMoney, sysarg, nYuanBao)
-		end
 	end
 
 	local szRewardTip = string.format("<(c0xFFd4ab6f)击败Boss><(c0xFFFF0000)【%s】><(c0xFFd4ab6f)！地点：%s 掉落：><(c0xFFFFD700)元宝直充+%d><(c0xFFd4ab6f)，远古积分+%d>", szBossName, szSceneName, nYuanBao, nYuanGu)

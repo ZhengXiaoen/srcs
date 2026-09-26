@@ -7,6 +7,8 @@
 3. 双击 4.查看游戏时间.bat 可只读查看当前记录。
 4. 游戏运行时如果只有数据库服务掉线，双击 2-1.DB掉线启动.bat。脚本会检查逻辑服和时间记录，不会重复启动已经运行的数据库服务。
 
+切换游戏时间或恢复现实时间时，脚本会重启本目录下已运行的 Apache/PHP，避免登录请求长时间等待后返回 503。若 phpStudy 尚未启动，照常先启动 phpStudy 再打开登录页。
+
 请用上述入口启停服务器。运行中手动关闭进程、电脑重启或自动校时打断游戏时间时，脚本会停止推断最后游戏时间，防止下次启动把游戏时间拨回过去。遇到提示后保留文件和日志，不要直接删除时间记录。
 
 运行时生成的 GameClock.state.json 是下一次启动时间记录，GameClock.LogicServer.original.txt 是首次修改前的开服配置备份；这两个文件不会提交到 Git。启动前请关闭 Windows 的“自动设置时间”；如果在虚拟机内运行，也请关闭虚拟机与宿主机的时间同步。运行期间不要手动校时。脚本发现 Windows 自动校时服务正在运行时会中止启动；关服时若发现时间跳变，会保留异常记录，等待你根据游戏日志恢复。
@@ -22,7 +24,7 @@
 如果服务器进程意外退出，或电脑重启后脚本要求恢复记录，先确认所有游戏服务器进程都已退出。根据游戏日志中最后确认的游戏时间，执行：
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "D:\SRCS\GameClock.ps1" -Action Recover -LastGameTime "2026-09-25 18:30:00"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "D:\SRCS\GameClock.ps1" -Action Recover -LastGameTime "2026-09-25 13:22:48"
 ```
 
 把示例时间换成日志中的实际时间。恢复脚本会把它保存为 `lastStopGameTime`，并默认把 `nextStart` 设为相同时间；需要额外推进时，可按上节手动修改。如果电脑在游戏期间重启或脚本提示无法自动还原现实时间，先在 Windows 设置中校准电脑时间，再在上述命令末尾加 `-ClockIsReal`。如果停服记录已保存、但电脑时间尚未恢复，校准后仅运行 `-Action Recover -ClockIsReal`。时间记录和原始配置备份都应保留。

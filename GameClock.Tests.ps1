@@ -61,7 +61,7 @@ function Get-BootId {
 }
 
 function Set-ComputerClock {
-    param([datetime]$Target)
+    param([datetime]$Target, $Paths)
     $script:FakeNow = $Target
 }
 
@@ -624,6 +624,17 @@ try {
     }
     Assert-True ($queryFailure -like '*simulated CIM access failure*') 'failed fallback query still blocks operation'
     $script:FakeCimFails = $false
+
+    $ownApachePath = [IO.Path]::Combine($paths.Root, 'phpStudy', 'PHPTutorial', 'Apache', 'bin', 'httpd.exe')
+    $ownPhpRoot = [IO.Path]::Combine($paths.Root, 'phpStudy', 'PHPTutorial', 'php')
+    $script:FakeProcessList = @(
+        [pscustomobject]@{ Path = $ownApachePath; ProcessName = 'httpd'; Id = 401 },
+        [pscustomobject]@{ Path = 'C:\Other\Apache\httpd.exe'; ProcessName = 'httpd'; Id = 402 },
+        [pscustomobject]@{ Path = ([IO.Path]::Combine($ownPhpRoot, 'php-5.6.27-nts', 'php-cgi.exe')); ProcessName = 'php-cgi'; Id = 403 },
+        [pscustomobject]@{ Path = 'C:\Other\PHP\php-cgi.exe'; ProcessName = 'php-cgi'; Id = 404 }
+    )
+    Assert-Equal 1 @(Get-WorkspaceWebProcesses 'httpd' $ownApachePath).Count 'only workspace Apache is selected'
+    Assert-Equal 1 @(Get-WorkspaceWebProcesses 'php-cgi' $ownPhpRoot $true).Count 'only workspace PHP workers are selected'
 
     Write-Host 'GameClock tests passed (clock and process operations were simulated).'
 } finally {

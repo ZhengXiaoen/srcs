@@ -41,6 +41,14 @@ function OnStartedLogicServer()
 	end
 	
 	static_data_on_logic_server_started()
+	if RepairDaJiDaLiOpenDate ~= nil then
+		RepairDaJiDaLiOpenDate()
+		svar = System.getStaticVar()
+	end
+	if DisableJingJiCompetition ~= nil then
+		DisableJingJiCompetition() -- 清理升级前已开启或已排期的竞技大赛
+		svar = System.getStaticVar()
+	end
 
 	CheckCombineServerStatus()	
 	
@@ -252,6 +260,9 @@ end
 
 -- 服务器跨天
 function OnServerNewDayArrive()
+	if DisableJingJiCompetition ~= nil then
+		DisableJingJiCompetition()
+	end
 	-- 零点清除所有的黑龙神殿怪
 	ClearHeiLongShenDianMonsters()
 	
@@ -264,7 +275,8 @@ function OnServerNewDayArrive()
 	dVar.psczNum = nil;		-- 鄙视城主人数
 	
 	local svar = System.getStaticVar()
-	local y,m,d,nHour,nMinute,nSecond = System.GetSystemTimeInMiniTime(System.getCurrMiniTime())	
+	local canStartOpenActivities = System.getCurrMiniTime() >= System.getServerOpenTime()
+	local y,m,d,nHour,nMinute,nSecond = System.GetSystemTimeInMiniTime(System.getCurrMiniTime())
 	local nNowDt = System.encodeNumTime(y,m,d,0,0,0)		
 	svar.SaveServerNewDayArriveTime = nNowDt
 	
@@ -382,7 +394,7 @@ function OnServerNewDayArrive()
 	
 	
 	--庆典活动开启
-	if svar.QingDianActivityYear~=nil and svar.QingDianActivityMonth~=nil and svar.QingDianActivityDay~=nil then 
+	if canStartOpenActivities and svar.QingDianActivityYear~=nil and svar.QingDianActivityMonth~=nil and svar.QingDianActivityDay~=nil then
 		local y,m,d = System.getDate( 0, 0, 0 )
 		if svar.QingDianActivityYear==y and svar.QingDianActivityMonth==m and svar.QingDianActivityDay==d then 
 			if svar.QingDian_openDay==nil then 
@@ -396,7 +408,7 @@ function OnServerNewDayArrive()
 	end
 	
 	--神秘商店活动开启
-	if svar.SHENMISTORE_Year~=nil and svar.SHENMISTORE_Month~=nil and svar.SHENMISTORE_Day~=nil then 
+	if canStartOpenActivities and svar.SHENMISTORE_Year~=nil and svar.SHENMISTORE_Month~=nil and svar.SHENMISTORE_Day~=nil then
 		local y,m,d = System.getDate( 0, 0, 0 )
 		if svar.SHENMISTORE_Year==y and svar.SHENMISTORE_Month==m and svar.SHENMISTORE_Day==d then 
 			if svar.SHENMISTORE_openDay==nil then 
@@ -408,7 +420,7 @@ function OnServerNewDayArrive()
 	
 	--月末活动开启
 	local y,m,d = System.getDate( 0, 0, 0 )
-	if EndMonthActivityDisabled ~= true and svar.EMActivityYear~=nil and svar.EMActivityMonth~=nil and svar.EMActivityDay~=nil then 
+	if canStartOpenActivities and EndMonthActivityDisabled ~= true and svar.EMActivityYear~=nil and svar.EMActivityMonth~=nil and svar.EMActivityDay~=nil then
 		if svar.EMActivityYear==y and svar.EMActivityMonth==m and svar.EMActivityDay==d then 
 			if svar.EndMonth_openDay==nil then 
 				svar.EndMonth_openDay=3
@@ -419,7 +431,7 @@ function OnServerNewDayArrive()
 	
 	--国庆活动开启
 	local y,m,d = System.getDate( 0, 0, 0 )
-	if svar.NAL_DAY_Year~=nil and svar.NAL_DAY_Month~=nil and svar.NAL_DAY_Day~=nil then 
+	if canStartOpenActivities and svar.NAL_DAY_Year~=nil and svar.NAL_DAY_Month~=nil and svar.NAL_DAY_Day~=nil then
 		if svar.NAL_DAY_Year==y and svar.NAL_DAY_Month==m and svar.NAL_DAY_Day==d then 
 			if svar.NAL_DAY_openDay==nil then 
 				svar.NAL_DAY_openDay=8
@@ -430,19 +442,15 @@ function OnServerNewDayArrive()
 	
 	
 	
-	--大吉大利活动开启
-	if svar.isDringDaJiDaLi ~=nil and svar.isDringDaJiDaLi ~=0 then 
-		if svar.isDringDaJiDaLi<3 then 
-			svar.isDringDaJiDaLi = svar.isDringDaJiDaLi+1
-			System.saveStaticVar()
-		else --第4日自动关闭
-            EndDaJiDaLi()
-		end
+	-- 按实际活动起始日计算天数，避免跨天或时钟调整后提前一天。
+	if RepairDaJiDaLiOpenDate ~= nil then
+		RepairDaJiDaLiOpenDate()
+		svar = System.getStaticVar()
 	end
 	
 	
 	--竞技活动开启
-	if svar.isDringJingJi ~=nil and svar.JingJiOpenDay ~=nil and svar.isDringJingJi ~=0 then 
+	if (JingJiCompetitionDisabled ~= true or svar.JingJiActivityTypes == 1) and svar.isDringJingJi ~=nil and svar.JingJiOpenDay ~=nil and svar.isDringJingJi ~=0 then
 		if svar.isDringJingJi<svar.JingJiOpenDay then 
 			svar.isDringJingJi = svar.isDringJingJi+1
 			System.saveStaticVar()
@@ -454,7 +462,7 @@ function OnServerNewDayArrive()
 	
 	
 	--竞技活动开启
-	if svar.StartJingJIYear~=nil and svar.StartJingjiMonth~=nil and svar.StartJingJiDay~=nil then 
+	if canStartOpenActivities and (JingJiCompetitionDisabled ~= true or svar.JingJiActivityTypes == 1) and svar.StartJingJIYear~=nil and svar.StartJingjiMonth~=nil and svar.StartJingJiDay~=nil then
 		local y,m,d = System.getDate( 0, 0, 0 )
 		if svar.StartJingJIYear==y and svar.StartJingjiMonth==m and svar.StartJingJiDay==d and svar.JingJiOpenDay~=nil and svar.JingJiActivityTypes~=nil then 
 			StartJingJi(svar.JingJiOpenDay,1,svar.JingJiActivityTypes) --当前第一天
@@ -465,9 +473,11 @@ function OnServerNewDayArrive()
 	
 	
 	--大吉大利活动开启
-	if svar.StartDaJiDaLiYear~=nil and svar.SpringDaJiDaLiMonth~=nil and svar.StartDaJiDaLiDay~=nil then 
+	if svar.StartDaJiDaLiYear~=nil and svar.SpringDaJiDaLiMonth~=nil and svar.StartDaJiDaLiDay~=nil then
 		local y,m,d = System.getDate( 0, 0, 0 )
-		if svar.StartDaJiDaLiYear==y and svar.SpringDaJiDaLiMonth==m and svar.StartDaJiDaLiDay==d then 
+		if canStartOpenActivities and
+			svar.isDringDaJiDaLi == nil and
+			svar.StartDaJiDaLiYear==y and svar.SpringDaJiDaLiMonth==m and svar.StartDaJiDaLiDay==d then
 			StartDaJiDaLi(1) --当前第一天
 		end
 	end
@@ -490,7 +500,7 @@ function OnServerNewDayArrive()
 	
 	
 	--周年活动开启
-	if svar.StartOneYear_Year~=nil and svar.StartOneYear_Month~=nil and svar.StartOneYear_Day~=nil then 
+	if canStartOpenActivities and svar.StartOneYear_Year~=nil and svar.StartOneYear_Month~=nil and svar.StartOneYear_Day~=nil then
 		local y,m,d = System.getDate( 0, 0, 0 )
 		if svar.StartOneYear_Year==y and svar.StartOneYear_Month==m and svar.StartOneYear_Day==d then 
 			if svar.StartOneYear_OpenDay==nil then 
@@ -513,7 +523,7 @@ function OnServerNewDayArrive()
 	end
 	
 	--散人红利活动开启
-	if svar.StartSanRenHongLiYear~=nil and svar.StartSanRenHongLiMonth~=nil and svar.StartSanRenHongLiDay~=nil then 
+	if canStartOpenActivities and svar.StartSanRenHongLiYear~=nil and svar.StartSanRenHongLiMonth~=nil and svar.StartSanRenHongLiDay~=nil then
 		local y,m,d = System.getDate( 0, 0, 0 )
 		if svar.StartSanRenHongLiYear==y and svar.StartSanRenHongLiMonth==m and svar.StartSanRenHongLiDay==d then 
 			StartSanRenHongLi(1) --当前第一天
@@ -523,7 +533,7 @@ function OnServerNewDayArrive()
 	
 	--散人红利活动新年时候连续开启4次
 	local y,m,d = System.getDate( 0, 0, 0 )
-	if 2019==y and ( 2==m and 2==d  or 2==m and 5==d or 2==m and 8==d or 2==m and 11==d) then 
+	if canStartOpenActivities and 2019==y and ( 2==m and 2==d  or 2==m and 5==d or 2==m and 8==d or 2==m and 11==d) then
 		StartSanRenHongLi(1) --当前第一天
 	end
 	

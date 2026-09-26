@@ -341,12 +341,70 @@ function Get-ElapsedMilliseconds {
     return [double]($now - $start)
 }
 
+function Get-WorkspaceWebProcesses {
+    param([string]$Name, [string]$Path, [bool]$IncludeSubdirectories = $false)
+    $expected = [IO.Path]::GetFullPath($Path)
+    $prefix = $expected.TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+    $matches = @()
+    foreach ($process in @(Get-Process -Name $Name -ErrorAction SilentlyContinue)) {
+        $actual = $null
+        try { $actual = $process.Path } catch {}
+        if ([string]::IsNullOrWhiteSpace($actual)) {
+            $cim = Get-CimInstance -ClassName Win32_Process -Filter "ProcessId = $($process.Id)" -ErrorAction SilentlyContinue
+            if ($null -ne $cim) { $actual = $cim.ExecutablePath }
+        }
+        if (-not [string]::IsNullOrWhiteSpace($actual)) {
+            $actual = [IO.Path]::GetFullPath($actual)
+            if ((-not $IncludeSubdirectories -and [string]::Equals($actual, $expected, [StringComparison]::OrdinalIgnoreCase)) -or
+                ($IncludeSubdirectories -and $actual.StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase))) {
+                $matches += $process
+            }
+        }
+    }
+    return @($matches)
+}
+
+function Restart-WorkspaceApacheAfterClockChange {
+    param($Paths)
+    if ($null -eq $Paths) { return }
+    $apacheRoot = [IO.Path]::Combine($Paths.Root, 'phpStudy', 'PHPTutorial', 'Apache')
+    $apacheExe = [IO.Path]::Combine($apacheRoot, 'bin', 'httpd.exe')
+    $apacheProcesses = @(Get-WorkspaceWebProcesses 'httpd' $apacheExe)
+    if ($apacheProcesses.Count -eq 0) { return }
+
+    $phpRoot = [IO.Path]::Combine($Paths.Root, 'phpStudy', 'PHPTutorial', 'php')
+    foreach ($worker in @(Get-WorkspaceWebProcesses 'php-cgi' $phpRoot $true)) {
+        Stop-Process -Id $worker.Id -Force -ErrorAction SilentlyContinue
+    }
+    foreach ($process in $apacheProcesses) {
+        Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+    }
+    for ($attempt = 0; $attempt -lt 20; $attempt++) {
+        $remaining = @($apacheProcesses | Where-Object { Get-Process -Id $_.Id -ErrorAction SilentlyContinue })
+        if ($remaining.Count -eq 0) { break }
+        Start-Sleep -Milliseconds 100
+    }
+    if ($remaining.Count -gt 0) {
+        throw '切换电脑时间后，旧 Apache 进程未退出；请检查 phpStudy。'
+    }
+    # phpStudy may have restarted Apache while the old processes were stopping.
+    if (@(Get-WorkspaceWebProcesses 'httpd' $apacheExe).Count -eq 0) {
+        $null = Start-Process -FilePath $apacheExe -ArgumentList ('-d "{0}"' -f $apacheRoot.Replace('\', '/')) -WorkingDirectory ([IO.Path]::GetDirectoryName($apacheExe)) -WindowStyle Hidden -PassThru -ErrorAction Stop
+    }
+    for ($attempt = 0; $attempt -lt 30; $attempt++) {
+        if (@(Get-WorkspaceWebProcesses 'httpd' $apacheExe).Count -ge 2) { return }
+        Start-Sleep -Milliseconds 100
+    }
+    throw '切换电脑时间后，Apache 未能重新启动；请检查 phpStudy。'
+}
+
 function Set-ComputerClock {
-    param([datetime]$Target)
+    param([datetime]$Target, $Paths)
     $null = Set-Date -Date $Target -ErrorAction Stop
     if ([Math]::Abs(((Get-Date) - $Target).TotalSeconds) -gt 5) {
         throw "设置电脑时间后读回不一致，预期 $(Format-ClockTime $Target)。"
     }
+    Restart-WorkspaceApacheAfterClockChange $Paths
 }
 
 function Restore-RealClock {
@@ -358,7 +416,8 @@ function Restore-RealClock {
     $utc = [datetime]::SpecifyKind(
         (Parse-ClockTime ([string]$State.realStartUtc)), [DateTimeKind]::Utc
     )
-    Set-ComputerClock $utc.AddMilliseconds($elapsed).ToLocalTime()
+    $realTime = $utc.AddMilliseconds($elapsed).ToLocalTime()
+    Set-ComputerClock -Target $realTime -Paths $Paths
 }
 
 function Get-ExpectedExecutablePath {
@@ -573,7 +632,7 @@ function Invoke-GameStart {
         if (@(Get-RunningServerNames $Paths).Count -gt 0) {
             throw '服务器进程在启动准备期间出现，不能回拨电脑时间。'
         }
-        Set-ComputerClock $plan.Target
+        Set-ComputerClock -Target $plan.Target -Paths $Paths
         $pending.phase = 'launching'
         Write-ClockState $Paths.State $pending
         foreach ($launcher in $script:Launchers) {

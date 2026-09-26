@@ -196,6 +196,7 @@ spirit_pet_recycle_item_list = {
 			6271, 1,
 			5951, 1,
             6736, 3,
+            6403, 1, -- Five-element stone: 0.1 sacrifice point
 
 		},
 

@@ -895,92 +895,92 @@ OneYearActivityCfg =
 	
 	},
 	
-	--11消费转盘
+	--11消费转盘：累计消费，7天按每天150万元宝，末档1050万
 	XiaoFeiZhuanPan = 
 	{
 		{
 			--第1挡
 			{
-				needPay = 8800,
+				needPay = 50000,
 				award={
 						{type = 0, id = 5365, count = 12,bind = 1,txt="三阶宝石袋"},
 				},
 			},
 			--第2挡
 			{
-				needPay = 18800,
+				needPay = 150000,
 				award={
 						{type = 0, id = 6932, count = 1,bind = 1,txt="周年庆礼盒①"},
 				},
 			},
 			--第3挡
 			{
-				needPay = 38800,
+				needPay = 300000,
 				award={
 						{type = 0, id = 6929, count = 1,bind = 1,txt="周年庆礼盒②"},
 				},
 			},
 			--第4挡
 			{
-				needPay = 88800,
+				needPay = 500000,
 				award={
 						{type = 0, id = 6930, count = 1,bind = 1,txt="周年庆礼盒③"},
 				},
 			},
 			--第5挡
 			{
-				needPay = 158000,
+				needPay = 900000,
 				award={
 						{type = 0, id = 6931, count = 1,bind = 1,txt="周年庆礼盒④"},
 				},
 			},
 			--第6挡
 			{
-				needPay = 258000,
+				needPay = 1500000,
 				award={
 						{type = 0, id = 6818, count = 3,bind = 1,txt="元神装备箱"},
 				},
 			},
 			--第7挡
 			{
-				needPay = 358000,
+				needPay = 3000000,
 				award={
-						{type = 0, id = 6820, count = 1,bind = 1,txt="龍装Ⅱ装备箱"},
+						{type = 0, id = 6887, count = 1,bind = 1,txt="龍装Ⅰ首饰箱"},
 				},
 			},
 			--第8挡
 			{
-				needPay = 488000,
+				needPay = 4500000,
 				award={
-						{type = 0, id = 6364, count = 1,bind = 1,txt="九转装备箱"},
+						{type = 0, id = 6365, count = 1,bind = 1,txt="七转装备箱"},
 				},
 			},
 			--第9挡
 			{
-				needPay = 746000,
+				needPay = 6000000,
 				award={
-						{type = 0, id = 6821, count = 1,bind = 1,txt="龍装Ⅲ装备箱"},
+						{type = 0, id = 6820, count = 1,bind = 1,txt="龍装Ⅱ装备箱"},
 				},
 			},
 			--第10挡
 			{
-				needPay = 1104000,
+				needPay = 7500000,
 				award={
-						{type = 0, id = 6714, count = 1,bind = 1,txt="十一转装备箱"},
+						{type = 0, id = 6364, count = 1,bind = 1,txt="九转装备箱"},
 				},
 			},
 			--第11挡
 			{
-				needPay = 2084000,
+				needPay = 9000000,
 				award={
-						{type = 0, id = 6936, count = 1,bind = 0,txt="至尊屠龙首饰盒"},
+						{type = 0, id = 7039, count = 8,bind = 1,txt="至尊屠龙碎片"},
 				},
 			},
 			--第12挡
 			{
-				needPay = 6664000,
+				needPay = 10500000,
 				award={
-						{type = 0, id = 6362, count = 1,bind = 0,txt="至尊屠龙刀"},
+						{type = 0, id = 7039, count = 18,bind = 1,txt="至尊屠龙碎片"},
 				},
 			},
 		},

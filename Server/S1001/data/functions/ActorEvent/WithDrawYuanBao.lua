@@ -116,7 +116,7 @@ function OnConsumeYuanBaoEvent(sysarg, nYuanBao, nLogId)
 			var.QDHD_Data.XFZPCosume = var.QDHD_Data.XFZPCosume + nYuanBao
 		end
 		
-		GetOneYearActInfo(sysarg,14)
+		GetQingDianActivityInfo(sysarg,14)
 	end
 	
 	

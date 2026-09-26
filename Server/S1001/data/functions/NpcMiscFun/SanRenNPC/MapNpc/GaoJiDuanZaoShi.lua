@@ -325,6 +325,7 @@ local t = {
 		
 		{7810,6371,15,"幻羽碎片兑换",1}, --幻羽碎片兑换
 		{7811,7047,15,"坐骑碎片兑换",1}, --坐骑碎片兑换
+		{7039,7557,88,"至尊屠龙令兑换",1}, --至尊屠龙碎片兑换至尊屠龙令
 	},
 	
 };
@@ -359,8 +360,8 @@ t.main = function(sysarg)
     <(c0xFFb6946c)矿石兑奖:> <#c0xFFFFFF00#黑铁矿/@onRebirthExp,1|在矿区挖矿获得#点击随机获得转生修为或绑定金币> <#c0xFFFFFF00#青金石矿/@onRebirthExp,2|在矿区挖矿获得#点击随机获得转生修为或绑定金币> <#c0xFFFFFF00#绿宝石矿/@onRebirthExp,3|在矿区挖矿获得#点击随机获得转生修为或绑定金币> <#c0xFFFFFF00#钻石矿/@onRebirthExp,4|在矿区挖矿获得#点击随机获得转生修为或绑定金币>
       <(c0xFF846f57)挖矿获得的矿石可以兑换获得转生修为或绑定金币> 
 <(idecoLine#330)>   <碎片兑换：>   <(c0xFF00c0ff)各碎片在各活动期间内产出>
-    <西游时装碎片兑换/@onduihuanshizhuang|15个西游时装碎片可随机兑换一个西游成品,可在角色-时装处激活> <三国时装兑换/@suihuanAllFunc,1|15个三国时装碎片可随机兑换一个三国时装成品,可佩戴在角色-时装中>  <至尊屠龙碎片兑换/@suihuanAllFunc,2|38个至尊屠龙碎片可兑换一个至尊屠龙首饰盒,碎片来源于活动>\   <幻羽兑换/@suihuanAllFunc,12|15个幻羽碎片可随机兑换一个幻羽礼箱,可在翅膀-幻羽处激活>   <坐骑兑换/@suihuanAllFunc,13|15个坐骑碎片可随机兑换一个坐骑礼盒,可在坐骑-幻化处激活>
-<(idecoLine#330)>   <至尊屠龙部件兑换：>     <(c0xFF00c0ff)至尊屠龙令与牌在庆典转盘内产出>
+    <西游时装碎片兑换/@onduihuanshizhuang|15个西游时装碎片可随机兑换一个西游成品,可在角色-时装处激活> <三国时装兑换/@suihuanAllFunc,1|15个三国时装碎片可随机兑换一个三国时装成品,可佩戴在角色-时装中>  <至尊屠龙碎片兑换/@suihuanAllFunc,2|38个至尊屠龙碎片可兑换一个至尊屠龙首饰盒,碎片来源于活动>\   <至尊屠龙令兑换/@suihuanAllFunc,14|88个至尊屠龙碎片可兑换一个至尊屠龙令,可用于兑换至尊屠龙刀、甲或衣>\   <幻羽兑换/@suihuanAllFunc,12|15个幻羽碎片可随机兑换一个幻羽礼箱,可在翅膀-幻羽处激活>   <坐骑兑换/@suihuanAllFunc,13|15个坐骑碎片可随机兑换一个坐骑礼盒,可在坐骑-幻化处激活>
+<(idecoLine#330)>   <至尊屠龙部件兑换：>     <(c0xFF00c0ff)至尊屠龙令可由88个碎片兑换，至尊屠龙牌在其他活动中产出>
                     <至尊屠龙部件兑换/@duihuanye>
 <(idecoLine#330)>  <(c0xFF00c0ff)至尊屠龙衣服互换： 所需消耗88800元宝>
 	    <至尊屠龙甲> <(c0xFFeabc78)→> <至尊屠龙衣> <互换/@onchangeGoods,1|每次兑换所需消耗88800元宝>
@@ -478,7 +479,7 @@ t.suihuanAllFunc =function(sysarg,index)
 	local logid = 1
 	if index ==1 then 
 		logid = LogIds.duihuansanguoshizhuanghun
-	elseif index==2 then 
+	elseif index==2 or index==14 then
 		logid =LogIds.duihuanzhizhuntulong
 	end
 

@@ -2,6 +2,7 @@
 /*
 !/.gitignore
 !/.gitattributes
+!/AGENTS.md
 !/GameClock.ps1
 !/GameClock.Tests.ps1
 !/Clean-TestData.ps1

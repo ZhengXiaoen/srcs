@@ -93,7 +93,7 @@ EveryDayPayGiftCfg =
                 {
 {type=0,id=7825,count=15,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
-{type=0,id=536,count=50,quality=0,strong=0,bind=1},--护符碎片(10000颗)
+{type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
 {type=0,id=484,count=20,quality=0,strong=0,bind=1},--功勋令牌(小)
 {type=0,id=7197,count=12,quality=0,strong=0,bind=1},--玛法晶块
@@ -394,7 +394,7 @@ EveryDayPayGiftCfg =
                 {
 {type=0,id=7825,count=15,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
-{type=0,id=536,count=50,quality=0,strong=0,bind=1},--护符碎片(10000颗)
+{type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
 {type=0,id=484,count=20,quality=0,strong=0,bind=1},--功勋令牌(小)
 {type=0,id=7197,count=12,quality=0,strong=0,bind=1},--玛法晶块
@@ -695,7 +695,7 @@ EveryDayPayGiftCfg =
                 {
 {type=0,id=7825,count=15,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
-{type=0,id=536,count=50,quality=0,strong=0,bind=1},--护符碎片(10000颗)
+{type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
 {type=0,id=484,count=20,quality=0,strong=0,bind=1},--功勋令牌(小)
 {type=0,id=7197,count=12,quality=0,strong=0,bind=1},--玛法晶块
@@ -996,7 +996,7 @@ EveryDayPayGiftCfg =
                 {
 {type=0,id=7825,count=15,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
-{type=0,id=536,count=50,quality=0,strong=0,bind=1},--护符碎片(10000颗)
+{type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
 {type=0,id=484,count=20,quality=0,strong=0,bind=1},--功勋令牌(小)
 {type=0,id=7197,count=12,quality=0,strong=0,bind=1},--玛法晶块
@@ -1297,7 +1297,7 @@ EveryDayPayGiftCfg =
                 {
 {type=0,id=7825,count=15,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
-{type=0,id=536,count=50,quality=0,strong=0,bind=1},--护符碎片(10000颗)
+{type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
 {type=0,id=484,count=20,quality=0,strong=0,bind=1},--功勋令牌(小)
 {type=0,id=7197,count=12,quality=0,strong=0,bind=1},--玛法晶块
@@ -1600,7 +1600,7 @@ EveryDayPayGiftCfg =
                 {
 {type=0,id=7825,count=15,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
-{type=0,id=536,count=50,quality=0,strong=0,bind=1},--护符碎片(10000颗)
+{type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
 {type=0,id=484,count=20,quality=0,strong=0,bind=1},--功勋令牌(小)
 {type=0,id=7197,count=12,quality=0,strong=0,bind=1},--玛法晶块
@@ -1836,7 +1836,7 @@ EveryDayPayGiftCfg =
                 {
 {type=0,id=7825,count=15,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
-{type=0,id=536,count=50,quality=0,strong=0,bind=1},--护符碎片(10000颗)
+{type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
 {type=0,id=484,count=20,quality=0,strong=0,bind=1},--功勋令牌(小)
 {type=0,id=7197,count=12,quality=0,strong=0,bind=1},--玛法晶块

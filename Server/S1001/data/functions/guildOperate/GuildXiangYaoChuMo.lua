@@ -83,7 +83,11 @@ SendGuildXiangYaoChuMoInfo = function(sysarg)
 	end
 	--print("var.Guild_xycmIndex="..var.Guild_xycmIndex)
 	--print("var.Guild_xycmKillC="..var.Guild_xycmKillC)
-	DataPack.writeByte(pack,var.Guild_xycmIndex)--任务的索引
+	local clientIndex = var.Guild_xycmIndex
+	if IsSpeciaTitleVip(sysarg, 2) then
+		clientIndex = clientIndex + #GuildXiangYaoChuMo_Cfg.ForClient
+	end
+	DataPack.writeByte(pack,clientIndex)--客户端用独立配置显示白银特权奖励
 	DataPack.writeByte(pack,var.Guild_xycmKillC)	--当前xx只
 
 	DataPack.flush(pack)

@@ -1,7 +1,7 @@
-"""Update the guild quest reward text embedded in GameFrame.swf.
+"""Restore the guild flag page text changed by the earlier quest UI patch.
 
-The Flash client stores this UI text in its ABC string pool. This patch keeps
-all string indexes and bytecode intact, then updates the SWF length fields.
+The quest's actual numbers come from guildxiangyaochumocfg.cbp, not this
+string. Keep all ABC string indexes and bytecode intact.
 """
 
 from __future__ import annotations
@@ -14,10 +14,9 @@ from pathlib import Path
 from patch_bag_client import ABCReader, encode_u30
 
 
-EXPECTED_SHA256 = "4d721cb2de13d31d4c6570d537b068ff7ae5cb2db968d59fcc32de043c4912ef"
+EXPECTED_SHA256 = "aa3ae478dc00bd67178d0498fb03cbfb3850b335ca35a5b9342d439738e5f469"
 REPLACEMENTS = {
-    "1000        300": "25万/40万  5000/8000",
-    "每日额外增加3次行会除魔任务": "每日行会除魔奖励按8次合并领取",
+    "25万/40万  5000/8000": "1000        300",
 }
 
 

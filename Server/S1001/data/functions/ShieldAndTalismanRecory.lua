@@ -19,30 +19,6 @@ ShieldAndTalismanRecoryCfg =
         { item_id = 549, value = 1,	pr = 126, str = "护盾碎片",logid=2697},	--江湖万事通
     }
 }
-function showShieldAndTalismanAutoRecoryTips(sysarg,nType)
-    local var = Actor.getStaticVar(sysarg)
-    local szEntel = "<未开启>"
-    if var.autorecoyhufu ~= nil then
-        szEntel = "<(c0xFF00FF00)已开启>"
-    end
-    local str = "  <#c0xFFFFFF00#自动回收%s/@onAutoRecoryTalisman,%s>%s "
-    str = string.format(str,ShieldAndTalismanRecoryCfg.title,nType,szEntel)
-    return str
-
-end
-
-function onAutoRecoryTalisman(sysarg,nType)
-    nType = tonumber(nType)
-    local var = Actor.getStaticVar(sysarg)
-    if var.autorecoyhufu ~= nil then
-        var.autorecoyhufu = nil
-    else
-        var.autorecoyhufu = 1
-    end
-    if nType == 1 then
-        return onVipAutomaticHs(sysarg)
-    end  
-end
 --nType 1.vip回收  2.包裹装备回收 3.装备回收npc 4.定时器自动回收
 function showShieldAndTalismanRecoryTips(sysarg,nType)
 

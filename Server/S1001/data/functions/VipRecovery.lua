@@ -4,10 +4,32 @@
 --#include "data\config\item\RecycledItems.lua" once	--装备回收配置
 --#include "data\functions\ShieldAndTalismanRecory.lua" once
 local HuiShouData = {};
-LocalDT.VipRecoveryAutoUseFragmentOptions = {
-	[21] = {title = "宝石碎片", flag = "autoUseGemFragments", itemIds = {[537] = true, [538] = true, [539] = true}},
-	[22] = {title = "圣珠碎片", flag = "autoUseHolyPearlFragments", itemIds = {[572] = true, [573] = true, [574] = true}},
+LocalDT.VipRecoveryAutoUseMaterialIds = {
+	[488] = true, [489] = true, [490] = true, -- 成就令牌
+	[531] = true, [532] = true, [533] = true, [534] = true, [535] = true, [536] = true, -- 护符碎片
+	[537] = true, [538] = true, [539] = true, -- 宝石结晶
+	[565] = true, [566] = true, [567] = true, [568] = true, [569] = true, [570] = true, -- 护盾碎片
+	[572] = true, [573] = true, [574] = true, -- 圣珠结晶
+	[6297] = true, [6374] = true, [6298] = true, -- 元神丹
+	[5165] = true, [5166] = true, [5167] = true, [5168] = true, [5171] = true, -- 神魂
+	[5645] = true, [5646] = true, [5647] = true, -- 斗笠精华
+	[7194] = true, [7195] = true, [7196] = true, -- 火龙结晶
+	[551] = true, [552] = true, [553] = true, -- 战将灵力丹
 }
+LocalDT.IsVipMaterialAutoUseEnabled = function(sysarg)
+	local var = Actor.getStaticVar(sysarg)
+	if var.autoUseMaterials == nil then
+		if var.autoUseGemFragments == 1 or var.autoUseHolyPearlFragments == 1 or var.autorecoyhufu ~= nil then
+			var.autoUseMaterials = 1
+		else
+			var.autoUseMaterials = 0
+		end
+	end
+	var.autoUseGemFragments = nil
+	var.autoUseHolyPearlFragments = nil
+	var.autorecoyhufu = nil
+	return var.autoUseMaterials == 1
+end
 function VipRecoveryInit(sysarg)
 	local e = "<title/VIP随身回收特权>\\  <(c0xFFeabc78)点击对应的套装名按钮即可回收包裹内对应的套装.>\\\\";
 	local d = RecycledItems;
@@ -204,16 +226,12 @@ function onVipAutomaticHs(sysarg)
 			n = n + 1
 		end
 	end
-	e = e .. showShieldAndTalismanAutoRecoryTips(sysarg,1) .. "\\\\"
-	local var = Actor.getStaticVar(sysarg)
-	for i = 21, 22 do
-		local option = LocalDT.VipRecoveryAutoUseFragmentOptions[i]
-		local status = "<未开启>"
-		if var[option.flag] == 1 then
-			status = "<(c0xFF00FF00)已开启>"
-		end
-		e = e .. string.format("  <#c0xFFFFFF00#自动使用%s/@onVipAutomaticHsEx,%s>%s ", option.title, i, status)
+	e = e .. "\\\\"
+	local status = "<未开启>"
+	if LocalDT.IsVipMaterialAutoUseEnabled(sysarg) then
+		status = "<(c0xFF00FF00)已开启>"
 	end
+	e = e .. string.format("  <#c0xFFFFFF00#材料自动使用/@onVipAutomaticHsEx,21|自动使用宝石、圣珠、护盾、护符、元神丹、神魂、斗笠精华、火龙结晶、战将灵力丹、成就令牌>%s ", status)
 	return e;
 end
 
@@ -242,37 +260,44 @@ function onVipAutomaticHsEx(sysarg,i)
 		else
 			var.dealAutoSell[v]=1
 		end
-	elseif LocalDT.VipRecoveryAutoUseFragmentOptions[i] then
+	elseif i == 21 then
 		local var = Actor.getStaticVar(sysarg)
-		local flag = LocalDT.VipRecoveryAutoUseFragmentOptions[i].flag
-		if var[flag] == 1 then
-			var[flag] = nil
+		if LocalDT.IsVipMaterialAutoUseEnabled(sysarg) then
+			var.autoUseMaterials = 0
 		else
-			var[flag] = 1
+			var.autoUseMaterials = 1
 		end
 	end
 	return onVipAutomaticHs(sysarg);
 end
 
--- 沿用手动使用碎片的消耗、属性增长、排行和日志逻辑。
-function VipAutoUseFragments(sysarg)
+-- 沿用各材料手动使用的消耗、属性增长、排行和日志逻辑。
+function VipAutoUseMaterials(sysarg)
 	if IsSpeciaTitleVip(sysarg,3) == false then return end
-	local var = Actor.getStaticVar(sysarg)
-	local selectedIds = {}
-	for i = 21, 22 do
-		local option = LocalDT.VipRecoveryAutoUseFragmentOptions[i]
-		if var[option.flag] == 1 then
-			for itemId in pairs(option.itemIds) do
-				selectedIds[itemId] = true
-			end
-		end
-	end
-	if next(selectedIds) == nil then return end
+	if not LocalDT.IsVipMaterialAutoUseEnabled(sysarg) then return end
 
 	local itemConfigs = {}
 	for _, config in ipairs(zJuanZhouAdd) do
-		if selectedIds[config.item_id] then
-			itemConfigs[config.item_id] = config
+		if LocalDT.VipRecoveryAutoUseMaterialIds[config.item_id] then
+			itemConfigs[config.item_id] = {func = onJuanZhouAdd, params = config}
+		end
+	end
+	for _, config in ipairs(FuSoulAdd) do
+		if LocalDT.VipRecoveryAutoUseMaterialIds[config.item_id] then
+			itemConfigs[config.item_id] = {func = onFuSoulAdd, params = config}
+		end
+	end
+	for _, config in ipairs(zAchievement) do
+		if LocalDT.VipRecoveryAutoUseMaterialIds[config.item_id] then
+			itemConfigs[config.item_id] = {func = onAchievementFunc, params = config}
+		end
+	end
+	for _, config in ipairs(JSLingLiDanUseTable) do
+		if LocalDT.VipRecoveryAutoUseMaterialIds[config.item_id] then
+			local count = Actor.getItemCount(sysarg, config.item_id)
+			if count > 0 then
+				onUseJSLingLiDan(sysarg, config.item_id, nil, config, 0, count)
+			end
 		end
 	end
 
@@ -280,11 +305,11 @@ function VipAutoUseFragments(sysarg)
 		local itemPtr = Item.getItemPtrByIndex(sysarg, index)
 		if itemPtr then
 			local itemId = Item.getItemId(itemPtr)
-			local config = itemConfigs[itemId]
-			if config then
+			local handler = itemConfigs[itemId]
+			if handler then
 				local count = Item.getItemProperty(sysarg, itemPtr, Item.ipItemCount, 0)
 				if count and count > 0 then
-					onJuanZhouAdd(sysarg, itemId, itemPtr, config, 0, count)
+					handler.func(sysarg, itemId, itemPtr, handler.params, 0, count)
 				end
 			end
 		end

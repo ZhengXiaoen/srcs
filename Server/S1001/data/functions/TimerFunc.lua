@@ -599,10 +599,7 @@ TimerFunc[27] = function(sysarg)
 		ShuaXinFengHao(sysarg);
 	end
 
-    if var.autorecoyhufu ~= nil then
-        onShieldAndTalismanRecory(sysarg,1,4)
-    end
-	VipAutoUseFragments(sysarg)
+	VipAutoUseMaterials(sysarg)
 end
 
 --地图定时器

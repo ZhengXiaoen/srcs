@@ -2051,7 +2051,7 @@ function onUseJSLingLiDan(sysarg,itemidx,itemPtr,ItemTable,delType,itemUserNum)
     if ItemTable.logid ~= nil then
         local nActorId = Actor.getIntProperty(sysarg,PROP_ENTITY_ID)
         local szActorName = Actor.getName(sysarg)
-		System.sendCommonLog(LogIds.logid,nActorId,szActorName,0,nOldCount,nNewCount)
+		System.sendCommonLog(ItemTable.logid,nActorId,szActorName,0,nOldCount,nNewCount)
     end
 	return true
 end

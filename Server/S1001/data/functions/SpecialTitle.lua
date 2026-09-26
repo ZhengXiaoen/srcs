@@ -107,6 +107,9 @@ function SpecialTitle_OnActorLogin(sysarg)
 		    end
 	    end
         var.autorecoyhufu = nil
+        var.autoUseGemFragments = nil
+        var.autoUseHolyPearlFragments = nil
+        var.autoUseMaterials = 0
 	end
 	
 	Actor.deleteTimer(sysarg,31)

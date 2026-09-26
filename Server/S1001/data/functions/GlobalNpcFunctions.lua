@@ -39,7 +39,6 @@ GlobalNpcFunctionsFilter = {
 	NewYearBlessDialog = 1,
 	NianConvertAward = 1,
 	NoticeCoinAnswer = 1,
-	onAutoRecoryTalisman = 1,
 	onBossMapGo = 1,
 	OnBuyRose = 1,
 	oncontribution_DH = 1,

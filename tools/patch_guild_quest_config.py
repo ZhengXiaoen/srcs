@@ -17,6 +17,7 @@ from pathlib import Path
 
 
 ORIGINAL_SHA256 = "30371c0fb6b836759f6ac5547c79be73f04e23c172a11168eabfdf05d476c01d"
+PREVIOUS_PATCHED_SHA256 = "3e76f381ac905ee68c259739cff43f6cd3d0f0e665111cc44e7eb8c9f2acfb77"
 HEADER_SIZE = 64
 
 
@@ -126,16 +127,25 @@ def set_quest(entry: Node, *, flag: int, spirit: int) -> None:
         raise ValueError("Unexpected original flag reward")
     if entry.child("lingLi").number() != 300:
         raise ValueError("Unexpected original spirit reward")
-    entry.child("monsterNum").set_number(1)
+    entry.child("monsterNum").set_number(20)
     entry.child("zhanLiZhi").set_number(flag)
     entry.child("lingLi").set_number(spirit)
 
 
 def patch(source: bytes) -> bytes:
-    if hashlib.sha256(source).hexdigest() != ORIGINAL_SHA256:
-        raise ValueError("Guild quest CBP differs from the expected original")
+    source_hash = hashlib.sha256(source).hexdigest()
+    if source_hash not in (ORIGINAL_SHA256, PREVIOUS_PATCHED_SHA256):
+        raise ValueError("Guild quest CBP differs from the expected versions")
     header, root = read_cbp(source)
     config = root.child("ForClient")
+    if source_hash == PREVIOUS_PATCHED_SHA256:
+        if config.kind != 4 or len(config.children) != 33:
+            raise ValueError("Expected 33 previously patched guild quest entries")
+        for entry in config.children:
+            if entry.child("monsterNum").number() != 1:
+                raise ValueError("Unexpected previously patched monster count")
+            entry.child("monsterNum").set_number(20)
+        return write_cbp(header, root)
     if config.kind != 4 or len(config.children) != 16:
         raise ValueError("Expected 16 original guild quest entries")
     originals = [config.child(str(index)) for index in range(16)]

@@ -1667,6 +1667,23 @@ taskstr=taskstr.."\\<(idecoLine9#195)>"
 			end
 		end
 		
+		--行会除魔只显示接取、进度和提交，不在任务追踪中显示奖励。
+		if Actor.getGuildId(sysarg) ~= 0 and GuildXiangYaoChuMoRemaining(sysarg) > 0 then
+			if var.Guild_xycmFlag == 1 then
+				taskstr = taskstr .. "<(c0xFF4ba0de)[行会]> <(c0xFFe19f21)行会除魔><(c0xFFf55c95a)(可接受)>\\<(c0xFFdce0cb)- 回复> <接受任务/@@showWin,7,5>"
+			elseif var.Guild_xycmFlag == 2 then
+				local cfg = GuildXiangYaoChuMo_Cfg.ForClient[var.Guild_xycmIndex or 1]
+				if cfg then
+					local killed = var.Guild_xycmKillC or 0
+					if killed >= cfg.monsterNum then
+						taskstr = taskstr .. "<(c0xFF4ba0de)[行会]> <(c0xFFe19f21)行会除魔><(c0xFFf55c95a)(已完成)>\\<(c0xFFdce0cb)- 回复> <提交任务/@@showWin,7,5>"
+					else
+						taskstr = taskstr .. string.format("<(c0xFF4ba0de)[行会]> <(c0xFFe19f21)行会除魔><(c0xFFf55c95a)(进行中)>\\<(c0xFFdce0cb)- 消灭> <任意怪/@@GetbranchAward,richangchumo><(c0xFFf55c95a)(%d/%d)>\\", killed, cfg.monsterNum)
+					end
+				end
+			end
+		end
+
 		if openServerDay >= 4 and Item.getEquipByPos(sysarg, itJunGuPos)==nil then
 			taskstr = taskstr .."\\<(c0xFF4ba0de)[攻击]> <(c0xFFe19f21)激活军鼓(属性暴涨)>\\<(c0xFFdce0cb)- 回复> <查看军鼓/@@showWin,213>\\<(c0xFFdce0cb)- 奖励> "..Item.getItemLinkMsg(5453)
 		end

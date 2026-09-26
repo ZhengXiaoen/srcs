@@ -29,7 +29,7 @@ GuildXiangYaoChuMo_Cfg = {
 		{
 			mapId = 14,
 			monsterId =0,
-			monsterNum=1,
+			monsterNum=20,
 			needYb2 = 0,
 			needYb3 = 298,
 			zhanLiZhi=250000,
@@ -40,7 +40,7 @@ GuildXiangYaoChuMo_Cfg = {
 		{
 			mapId = 21,
 			monsterId =0,
-			monsterNum=1,
+			monsterNum=20,
 			needYb2 = 0,
 			needYb3 = 298,
 			zhanLiZhi=250000,
@@ -51,7 +51,7 @@ GuildXiangYaoChuMo_Cfg = {
 				{
 			mapId = 27,
 			monsterId =0,
-			monsterNum=1,
+			monsterNum=20,
 			needYb2 = 0,
 			needYb3 = 298,
 			zhanLiZhi=250000,
@@ -63,7 +63,7 @@ GuildXiangYaoChuMo_Cfg = {
 		{
 			mapId = 31,
 			monsterId =0,
-			monsterNum=1,
+			monsterNum=20,
 			needYb2 = 0,
 			needYb3 = 298,
 			zhanLiZhi=250000,
@@ -75,7 +75,7 @@ GuildXiangYaoChuMo_Cfg = {
 		{
 			mapId = 34,
 			monsterId =0,
-			monsterNum=1,
+			monsterNum=20,
 			needYb2 = 0,
 			needYb3 = 298,
 			zhanLiZhi=250000,
@@ -87,7 +87,7 @@ GuildXiangYaoChuMo_Cfg = {
 		{
 			mapId = 38,
 			monsterId =0,
-			monsterNum=1,
+			monsterNum=20,
 			needYb2 = 0,
 			needYb3 = 298,
 			zhanLiZhi=250000,
@@ -99,7 +99,7 @@ GuildXiangYaoChuMo_Cfg = {
 		{
 			mapId = 41,
 			monsterId =0,
-			monsterNum=1,
+			monsterNum=20,
 			needYb2 = 0,
 			needYb3 = 298,
 			zhanLiZhi=250000,
@@ -111,7 +111,7 @@ GuildXiangYaoChuMo_Cfg = {
 		{
 			mapId = 45,
 			monsterId =0,
-			monsterNum=1,
+			monsterNum=20,
 			needYb2 = 0,
 			needYb3 = 298,
 			zhanLiZhi=250000,
@@ -123,7 +123,7 @@ GuildXiangYaoChuMo_Cfg = {
 		{
 			mapId = 49,
 			monsterId =0,
-			monsterNum=1,
+			monsterNum=20,
 			needYb2 = 0,
 			needYb3 = 298,
 			zhanLiZhi=250000,
@@ -135,7 +135,7 @@ GuildXiangYaoChuMo_Cfg = {
 		{
 			mapId = 53,
 			monsterId =0,
-			monsterNum=1,
+			monsterNum=20,
 			needYb2 = 0,
 			needYb3 = 298,
 			zhanLiZhi=250000,
@@ -147,7 +147,7 @@ GuildXiangYaoChuMo_Cfg = {
 		{
 			mapId = 56,
 			monsterId =0,
-			monsterNum=1,
+			monsterNum=20,
 			needYb2 = 0,
 			needYb3 = 298,
 			zhanLiZhi=250000,
@@ -159,7 +159,7 @@ GuildXiangYaoChuMo_Cfg = {
 		{
 			mapId = 58,
 			monsterId =0,
-			monsterNum=1,
+			monsterNum=20,
 			needYb2 = 0,
 			needYb3 = 298,
 			zhanLiZhi=250000,
@@ -171,7 +171,7 @@ GuildXiangYaoChuMo_Cfg = {
 		{
 			mapId = 66,
 			monsterId =0,
-			monsterNum=1,
+			monsterNum=20,
 			needYb2 = 0,
 			needYb3 = 298,
 			zhanLiZhi=250000,
@@ -183,7 +183,7 @@ GuildXiangYaoChuMo_Cfg = {
 		{
 			mapId = 66,
 			monsterId =0,
-			monsterNum=1,
+			monsterNum=20,
 			needYb2 = 0,
 			needYb3 = 298,
 			zhanLiZhi=250000,
@@ -195,7 +195,7 @@ GuildXiangYaoChuMo_Cfg = {
 		{
 			mapId = 66,
 			monsterId =0,
-			monsterNum=1,
+			monsterNum=20,
 			needYb2 = 0,
 			needYb3 = 298,
 			zhanLiZhi=250000,
@@ -206,7 +206,7 @@ GuildXiangYaoChuMo_Cfg = {
 		{
 			mapId = 66,
 			monsterId =0,
-			monsterNum=1,
+			monsterNum=20,
 			needYb2 = 0,
 			needYb3 = 298,
 			zhanLiZhi=250000,

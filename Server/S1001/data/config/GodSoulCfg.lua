@@ -1843,92 +1843,92 @@ GodSoulCfg =
             Name= "<(c0xFFeed49c)收集1转符文任意3个>",  --兑换名称
             SrcItemId = {3551,3552,3553,3554,3555,3556,3557,3558},         --兑换的道具id
             Count = 3,                --数量
-            Value = 10,               --获得的神器值
+            Value = 100,               --获得的神器值
         },
         -- 
         {
             Name= "<(c0xFFeed49c)收集2转符文任意2个>",
             SrcItemId = {3559,3560,3561,3562,3563,3564,3565,3566},
             Count = 2,
-            Value = 12,
+            Value = 120,
         },
         
         {
             Name= "<(c0xFFeed49c)收集3转符文任意2个>",
             SrcItemId = {3567,3568,3569,3570,3571,3572,3573,3574},
             Count = 2,
-            Value = 15,
+            Value = 150,
         },        
 
         {
             Name= "<(c0xFFeed49c)收集4转符文任意1个>",
             SrcItemId = {3575,3576,3577,3578,3579,3580,3581,3582},
             Count = 1,
-            Value = 20,
+            Value = 200,
         },
         
         {
             Name= "<(c0xFFeed49c)收集5转符文任意1个>",
             SrcItemId = {3583,3584,3585,3586,3587,3588,3589,3590},
             Count = 1,
-            Value = 26,
+            Value = 260,
         },
         
         {
             Name= "<(c0xFFeed49c)收集6转符文任意1个>",
             SrcItemId = {3591,3592,3593,3594,3595,3596,3597,3598},
             Count = 1,
-            Value = 38,
+            Value = 380,
         },
 
         {
             Name= "<(c0xFFeed49c)收集八荒装备任意3件>",
             SrcItemId = {403,404,405,406,407,408,409,410,411},
             Count = 3,
-            Value = 3,
+            Value = 30,
         },
         {
             Name= "<(c0xFFeed49c)收集九宫装备任意3件>",
             SrcItemId = {412,413,414,415,416,417,418,419,420},
             Count = 3,
-            Value = 6,
+            Value = 60,
         },
         {
             Name= "<(c0xFFeed49c)收集十方装备任意3件>",
             SrcItemId = {421,422,423,424,425,426,427,428,429},
             Count = 3,
-            Value = 10,
+            Value = 100,
         },
         {
             Name= "<(c0xFFeed49c)收集1转首饰任意3件>",
             SrcItemId = {433,434,435,436,437,438},
             Count = 3,
-            Value = 15,
+            Value = 150,
         },
         {
             Name= "<(c0xFFeed49c)收集2转首饰任意2件>",
             SrcItemId = {442,443,444,445,446,447},
             Count = 2,
-            Value = 20,
+            Value = 200,
         },
         {
             Name= "<(c0xFFeed49c)收集3转首饰任意1件>",
             SrcItemId = {451,452,453,454,455,456},
             Count = 1,
-            Value = 25,
+            Value = 250,
         },
         
         {
             Name= "<(c0xFFeed49c)收集霸主血刃1件>",
             SrcItemId = {430},
             Count = 1,
-            Value = 50,
+            Value = 500,
         },
         {
             Name= "<(c0xFFeed49c)收集霸主血甲(男女)任意1件>",
             SrcItemId = {431,432},
             Count = 1,
-            Value = 40,
+            Value = 400,
         },
        
        
@@ -1936,26 +1936,26 @@ GodSoulCfg =
             Name= "<(c0xFFeed49c)收集通天神剑1件>",
             SrcItemId = {439},
             Count = 1,
-            Value = 100,
+            Value = 1000,
         },
         {
             Name= "<(c0xFFeed49c)收集通天神甲(男女)任意1件>",
             SrcItemId = {440,441},
             Count = 1,
-            Value = 80,
+            Value = 800,
         },
       
         {
             Name= "<(c0xFFeed49c)收集毁灭灵斩1件>",
             SrcItemId = {448},
             Count = 1,
-            Value = 200,
+            Value = 2000,
         },
         {
             Name= "<(c0xFFeed49c)收集毁灭灵甲(男女)任意1件>",
             SrcItemId = {449,450},
             Count = 1,
-            Value = 150,
+            Value = 1500,
         },
        
        
@@ -1963,21 +1963,21 @@ GodSoulCfg =
             Name= "<(c0xFFeed49c)收集神甲碎片>",
             SrcItemId = {5170},
             Count = 1,
-            Value = 108,
+            Value = 1080,
         },
 
         {
             Name= "<(c0xFFeed49c)收集书页5张>",
             SrcItemId = {469},
             Count = 5,
-            Value = 5,
+            Value = 50,
         },
 
         {
             Name= "<(c0xFFeed49c)收集九花玉露丸>",
             SrcItemId = {4741},
             Count = 1,
-            Value = 20,
+            Value = 200,
         },
     },
 }

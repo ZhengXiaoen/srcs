@@ -6,6 +6,7 @@
 --#include "data\config\TasksConfig.inc" once --活动开始配置
 --#include "data\config\activityconfig\corpsBattle\corpsBattle.lua" once
 --#include "data\config\activityconfig\Dart\DartConfig.lua"  once  --基本设置
+--#include "data\config\activity\StdActivityCfg.lua" once
 --#include "data\functions\Systems\FlowerSystem\RoseRanking.lua" once  --玫瑰配置
 	--#include "data\functions\Tasks\LuoYangBattle\BattleCommon.lua" once
 --#include "data\config\activityconfig\KillEvil\KillEvilConfig.lua" once  --装备不可回收时物品
@@ -423,18 +424,10 @@ function SendApplyDartLeftTimes(sysarg)
 		var.days.darttms = 0
 	end
 
-	--vip类型
-	local bVip = Actor.isVip(sysarg)
-					
-	local maxTimes = 0
-	if(bVip == true) then
-		maxTimes = EscortDartConfig.VipOpenTimes
-	else
-		maxTimes = EscortDartConfig.OpenTimes
-	end
+	local maxTimes = StdActivityCfg.DuoBeiYaSong.maxEscort
 	local pack = DataPack.allocPacket(sysarg, LogicCmd.activitySys.sysID, LogicCmd.activitySys.sub.sDartSurplusTimes) --分配一个数据包
 	if(pack~=nil) then
-		DataPack.writeInt(pack,maxTimes - var.days.darttms)
+		DataPack.writeInt(pack,math.max(0, maxTimes - var.days.darttms))
 
 		DataPack.flush(pack) --向客户端发送
 	end

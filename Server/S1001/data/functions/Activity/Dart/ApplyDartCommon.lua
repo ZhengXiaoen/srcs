@@ -54,6 +54,15 @@ function StartApplyActorDart(sysarg, type)
 	end
 end
 
+-- 每日押镖浓缩为一次，奖励按原次数合并
+function GetActorDartRewardMultiplier(sysarg, cfg)
+	local times = cfg.mergedEscortTimes
+	if IsSpeciaTitleVip(sysarg, 3) == true then
+		times = times + cfg.vipExtraEscortTimes
+	end
+	return cfg.escortAwardRate * times
+end
+
 -- 请求开始押镖
 function StartDart(sysarg, packet)
 	--local buybx = DataPack.readByte( packet );	--是否购买保险
@@ -91,13 +100,7 @@ function StartDart(sysarg, packet)
 	local darttms = sVar.days.darttms
 	if not darttms then darttms = 0; end
 	
-	--黄金特权多1次
-	local maxDart = cfg.maxEscort
-	if IsSpeciaTitleVip(sysarg,3) ==true then 
-		maxDart = cfg.maxEscort+1
-	end
-	
-	if darttms >= maxDart then
+	if darttms >= cfg.maxEscort then
 		Actor.sendTipmsg(sysarg, string.format(Lang.ScriptTips.bc00013, cfg.maxEscort), ttFlyTip)
 		return;
 	end
@@ -162,6 +165,7 @@ function StartDartToDest(sysarg)
 		local x, y = Actor.getEntityPosition(sysarg, 0, 0)		--获取实体X Y坐标
 		if CreateDartCar(sysarg, cfg, monsterInfo, x, y, cfg.time) == true then
 			sVar.ybstate = cfg.DartSetup.CampDartStatusAccept
+			sVar.dartRewardMultiplier = GetActorDartRewardMultiplier(sysarg, cfg)
 			Actor.setDartFlag(sysarg, 1) --设置普通押镖
 			Actor.onTakeOffRide(sysarg);
 			sVar.ActorDartTime = System.getCurrMiniTime() --开始护镖时间 
@@ -204,6 +208,7 @@ function UpdateDartInfo(sysarg, var, cfg, bcpz, startTime)
 	local tOpenTime = cfg.tOpenTime.times;
 	local nIdx = checkActivityTime(tOpenTime);
 	local monsterInfo = cfg.tBiaoche[bcpz];
+	local rewardMultiplier = var.dartRewardMultiplier or GetActorDartRewardMultiplier(sysarg, cfg)
 	local args = {}
 	args[1] = bcpz;
 	if not var.buybx then
@@ -219,9 +224,9 @@ function UpdateDartInfo(sysarg, var, cfg, bcpz, startTime)
 	local activitytime = 0; -- 活动剩余时间
 	if nIdx > 0 then
 		args[4] = 1;
-		 nExp = monsterInfo.Awards[1].count * 2;
-		nBindCion = monsterInfo.Awards[2].count * 2;
-		nMana = monsterInfo.Awards[3].count * 2;
+		 nExp = monsterInfo.Awards[1].count * 2 * rewardMultiplier;
+		nBindCion = monsterInfo.Awards[2].count * 2 * rewardMultiplier;
+		nMana = monsterInfo.Awards[3].count * 2 * rewardMultiplier;
 		if var.buybx == 1 then
 			 nExp = nExp * cfg.tAwardPercent[4];
 			nBindCion = nBindCion * cfg.tAwardPercent[4];
@@ -231,9 +236,9 @@ function UpdateDartInfo(sysarg, var, cfg, bcpz, startTime)
 	else
 		args[4] = 0;
 		--DataPack.writeByte(pack, 0);
-		 nExp = monsterInfo.Awards[1].count;
-		nBindCion = monsterInfo.Awards[2].count;
-		nMana = monsterInfo.Awards[3].count;
+		 nExp = monsterInfo.Awards[1].count * rewardMultiplier;
+		nBindCion = monsterInfo.Awards[2].count * rewardMultiplier;
+		nMana = monsterInfo.Awards[3].count * rewardMultiplier;
 		if var.buybx == 1 then
 			 nExp = nExp * cfg.tAwardPercent[4];
 			nBindCion = nBindCion * cfg.tAwardPercent[4];
@@ -292,6 +297,7 @@ function SubmitDart(sysarg)
 	if not buybx then buybx = 0; end
 	
 	local tAwardPercent = cfg.tAwardPercent;
+	local rewardMultiplier = var.dartRewardMultiplier or GetActorDartRewardMultiplier(sysarg, cfg)
 	local ybfail = var.ybfail;
 	local tAwards = 
                    {
@@ -336,6 +342,8 @@ function SubmitDart(sysarg)
 			tAwards[3].count = mana * nMultiple * tAwardPercent[1];
 		end
 	end
+	tAwards[2].count = tAwards[2].count * rewardMultiplier
+	tAwards[3].count = tAwards[3].count * rewardMultiplier
     --老兵回归
     local sys = System.getStaticVar()
     if sys.oldplayer ~= nil then
@@ -811,7 +819,8 @@ function ResetActorDartInfo(sysarg, bDelayRemove, bResetData)
 		svar.bcpz = nil
 		svar.ActorDartTime = nil
 		svar.bcHandle = nil
-        svar.ybindex = nil
+		svar.ybindex = nil
+		svar.dartRewardMultiplier = nil
 		if not svar.ybfail then svar.ybfail = nil; end
 		
 	else

@@ -202,7 +202,7 @@ function BuySpecialRight(sysarg, sysid,packet)
 		end
 		
 		
-		System.broadcastTipmsg(string.format("<(n%s)>一次性购买了<全部特权/@@showWin,187>,享受了折扣价并可每日可免费领取丰厚奖励以及特权:个人副本一键通关,个人副本<3>倍领取打<8>折,杀怪经验增加<20％>,死亡掉落装备机率降低<20％>,炼狱获得经验增加<10％>,每日押镖次数额外赠送<1次>,行会除魔任务次数每日额外增加<3次>,享受自动回收装备功能(装备回收或随身回收处开启).<我也要购买/@@showWin,187>",Actor.getName(sysarg)), ttChatWindow)
+		System.broadcastTipmsg(string.format("<(n%s)>一次性购买了<全部特权/@@showWin,187>,享受了折扣价并可每日可免费领取丰厚奖励以及特权:个人副本一键通关,个人副本<3>倍领取打<8>折,杀怪经验增加<20％>,死亡掉落装备机率降低<20％>,炼狱获得经验增加<10％>,每日押镖奖励按原<4次>合并发放,行会除魔任务次数每日额外增加<3次>,享受自动回收装备功能(装备回收或随身回收处开启).<我也要购买/@@showWin,187>",Actor.getName(sysarg)), ttChatWindow)
 		System.broadcastTipmsg(string.format("<(n%s)>玩家财大气粗一次性购买了全部特权,从此享受多项福利,荣获各种特权,从此走上人生巅峰",Actor.getName(sysarg)), ttScreenCenter)
 	else 
 		return 

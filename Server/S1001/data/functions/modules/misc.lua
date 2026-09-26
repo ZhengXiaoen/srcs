@@ -2,6 +2,7 @@
 --得到沙巴克状态
 --#include "data\functions\ActorFlags.lua" once
 --#include "data\functions\Activity\Common\Awards.lua" once
+--#include "data\config\activity\StdActivityCfg.lua" once
 --#include "data\config\activityconfig\Answer\AnswerAwardCgf.lua" once
 --#include "data\functions\ItemFunc\TresureBox.lua" once
 --#include "data\config\UpdateGiftCfg.lua" once
@@ -44,16 +45,11 @@ function GetSurplusActivityCount(sysarg, sysid, packet)
         count = 2 - var.days.emolingCount
     end
     DataPack.writeByte(netPack,count)
-    --押镖次数
-	--黄金特权多1次
-	local maxDart = 3
-	if IsSpeciaTitleVip(sysarg,3) ==true then 
-		maxDart = 4
-	end
-    count = maxDart
+	-- 押镖每日只进行一次，黄金特权的原次数并入奖励
+	count = StdActivityCfg.DuoBeiYaSong.maxEscort
 	
     if var.days ~= 0 and var.days.darttms ~= nil then
-        count = count - var.days.darttms
+        count = math.max(0, count - var.days.darttms)
     end
     DataPack.writeByte(netPack,count)
 

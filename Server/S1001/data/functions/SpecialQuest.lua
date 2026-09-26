@@ -2,6 +2,7 @@
 SpecialQuestFuncs = {}
 
 --#include "data\config\quest\BranchTaskCfg.lua" once
+--#include "data\config\activity\StdActivityCfg.lua" once
 --#include "data\functions\FuBenNpcFunc\NewFubenFunc.lua" once
 --#include "data\functions\ActorFlags.lua" once
 --#include "data\config\quest\CircleQuest.lua" once
@@ -564,7 +565,7 @@ function MainQuestPriority(sysarg)
 	end
 
 	--护送任务
-	if pLv >= 70 and var.days.darttms <= 3 then
+	if pLv >= 70 and (var.days.darttms or 0) < StdActivityCfg.DuoBeiYaSong.maxEscort then
 		return 3,'<护送镖车/M比奇城:191:118:军需官> <(x比奇城:191:118:军需官)>'
 	end
 
@@ -1610,14 +1611,8 @@ taskstr=taskstr.."\\<(idecoLine9#195)>"
 			if var.days.darttms == nil then 
 				var.days.darttms = 0
 			end
-			-- 运镖次数
-				--黄金特权多1次
-			local maxDart = 3
-			if IsSpeciaTitleVip(sysarg,3) ==true then 
-				maxDart = 3+1
-			end
-	
-			if var.days.darttms<maxDart then 
+			-- 每日押镖次数
+			if var.days.darttms < StdActivityCfg.DuoBeiYaSong.maxEscort then
 				taskstr = taskstr .. "<(c0xFF4ba0de)[血装]> <(c0xFFe19f21)押镖><(c0xFFf55c95a)(军印功勋值)>\\<(c0xFFdce0cb)- 回复> <龙门镖局/M威龙城:150:140:龙门镖局|总镖头明确的告诉你每天不押镖就亏了亏了#押镖可拿功勋值#功勋值提升军印可以增加大量人物生命值和魔法值> <(x威龙城:150:140:龙门镖局)>\\"
 			end
 		
@@ -3023,4 +3018,3 @@ function GetbranchAward(sysarg,...)
 	-- 	end
 	-- end
 end
-

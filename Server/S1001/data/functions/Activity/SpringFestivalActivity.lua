@@ -1,7 +1,7 @@
 --#include "data\config\activity\SpringFestivalCfg.lua" once
 
 -- 春节活动
-SpringFestivalActivityDisabled = false -- 新春活动按活动周期自动开启
+SpringFestivalActivityDisabled = true -- 彻底关闭春节活动
 
 -- func(sysarg, packet)
 g_spring_festival_funcs = {}

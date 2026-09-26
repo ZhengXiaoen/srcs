@@ -167,8 +167,8 @@ activity_jingji =
 	{
 		{
 			name = "坐骑丹",
-			needMoney =7000,
-			Money =10000,
+			needMoney =700,
+			Money =1000,
 			count =10,
 			award =
 			{
@@ -177,8 +177,8 @@ activity_jingji =
 		},
 		{
 			name = "火龙结晶(小)",
-			needMoney =7000,
-			Money =10000,
+			needMoney =700,
+			Money =1000,
 			count =10,
 			award =
 			{
@@ -187,8 +187,8 @@ activity_jingji =
 		},
 		{
 			name = "九龍珠",
-			needMoney =21000,
-			Money =30000,
+			needMoney =2100,
+			Money =3000,
 			count =10,
 			award =
 			{
@@ -197,8 +197,8 @@ activity_jingji =
 		},
 		{
 			name = "宝石结晶(1000)",
-			needMoney =70000,
-			Money =100000,
+			needMoney =7000,
+			Money =10000,
 			count =10,
 			award =
 			{
@@ -207,8 +207,8 @@ activity_jingji =
 		},
 		{
 			name = "圣珠结晶(1000)",
-			needMoney =70000,
-			Money =100000,
+			needMoney =7000,
+			Money =10000,
 			count =10,
 			award =
 			{
@@ -217,8 +217,8 @@ activity_jingji =
 		},
 		{
 			name = "特戒结晶(1)",
-			needMoney =70000,
-			Money =100000,
+			needMoney =7000,
+			Money =10000,
 			count =10,
 			award =
 			{
@@ -227,8 +227,8 @@ activity_jingji =
 		},
 		{
 			name = "1级羽毛",
-			needMoney =7000,
-			Money =10000,
+			needMoney =700,
+			Money =1000,
 			count =10,
 			award =
 			{
@@ -237,18 +237,18 @@ activity_jingji =
 		},
 		{
 			name = "神魂",
-			needMoney =7000,
-			Money =10000,
+			needMoney =525,
+			Money =750,
 			count =10,
 			award =
 			{
-				{type = 0, id = 5171,count = 50,bind = 1},--转生修为丹(小)
+				{type = 0, id = 5171,count = 50,bind = 1},--神魂
 			},
 		},
 		{
 			name = "斗笠精华(小)",
-			needMoney =7000,
-			Money =10000,
+			needMoney =700,
+			Money =1000,
 			count =10,
 			award =
 			{
@@ -257,8 +257,8 @@ activity_jingji =
 		},
 		{
 			name = "戒灵粉尘(100)",
-			needMoney =7000,
-			Money =10000,
+			needMoney =700,
+			Money =1000,
 			count =10,
 			award =
 			{
@@ -267,8 +267,8 @@ activity_jingji =
 		},
 		{
 			name = "元神丹(小)",
-			needMoney =70000,
-			Money =100000,
+			needMoney =7000,
+			Money =10000,
 			count =10,
 			award =
 			{
@@ -277,8 +277,8 @@ activity_jingji =
 		},
 		{
 			name = "转生修为丹(小)",
-			needMoney =35000,
-			Money =50000,
+			needMoney =3500,
+			Money =5000,
 			count =10,
 			award =
 			{

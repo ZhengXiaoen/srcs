@@ -1,4 +1,4 @@
-# Track core server Lua, static text dependencies, and game clock scripts.
+# Track core server Lua, game clock scripts, and the patched Flash client.
 /*
 !/.gitignore
 !/.gitattributes
@@ -16,6 +16,14 @@
 !/目录索引.md
 !/代码索引.md
 !/Server/
+!/web/
+!/tools/
+
+/web/*
+!/web/GameFrame.swf
+
+/tools/*
+!/tools/patch_bag_client.py
 
 /Server/*
 !/Server/S1001/

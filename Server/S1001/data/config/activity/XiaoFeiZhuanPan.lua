@@ -12,7 +12,7 @@ XiaoFeiZhuanPan= --神秘商店
 	needCircle =3,
 	
     award ={
-							{name ="日纹强化石",type=0,id=461,count=100,bind=1,rate=5,},
+							{name ="星纹强化石",type=0,id=459,count=400,bind=1,rate=5,},
 							{name ="元神丹(小)",type=0,id=6297,count=10,bind=1,rate=5,},
 							{name ="五行石",type=0,id=6403,count=50,bind=1,rate=5,},
 							{name ="五彩石",type=0,id=6271,count=100,bind=1,rate=5,},

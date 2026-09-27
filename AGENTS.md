@@ -4,3 +4,8 @@
 - Git 提交说明使用中文。
 - 提交前检查工作区，只提交本次任务相关文件，不要混入其他未提交改动。
 - 最终答复使用中文，简要说明修改内容、验证结果和提交哈希。
+
+## Lua 脚本编译限制
+
+- `Server/S1001/data/functions/GlobalFunction.lua` 会通过 `--#include` 将大量脚本合并为同一个 Lua 代码块。被包含文件中的顶层 `local` 和 `local function` 会一直占用该代码块的局部变量与寄存器名额；新增几个就可能使后面的配置表编译时报 `function or expression too complex near ','`，报错行号通常不是新增代码所在行。
+- 在此代码块包含的脚本中新增辅助函数时，优先挂到已有的 `LocalDT` 表上（例如 `LocalDT.SomeHelper = function(...) ... end`），避免新增顶层局部变量。修改后检查所有调用处，并尽可能用服务器实际启动验证整个合并脚本能编译；只检查单个 Lua 文件的语法不足以发现此问题。

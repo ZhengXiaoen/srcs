@@ -112,7 +112,7 @@ LocalDT.NormalizeSkyRingMaterialStacks = function(sysarg)
 end
 
 -- 定时 BOSS 的截止时间和当前怪物写入服务器持久变量，重启后可恢复。
-local function GetSRRefreshMonsterSave()
+LocalDT.GetSRRefreshMonsterSave = function()
 	local svar = System.getStaticVar()
 	if svar.srRefreshMonsterSave == nil then
 		svar.srRefreshMonsterSave = {}
@@ -120,14 +120,14 @@ local function GetSRRefreshMonsterSave()
 	return svar.srRefreshMonsterSave
 end
 
-local function GetSRRefreshMonsterRecord(save, bj)
+LocalDT.GetSRRefreshMonsterRecord = function(save, bj)
 	if save[bj] == nil then
 		save[bj] = {}
 	end
 	return save[bj]
 end
 
-local function GetSRRefreshMonsterLiveId(scene, ref)
+LocalDT.GetSRRefreshMonsterLiveId = function(scene, ref)
 	if scene == nil then return 0, 0 end
 	if Fuben.getLiveMonsterCount(scene, ref.monid) > 0 then
 		return ref.monid, 0
@@ -142,7 +142,7 @@ local function GetSRRefreshMonsterLiveId(scene, ref)
 	return 0, 0
 end
 
-local function GetSRRefreshMonsterActiveId(ref, record)
+LocalDT.GetSRRefreshMonsterActiveId = function(ref, record)
 	local activeId = tonumber(record.activeId)
 	if ref.nextboss ~= nil then
 		for i = 1, #ref.nextboss do
@@ -154,7 +154,7 @@ local function GetSRRefreshMonsterActiveId(ref, record)
 	return ref.monid, 0
 end
 
-local function CreateSRRefreshMonster(scene, ref, monid, randomPosition)
+LocalDT.CreateSRRefreshMonster = function(scene, ref, monid, randomPosition)
 	if scene == nil then return nil end
 	if not randomPosition then
 		return Fuben.createMonster(scene, monid, ref.x, ref.y, 0)
@@ -2703,7 +2703,7 @@ function OnMonsterByKilled(monster, sysarg, monId, fubenId, sceneId,fuBenPtr)
 ---------------------------------------------------------------------------击杀定时刷的BOSS处理
 
    local bIdentCode = false
-	local refreshSave = GetSRRefreshMonsterSave()
+	local refreshSave = LocalDT.GetSRRefreshMonsterSave()
 	for i = 1,#RefreshMonsterData do
 		local ref = RefreshMonsterData[i];
         local refreshRecord = refreshSave[ref.bj]
@@ -2719,7 +2719,7 @@ function OnMonsterByKilled(monster, sysarg, monId, fubenId, sceneId,fuBenPtr)
             bIdentCode = true
         end
 		if (ref.monid == monId or (ref.nextboss ~= nil and nextboss[ref.bj] > 0 and nextboss[ref.bj] <= #ref.nextboss and ref.nextboss[nextboss[ref.bj]].monid == monId)) and nBossSceneId == ref.mapid then
-			refreshRecord = GetSRRefreshMonsterRecord(refreshSave, ref.bj)
+			refreshRecord = LocalDT.GetSRRefreshMonsterRecord(refreshSave, ref.bj)
 			local remaining = svar.srrmRemaining;	--记录刷怪剩余时间,如果等于0就刷
 			if s == nil then svar.srRefreshMonster = {}; s = svar.srRefreshMonster; end
 			if remaining == nil then svar.srrmRemaining = {}; remaining = svar.srrmRemaining; end
@@ -5779,13 +5779,13 @@ function SRRefreshMonsterEx()
 	local s = svar.srRefreshMonster
 	local remaining = svar.srrmRemaining
 	local nextboss = svar.srRefreshMonsterBoss
-	local refreshSave = GetSRRefreshMonsterSave()
+	local refreshSave = LocalDT.GetSRRefreshMonsterSave()
 	local now = System.getCurrMiniTime()
 	for i = 1,#RefreshMonsterData do
 		local r = RefreshMonsterData[i]
-		local record = GetSRRefreshMonsterRecord(refreshSave, r.bj)
+		local record = LocalDT.GetSRRefreshMonsterRecord(refreshSave, r.bj)
 		local scene = Fuben.getSceneHandleById(r.mapid)
-		local liveId, liveIndex = GetSRRefreshMonsterLiveId(scene, r)
+		local liveId, liveIndex = LocalDT.GetSRRefreshMonsterLiveId(scene, r)
 		local nextTime = tonumber(record.nextTime) or 0
 		if nextTime > 0 then
 			-- 启动恢复只执行一次，已死亡 BOSS 的截止时间额外提前 30 分钟。
@@ -5800,9 +5800,9 @@ function SRRefreshMonsterEx()
 			remaining[r.bj] = math.ceil((nextTime - now) / 60)
 			nextboss[r.bj] = 0
 		else
-			local activeId, activeIndex = GetSRRefreshMonsterActiveId(r, record)
+			local activeId, activeIndex = LocalDT.GetSRRefreshMonsterActiveId(r, record)
 			if nextTime > 0 then activeId, activeIndex = r.monid, 0 end
-			local monster = CreateSRRefreshMonster(scene, r, activeId, false)
+			local monster = LocalDT.CreateSRRefreshMonster(scene, r, activeId, false)
 			if monster ~= nil then
 				s[r.bj], remaining[r.bj], nextboss[r.bj] = 1, 0, activeIndex
 				record.activeId, record.nextIndex, record.nextTime = activeId, activeIndex, 0
@@ -5844,16 +5844,16 @@ function SRRefreshMonster()
     local s = svar.srRefreshMonster
     local remaining = svar.srrmRemaining
     local nextboss = svar.srRefreshMonsterBoss
-    local refreshSave = GetSRRefreshMonsterSave()
+    local refreshSave = LocalDT.GetSRRefreshMonsterSave()
     local now = System.getCurrMiniTime()
     local openday = System.getDaysSinceOpenServer()
     local staticChanged = false
 
     for i = 1, #RefreshMonsterData do
         local r = RefreshMonsterData[i]
-        local record = GetSRRefreshMonsterRecord(refreshSave, r.bj)
+        local record = LocalDT.GetSRRefreshMonsterRecord(refreshSave, r.bj)
         local scene = Fuben.getSceneHandleById(r.mapid)
-        local liveId, liveIndex = GetSRRefreshMonsterLiveId(scene, r)
+        local liveId, liveIndex = LocalDT.GetSRRefreshMonsterLiveId(scene, r)
         local nextTime = tonumber(record.nextTime) or 0
         if liveId ~= 0 then
             s[r.bj], remaining[r.bj], nextboss[r.bj] = 1, 0, liveIndex
@@ -5866,9 +5866,9 @@ function SRRefreshMonster()
             remaining[r.bj] = math.ceil((nextTime - now) / 60)
             nextboss[r.bj] = 0
         else
-            local activeId, activeIndex = GetSRRefreshMonsterActiveId(r, record)
+            local activeId, activeIndex = LocalDT.GetSRRefreshMonsterActiveId(r, record)
             if nextTime > 0 then activeId, activeIndex = r.monid, 0 end
-            local monster = CreateSRRefreshMonster(scene, r, activeId, true)
+            local monster = LocalDT.CreateSRRefreshMonster(scene, r, activeId, true)
             if monster == nil then
                 s[r.bj], remaining[r.bj], nextboss[r.bj] = 0, 0, activeIndex
             else

@@ -1,7 +1,7 @@
 --#include "data\config\activity\SpringFestivalCfg.lua" once
 
 -- 春节活动
-SpringFestivalActivityDisabled = true -- 永久关闭新春活动
+SpringFestivalActivityDisabled = false -- 新春活动按活动周期自动开启
 
 -- func(sysarg, packet)
 g_spring_festival_funcs = {}
@@ -191,7 +191,7 @@ function on_spring_festival_online_cross_day(sysarg)
 	
 end
 
-function on_spring_festival_started_logic_server()
+function ensure_spring_festival_activity(is_started_server)
 	if SpringFestivalActivityDisabled then
 		local dvar = System.getDyanmicVar()
 		if dvar.start_spring_festival_activity == 1 then
@@ -199,33 +199,26 @@ function on_spring_festival_started_logic_server()
 		end
 		return
 	end
-	get_spring_festival_time(false)
-	if is_spring_festival_time() then
-		start_spring_festival_activity(true)
+	if System.getCurrMiniTime() < System.getServerOpenTime() then return end
+	local previousStart = System.getStaticVar().SpringTime
+	get_spring_festival_time(true)
+	local cycleChanged = previousStart ~= System.getStaticVar().SpringTime
+	local dvar = System.getDyanmicVar()
+	if cycleChanged and dvar.start_spring_festival_activity == 1 then
+		end_spring_festival_activity()
 	end
+	if is_spring_festival_time() and (is_started_server or dvar.start_spring_festival_activity ~= 1) then
+		start_spring_festival_activity(is_started_server == true and not cycleChanged)
+	end
+end
+
+function on_spring_festival_started_logic_server()
+	ensure_spring_festival_activity(true)
 end
 
 -- 春节活动跨天
 function on_spring_festival_new_day_arrive()
-	if SpringFestivalActivityDisabled then
-		local dvar = System.getDyanmicVar()
-		if dvar.start_spring_festival_activity == 1 then
-			end_spring_festival_activity()
-		end
-		return
-	end
-	local y,m,d = System.getDate()
-	local _time = get_spring_festival_time(false)
-	if _time ~= nil and _time[1] ~= nil and y == _time[1] and m == _time[2] and d == _time[3] then
-		start_spring_festival_activity(false)
-	else
-		if not is_spring_festival_time() then
-			local dvar = System.getDyanmicVar()
-			if dvar.start_spring_festival_activity ~= nil and dvar.start_spring_festival_activity == 1 then
-				end_spring_festival_activity()
-			end
-		end
-	end
+	ensure_spring_festival_activity(false)
 end
 
 function start_spring_festival_activity(is_started_server)

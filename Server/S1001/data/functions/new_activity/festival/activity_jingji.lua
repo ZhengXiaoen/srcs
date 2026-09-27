@@ -1,7 +1,7 @@
 --#include "data\config\new_activity\festival\activity_jingji.lua" once --竞技活动
 --#include "data\functions\new_activity\festival\ActivityRankFunc.lua" once 
 --#include "data\functions\modules\daily_pay_ranking.lua" once -- 活动:每日充值排行榜
-JingJiCompetitionDisabled = true -- 永久关闭竞技大赛；圣诞活动仍可使用共用协议
+JingJiCompetitionDisabled = false -- 竞技大赛按活动周期自动开启；圣诞活动仍可使用共用协议
 
 --竞技协议派发
 handleJingjiActivity = function (sysarg, sysid, packet)
@@ -384,29 +384,23 @@ end
 --结束竞技活动
 EndJingJi = function()
 	local svar = System.getStaticVar()
+	local endedType = svar.JingJiActivityTypes or 0
 	svar.isDringJingJi = nil
-	System.saveStaticVar()
-	
 	svar.JingJiOpenDay =nil
-	
+	svar.JingJiActivityTypes =nil
+	System.saveStaticVar()
+
 	local playerList = LuaHelp.getAllActorList()
 	if not playerList then return end
-	
+
 	for i, player in ipairs(playerList) do
 		--是否开启庆典活动
 		local netPack = DataPack.allocPacket(player,151,LogicCmd.miscSysEx.sub.sJingJI_isOpen)
-		--开的是哪一个活动
-		if svar.JingJiActivityTypes==nil then 
-			DataPack.writeByte(netPack,0)
-		else	
-			DataPack.writeByte(netPack,svar.JingJiActivityTypes)
-		end
+		DataPack.writeByte(netPack,endedType)
 		DataPack.writeByte(netPack,0)
 		DataPack.writeByte(netPack,0)
 		DataPack.flush(netPack)
 	end
-	
-	svar.JingJiActivityTypes =nil
 end
 	
 --下发前端是否是竞技活动中

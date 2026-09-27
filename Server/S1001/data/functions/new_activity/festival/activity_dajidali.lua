@@ -1312,6 +1312,25 @@ EndDaJiDaLi = function()
 		DataPack.flush(netPack)
 	end
 end
+
+-- 活动结束后按三天一轮重新开启；保留后台指定的未来开启日期。
+function EnsureDaJiDaLiActivity()
+	if not RepairDaJiDaLiOpenDate() then return end
+	local svar = System.getStaticVar()
+	if svar.isDringDaJiDaLi ~= nil and svar.isDringDaJiDaLi >= 1 and svar.isDringDaJiDaLi <= 3 then return end
+
+	local y, m, d = System.getDate()
+	local today = System.encodeNumTime(y, m, d, 0, 0, 0)
+	if svar.StartDaJiDaLiYear ~= nil and svar.SpringDaJiDaLiMonth ~= nil and svar.StartDaJiDaLiDay ~= nil then
+		local scheduledDate = System.encodeNumTime(svar.StartDaJiDaLiYear, svar.SpringDaJiDaLiMonth, svar.StartDaJiDaLiDay, 0, 0, 0)
+		if scheduledDate > today then return end
+	end
+
+	svar.StartDaJiDaLiYear = y
+	svar.SpringDaJiDaLiMonth = m
+	svar.StartDaJiDaLiDay = d
+	StartDaJiDaLi(1)
+end
 	
 --是否是春节活动中
 handleDaJiDaLiIsOpen = function (sysarg, sysid, packet)

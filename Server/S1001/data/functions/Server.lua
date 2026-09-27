@@ -41,12 +41,10 @@ function OnStartedLogicServer()
 	end
 	
 	static_data_on_logic_server_started()
-	if RepairDaJiDaLiOpenDate ~= nil then
-		RepairDaJiDaLiOpenDate()
-		svar = System.getStaticVar()
-	end
+	EnsureDaJiDaLiActivity()
+	svar = System.getStaticVar()
 	if DisableJingJiCompetition ~= nil then
-		DisableJingJiCompetition() -- 清理升级前已开启或已排期的竞技大赛
+		DisableJingJiCompetition() -- 关闭开关启用时清理旧活动状态
 		svar = System.getStaticVar()
 	end
 	EnsureNationalDayActivity() -- 启动时恢复国庆送礼的七天轮次
@@ -414,11 +412,9 @@ function OnServerNewDayArrive()
 		end
 	end
 	
-	-- 按实际活动起始日计算天数，避免跨天或时钟调整后提前一天。
-	if RepairDaJiDaLiOpenDate ~= nil then
-		RepairDaJiDaLiOpenDate()
-		svar = System.getStaticVar()
-	end
+	-- 按实际起始日推进大吉大利，结束后开启下一轮。
+	EnsureDaJiDaLiActivity()
+	svar = System.getStaticVar()
 	
 	
 	--竞技活动开启
@@ -441,18 +437,6 @@ function OnServerNewDayArrive()
 		end
 	end
 	
-	
-	
-	
-	--大吉大利活动开启
-	if svar.StartDaJiDaLiYear~=nil and svar.SpringDaJiDaLiMonth~=nil and svar.StartDaJiDaLiDay~=nil then
-		local y,m,d = System.getDate( 0, 0, 0 )
-		if canStartOpenActivities and
-			svar.isDringDaJiDaLi == nil and
-			svar.StartDaJiDaLiYear==y and svar.SpringDaJiDaLiMonth==m and svar.StartDaJiDaLiDay==d then
-			StartDaJiDaLi(1) --当前第一天
-		end
-	end
 	
 	
 	

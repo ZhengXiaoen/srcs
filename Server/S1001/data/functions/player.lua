@@ -239,32 +239,10 @@ function OnPlayerLogin(sysarg, isCrossDay)
 		svar = System.getStaticVar()
 	end
 
-	-- 3. 大吉大利活动自启动与首日修复
-	if RepairDaJiDaLiOpenDate ~= nil then
-		RepairDaJiDaLiOpenDate()
+	-- 3. 大吉大利按三天一轮自动开启，并修复停服期间的活动天数
+	if canStartOpenActivities then
+		EnsureDaJiDaLiActivity()
 		svar = System.getStaticVar()
-	end
-	if canStartOpenActivities and
-		(svar.isDringDaJiDaLi == nil or svar.isDringDaJiDaLi < 1 or svar.isDringDaJiDaLi > 3) and
-		(svar.StartDJDL_MiNitime == nil or svar.StartDJDL_MiNitime < serverOpenTime) then
-		local oy, om, od = System.GetSystemTimeInMiniTime(serverOpenTime)
-		local openDate = System.encodeNumTime(oy, om, od, 0, 0, 0)
-		local y, m, d = System.getDate()
-		local today = System.encodeNumTime(y, m, d, 0, 0, 0)
-		local activityDay = math.floor((today - openDate) / 86400) + 1
-		local scheduledDate = openDate
-		if svar.StartDaJiDaLiYear ~= nil and svar.SpringDaJiDaLiMonth ~= nil and svar.StartDaJiDaLiDay ~= nil then
-			scheduledDate = System.encodeNumTime(svar.StartDaJiDaLiYear, svar.SpringDaJiDaLiMonth, svar.StartDaJiDaLiDay, 0, 0, 0)
-		end
-		if activityDay >= 1 and activityDay <= 3 and scheduledDate <= openDate then
-			svar.StartDaJiDaLiYear = oy
-			svar.SpringDaJiDaLiMonth = om
-			svar.StartDaJiDaLiDay = od
-			if StartDaJiDaLi ~= nil then
-				StartDaJiDaLi(activityDay)
-			end
-			svar = System.getStaticVar()
-		end
 	end
 
 	-- 4. 周年庆典活动自启动与首日修复
@@ -322,21 +300,10 @@ function OnPlayerLogin(sysarg, isCrossDay)
 		svar = System.getStaticVar()
 	end
 
-	-- 8. 新春活动自启动与动态时间对齐
-	if canStartOpenActivities and SpringFestivalActivityDisabled ~= true and SpringFestivalCfg ~= nil then
-		if get_spring_festival_time ~= nil then
-			get_spring_festival_time(true)
-			svar = System.getStaticVar()
-		end
-		
-		local dvar = System.getDyanmicVar()
-		if dvar.start_spring_festival_activity == nil then
-			if is_spring_festival_time ~= nil and is_spring_festival_time() then
-				if start_spring_festival_activity ~= nil then
-					start_spring_festival_activity(true)
-				end
-			end
-		end
+	-- 8. 新春活动按周期自动开启，并同步跨期状态
+	if canStartOpenActivities then
+		ensure_spring_festival_activity(false)
+		svar = System.getStaticVar()
 	end
 
 	if type(var.zkillmon)=='number' then 

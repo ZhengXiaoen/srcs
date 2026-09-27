@@ -2235,6 +2235,42 @@ function GetBossKillPayMoneyReward(nBossLevel, nBossMaxHp)
 	return math.floor(nBossLevel * nRate * nLuckRate + 0.5), nBossLevel, nLuckRate, bLuckyTriggered, bLuckyExtraTriggered
 end
 
+LocalDT.SendBrotherTaskInfo = function(sysarg)
+	local var = Actor.getStaticVar(sysarg)
+	if var.newdays == nil then var.newdays = {} end
+	if var.newdays.BrotherTask == nil then var.newdays.BrotherTask = {} end
+
+	local pack = DataPack.allocPacket(sysarg,151,LogicCmd.miscSysEx.sub.sBrotherTask)
+	for taskType = 1, #BrotherTasks do
+		if var.newdays.BrotherTask[taskType] == nil then var.newdays.BrotherTask[taskType] = {} end
+		for taskIndex = 1, #BrotherTasks[taskType] do
+			if var.newdays.BrotherTask[taskType][taskIndex] == 1 then
+				DataPack.writeByte(pack,1)
+			else
+				DataPack.writeByte(pack,0)
+			end
+		end
+	end
+
+	if var.newdays.brotherTaskCon == nil then var.newdays.brotherTaskCon = {} end
+	if var.newdays.brotherTaskCon[1] == nil then var.newdays.brotherTaskCon[1] = {} end
+	if var.newdays.brotherTaskCon[2] == nil then var.newdays.brotherTaskCon[2] = {} end
+
+	for taskIndex = 1, #BrotherTasks[1] do
+		DataPack.writeByte(pack,var.newdays.brotherTaskCon[1][taskIndex] or 0)
+	end
+	for taskIndex = 1, #BrotherTasks[2] do
+		DataPack.writeByte(pack,var.newdays.brotherTaskCon[2][taskIndex] or 0)
+	end
+
+	if var.days.LivenessData == nil or (var.days.LivenessData.meirishouchong or 0) == 0 then
+		DataPack.writeByte(pack,0)
+	else
+		DataPack.writeByte(pack,1)
+	end
+	DataPack.flush(pack)
+end
+
 function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nLuckRate, bLuckyTriggered, bLuckyExtraTriggered)
 	nYuanBao = tonumber(nYuanBao) or 0
 	nYuanGu = tonumber(nYuanGu) or 0
@@ -2551,8 +2587,14 @@ function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nL
 			var.OpenServerLotteryScore = (var.OpenServerLotteryScore or 0) + nYuanBao
 		end
 
-		if var.days.PeyNum >= 1000 and OnFinish_Liveness ~= nil then
-			OnFinish_Liveness(sysarg, 7)
+		if OnFinish_Liveness ~= nil then
+			if var.days.LivenessData == nil or (var.days.LivenessData.meirishouchong or 0) == 0 then
+				OnFinish_Liveness(sysarg, 2)
+				LocalDT.SendBrotherTaskInfo(sysarg)
+			end
+			if var.days.PeyNum >= 1000 then
+				OnFinish_Liveness(sysarg, 7)
+			end
 		end
 
 		if System.isCrossServer() == false then

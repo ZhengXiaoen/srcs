@@ -47,6 +47,8 @@ $script:FailAfterLaunch = $false
 $script:RestoreCalls = 0
 $script:FakeBootId = 'test-boot'
 $script:LaunchedWindows = @()
+$script:SetClockCalls = 0
+$script:FakeTimeServiceRunning = $false
 
 function Get-Date {
     return $script:FakeNow
@@ -62,6 +64,7 @@ function Get-BootId {
 
 function Set-ComputerClock {
     param([datetime]$Target, $Paths)
+    $script:SetClockCalls++
     $script:FakeNow = $Target
 }
 
@@ -91,6 +94,9 @@ function Stop-ManagedProcesses {
 function Get-Service {
     [CmdletBinding()]
     param([string]$Name)
+    if ($script:FakeTimeServiceRunning) {
+        return [pscustomobject]@{ Status = 'Running' }
+    }
     return $null
 }
 
@@ -635,6 +641,41 @@ try {
     )
     Assert-Equal 1 @(Get-WorkspaceWebProcesses 'httpd' $ownApachePath).Count 'only workspace Apache is selected'
     Assert-Equal 1 @(Get-WorkspaceWebProcesses 'php-cgi' $ownPhpRoot $true).Count 'only workspace PHP workers are selected'
+
+    $systemPaths = New-TestRoot $testRoot 'system-time-mode'
+    $script:FakeRunning = @()
+    $script:FakeNow = Parse-ClockTime '2026-09-25 08:15:12'
+    $script:FakeUptime = [UInt64]100000
+    $script:FakeTimeServiceRunning = $true
+    $clockCallsBefore = $script:SetClockCalls
+    $restoresBefore = $script:RestoreCalls
+    $systemPlan = Get-StartPlan (Read-OpenConfig $systemPaths.Config) $null $script:FakeNow 'System'
+    Assert-Equal '2026-09-25 08:15:12' (Format-ClockTime $systemPlan.Target) 'system mode first start uses current time'
+    Invoke-GameStart $systemPaths 'RestoreReal' 'System'
+    Assert-Equal $clockCallsBefore $script:SetClockCalls 'system mode does not set computer clock'
+    Assert-Equal '2026-09-25 08:15:12' (Format-ClockTime $script:FakeNow) 'system mode leaves current time unchanged'
+    Assert-Equal 'System' (Read-ClockState $systemPaths.State).timeSource 'system time source is recorded'
+    Assert-Equal '2026-09-25 08:15:12' (Format-ClockTime (Read-OpenConfig $systemPaths.Config).OpenTime) 'system mode sets first open time'
+    $script:FakeNow = Parse-ClockTime '2026-09-25 09:15:12'
+    $script:FakeUptime = [UInt64]3700000
+    Invoke-GameStop $systemPaths
+    Assert-Equal $restoresBefore $script:RestoreCalls 'system mode stop does not restore computer clock'
+    Assert-Equal $clockCallsBefore $script:SetClockCalls 'system mode stop never changes computer clock'
+    $systemState = Read-ClockState $systemPaths.State
+    Assert-Equal '2026-09-25 09:15:12' $systemState.lastStopGameTime 'system mode saves last game time'
+    $script:FakeNow = Parse-ClockTime '2026-09-25 08:30:00'
+    Assert-Throws {
+        Get-StartPlan (Read-OpenConfig $systemPaths.Config) $systemState $script:FakeNow 'System'
+    } 'system mode rejects a time before the last stop'
+    $script:FakeNow = Parse-ClockTime '2026-09-25 10:00:00'
+    $script:FakeUptime = [UInt64]4000000
+    Invoke-GameStart $systemPaths 'RestoreReal' 'System'
+    Assert-Equal '2026-09-25 10:00:00' (Read-ClockState $systemPaths.State).sessionStart 'system mode restart reads new computer time'
+    Assert-Equal $clockCallsBefore $script:SetClockCalls 'system mode restart never sets computer clock'
+    $script:FakeNow = Parse-ClockTime '2026-09-25 10:05:00'
+    $script:FakeUptime = [UInt64]4300000
+    Invoke-GameStop $systemPaths
+    Assert-Equal $clockCallsBefore $script:SetClockCalls 'system mode remains clock-free across two sessions'
 
     Write-Host 'GameClock tests passed (clock and process operations were simulated).'
 } finally {

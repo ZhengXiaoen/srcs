@@ -8,9 +8,14 @@ param(
     [ValidateSet('RestoreReal', 'KeepGame')]
     [string]$AfterStop = 'RestoreReal',
 
+    [ValidateSet('Config', 'System')]
+    [string]$TimeSource = 'Config',
+
     [string]$LastGameTime,
 
     [switch]$ClockIsReal,
+
+    [switch]$LauncherWindow,
 
     [ValidatePattern('^[0-9a-fA-F]{32}$')]
     [string]$ResultToken
@@ -211,6 +216,12 @@ function Read-ClockState {
     if (@(3, 4) -notcontains $clockState.schema) {
         throw "不支持的时间记录版本：$($clockState.schema)"
     }
+    if ($null -eq $clockState.PSObject.Properties['timeSource']) {
+        $clockState | Add-Member -NotePropertyName timeSource -NotePropertyValue 'Config'
+    }
+    if (@('Config', 'System') -notcontains $clockState.timeSource) {
+        throw "启动时间来源无效：$($clockState.timeSource)"
+    }
     if ($clockState.schema -eq 4) {
         Require-StateField $clockState 'lastStopGameTime'
         $lastStop = Parse-ClockTime ([string]$clockState.lastStopGameTime)
@@ -266,12 +277,18 @@ function Write-ClockState {
 }
 
 function Get-StartPlan {
-    param($Config, $State, [datetime]$Today)
+    param($Config, $State, [datetime]$Today,
+          [ValidateSet('Config', 'System')][string]$TimeSource = 'Config')
     if ($null -eq $State) {
+        $target = if ($TimeSource -eq 'System') {
+            Parse-ClockTime (Format-ClockTime $Today)
+        } else {
+            $Today.Date.AddHours(10)
+        }
         return [pscustomobject]@{
             FirstStart = $true
-            Target = $Today.Date.AddHours(10)
-            OpenTime = $Today.Date.AddHours(10)
+            Target = $target
+            OpenTime = $target
         }
     }
     if ($State.phase -ne 'stopped' -or $State.needsRestore) {
@@ -280,13 +297,27 @@ function Get-StartPlan {
     if ($Config.OpenTime -ne (Parse-ClockTime ([string]$State.openTime))) {
         throw '开服配置与时间记录不一致；已中止启动，避免游戏时间错乱。'
     }
-    if ([string]::IsNullOrWhiteSpace([string]$State.nextStart)) {
-        throw '请先在 GameClock.state.json 中手动填写 nextStart，再启动服务器。'
-    }
-    $target = Parse-ClockTime ([string]$State.nextStart)
     $lastStopField = $State.PSObject.Properties['lastStopGameTime']
     if ($State.schema -eq 4 -and $null -eq $lastStopField) {
         throw '时间记录缺少最后停服游戏时间，不能安全启动。'
+    }
+    if ($TimeSource -eq 'System') {
+        $target = Parse-ClockTime (Format-ClockTime $Today)
+        $earliest = $Config.OpenTime
+        if ($null -ne $lastStopField -and
+            -not [string]::IsNullOrWhiteSpace([string]$lastStopField.Value)) {
+            $earliest = Parse-ClockTime ([string]$lastStopField.Value)
+        } elseif (-not [string]::IsNullOrWhiteSpace([string]$State.nextStart)) {
+            $earliest = Parse-ClockTime ([string]$State.nextStart)
+        }
+        if ($target -lt $earliest) {
+            throw '当前电脑时间早于开服或上次停服的游戏时间，不能安全启动。'
+        }
+    } else {
+        if ([string]::IsNullOrWhiteSpace([string]$State.nextStart)) {
+            throw '请先在 GameClock.state.json 中手动填写 nextStart，再启动服务器。'
+        }
+        $target = Parse-ClockTime ([string]$State.nextStart)
     }
     if ($null -ne $lastStopField -and
         -not [string]::IsNullOrWhiteSpace([string]$lastStopField.Value) -and
@@ -554,12 +585,20 @@ function Test-Administrator {
     return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
+function Test-ManagedClock {
+    param($State)
+    return ($null -eq $State.PSObject.Properties['timeSource'] -or
+            $State.timeSource -ne 'System')
+}
+
 function Undo-PreparedStart {
     param($Paths, $ClockState)
     # No clock or configuration rollback is allowed until every managed
     # process has exited. A live server must never see a backward time jump.
     Stop-ManagedProcesses $Paths
-    Restore-RealClock $ClockState $Paths
+    if (Test-ManagedClock $ClockState) {
+        Restore-RealClock $ClockState $Paths
+    }
     if ($ClockState.firstStart -and [IO.File]::Exists($Paths.Backup)) {
         Restore-VerifiedOpenConfig $Paths $ClockState
     }
@@ -573,15 +612,16 @@ function Undo-PreparedStart {
 }
 
 function Invoke-GameStart {
-    param($Paths, [string]$Mode)
+    param($Paths, [string]$Mode,
+          [ValidateSet('Config', 'System')][string]$TimeSource = 'Config')
     $config = Read-OpenConfig $Paths.Config
     $previousState = Read-ClockState $Paths.State
-    $plan = Get-StartPlan $config $previousState (Get-Date)
+    $plan = Get-StartPlan $config $previousState (Get-Date) $TimeSource
     if ($null -ne $previousState -and $previousState.mode -ne $Mode) {
         throw '关服后的电脑时间模式不能在已有记录中切换。'
     }
     if ((@(Get-RunningServerNames $Paths)).Count -gt 0) {
-        throw '服务器进程已经在运行，不能在运行中回拨电脑时间。'
+        throw '服务器进程已经在运行，不能重复启动。'
     }
     foreach ($launcher in $script:Launchers) {
         $directory = [IO.Path]::Combine($Paths.Root, $launcher.Directory)
@@ -590,9 +630,11 @@ function Invoke-GameStart {
             throw "找不到服务器程序：$exe"
         }
     }
-    $timeService = Get-Service -Name W32Time -ErrorAction SilentlyContinue
-    if ($null -ne $timeService -and $timeService.Status -eq 'Running') {
-        throw 'Windows 自动校时服务正在运行，可能覆盖游戏时间。请关闭自动设置时间后再启动。'
+    if ($TimeSource -eq 'Config') {
+        $timeService = Get-Service -Name W32Time -ErrorAction SilentlyContinue
+        if ($null -ne $timeService -and $timeService.Status -eq 'Running') {
+            throw 'Windows 自动校时服务正在运行，可能覆盖游戏时间。请关闭自动设置时间后再启动。'
+        }
     }
     if ($plan.FirstStart -and [IO.File]::Exists($Paths.Backup)) {
         throw "已有原始配置备份却没有时间记录，请先检查：$($Paths.Backup)"
@@ -620,6 +662,7 @@ function Invoke-GameStart {
         uptimeMs = [string]$uptime
         bootId = $bootId
         mode = $Mode
+        timeSource = $TimeSource
         needsRestore = $false
         firstStart = [bool]$plan.FirstStart
         lastStopGameTime = $previousLastStop
@@ -630,9 +673,11 @@ function Invoke-GameStart {
             Set-OpenConfig $config $plan.OpenTime $Paths.Backup
         }
         if (@(Get-RunningServerNames $Paths).Count -gt 0) {
-            throw '服务器进程在启动准备期间出现，不能回拨电脑时间。'
+            throw '服务器进程在启动准备期间出现，不能继续启动。'
         }
-        Set-ComputerClock -Target $plan.Target -Paths $Paths
+        if ($TimeSource -eq 'Config') {
+            Set-ComputerClock -Target $plan.Target -Paths $Paths
+        }
         $pending.phase = 'launching'
         Write-ClockState $Paths.State $pending
         foreach ($launcher in $script:Launchers) {
@@ -660,7 +705,8 @@ function Invoke-GameStart {
             try {
                 Stop-ManagedProcesses $Paths
                 $pending.phase = 'interrupted'
-                $pending.needsRestore = ($pending.mode -eq 'RestoreReal')
+                $pending.needsRestore = ($pending.mode -eq 'RestoreReal' -and
+                                         (Test-ManagedClock $pending))
                 Write-ClockState $Paths.State $pending
                 if ($pending.needsRestore) {
                     Restore-RealClock $pending $Paths
@@ -677,9 +723,10 @@ function Invoke-GameStart {
         } catch {
             throw "启动失败：$startError；服务器或时间回退未完成：$($_.Exception.Message)。已保留状态，切勿直接再次启动。"
         }
-        throw "启动失败，电脑时间和配置已回退：$startError"
+        throw "启动失败，启动准备已回退：$startError"
     }
-    Write-Host "服务器已启动。游戏时间：$(Format-ClockTime $plan.Target)"
+    $sourceLabel = if ($TimeSource -eq 'System') { '当前电脑时间' } else { '时间记录' }
+    Write-Host "服务器已启动。时间来源：$sourceLabel；游戏时间：$(Format-ClockTime $plan.Target)"
     if ($plan.FirstStart) {
         Write-Host "已将开服配置同步到启动当天，并备份原件：$($Paths.Backup)"
     }
@@ -691,7 +738,8 @@ function Save-InterruptedStop {
         throw '服务器进程仍在运行，不能结算异常关服。'
     }
     $ClockState.phase = 'interrupted'
-    $ClockState.needsRestore = ($ClockState.mode -eq 'RestoreReal')
+    $ClockState.needsRestore = ($ClockState.mode -eq 'RestoreReal' -and
+                                (Test-ManagedClock $ClockState))
     Write-ClockState $Paths.State $ClockState
     if ($ClockState.needsRestore) {
         Restore-RealClock $ClockState $Paths
@@ -716,7 +764,7 @@ function Invoke-GameStop {
     if ($null -ne $clockState -and $clockState.phase -eq 'launching' -and
         $running -notcontains 'LogicServerCQ64_R') {
         Undo-PreparedStart $Paths $clockState
-        Write-Host '逻辑服未完成启动；电脑时间和配置已回退。'
+        Write-Host '逻辑服未完成启动；启动准备已回退。'
         return
     }
     if ($null -ne $clockState -and $clockState.phase -eq 'stopped' -and $running.Count -eq 0) {
@@ -763,6 +811,7 @@ function Invoke-GameStop {
             uptimeMs = $null
             bootId = $null
             mode = 'RestoreReal'
+            timeSource = 'Config'
             needsRestore = $false
             firstStart = $false
         }
@@ -802,7 +851,8 @@ function Invoke-GameStop {
     $lastGameStamp = Format-ClockTime $lastGameTime
     $clockState.nextStart = $lastGameStamp
     $clockState | Add-Member -NotePropertyName lastStopGameTime -NotePropertyValue $lastGameStamp -Force
-    $clockState.needsRestore = ($clockState.mode -eq 'RestoreReal')
+    $clockState.needsRestore = ($clockState.mode -eq 'RestoreReal' -and
+                                (Test-ManagedClock $clockState))
     Write-ClockState $Paths.State $clockState
     if ($clockState.needsRestore) {
         Restore-RealClock $clockState $Paths
@@ -813,7 +863,7 @@ function Invoke-GameStop {
 }
 
 function Invoke-GamePreview {
-    param($Paths)
+    param($Paths, [ValidateSet('Config', 'System')][string]$TimeSource = 'Config')
     $config = Read-OpenConfig $Paths.Config
     $clockState = Read-ClockState $Paths.State
     if ($null -ne $clockState -and @('preparing', 'launching', 'logic_attempted', 'running') -contains $clockState.phase) {
@@ -833,13 +883,20 @@ function Invoke-GamePreview {
         Write-Host '服务器已关闭，但电脑时间尚未恢复到现实时间。'
         return
     }
-    if ($null -ne $clockState -and $clockState.phase -eq 'stopped' -and
+    if ($TimeSource -eq 'Config' -and $null -ne $clockState -and
+        $clockState.phase -eq 'stopped' -and
         [string]::IsNullOrWhiteSpace([string]$clockState.nextStart)) {
         Write-Host "最后游戏时间：$($clockState.lastStopGameTime)。旧记录的 nextStart 尚为空，运行“3.一键停止.bat”可补写默认值。"
         return
     }
-    $plan = Get-StartPlan $config $clockState (Get-Date)
-    if ($plan.FirstStart) {
+    $plan = Get-StartPlan $config $clockState (Get-Date) $TimeSource
+    if ($TimeSource -eq 'System') {
+        if ($plan.FirstStart) {
+            Write-Host "首次启动将把开服配置设为当前电脑时间：$(Format-ClockTime $plan.Target)；不会调整电脑时钟。"
+        } else {
+            Write-Host "模式 2 将使用当前电脑时间：$(Format-ClockTime $plan.Target)；不会调整电脑时钟。"
+        }
+    } elseif ($plan.FirstStart) {
         Write-Host "首次启动将把开服配置和电脑时间设为：$(Format-ClockTime $plan.Target)"
     } else {
         Write-Host "下次启动将把电脑时间设为：$(Format-ClockTime $plan.Target)"
@@ -945,7 +1002,8 @@ function Invoke-GameRecover {
     if ($hasAnchor -and -not $RealClockConfirmed) {
         $sameBoot = ((Get-BootId) -eq [string]$clockState.bootId)
     }
-    $requiresRestore = ($clockState.mode -eq 'RestoreReal' -and
+    $requiresRestore = ((Test-ManagedClock $clockState) -and
+                        $clockState.mode -eq 'RestoreReal' -and
                         ($clockState.phase -ne 'interrupted' -or
                          $clockState.needsRestore -or -not $hasAnchor))
     $canRestore = ($requiresRestore -and $hasAnchor -and $sameBoot -and
@@ -977,17 +1035,29 @@ if (-not [string]::IsNullOrEmpty($Action)) {
         }
         $paths = Get-ClockPaths $Root
         if ($Action -ne 'Preview' -and -not (Test-Administrator)) {
-            $token = [guid]::NewGuid().ToString('N')
-            $resultPath = [IO.Path]::Combine($paths.Root, "GameClock.result.$token.txt")
-            $argLine = '-NoProfile -ExecutionPolicy Bypass -File "{0}" -Action {1} -Root "{2}" -AfterStop {3}' -f $PSCommandPath, $Action, $paths.Root, $AfterStop
-            $argLine += ' -ResultToken ' + $token
+            $argLine = '-NoProfile -ExecutionPolicy Bypass -File "{0}" -Action {1} -Root "{2}" -AfterStop {3} -TimeSource {4}' -f $PSCommandPath, $Action, $paths.Root, $AfterStop, $TimeSource
+            if ($LauncherWindow) {
+                $argLine += ' -LauncherWindow'
+            } else {
+                $token = [guid]::NewGuid().ToString('N')
+                $resultPath = [IO.Path]::Combine($paths.Root, "GameClock.result.$token.txt")
+                $argLine += ' -ResultToken ' + $token
+            }
             if (-not [string]::IsNullOrWhiteSpace($LastGameTime)) {
                 $argLine += ' -LastGameTime "' + $LastGameTime + '"'
             }
             if ($ClockIsReal) {
                 $argLine += ' -ClockIsReal'
             }
-            $child = Start-Process -FilePath ([IO.Path]::Combine($PSHOME, 'powershell.exe')) -ArgumentList $argLine -Verb RunAs -Wait -PassThru -WindowStyle Normal
+            $child = Start-Process -FilePath ([IO.Path]::Combine($PSHOME, 'powershell.exe')) -ArgumentList $argLine -Verb RunAs -PassThru -WindowStyle Normal
+            if ($LauncherWindow) {
+                # The elevated window reports the result and controls its own lifetime.
+                # Let the initial batch/PowerShell window close immediately.
+                exit 0
+            }
+            # Start-Process -Wait also waits for the long-lived server children on Win11.
+            # Wait only for the elevated script process so the launcher window can close.
+            $child.WaitForExit()
             if ($child.ExitCode -ne 0) {
                 if ([IO.File]::Exists($resultPath)) {
                     $childError = [IO.File]::ReadAllText($resultPath, [Text.Encoding]::UTF8)
@@ -1000,20 +1070,20 @@ if (-not [string]::IsNullOrEmpty($Action)) {
                 [IO.File]::Delete($resultPath)
             }
             try {
-                Invoke-GamePreview $paths
+                Invoke-GamePreview $paths $TimeSource
             } catch {
                 Write-Host '操作已完成，请重新打开“查看游戏时间”确认记录。'
             }
             exit 0
         }
         if ($Action -eq 'Preview') {
-            Invoke-GamePreview $paths
+            Invoke-GamePreview $paths $TimeSource
         } else {
             $lockStream = [IO.File]::Open($paths.Lock, [IO.FileMode]::OpenOrCreate,
                                          [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
             try {
                 if ($Action -eq 'Start') {
-                    Invoke-GameStart $paths $AfterStop
+                    Invoke-GameStart $paths $AfterStop $TimeSource
                 } elseif ($Action -eq 'Stop') {
                     Invoke-GameStop $paths
                 } elseif ($Action -eq 'RestartDB') {
@@ -1024,6 +1094,10 @@ if (-not [string]::IsNullOrEmpty($Action)) {
             } finally {
                 $lockStream.Dispose()
             }
+        }
+        if ($LauncherWindow -and @('Start', 'Stop') -contains $Action) {
+            Write-Host '操作完成，窗口将在 3 秒后关闭。'
+            Start-Sleep -Seconds 3
         }
     } catch {
         $actionError = $_.Exception.Message
@@ -1036,6 +1110,14 @@ if (-not [string]::IsNullOrEmpty($Action)) {
             }
         }
         [Console]::Error.WriteLine($actionError)
+        if ($LauncherWindow -and @('Start', 'Stop') -contains $Action) {
+            Write-Host '发生异常，按任意键退出。'
+            try {
+                $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+            } catch {
+                $null = Read-Host '按回车键退出'
+            }
+        }
         exit 1
     }
 }

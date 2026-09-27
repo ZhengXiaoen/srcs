@@ -4,12 +4,12 @@
 	name=Lang.Store.c00007,--��������
 	--�÷����е���Ʒ��
 items={
-{id=70001,item=6005,quality=0,strong=0,singleBuyLimit=0,rankPoint=1,price={{spid='*',bind=true,type=8,price=2000,oldPrice=2000,},},},--//��ͭ��λ֤��
-{id=70002,item=6006,quality=0,strong=0,singleBuyLimit=0,rankPoint=1500,price={{spid='*',bind=true,type=8,price=5000,oldPrice=5000,},},},--//������λ֤��
-{id=70003,item=6007,quality=0,strong=0,singleBuyLimit=0,rankPoint=2500,price={{spid='*',bind=true,type=8,price=10000,oldPrice=10000,},},},--//�ƽ���λ֤��
-{id=70004,item=6008,quality=0,strong=0,singleBuyLimit=0,rankPoint=4000,price={{spid='*',bind=true,type=8,price=20000,oldPrice=20000,},},},--//��ʯ��λ֤��
-{id=70005,item=6009,quality=0,strong=0,singleBuyLimit=0,rankPoint=6000,price={{spid='*',bind=true,type=8,price=30000,oldPrice=30000,},},},--//���߶�λ֤��
-{id=70006,item=6010,quality=0,strong=0,singleBuyLimit=0,rankPoint=8500,price={{spid='*',bind=true,type=8,price=50000,oldPrice=50000,},},},--//������λ֤��
+{id=70001,item=6005,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=2000,oldPrice=2000,},},},--//��ͭ��λ֤��
+{id=70002,item=6006,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=5000,oldPrice=5000,},},},--//������λ֤��
+{id=70003,item=6007,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=10000,oldPrice=10000,},},},--//�ƽ���λ֤��
+{id=70004,item=6008,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=20000,oldPrice=20000,},},},--//��ʯ��λ֤��
+{id=70005,item=6009,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=30000,oldPrice=30000,},},},--//���߶�λ֤��
+{id=70006,item=6010,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=50000,oldPrice=50000,},},},--//������λ֤��
 {id=70007,item=6011,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=500,oldPrice=500,},},},--//Ӣ������
 {id=70008,item=5576,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=255,oldPrice=255,},},},--//Զ����Ƭ
 {id=70009,item=6403,quality=0,strong=0,dayLimit=10,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=500,oldPrice=500,},},},--//ϴ��ʯ
@@ -49,6 +49,31 @@ items={
 {id=70043,item=6528,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=5880,oldPrice=5880,},},},--//������Ƭ
 {id=70044,item=6529,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=5880,oldPrice=5880,},},},--//������Ƭ
 {id=70045,item=6530,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=5880,oldPrice=5880,},},},--//������Ƭ
+{id=70046,item=7805,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70047,item=7040,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70048,item=7654,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70049,item=7199,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70050,item=7200,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70051,item=7655,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70052,item=7656,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70053,item=7701,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70054,item=7702,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70055,item=7711,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70056,item=7712,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70057,item=7802,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70058,item=7803,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70059,item=7823,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70060,item=7824,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70061,item=6650,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70062,item=7077,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70063,item=6940,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70064,item=6938,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70065,item=6939,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70066,item=7653,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70067,item=7696,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70068,item=7804,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70069,item=7719,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
+{id=70070,item=7822,quality=0,strong=0,singleBuyLimit=0,price={{spid='*',bind=true,type=8,price=88888,oldPrice=88888,},},},
 
 
 

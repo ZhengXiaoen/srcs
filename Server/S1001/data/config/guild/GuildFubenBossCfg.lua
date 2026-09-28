@@ -23,10 +23,10 @@ GuildFubenBossCfg =
                 --奖励
                 award =  
                 {
-                    { type = 0, id = 534, count = 2, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 568, count = 2, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 459, count = 5, strong = 0, quality = 0, bind = 1 },
-                    { type = 70, id = 0, count = 10, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 534, count = 20, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 568, count = 20, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 459, count = 250, strong = 0, quality = 0, bind = 1 },
+                    { type = 70, id = 0, count = 100, strong = 0, quality = 0, bind = 1 },
                 }, 
             },
         },
@@ -47,10 +47,10 @@ GuildFubenBossCfg =
                 --奖励
                 award =  
                 {
-                    { type = 0, id = 534, count = 4, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 568, count = 4, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 459, count = 5, strong = 0, quality = 0, bind = 1 },
-                    { type = 70, id = 0, count = 20, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 534, count = 40, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 568, count = 40, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 459, count = 250, strong = 0, quality = 0, bind = 1 },
+                    { type = 70, id = 0, count = 200, strong = 0, quality = 0, bind = 1 },
                 }, 
             },
         },
@@ -71,10 +71,10 @@ GuildFubenBossCfg =
                 --奖励
                 award =  
                 {
-                    { type = 0, id = 534, count = 6, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 568, count = 6, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 459, count = 5, strong = 0, quality = 0, bind = 1 },
-                    { type = 70, id = 0, count = 30, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 534, count = 60, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 568, count = 60, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 459, count = 250, strong = 0, quality = 0, bind = 1 },
+                    { type = 70, id = 0, count = 300, strong = 0, quality = 0, bind = 1 },
                 }, 
             },
         },
@@ -95,10 +95,10 @@ GuildFubenBossCfg =
                 --奖励
                 award =  
                 {
-                    { type = 0, id = 534, count = 8, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 568, count = 8, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 459, count = 10, strong = 0, quality = 0, bind = 1 },
-                    { type = 70, id = 0, count = 40, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 534, count = 80, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 568, count = 80, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 459, count = 500, strong = 0, quality = 0, bind = 1 },
+                    { type = 70, id = 0, count = 400, strong = 0, quality = 0, bind = 1 },
                 }, 
             },
         },
@@ -119,10 +119,10 @@ GuildFubenBossCfg =
                 --奖励
                 award =  
                 {
-                    { type = 0, id = 534, count = 10, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 568, count = 10, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 459, count = 10, strong = 0, quality = 0, bind = 1 },
-                    { type = 70, id = 0, count = 50, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 534, count = 100, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 568, count = 100, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 459, count = 500, strong = 0, quality = 0, bind = 1 },
+                    { type = 70, id = 0, count = 500, strong = 0, quality = 0, bind = 1 },
                 }, 
             },
         },
@@ -143,10 +143,10 @@ GuildFubenBossCfg =
                 --奖励
                 award =  
                 {
-                    { type = 0, id = 534, count = 12, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 568, count = 12, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 459, count = 10, strong = 0, quality = 0, bind = 1 },
-                    { type = 70, id = 0, count = 60, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 534, count = 120, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 568, count = 120, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 459, count = 500, strong = 0, quality = 0, bind = 1 },
+                    { type = 70, id = 0, count = 600, strong = 0, quality = 0, bind = 1 },
                 }, 
             },
         },
@@ -167,10 +167,10 @@ GuildFubenBossCfg =
                 --奖励
                 award =  
                 {
-                    { type = 0, id = 534, count = 14, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 568, count = 14, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 459, count = 15, strong = 0, quality = 0, bind = 1 },
-                    { type = 70, id = 0, count = 70, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 534, count = 140, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 568, count = 140, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 459, count = 750, strong = 0, quality = 0, bind = 1 },
+                    { type = 70, id = 0, count = 700, strong = 0, quality = 0, bind = 1 },
                 }, 
             },
         },
@@ -191,10 +191,10 @@ GuildFubenBossCfg =
                 --奖励
                 award =  
                 {
-                    { type = 0, id = 534, count = 16, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 568, count = 16, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 459, count = 15, strong = 0, quality = 0, bind = 1 },
-                    { type = 70, id = 0, count = 80, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 534, count = 160, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 568, count = 160, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 459, count = 750, strong = 0, quality = 0, bind = 1 },
+                    { type = 70, id = 0, count = 800, strong = 0, quality = 0, bind = 1 },
                 }, 
             },
         },
@@ -215,10 +215,10 @@ GuildFubenBossCfg =
                 --奖励
                 award =  
                 {
-                    { type = 0, id = 534, count = 18, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 568, count = 18, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 459, count = 15, strong = 0, quality = 0, bind = 1 },
-                    { type = 70, id = 0, count = 90, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 534, count = 180, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 568, count = 180, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 459, count = 750, strong = 0, quality = 0, bind = 1 },
+                    { type = 70, id = 0, count = 900, strong = 0, quality = 0, bind = 1 },
                 }, 
             },
         },
@@ -239,10 +239,10 @@ GuildFubenBossCfg =
                 --奖励
                 award =  
                 {
-                    { type = 0, id = 534, count = 20, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 568, count = 20, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 459, count = 20, strong = 0, quality = 0, bind = 1 },
-                    { type = 70, id = 0, count = 100, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 534, count = 200, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 568, count = 200, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 459, count = 1000, strong = 0, quality = 0, bind = 1 },
+                    { type = 70, id = 0, count = 1000, strong = 0, quality = 0, bind = 1 },
                 }, 
             },
         },
@@ -263,10 +263,10 @@ GuildFubenBossCfg =
                 --奖励
                 award =  
                 {
-                    { type = 0, id = 534, count = 22, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 568, count = 22, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 459, count = 20, strong = 0, quality = 0, bind = 1 },
-                    { type = 70, id = 0, count = 110, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 534, count = 220, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 568, count = 220, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 459, count = 1000, strong = 0, quality = 0, bind = 1 },
+                    { type = 70, id = 0, count = 1100, strong = 0, quality = 0, bind = 1 },
                 }, 
             },
         },
@@ -287,10 +287,10 @@ GuildFubenBossCfg =
                 --奖励
                 award =  
                 {
-                    { type = 0, id = 534, count = 24, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 568, count = 24, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 459, count = 20, strong = 0, quality = 0, bind = 1 },
-                    { type = 70, id = 0, count = 120, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 534, count = 240, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 568, count = 240, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 459, count = 1000, strong = 0, quality = 0, bind = 1 },
+                    { type = 70, id = 0, count = 1200, strong = 0, quality = 0, bind = 1 },
                 }, 
             },
         },
@@ -311,10 +311,10 @@ GuildFubenBossCfg =
                 --奖励
                 award =  
                 {
-                    { type = 0, id = 534, count = 26, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 568, count = 26, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 459, count = 25, strong = 0, quality = 0, bind = 1 },
-                    { type = 70, id = 0, count = 130, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 534, count = 260, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 568, count = 260, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 459, count = 1250, strong = 0, quality = 0, bind = 1 },
+                    { type = 70, id = 0, count = 1300, strong = 0, quality = 0, bind = 1 },
                 }, 
             },
         },
@@ -335,10 +335,10 @@ GuildFubenBossCfg =
                 --奖励
                 award =  
                 {
-                    { type = 0, id = 534, count = 28, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 568, count = 28, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 459, count = 25, strong = 0, quality = 0, bind = 1 },
-                    { type = 70, id = 0, count = 140, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 534, count = 280, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 568, count = 280, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 459, count = 1250, strong = 0, quality = 0, bind = 1 },
+                    { type = 70, id = 0, count = 1400, strong = 0, quality = 0, bind = 1 },
                 }, 
             },
         },
@@ -359,10 +359,10 @@ GuildFubenBossCfg =
                 --奖励
                 award =  
                 {
-                    { type = 0, id = 534, count = 30, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 568, count = 30, strong = 0, quality = 0, bind = 1 },
-                    { type = 0, id = 459, count = 25, strong = 0, quality = 0, bind = 1 },
-                    { type = 70, id = 0, count = 150, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 534, count = 300, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 568, count = 300, strong = 0, quality = 0, bind = 1 },
+                    { type = 0, id = 459, count = 1250, strong = 0, quality = 0, bind = 1 },
+                    { type = 70, id = 0, count = 1500, strong = 0, quality = 0, bind = 1 },
                 }, 
             },
         },

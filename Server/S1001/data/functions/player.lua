@@ -2311,6 +2311,10 @@ function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nL
 		end
 		var.days.PeyNum = (var.days.PeyNum or 0) + nYuanBao
 		var.lastPeyTime = nowTime
+		if EnsureNationalDayRewardCycle ~= nil then
+			EnsureNationalDayRewardCycle(sysarg)
+			if SentNationalDayInfoNew ~= nil then SentNationalDayInfoNew(sysarg) end
+		end
 
 
 		local svar = System.getStaticVar()

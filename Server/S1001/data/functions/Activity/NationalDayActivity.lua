@@ -448,11 +448,13 @@ EnsureNationalDayRewardCycle = function(sysarg)
 	if var.nationalDayInfoNewCycle ~= cycleStart then
 		var.nationalDayInfoNew = 0
 		var.nationalDayInfoNewCycle = cycleStart
-		local day = svar.isDringNational
-		if day ~= nil and day >= 1 and day <= #NationalDayActivityCfg.NationalDayNew and
-			var.days ~= nil and (var.days.PeyNum or 0) >= NationalDayActivityCfg.NationalDayNew[day].needYB then
-			var.nationalDayInfoNew = System.setIntBit(var.nationalDayInfoNew, day, true)
-		end
+	end
+	-- 查询和领奖时均按当天实际充值额修复遗漏的达标标记。
+	local day = svar.isDringNational
+	if day ~= nil and day >= 1 and day <= #NationalDayActivityCfg.NationalDayNew and
+		var.days ~= nil and (var.days.PeyNum or 0) >= NationalDayActivityCfg.NationalDayNew[day].needYB and
+		System.getIntBit(var.nationalDayInfoNew or 0, day) == 0 then
+		var.nationalDayInfoNew = System.setIntBit(var.nationalDayInfoNew or 0, day, true)
 	end
 end
 
@@ -511,15 +513,14 @@ function GetNationalDayAwardNew(sysarg,index)
 		return 
 	end
 	
-	--设置已经领取过
-	var.nationalDayInfoNew = System.setIntBit(var.nationalDayInfoNew,index+7,true)
-	
 	--给奖品
 	local bResult = Awards.Give(sysarg, cfg[index].award, LogIds.NationalDays,cfg[index].name)
 	if bResult == false then
 		print("NationalDayActivityCfg ChongZhi2 Gift error, actor name = "..Actor.getName(sysarg))
 		return 
 	end
+	--发奖成功后再标记已领取。
+	var.nationalDayInfoNew = System.setIntBit(var.nationalDayInfoNew,index+7,true)
 	
 	--给前端发协议
 	SentNationalDayInfoNew(sysarg)

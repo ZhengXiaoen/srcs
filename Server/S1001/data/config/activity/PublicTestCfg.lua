@@ -88,61 +88,49 @@ PublicTestCfg =
 	
 	-- 元宝消费排行 -----------------------------------------------
 	YbConsumeRanking = {
-		minConsume = 25000, -- 至少消费多少元宝才能进排行榜
-				
-		awardList = 
-		{			
-			-- 第 1 名
+		minConsume = 25000,
+		awardList = {
+			-- 周年庆典、万服庆典共用消费榜；奖品与散人红利充值榜一致。
 			{
-				minConsume = 2000000, -- 至少消费多少元宝
-				mailAward = "7181,1,1/6819,5,1/7039,5,1/5385,10,1",
-				award = 
-						{
-							{type = 0, id = 7181, count = 1, bind = 1},--十三转装备箱 X 1
-							{type = 0, id = 6819, count = 5, bind = 1},--紫色生肖袋*5
-							{type = 0, id = 7039, count = 5, bind = 1},--至尊屠龙碎片
-							{type = 0, id = 5385, count = 10, bind = 1},--5阶宝石袋*10
-							
-							
-						},	
+				minConsume = 2000000,
+				mailAward = "7039,5,1/6820,1,1/6364,1,1/5384,5,1",
+				award = {
+					{type = 0, id = 7039, count = 5, bind = 1},--至尊屠龙碎片
+					{type = 0, id = 6820, count = 1, bind = 1},--龍装Ⅱ装备箱
+					{type = 0, id = 6364, count = 1, bind = 1},--九转装备箱
+					{type = 0, id = 5384, count = 5, bind = 1},--4阶宝石袋
+				},
 			},
 			{
-				minConsume = 1000000, -- 至少消费多少元宝
-				mailAward = "6714,1,1/6819,3,1/7039,3,1/5385,5,1",
-				award = 
-						{
-							{type = 0, id = 6714, count = 1, bind = 1},--十一转装备箱 X 1
-							{type = 0, id = 6819, count = 3, bind = 1},--紫色生肖袋*1
-							{type = 0, id = 7039, count = 3, bind = 1},--至尊屠龙碎片
-							{type = 0, id = 5385, count = 5, bind = 1},--5阶宝石袋*1
-
-						},	
+				minConsume = 1000000,
+				mailAward = "7039,2,1/6887,1,1/6365,1,1/5384,4,1",
+				award = {
+					{type = 0, id = 7039, count = 2, bind = 1},--至尊屠龙碎片
+					{type = 0, id = 6887, count = 1, bind = 1},--龍装Ⅰ装备箱
+					{type = 0, id = 6365, count = 1, bind = 1},--七转装备箱
+					{type = 0, id = 5384, count = 4, bind = 1},--4阶宝石袋
+				},
 			},
 			{
-				minConsume = 500000, -- 至少消费多少元宝
-				mailAward = "6364,1,1/6819,2,1/7039,2,1/5385,3,1",
-				award = 
-						{
-							{type = 0, id = 6364, count = 1, bind = 1},--九转装备箱 X 1
-							{type = 0, id = 6819, count = 2, bind = 1},--紫色生肖袋*1
-							{type = 0, id = 7039, count = 2, bind = 1},--至尊屠龙碎片
-							{type = 0, id = 5385, count = 3, bind = 1},--5阶宝石袋*1
-							
-				
-						},	
+				minConsume = 500000,
+				mailAward = "7039,1,1/7650,1,1/7047,1,1/5384,3,1",
+				award = {
+					{type = 0, id = 7039, count = 1, bind = 1},--至尊屠龙碎片
+					{type = 0, id = 7650, count = 1, bind = 1},--龙腾首饰礼盒
+					{type = 0, id = 7047, count = 1, bind = 1},--坐骑礼盒
+					{type = 0, id = 5384, count = 3, bind = 1},--4阶宝石袋
+				},
 			},
 			{
-				minConsume = 250000, -- 至少消费多少元宝
-				mailAward = "6365,1,1/6819,1,1/7039,1,1/5385,1,1",
-				award = 
-						{
-							{type = 0, id = 6365, count = 1, bind = 1},--七转装备箱 X 1
-							{type = 0, id = 6819, count = 1, bind = 1},--紫色生肖袋*1
-							{type = 0, id = 7039, count = 1, bind = 1},--至尊屠龙碎片
-							{type = 0, id = 5385, count = 1, bind = 1},--5阶宝石袋*1
-						},	
+				minConsume = 250000,
+				mailAward = "6675,1,1/6363,3,1/7051,1,1/5384,2,1",
+				award = {
+					{type = 0, id = 6675, count = 1, bind = 1},--女娲宝藏
+					{type = 0, id = 6363, count = 3, bind = 1},--豪礼宝箱
+					{type = 0, id = 7051, count = 1, bind = 1},--三国时装礼盒
+					{type = 0, id = 5384, count = 2, bind = 1},--4阶宝石袋
+				},
 			},
-			  
 		},
 	},
 	

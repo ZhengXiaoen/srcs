@@ -1,4 +1,4 @@
-"""Update the client guild quest config stored in a CBP resource.
+"""Update the client guild quest config and sync its language-pack copy.
 
 The server uses 1-based quest indexes. The client resource contains 0-based
 entries, so index 16 is added for the last ordinary quest. Silver privilege
@@ -57,6 +57,8 @@ def read_node(data: bytes, pos: int) -> tuple[Node, int]:
     elif kind == 3:
         size = struct.unpack_from("<Q", data, pos)[0]
         pos += 8
+        name = data[pos : pos + name_size].decode("utf-8")
+        pos += name_size
         value = data[pos : pos + size]
         pos += size
         count = 0
@@ -66,8 +68,9 @@ def read_node(data: bytes, pos: int) -> tuple[Node, int]:
         value = b""
     else:
         raise ValueError(f"Unsupported CBP node type {kind}")
-    name = data[pos : pos + name_size].decode("utf-8")
-    pos += name_size
+    if kind != 3:
+        name = data[pos : pos + name_size].decode("utf-8")
+        pos += name_size
     children = []
     for _ in range(count):
         child, pos = read_node(data, pos)
@@ -80,17 +83,14 @@ def write_node(node: Node) -> bytes:
     if len(name) > 255:
         raise ValueError("CBP key is too long")
     if node.kind == 2:
-        payload = node.value
+        return bytes((len(name), node.kind)) + node.value + name
     elif node.kind == 3:
-        payload = struct.pack("<Q", len(node.value)) + node.value
+        return bytes((len(name), node.kind)) + struct.pack("<Q", len(node.value)) + name + node.value
     elif node.kind == 4:
-        payload = struct.pack("<Q", len(node.children))
+        return (bytes((len(name), node.kind)) + struct.pack("<Q", len(node.children))
+                + name + b"".join(write_node(child) for child in node.children))
     else:
         raise ValueError(f"Unsupported CBP node type {node.kind}")
-    result = bytes((len(name), node.kind)) + payload + name
-    if node.kind == 4:
-        result += b"".join(write_node(child) for child in node.children)
-    return result
 
 
 def read_cbp(source: bytes) -> tuple[bytes, Node]:
@@ -166,14 +166,67 @@ def patch(source: bytes) -> bytes:
     return write_cbp(header, root)
 
 
+def read_pack(source: bytes) -> list[tuple[str, bytes]]:
+    count = struct.unpack_from("<I", source, 0)[0]
+    pos = 4
+    entries = []
+    for _ in range(count):
+        name_size = source[pos]
+        pos += 1
+        name = source[pos : pos + name_size].decode("utf-8")
+        pos += name_size
+        size = struct.unpack_from("<I", source, pos)[0]
+        pos += 4
+        entries.append((name, source[pos : pos + size]))
+        pos += size
+    if pos != len(source):
+        raise ValueError("Language pack has trailing data")
+    return entries
+
+
+def write_pack(entries: list[tuple[str, bytes]]) -> bytes:
+    result = bytearray(struct.pack("<I", len(entries)))
+    for name, value in entries:
+        encoded = name.encode("utf-8")
+        if len(encoded) > 255:
+            raise ValueError("Language pack entry name is too long")
+        result += bytes((len(encoded),)) + encoded
+        result += struct.pack("<I", len(value)) + value
+    return bytes(result)
+
+
+def sync_pack(source: bytes, pack: bytes) -> bytes:
+    """Replace only the guild quest entry in the packed language resources."""
+    _, root = read_cbp(source)
+    config = root.child("ForClient")
+    if [entry.name for entry in config.children] != [str(i) for i in range(33)]:
+        raise ValueError("Expected 33 guild quest entries")
+    entries = read_pack(pack)
+    if write_pack(entries) != pack:
+        raise ValueError("Language pack did not round-trip")
+    matches = [i for i, (name, _) in enumerate(entries) if name == "guildxiangyaochumocfg.cbp"]
+    if len(matches) != 1:
+        raise ValueError("Expected one packed guild quest config")
+    old = entries[matches[0]][1]
+    read_cbp(old)
+    if old == source:
+        return pack
+    entries[matches[0]] = (entries[matches[0]][0], source)
+    return write_pack(entries)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("source", type=Path)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--sync-pack", action="store_true", help="Sync an already patched CBP into zh-cn.dat")
     args = parser.parse_args()
     if args.source.resolve() == args.output.resolve():
         parser.error("Use separate input and output paths")
-    patched = patch(args.source.read_bytes())
+    if args.sync_pack:
+        patched = sync_pack(args.source.read_bytes(), args.output.read_bytes())
+    else:
+        patched = patch(args.source.read_bytes())
     args.output.write_bytes(patched)
     print(f"Wrote {args.output} ({len(patched)} bytes)")
 

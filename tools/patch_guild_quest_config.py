@@ -50,7 +50,7 @@ def read_node(data: bytes, pos: int) -> tuple[Node, int]:
         raise ValueError("Truncated CBP node")
     name_size, kind = data[pos], data[pos + 1]
     pos += 2
-    if kind == 2:
+    if kind in (1, 2):
         value = data[pos : pos + 8]
         pos += 8
         count = 0
@@ -82,7 +82,7 @@ def write_node(node: Node) -> bytes:
     name = node.name.encode("utf-8")
     if len(name) > 255:
         raise ValueError("CBP key is too long")
-    if node.kind == 2:
+    if node.kind in (1, 2):
         return bytes((len(name), node.kind)) + node.value + name
     elif node.kind == 3:
         return bytes((len(name), node.kind)) + struct.pack("<Q", len(node.value)) + name + node.value

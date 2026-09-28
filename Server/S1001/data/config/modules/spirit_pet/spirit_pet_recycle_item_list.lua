@@ -196,7 +196,7 @@ spirit_pet_recycle_item_list = {
 			6271, 1,
 			5951, 1,
             6736, 3,
-            6403, 1, -- Five-element stone: 0.1 sacrifice point
+            6403, 2, -- 五行石：每颗 0.2 献祭值（配置值乘以 10）
 
 		},
 

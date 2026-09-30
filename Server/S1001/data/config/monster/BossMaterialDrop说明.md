@@ -30,3 +30,5 @@
 原来有 10 秒拾取保护的 5 种 BOSS 使用 `dropsBossGoldBrickProtected.lua`，保留保护时间。替换记录放在原生掉落表内，沿用服务器一次性掉落、拾取及死亡回调处理；多次引用含金币模板也只替换成 1 个金砖。
 
 前后端已有该金砖的名称、图标和使用说明，客户端怪物资源不保存实际掉落表，因此无需重新打包。`tools/test_monster_gold_drop.py` 校验金币清除、其他内容逐字节保持、BOSS 范围与单件数量、拾取保护、完整怪物配置编译及前端资源一致性。
+
+金砖 ID 83 已加入 `help/SystemConfig.lua` 的“其他道具”自动拾取范围，并同步 `SystemConfig.cbp` 及 `zh-cn.dat` 副本。该分类默认开启拾取和显名，沿用玩家已有开关；重新进入游戏加载更新资源后，“其他道具”自动拾取开启即可拾取金砖。`tools/patch_gold_brick_pickup.py --verify-only` 核对全部前后端拾取范围、默认开关及资源包副本。

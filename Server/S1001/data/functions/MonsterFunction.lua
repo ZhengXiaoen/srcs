@@ -50,6 +50,13 @@ end
 
 --当一个怪物被杀死的时候回调
 function HandlerMonsterByKilled(monster, killer, monId, fubenId, sceneId, fuBenPtr)
+	-- 真荒古之地专属掉落，宠物或战将击杀也会触发
+	if killer ~= nil and monId == 635 and Actor.getSceneId(monster) == 286 then
+		Item.createDropItem(monster, Item.createItem(552, math.random(3, 5), 0, 0, 0), LogIds.HuangGuBossDrop, "HuangGuBoss", nil)
+		if System.getRandomNumber(100) < 30 then
+			Item.createDropItem(monster, Item.createItem(553, math.random(1, 2), 0, 0, 0), LogIds.HuangGuBossDrop, "HuangGuBoss", nil)
+		end
+	end
   -- 处理怪物被杀
 	OnMonsterByKilled(monster, killer, monId, fubenId, sceneId, fuBenPtr)
 

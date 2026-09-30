@@ -297,7 +297,7 @@ function BackToCityFunc(sysarg,itemidx,itemPtr,ItemTable,delType)
 				set_d_val(sysarg,12,1800); --定时器记时用
 				Actor.addTimer(sysarg, 28, 5000 ); --每5秒1判断，顺带给玩家提示倒计时
 				if HGdata[i].mapid == 286 then
-					Actor.sendTipmsg(sysarg,"恭喜您进入到了真荒古之地!\\此地图BOSS杀死高机率掉落战将装备.",4);
+					Actor.sendTipmsg(sysarg,"恭喜您进入到了真荒古之地!\\荒古战将之神必掉战将灵力丹(中)3-5个，30%概率掉战将灵力丹(大)1-2个；另有高概率掉落战将装备.",4);
 				end
 				local SceneName = Fuben.getSceneNameById(HGdata[i].mapid);
 				local ScenePtr = Actor.getScenePtr(sysarg);  --用这个的话，有可能人没有传过去，然后说怪物突然被清了

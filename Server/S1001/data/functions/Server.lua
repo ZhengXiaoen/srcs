@@ -356,19 +356,11 @@ end
 -- 精确的玩家跨天(不延迟)
 function OnActorExactNewDayArrive(sysarg)
 	local var = Actor.getStaticVar(sysarg)
+	sevenDaysActivity_WhenLogin(sysarg, true)
+	GetThe7DayData(sysarg)
 	
 	ClearActorExactNewDayArriveData(sysarg, var)
 	
-	
-	--7日活动。
-	if var.sevenDActivity ==nil then 
-		var.sevenDActivity = 1
-	else 
-		var.sevenDActivity=var.sevenDActivity+1
-		if var.sevenDActivity>=7 then 
-			var.sevenDActivity = 7
-		end
-	end
 	
 	--这个可以精确点的代替days
 	var.newdays = {}

@@ -7,11 +7,10 @@ function handleSevenDaysActivityOpt(sysarg, sysid, packet)
 		return false;
 	end
 	
-	local nIndx = DataPack.readByte(packet);--奖励索引
+	local nIndx = tonumber(DataPack.readByte(packet));--操作类型
 	if not nIndx then
 		return false
 	end
-	local nIndx = tonumber(nIndx)
 	if nIndx == 1 then 
 		GetThe7DayData(sysarg)
 	elseif nIndx == 2 then 
@@ -28,7 +27,7 @@ end
 
 function GetThe7DayData(sysarg)
 
-	local var = Actor.getStaticVar(sysarg)
+	local var = sevenDaysActivity_WhenLogin(sysarg)
 	local sevenDActivity = var.sevenDActivity
 	local sevenDActivityData = var.sevenDActivityData
 	
@@ -48,40 +47,37 @@ function GetThe7DayData(sysarg)
 end
 
 function GetThe7DayAwards(sysarg,n)
-	local var = Actor.getStaticVar(sysarg)
 	local index = tonumber(n)
-	if n<1 or n>7 then 
+	if not index or index ~= math.floor(index) or index<1 or index>7 then
 		return 
 	end
-	if var.sevenDActivity ==nil then 
-		return
-	end
-	if n>var.sevenDActivity then 
+	local var = sevenDaysActivity_WhenLogin(sysarg)
+	if index>var.sevenDActivity then
 		Actor.sendTipmsg(sysarg, "还没到天数领取奖励", ttFlyTip);
 		return 
 	end
 	if var.sevenDActivityData == nil then 
 		var.sevenDActivityData = 0 
 	end
-	if System.getIntBit(var.sevenDActivityData,n-1) == 1 then 
+	if System.getIntBit(var.sevenDActivityData,index-1) == 1 then
 		Actor.sendTipmsg(sysarg, "已经领取了奖励，不能再领", ttFlyTip);
 		return 
 	end
 	
 	--给奖励
 
-	if Awards.Give(sysarg,Award[n],998,"领取登录7天奖励") == false then 
+	if Awards.Give(sysarg,Award[index],998,"领取登录7天奖励") ~= true then
 		return 
 	end
-	Actor.sendTipmsg(sysarg,Lang.ScriptTips.zf194,ttFlyTip)
 	
 	-- 记录日志
 	--local nActorId = Actor.getIntProperty(sysarg, PROP_ENTITY_ID)
 	--System.sendCommonLog(GameLog.cGetSevenDayLogin,nActorId,'',config.id,0,0,'','','','','','','',"Get Seven Day LoginAward")
 		
 	--Actor.sendTipmsg(sysarg,"得到奖励",ttFlyTip)
-	var.sevenDActivityData=System.setIntBit(var.sevenDActivityData,n-1,1)
+	var.sevenDActivityData=System.setIntBit(var.sevenDActivityData,index-1,1)
 	GetThe7DayData(sysarg)
+	Actor.sendTipmsg(sysarg,Lang.ScriptTips.zf194,ttFlyTip)
 
 	
 end

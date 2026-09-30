@@ -118,6 +118,8 @@ EventCallDispatcher.defaultHandlerPlayerLogin = function (sysarg,arg)
 	local var = Actor.getStaticVar(sysarg)
 	if var.days == nil then var.days = {} end
 	if var.newdays == nil then var.newdays = {} end
+	sevenDaysActivity_WhenLogin(sysarg, isCrossDayLogin ~= 0)
+	GetThe7DayData(sysarg)
 
     --腾讯的微端
     if System.getSpid()==99 then
@@ -762,6 +764,8 @@ end
 
 --在线跨天
 function OnActorEventNewDayAcrrive(sysarg,arg)
+	sevenDaysActivity_WhenLogin(sysarg, true)
+	GetThe7DayData(sysarg)
 	-- 注意：因为要记录昨天的数据，所以要在清除每日数据之前调用
 	SaveHistoryTaskData(sysarg)
 	

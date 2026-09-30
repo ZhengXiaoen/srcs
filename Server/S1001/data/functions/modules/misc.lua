@@ -354,7 +354,7 @@ end
 --激活神甲
 function MiscActivateGodDress(sysarg,sysid,packet)
     local cfg = GodSoulCfg.Activate
-    local pEquip = Item.getEquipByPos(sysrg,itPayDressPos) 
+    local pEquip = Item.getEquipByPos(sysarg,itPayDressPos)
     local id = GetGodEquipItemId(sysarg,cfg.DestItem)
     if id == nil then return end
     if pEquip ~= nil then
@@ -388,10 +388,11 @@ end
 
 --神器升级
 function MiscGodEquipUpLev(sysarg,sysid,packet)
-    local type = DataPack.readByte(packet)
+    local equipType = DataPack.readByte(packet)
+    if equipType ~= 1 and equipType ~= 2 then return end
     local cfg = GodSoulCfg.UpLev.GodWeapon
     local nEquipPos = itPayWeaponPos
-    if type == 2 then
+    if equipType == 2 then
         cfg = GodSoulCfg.UpLev.GodDress
         nEquipPos = itPayDressPos
     end
@@ -404,26 +405,25 @@ function MiscGodEquipUpLev(sysarg,sysid,packet)
     local nNeedSoulValue= -1
     local nDestItemId = 0
     local nItemId = Item.getItemProperty(sysarg,pItem,ipItemID) 
-    local i = 0
     local nLev = 0
     for i=1,table.getn(cfg) do
         for j= 1,table.getn(cfg[i].SrcItem) do
-            nLev = nLev + 1
             if cfg[i].SrcItem[j] == nItemId then
+                nLev = i
+                if i == table.getn(cfg) then
+                    Actor.sendTipmsg(sysarg,"升级失败，神器已满级！",ttFlyTip)
+                    return
+                end
                 nNeedSoulValue =  cfg[i].NeedSoulValue
                 nDestItemId = GetGodEquipItemId(sysarg,cfg[i].DestItem)
-                if nDestItemId == nil then 
+                if nDestItemId == nil or nDestItemId <= 0 then
                     Actor.sendTipmsg(sysarg,"升级失败，无法找到配置！",ttFlyTip)
                     return
                 end
                 break
             end
         end
-        
-    end
-    if i == table.getn(cfg) then
-        Actor.sendTipmsg(sysarg,"升级失败，神器已满级！",ttFlyTip)
-        return
+        if nLev > 0 then break end
     end
     if nNeedSoulValue == -1 then
         Actor.sendTipmsg(sysarg,"升级失败，无法找到该物品id！",ttFlyTip)
@@ -593,6 +593,17 @@ function MiscSendGiveGodEquipState(sysarg,sysid,packet)
     local var = Actor.getStaticVar( sysarg )
     local nState = 0
     if var.buyoldgod ~= nil then nState= 1 end
+    -- 实际已穿戴神器的角色不依赖历史礼包领取标记。
+    local pItem = Item.getEquipByPos(sysarg,itPayWeaponPos)
+    if pItem ~= nil then
+        local itemId = Item.getItemProperty(sysarg,pItem,ipItemID)
+        for _, cfg in ipairs(GodSoulCfg.UpLev.GodWeapon) do
+            for _, sourceId in ipairs(cfg.SrcItem) do
+                if sourceId == itemId then nState = 1; break end
+            end
+            if nState == 1 then break end
+        end
+    end
     local pack = DataPack.allocPacket(sysarg,139,243)
     DataPack.writeByte(pack,nState)
     DataPack.flush(pack)

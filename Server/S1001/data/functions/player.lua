@@ -270,7 +270,6 @@ function OnPlayerLogin(sysarg, isCrossDay)
 		
 		ClearActorExactNewDayArriveData(sysarg, var)
 		OnPlayerCrossDay(sysarg)
-		sevenDaysActivity_WhenLogin(sysarg)
 		
 		--这个可以精确点的代替days,跨天登录
 		var.newdays = {}
@@ -5644,17 +5643,23 @@ function checkIsFinishTask(sysarg,types)
 	Quest_ShuaXin(sysarg)
     end
 end
---7天活动(跨天登录,在线跨天都要调用)
-function sevenDaysActivity_WhenLogin(sysarg)
+--角色一次性七日奖励：首日初始化，同一天的登录和跨天回调只记一次。
+function sevenDaysActivity_WhenLogin(sysarg, isCrossDay)
 	local var = Actor.getStaticVar(sysarg)
-	if var.sevenDActivity ==nil then 
+	local now = System.getCurrMiniTime()
+	if var.sevenDActivity == nil or var.sevenDActivity < 1 then
 		var.sevenDActivity = 1
-	else 
-		var.sevenDActivity=var.sevenDActivity+1
-		if var.sevenDActivity>=7 then 
-			var.sevenDActivity = 7
-		end
+	elseif (var.sevenDActivityLoginTime == nil and isCrossDay == true) or
+		(var.sevenDActivityLoginTime ~= nil and now > var.sevenDActivityLoginTime and
+		System.isSameDay(now, var.sevenDActivityLoginTime) == false) then
+		var.sevenDActivity = var.sevenDActivity + 1
 	end
+	var.sevenDActivity = math.min(7, var.sevenDActivity)
+	-- 回调重复、重登及校时均不清除永久领奖位。
+	if var.sevenDActivityLoginTime == nil or now > var.sevenDActivityLoginTime then
+		var.sevenDActivityLoginTime = now
+	end
+	return var
 end
 
 --查看开区合区天数

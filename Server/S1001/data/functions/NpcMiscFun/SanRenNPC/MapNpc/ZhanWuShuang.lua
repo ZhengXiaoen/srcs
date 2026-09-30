@@ -418,14 +418,15 @@ t.rcWanChengRenWu = function(sysarg)
             end		
 		local rewardExp = math.floor(rewardConfig.Exp*Times*SpeciaTitleTime * nOldPlayerRate)
 		local rewardInnerExp = math.floor(rewardConfig.innerExp*Times*SpeciaTitleTime * nOldPlayerRate)
-		Var.days = Var.days or {}
+		-- 引擎子表是 userdata，不能把已有 days 重新赋值，否则会覆盖整个角色变量。
+		if Var.days == nil then Var.days = {} end
 		set_d_val(sysarg,7,1);
 		Var.RiChangRenWuIndex=taskIndex
 		Var.RiChangRenWuFlag=0
 		Var.RiChangRenWuFinish=0
 		Actor.addExp(sysarg,rewardExp)
 		Actor.addInnerExp(sysarg,rewardInnerExp)
-		Var.days = Var.days or {}
+		if Var.days == nil then Var.days = {} end
 		
 		--广播日常除魔
 		if Var.days.KoRccmTime ==nil then 

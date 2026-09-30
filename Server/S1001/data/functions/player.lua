@@ -2117,15 +2117,15 @@ function seth(sysarg, val)
 	Actor.setUIntProperty(sysarg, PROP_ACTOR_HONOR_VALUE, val)
 end
 
-function GetBossKillPayMoneyReward(nBossLevel, nBossMaxHp)
+function GetBossKillPayMoneyReward(nBossLevel, nBossMaxHp, sysarg)
 	local svar = System.getStaticVar()
 	if svar ~= nil and svar.disableBossPayMoney == 1 then
-		return 0, 0, 1, false, false
+		return 0, 0, 1, false, false, false, false
 	end
 
 	nBossLevel = tonumber(nBossLevel) or 0
 	nBossMaxHp = tonumber(nBossMaxHp) or 0
-	if nBossLevel < 100 then return 0, 0, 1, false, false end
+	if nBossLevel < 100 then return 0, 0, 1, false, false, false, false end
 	if nBossMaxHp < 0 then nBossMaxHp = 0 end
 
 	local nMinRate = math.floor(nBossMaxHp / 2000000)
@@ -2147,17 +2147,28 @@ function GetBossKillPayMoneyReward(nBossLevel, nBossMaxHp)
 	nRate = nRate * baseRateMult
 
 	local nLuckRate = 1
-	local bLuckyTriggered = false
+	local bGoldenRights = sysarg ~= nil and IsSpeciaTitleVip(sysarg, 3) == true
+	local bGoldenLuckyTriggered = false
+	local bGoldenGodTriggered = false
+	local bLuckyTriggered = System.getRandomNumber(100) < 20
 	local bLuckyExtraTriggered = false
-	if System.getRandomNumber(100) < 20 then
+	-- 黄金权益：首次判定失败后各补判一次，幸运暴击15%，神级暴击8%。
+	if not bLuckyTriggered and bGoldenRights then
+		bGoldenLuckyTriggered = System.getRandomNumber(100) < 15
+		bLuckyTriggered = bGoldenLuckyTriggered
+	end
+	if bLuckyTriggered then
 		nLuckRate = (System.getRandomNumber(101) + 100) / 100
-		bLuckyTriggered = true
-		if System.getRandomNumber(100) < 10 then
+		bLuckyExtraTriggered = System.getRandomNumber(100) < 10
+		if not bLuckyExtraTriggered and bGoldenRights then
+			bGoldenGodTriggered = System.getRandomNumber(100) < 8
+			bLuckyExtraTriggered = bGoldenGodTriggered
+		end
+		if bLuckyExtraTriggered then
 			nLuckRate = nLuckRate * (System.getRandomNumber(301) + 200) / 100
-			bLuckyExtraTriggered = true
 		end
 	end
-	return math.floor(nBossLevel * nRate * nLuckRate + 0.5), nBossLevel, nLuckRate, bLuckyTriggered, bLuckyExtraTriggered
+	return math.floor(nBossLevel * nRate * nLuckRate + 0.5), nBossLevel, nLuckRate, bLuckyTriggered, bLuckyExtraTriggered, bGoldenLuckyTriggered, bGoldenGodTriggered
 end
 
 function TellClientBrotherTaskInfo(sysarg)
@@ -2197,12 +2208,14 @@ function TellClientBrotherTaskInfo(sysarg)
 	DataPack.flush(pack)
 end
 
-function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nLuckRate, bLuckyTriggered, bLuckyExtraTriggered)
+function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nLuckRate, bLuckyTriggered, bLuckyExtraTriggered, bGoldenLuckyTriggered, bGoldenGodTriggered)
 	nYuanBao = tonumber(nYuanBao) or 0
 	nYuanGu = tonumber(nYuanGu) or 0
 	nLuckRate = tonumber(nLuckRate) or 1
 	bLuckyTriggered = bLuckyTriggered == true
 	bLuckyExtraTriggered = bLuckyExtraTriggered == true
+	bGoldenLuckyTriggered = bGoldenLuckyTriggered == true and bLuckyTriggered
+	bGoldenGodTriggered = bGoldenGodTriggered == true and bLuckyExtraTriggered
 	szBossName = szBossName or ""
 	szSceneName = szSceneName or ""
 	if nYuanBao <= 0 and nYuanGu <= 0 then return false end
@@ -2577,12 +2590,29 @@ function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nL
 	local szRewardTip = string.format("<(c0xFFd4ab6f)击败Boss><(c0xFFFF0000)【%s】><(c0xFFd4ab6f)！地点：%s 掉落：><(c0xFFFFD700)元宝直充+%d><(c0xFFd4ab6f)，远古积分+%d>", szBossName, szSceneName, nYuanBao, nYuanGu)
 	local szBroadcastTip = string.format("<(n%s)><(c0xFFd4ab6f)在><%s><(c0xFFd4ab6f)击败Boss><(c0xFFFF0000)【%s】><(c0xFFd4ab6f)，获得><(c0xFFFFD700)元宝直充+%d>", Actor.getName(sysarg), szSceneName, szBossName, nYuanBao)
 	if bLuckyTriggered then
-		szRewardTip = string.format("<(c0xFFd4ab6f)击败Boss><(c0xFFFF0000)【%s】><(c0xFFd4ab6f)！地点：%s 触发><(c0xFF00FF00)幸运暴击><(c0xFFd4ab6f)！掉落：><(c0xFFFFD700)元宝直充+%d><(c0xFF00FF00)（%.2f倍）><(c0xFFd4ab6f) 远古积分+%d>", szBossName, szSceneName, nYuanBao, nLuckRate, nYuanGu)
-		szBroadcastTip = string.format("<(n%s)><(c0xFFd4ab6f)在><%s><(c0xFFd4ab6f)击败Boss><(c0xFFFF0000)【%s】><(c0xFFd4ab6f)触发><(c0xFF00FF00)幸运暴击><(c0xFFd4ab6f)！获得><(c0xFFFFD700)元宝直充+%d><(c0xFF00FF00)（%.2f倍）>", Actor.getName(sysarg), szSceneName, szBossName, nYuanBao, nLuckRate)
+		local szCritName = "<(c0xFF00FF00)幸运暴击>"
+		local szRateColor = "0xFF00FF00"
+		local szExclamation = "！"
 		if bLuckyExtraTriggered then
-			szRewardTip = string.format("<(c0xFFd4ab6f)击败Boss><(c0xFFFF0000)【%s】><(c0xFFd4ab6f)！地点：%s 触发><(c0xFFFF6600)神级暴击><(c0xFFd4ab6f)！！掉落：><(c0xFFFFD700)元宝直充+%d><(c0xFFFF6600)（%.2f倍）><(c0xFFd4ab6f) 远古积分+%d>", szBossName, szSceneName, nYuanBao, nLuckRate, nYuanGu)
-			szBroadcastTip = string.format("<(n%s)><(c0xFFd4ab6f)在><%s><(c0xFFd4ab6f)击败Boss><(c0xFFFF0000)【%s】><(c0xFFd4ab6f)触发><(c0xFFFF6600)神级暴击><(c0xFFd4ab6f)！！获得><(c0xFFFFD700)元宝直充+%d><(c0xFFFF6600)（%.2f倍）>", Actor.getName(sysarg), szSceneName, szBossName, nYuanBao, nLuckRate)
+			szCritName = "<(c0xFFFF6600)神级暴击>"
+			szRateColor = "0xFFFF6600"
+			szExclamation = "！！"
 		end
+		local szCritTrigger = "<(c0xFFd4ab6f)触发>" .. szCritName
+		if bGoldenLuckyTriggered or bGoldenGodTriggered then
+			szCritTrigger = "<(c0xFFd4ab6f)因为><(c0xFFFF00FF)钞能力> <(c0xFFFFD700)黄金权益><(c0xFF00FFFF) 额外判定触发>"
+			if bLuckyExtraTriggered and not bGoldenGodTriggered then
+				-- 幸运补判成功、神级首次成功时，明确区分两种暴击的来源。
+				szCritTrigger = szCritTrigger .. "<(c0xFF00FF00)幸运暴击><(c0xFFd4ab6f)，继而触发>" .. szCritName
+			else
+				szCritTrigger = szCritTrigger .. szCritName
+				if bGoldenLuckyTriggered and bGoldenGodTriggered then
+					szCritTrigger = szCritTrigger .. "<(c0xFF00FFFF)（幸运暴击也由权益额外判定触发）>"
+				end
+			end
+		end
+		szRewardTip = string.format("<(c0xFFd4ab6f)击败Boss><(c0xFFFF0000)【%s】><(c0xFFd4ab6f)！地点：%s >%s<(c0xFFd4ab6f)%s掉落：><(c0xFFFFD700)元宝直充+%d><(c%s)（%.2f倍）><(c0xFFd4ab6f) 远古积分+%d>", szBossName, szSceneName, szCritTrigger, szExclamation, nYuanBao, szRateColor, nLuckRate, nYuanGu)
+		szBroadcastTip = string.format("<(n%s)><(c0xFFd4ab6f)在><%s><(c0xFFd4ab6f)击败Boss><(c0xFFFF0000)【%s】>%s<(c0xFFd4ab6f)%s获得><(c0xFFFFD700)元宝直充+%d><(c%s)（%.2f倍）>", Actor.getName(sysarg), szSceneName, szBossName, szCritTrigger, szExclamation, nYuanBao, szRateColor, nLuckRate)
 	end
 
 	Actor.sendTipmsg(sysarg, szRewardTip, ttFlyTip)
@@ -3139,9 +3169,9 @@ function OnMonsterByKilled(monster, sysarg, monId, fubenId, sceneId,fuBenPtr)
 	if monsterType == 4 and mLv >= 100 and bossMaxHp >= 1000000 then
 		local bossRewardLevel = mLv
 		if bossRewardLevel > 200 then bossRewardLevel = 200 end
-		local vipPointReward, yuanGuReward, nLuckRate, bLuckyTriggered, bLuckyExtraTriggered = GetBossKillPayMoneyReward(bossRewardLevel, bossMaxHp)
+		local vipPointReward, yuanGuReward, nLuckRate, bLuckyTriggered, bLuckyExtraTriggered, bGoldenLuckyTriggered, bGoldenGodTriggered = GetBossKillPayMoneyReward(bossRewardLevel, bossMaxHp, sysarg)
 		local bossName = System.getMonsterNameById(monId) or Actor.getName(monster)
-		BossKillPayMoney(sysarg, vipPointReward, yuanGuReward, bossName, SceneName, nLuckRate, bLuckyTriggered, bLuckyExtraTriggered)
+		BossKillPayMoney(sysarg, vipPointReward, yuanGuReward, bossName, SceneName, nLuckRate, bLuckyTriggered, bLuckyExtraTriggered, bGoldenLuckyTriggered, bGoldenGodTriggered)
 	end
 
 

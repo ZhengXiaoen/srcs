@@ -252,6 +252,12 @@ function daily_pay_ranking_OnActorPayMoney(sysarg, args)
 end
 
 function daily_pay_ranking_ScriptRankingNewDayArrive()
+    local year, month, day = System.GetSystemTimeInMiniTime(System.getCurrMiniTime())
+    local today = System.encodeNumTime(year, month, day, 0, 0, 0)
+    local svar = System.getStaticVar()
+    if svar.daily_pay_ranking_last_settle_date ~= nil and svar.daily_pay_ranking_last_settle_date >= today then return end
+    svar.daily_pay_ranking_last_settle_date = today
+    System.saveStaticVar()
 	if DisableJingJiCompetition ~= nil then
 		DisableJingJiCompetition()
 	end

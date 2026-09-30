@@ -2375,6 +2375,7 @@ StartShenMiActivity = function( openday , nowOpenday)
 	if svar.SHENMISTORE_openDay==nil then --默认开启为3天
 		svar.SHENMISTORE_openDay=3
 	end
+	svar.StartShenMi_MiNitime = System.getCurrMiniTime()
 	System.saveStaticVar()
 	
 	--print("svar.SHENMISTORE_openDay="..svar.SHENMISTORE_openDay)

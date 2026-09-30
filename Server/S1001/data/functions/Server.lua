@@ -21,6 +21,7 @@
 --#include "data\functions\SuperLuckStarFunc.lua" once
 --#include "data\functions\OldPlayerReturnFunc.lua" once
 --#include "data\functions\Activity\SpringFestivalActivity.lua" once
+--#include "data\functions\Activity\RecurringActivities.lua" once
 
 function OnStartedLogicServer()
 	
@@ -41,7 +42,6 @@ function OnStartedLogicServer()
 	end
 	
 	static_data_on_logic_server_started()
-	EnsureDaJiDaLiActivity()
 	svar = System.getStaticVar()
 	if DisableJingJiCompetition ~= nil then
 		DisableJingJiCompetition() -- 关闭开关启用时清理旧活动状态
@@ -134,11 +134,10 @@ function OnStartedLogicServer()
 	end
 	
 	OnLuaEvent(LuaEventId.ServerStarted)
-	System.addTimer("EnsureDaJiDaLiActivity", 60 * 1000, -1)
+	EnsureRecurringActivities()
+	InitRecurringActivityTimer()
 	
 	if crossDayStarted then
-		checkDaJiDaLiAndOneYearDayCount()
-		
 		svar.days = {}
 	end
 end
@@ -187,6 +186,7 @@ function OnStopLogicServer()
 	 System.deleteTimer("VIPnotice_on_timer")
 	 System.deleteTimer("OpenServerDayIn4")
 	 System.deleteTimer("EnsureDaJiDaLiActivity")
+	 System.deleteTimer("EnsureRecurringActivities")
 	 
 	 OnLuaEvent(LuaEventId.ServerStop)
 end
@@ -277,7 +277,6 @@ function OnServerNewDayArrive()
 	dVar.psczNum = nil;		-- 鄙视城主人数
 	
 	local svar = System.getStaticVar()
-	local canStartOpenActivities = System.getCurrMiniTime() >= System.getServerOpenTime()
 	local y,m,d,nHour,nMinute,nSecond = System.GetSystemTimeInMiniTime(System.getCurrMiniTime())
 	local nNowDt = System.encodeNumTime(y,m,d,0,0,0)		
 	svar.SaveServerNewDayArriveTime = nNowDt
@@ -314,194 +313,9 @@ function OnServerNewDayArrive()
         Ranking.clearRanking(pRank)
     end
 	
-	--月末活动
-	local svar = System.getStaticVar()
-	if svar.EndMonth_openDay ==nil then 
-		svar.EndMonth_openDay=3
-	end
-	
-	if svar.isDringEndMonth ~=nil and svar.isDringEndMonth ~=0 then 
-		if svar.isDringEndMonth<svar.EndMonth_openDay then 
-			svar.isDringEndMonth = svar.isDringEndMonth+1
-			--第2日就要关闭双倍经验
-			if svar.isDringEndMonth==2 then 
-				EndMonthQuanFuShuangbei_CLOSE()
-			end
-			System.saveStaticVar()
-		else --第4日自动关闭
-			svar.isDringEndMonth =nil 
-			System.saveStaticVar()
-		end
-	end
-	
-	
-	--庆典活动
-	local svar = System.getStaticVar()
-	--默认为3天
-	if svar.QingDian_openDay ==nil then 
-		svar.QingDian_openDay=3
-	end
-	
-	if svar.isDringQingDianActivity ~=nil and svar.isDringQingDianActivity ~=0 then 
-		if svar.isDringQingDianActivity<svar.QingDian_openDay then 
-			svar.isDringQingDianActivity = svar.isDringQingDianActivity+1
-			System.saveStaticVar()
-		else --第4日自动关闭
-            EndQingDianActivity()
---			svar.isDringQingDianActivity =nil 
---			System.saveStaticVar()
-		end
-	end
-	
-	--神秘商店活动
-	local svar = System.getStaticVar()
-	--默认为3天
-	if svar.SHENMISTORE_openDay ==nil then 
-		svar.SHENMISTORE_openDay=3
-	end
-	if svar.isDringShenMiSD ~=nil and svar.isDringShenMiSD ~=0 then 
-		if svar.isDringShenMiSD<svar.SHENMISTORE_openDay then 
-			svar.isDringShenMiSD = svar.isDringShenMiSD+1
-			System.saveStaticVar()
-		else --第4日自动关闭
-			svar.isDringShenMiSD =nil 
-			System.saveStaticVar()
-		end
-	end
-	
-    --矿石
     local sdVar = System.getDyanmicVar()
     sdVar.Mineral = nil
 
-    local svar = System.getStaticVar()
-     --开服特惠礼包- 神魂礼包与宝石礼包- 第八天开始
---    if svar.tehuinewday == nil  and System.getDaysSinceOpenServer() > 7 then
---        svar.tehuinewday = 8
---    elseif svar.tehuinewday ~= nil then
---        svar.tehuinewday = svar.tehuinewday + 1
---    end
-	
-	
-	--庆典活动开启
-	if canStartOpenActivities and svar.QingDianActivityYear~=nil and svar.QingDianActivityMonth~=nil and svar.QingDianActivityDay~=nil then
-		local y,m,d = System.getDate( 0, 0, 0 )
-		if svar.QingDianActivityYear==y and svar.QingDianActivityMonth==m and svar.QingDianActivityDay==d then 
-			if svar.QingDian_openDay==nil then 
-				svar.QingDian_openDay =3 
-			end
-			if svar.QingDian_type == nil then 
-				svar.QingDian_type = 0
-			end
-			StartQingDianActivity(svar.QingDian_openDay,1,svar.QingDian_type)
-		end
-	end
-	
-	--神秘商店活动开启
-	if canStartOpenActivities and svar.SHENMISTORE_Year~=nil and svar.SHENMISTORE_Month~=nil and svar.SHENMISTORE_Day~=nil then
-		local y,m,d = System.getDate( 0, 0, 0 )
-		if svar.SHENMISTORE_Year==y and svar.SHENMISTORE_Month==m and svar.SHENMISTORE_Day==d then 
-			if svar.SHENMISTORE_openDay==nil then 
-				svar.SHENMISTORE_openDay=3
-			end
-			StartShenMiActivity(svar.SHENMISTORE_openDay,1)
-		end
-	end
-	
-	--月末活动开启
-	local y,m,d = System.getDate( 0, 0, 0 )
-	if canStartOpenActivities and EndMonthActivityDisabled ~= true and svar.EMActivityYear~=nil and svar.EMActivityMonth~=nil and svar.EMActivityDay~=nil then
-		if svar.EMActivityYear==y and svar.EMActivityMonth==m and svar.EMActivityDay==d then 
-			if svar.EndMonth_openDay==nil then 
-				svar.EndMonth_openDay=3
-			end
-			StartEndMonthActivity(svar.EndMonth_openDay,1)
-		end
-	end
-	
-	-- 按实际起始日推进大吉大利，结束后开启下一轮。
-	EnsureDaJiDaLiActivity()
-	svar = System.getStaticVar()
-	
-	
-	--竞技活动开启
-	if (JingJiCompetitionDisabled ~= true or svar.JingJiActivityTypes == 1) and svar.isDringJingJi ~=nil and svar.JingJiOpenDay ~=nil and svar.isDringJingJi ~=0 then
-		if svar.isDringJingJi<svar.JingJiOpenDay then 
-			svar.isDringJingJi = svar.isDringJingJi+1
-			System.saveStaticVar()
-		else --第4日自动关闭
-            EndJingJi()
-		end
-	end
-	
-	
-	
-	--竞技活动开启
-	if canStartOpenActivities and (JingJiCompetitionDisabled ~= true or svar.JingJiActivityTypes == 1) and svar.StartJingJIYear~=nil and svar.StartJingjiMonth~=nil and svar.StartJingJiDay~=nil then
-		local y,m,d = System.getDate( 0, 0, 0 )
-		if svar.StartJingJIYear==y and svar.StartJingjiMonth==m and svar.StartJingJiDay==d and svar.JingJiOpenDay~=nil and svar.JingJiActivityTypes~=nil then 
-			StartJingJi(svar.JingJiOpenDay,1,svar.JingJiActivityTypes) --当前第一天
-		end
-	end
-	
-	
-	
-	
-	--周年活动结束
-	if svar.isDringOneYearAct ~=nil and svar.isDringOneYearAct ~=0 then 
-		if svar.StartOneYear_OpenDay==nil then 
-			svar.StartOneYear_OpenDay=7
-		end
-		if svar.isDringOneYearAct<svar.StartOneYear_OpenDay then 
-			svar.isDringOneYearAct = svar.isDringOneYearAct+1
-			System.saveStaticVar()
-		else --第4日自动关闭
-            EndOneYearActivity()
-		end
-	end
-	
-	
-	
-	--周年活动开启
-	if canStartOpenActivities and svar.StartOneYear_Year~=nil and svar.StartOneYear_Month~=nil and svar.StartOneYear_Day~=nil then
-		local y,m,d = System.getDate( 0, 0, 0 )
-		if svar.StartOneYear_Year==y and svar.StartOneYear_Month==m and svar.StartOneYear_Day==d then 
-			if svar.StartOneYear_OpenDay==nil then 
-				svar.StartOneYear_OpenDay=7
-			end
-		
-			StartOneYearActivity(svar.StartOneYear_OpenDay,1) --当前第一天
-		end
-	end
-	
-	
-	--散人红利活动开启
-	if svar.isDringSanRenHongLi ~=nil and svar.isDringSanRenHongLi ~=0 then 
-		if svar.isDringSanRenHongLi<3 then 
-			svar.isDringSanRenHongLi = svar.isDringSanRenHongLi+1
-			System.saveStaticVar()
-		else --第4日自动关闭
-            EndSanRenHongLi()
-		end
-	end
-	
-	--散人红利活动开启
-	if canStartOpenActivities and svar.StartSanRenHongLiYear~=nil and svar.StartSanRenHongLiMonth~=nil and svar.StartSanRenHongLiDay~=nil then
-		local y,m,d = System.getDate( 0, 0, 0 )
-		if svar.StartSanRenHongLiYear==y and svar.StartSanRenHongLiMonth==m and svar.StartSanRenHongLiDay==d then 
-			StartSanRenHongLi(1) --当前第一天
-		end
-	end
-	
-	
-	--散人红利活动新年时候连续开启4次
-	local y,m,d = System.getDate( 0, 0, 0 )
-	if canStartOpenActivities and 2019==y and ( 2==m and 2==d  or 2==m and 5==d or 2==m and 8==d or 2==m and 11==d) then
-		StartSanRenHongLi(1) --当前第一天
-	end
-	
-	
-	
-	
 	--老兵回归，跨天
     OldPlayerReturnSystemCrossDay()
 	ClearGuildFlagExpLog()
@@ -517,6 +331,7 @@ function OnServerNewDayArrive()
     
 	
 	OnLuaEvent(LuaEventId.ServerNewDayArrive)
+	EnsureRecurringActivities()
 	
 	------------------
 	-- 这句放在最后
@@ -596,10 +411,8 @@ function OnReloadScriptFinish()
 	
 	load_static_data_from_file() -- 装载 LuaStaticData
 	load_dyanmic_data_from_file() -- 装载 LuaDyanmicData
-	EnsureDaJiDaLiActivity()
-	if not System.hasTimer("EnsureDaJiDaLiActivity") then
-		System.addTimer("EnsureDaJiDaLiActivity", 60 * 1000, -1)
-	end
+	EnsureRecurringActivities()
+	InitRecurringActivityTimer()
 
     
 end
@@ -607,6 +420,7 @@ end
 -- 脚本排行榜跨天
 function OnScriptRankingNewDayArrive()
 	OnLuaEvent(LuaEventId.ScriptRankingNewDayArrive)
+	EnsureRecurringActivities()
 end
 
 -- 玩家是否能进入跨服
@@ -934,38 +748,5 @@ function SetAiqyDoorState(nState,szUrl,nIconId,nStartTime,nEndTime)
 end
 
 function checkDaJiDaLiAndOneYearDayCount()
-	-- 有可能0点前关服，0点后再开服，导致 活动天数 没有加 1, 这里修改复一下
-	local svar = System.getStaticVar()
-	
-	local y,m,d,nHour,nMinute,nSecond = System.GetSystemTimeInMiniTime(System.getCurrMiniTime())
-	
-	EnsureDaJiDaLiActivity()
-
-	--周年活动结束
-	if svar.isDringOneYearAct ~=nil and svar.isDringOneYearAct ~=0 then 
-		local Year = svar.StartOneYear_Year
-		local Month = svar.StartOneYear_Month
-		local Day = svar.StartOneYear_Day
-		local _OpenDay = svar.StartOneYear_OpenDay
-		
-		if Year ~= nil and Month ~= nil and Day ~= nil and _OpenDay ~= nil then
-			local startDt = System.encodeNumTime(Year,Month,Day,0,0,0)
-			local curDt = System.encodeNumTime(y,m,d,0,0,0)
-			local diffTime = curDt - startDt
-			if diffTime > 0 then
-				local openDay = (math.floor(diffTime/86400)+1)
-				if svar.isDringOneYearAct ~= openDay then					
-					local oldDay = svar.isDringOneYearAct
-					svar.isDringOneYearAct = openDay
-					System.trace("修复周年活动当前活动天数，oldDay" .. oldDay .. ",newDay="..openDay)
-					
-					if openDay > _OpenDay then
-						System.trace("修复周年活动当前活动天数之后，活动结束")
-						EndOneYearActivity()
-					end
-				end
-			end			
-		end		
-	end
+	EnsureRecurringActivities()
 end
-

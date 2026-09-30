@@ -11,6 +11,8 @@ param(
     [ValidateSet('Config', 'System')]
     [string]$TimeSource = 'Config',
 
+    [switch]$SelectStartMode,
+
     [string]$LastGameTime,
 
     [switch]$ClockIsReal,
@@ -49,6 +51,23 @@ $script:StopNames = @(
     'DBCenterServer64_R',
     'DBCenterServer64_D'
 )
+
+function Read-StartTimeSource {
+    Write-Host '请选择启动模式：'
+    Write-Host '  1. 读取 GameClock.state.json 中的下次游戏时间'
+    Write-Host '  2. 使用当前电脑时间，不调整电脑时钟'
+    while ($true) {
+        $selection = Read-Host '请输入 1 或 2，然后按回车确认（不会自动选择）'
+        if ($null -eq $selection) {
+            throw '未收到启动模式选择，已取消启动。'
+        }
+        switch ($selection.Trim()) {
+            '1' { return 'Config' }
+            '2' { return 'System' }
+        }
+        Write-Host '请输入 1 或 2；直接回车不会启动服务器。'
+    }
+}
 
 function Format-ClockTime {
     param([datetime]$Value)
@@ -1030,6 +1049,12 @@ function Invoke-GameRecover {
 if (-not [string]::IsNullOrEmpty($Action)) {
     $paths = $null
     try {
+        if ($LauncherWindow) {
+            [Console]::OutputEncoding = New-Object Text.UTF8Encoding($false)
+        }
+        if ($Action -eq 'Start' -and $SelectStartMode) {
+            $TimeSource = Read-StartTimeSource
+        }
         if ([string]::IsNullOrWhiteSpace($Root)) {
             $Root = [IO.Path]::GetDirectoryName($PSCommandPath)
         }
@@ -1110,7 +1135,8 @@ if (-not [string]::IsNullOrEmpty($Action)) {
             }
         }
         [Console]::Error.WriteLine($actionError)
-        if ($LauncherWindow -and @('Start', 'Stop') -contains $Action) {
+        if ($LauncherWindow -and @('Start', 'Stop') -contains $Action -and
+            -not [Console]::IsInputRedirected) {
             Write-Host '发生异常，按任意键退出。'
             try {
                 $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')

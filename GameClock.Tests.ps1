@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'GameClock.ps1')
 $realRestoreClock = (Get-Command Restore-RealClock -CommandType Function).ScriptBlock
 
@@ -123,6 +123,46 @@ function Start-Process {
     $script:LaunchedWindows += [pscustomobject]@{ Name = $name; WindowStyle = $WindowStyle }
     $script:FakeRunning += $name
     return [pscustomobject]@{ Name = $name }
+}
+
+function Read-Host {
+    param([string]$Prompt)
+    $script:ModePromptCount++
+    if ($script:ModeInputs.Count -eq 0) {
+        throw 'Unexpected extra startup prompt'
+    }
+    return $script:ModeInputs.Dequeue()
+}
+
+try {
+    foreach ($modeCase in @(
+        @{ Inputs = @('1'); Expected = 'Config' },
+        @{ Inputs = @('2'); Expected = 'System' },
+        @{ Inputs = @('', ' ', '3', 'invalid', '1'); Expected = 'Config' },
+        @{ Inputs = @('', '2'); Expected = 'System' }
+    )) {
+        $script:ModeInputs = New-Object 'Collections.Generic.Queue[object]'
+        foreach ($modeInput in $modeCase.Inputs) {
+            $script:ModeInputs.Enqueue($modeInput)
+        }
+        $script:ModePromptCount = 0
+        Assert-Equal $modeCase.Expected (Read-StartTimeSource) 'explicit startup mode is required'
+        Assert-Equal $modeCase.Inputs.Count $script:ModePromptCount 'empty and invalid inputs are retried'
+    }
+    $script:ModeInputs = New-Object 'Collections.Generic.Queue[object]'
+    $script:ModeInputs.Enqueue($null)
+    $script:ModePromptCount = 0
+    Assert-Throws { Read-StartTimeSource } 'closed input cancels instead of selecting a default'
+    Assert-Equal 1 $script:ModePromptCount 'closed input stops prompting immediately'
+    Assert-Equal 0 $script:SetClockCalls 'menu never changes the clock'
+    Assert-Equal 0 $script:LaunchedWindows.Count 'menu never starts servers'
+
+    $launcherText = [IO.File]::ReadAllText((Join-Path $PSScriptRoot '2.一键启动.bat'))
+    Assert-True ($launcherText -notmatch '[^\x00-\x7F]') 'batch launcher contains no encoding-sensitive text'
+    Assert-True ($launcherText -match '-Action Start -SelectStartMode -LauncherWindow') 'batch requests PowerShell mode selection'
+    Assert-True ($launcherText -notmatch 'set /p|\bstartMode\b|chcp') 'batch no longer handles menu input or encoding'
+} finally {
+    Remove-Item -LiteralPath Function:\Read-Host
 }
 
 function New-TestRoot {

@@ -365,6 +365,13 @@ t.rcWanChengRenWu = function(sysarg)
 		
 	--有任务，并且任务已经完成
 	if Var.RiChangRenWuFlag~=nil and Var.RiChangRenWuFlag==1 and Var.RiChangRenWuFinish ~=nil and Var.RiChangRenWuFinish ==1 then
+		local taskIndex = tonumber(Var.RiChangRenWuIndex)
+		if taskIndex == 0 then taskIndex = 1 end
+		local rewardConfig = t[taskIndex]
+		if rewardConfig == nil or type(rewardConfig.Exp) ~= "number" or type(rewardConfig.innerExp) ~= "number" then
+			Actor.sendTipmsg(sysarg,"日常任务记录异常，领取状态已保留，请重新登录后再提交。",256)
+			return
+		end
 		if Var.RiChangRenWuType ~= nil and Var.RiChangRenWuType == 1 then --日常除魔收集矿石
 			--Actor.removeItem(sysarg,t.kuangshi[Var.RiChangRenWuIndex].needItem,t.kuangshi[Var.RiChangRenWuIndex].needcount)
 			
@@ -394,19 +401,11 @@ t.rcWanChengRenWu = function(sysarg)
 		local Times = get_d_val(sysarg,7)
 		local actorName =Actor.getName(sysarg)
 		
-		set_d_val(sysarg,7,1);
-		Var.RiChangRenWuFlag=0
-		Var.RiChangRenWuFinish=0
-		
-		if Var.RiChangRenWuIndex ~=nil and Var.RiChangRenWuIndex==0 then 
-			Var.RiChangRenWuIndex=1
-		end
-		
 		local SpeciaTitleTime=1
 		--特权
 		if IsSpeciaTitleVip(sysarg,1)==true then 
 			SpeciaTitleTime = 1.2
-			Actor.sendTipmsg(sysarg,string.format("黄铜特权加成百分之20奖励,获得经验:%s,内功经验%s",math.floor(t[Var.RiChangRenWuIndex].Exp*Times*SpeciaTitleTime),math.floor(t[Var.RiChangRenWuIndex].innerExp*Times*SpeciaTitleTime)),ttFlyTip)
+			Actor.sendTipmsg(sysarg,string.format("黄铜特权加成百分之20奖励,获得经验:%s,内功经验%s",math.floor(rewardConfig.Exp*Times*SpeciaTitleTime),math.floor(rewardConfig.innerExp*Times*SpeciaTitleTime)),ttFlyTip)
 		end
         --老兵回归
         local nOldPlayerRate = 1
@@ -417,8 +416,15 @@ t.rcWanChengRenWu = function(sysarg)
                       nOldPlayerRate = OldPlayerReturnCfg[1].Daily.rate
                 end
             end		
-		Actor.addExp(sysarg,math.floor(t[Var.RiChangRenWuIndex].Exp*Times*SpeciaTitleTime * nOldPlayerRate))
-		Actor.addInnerExp(sysarg, math.floor(t[Var.RiChangRenWuIndex].innerExp*Times*SpeciaTitleTime * nOldPlayerRate))
+		local rewardExp = math.floor(rewardConfig.Exp*Times*SpeciaTitleTime * nOldPlayerRate)
+		local rewardInnerExp = math.floor(rewardConfig.innerExp*Times*SpeciaTitleTime * nOldPlayerRate)
+		Var.days = Var.days or {}
+		set_d_val(sysarg,7,1);
+		Var.RiChangRenWuIndex=taskIndex
+		Var.RiChangRenWuFlag=0
+		Var.RiChangRenWuFinish=0
+		Actor.addExp(sysarg,rewardExp)
+		Actor.addInnerExp(sysarg,rewardInnerExp)
 		
 		--广播日常除魔
 		if Var.days.KoRccmTime ==nil then 

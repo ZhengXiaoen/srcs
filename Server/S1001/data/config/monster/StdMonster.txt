@@ -41565,7 +41565,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         weaponid=0,
         swingid=0,
         drops={
---#include "drops\drops1511.lua"
+--#include "drops\drops1511Normal.lua"
 --#include "drops\drops2114.lua"
         },
         flags={

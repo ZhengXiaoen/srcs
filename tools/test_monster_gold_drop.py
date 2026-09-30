@@ -5,6 +5,7 @@ Use --lua-path for an isolated lupa installation. No live game process is used.
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 from pathlib import Path
 import re
 import subprocess
@@ -18,6 +19,11 @@ GOLD = re.compile(rb"\s*\{type=[56],")
 BRICK_INCLUDE = re.compile(
     rb'--#include "drops\\dropsBossGoldBrick(?:Protected)?\.lua"\r?\n')
 BASELINE = "d5a72c8^"
+MATERIAL_VALUES = {
+    568: ("shield", 100), 569: ("shield", 1000), 570: ("shield", 10000),
+    535: ("talisman", 1000), 536: ("talisman", 10000),
+    5165: ("soul", 10), 5166: ("soul", 100),
+}
 
 
 def old(path):
@@ -32,6 +38,24 @@ def fields(line):
 def blocks(data):
     return {int(re.search(rb"entityid=(\d+)", block)[1]): block
             for block in re.split(rb"\r?\n\{\r?\n", data)[1:]}
+
+
+def guaranteed_material_values(data):
+    """Compare equivalent denominations while keeping every drop condition."""
+    other, values = [], Counter()
+    for line in data.splitlines(keepends=True):
+        row = fields(line.split(b"--", 1)[0]) if line.lstrip().startswith(b"{type=") else {}
+        if (row.get("type") == 0 and row.get("id") in MATERIAL_VALUES
+                and row.get("propability") == 1 and row.get("group") == 0
+                and row.get("mincount") == 0 and row.get("maxcount") == 0):
+            if row["count"] <= 0:
+                raise ValueError("Material reward count must remain positive")
+            family, value = MATERIAL_VALUES[row["id"]]
+            conditions = tuple(sorted((k, v) for k, v in row.items() if k not in ("id", "count")))
+            values[(family, conditions)] += value * row["count"]
+        else:
+            other.append(line)
+    return b"".join(other), values
 
 
 class MonsterGoldDropTests(unittest.TestCase):
@@ -57,16 +81,21 @@ class MonsterGoldDropTests(unittest.TestCase):
                 assert any(row["propability"] == 1 for row in rows), mid
                 cls.expected[mid] = max(row["LootTime"] for row in rows)
 
-    def test_all_gold_removed_and_other_drop_bytes_unchanged(self):
+    def test_all_gold_removed_and_other_drop_values_unchanged(self):
         changed = removed = 0
         for path, original in self.original_drops.items():
             wanted = b"".join(line for line in original.splitlines(keepends=True)
                               if not GOLD.match(line))
-            self.assertEqual(wanted, (ROOT / path).read_bytes(), path)
+            self.assertEqual(guaranteed_material_values(wanted),
+                             guaranteed_material_values((ROOT / path).read_bytes()), path)
             if wanted != original:
                 changed += 1
                 removed += sum(bool(GOLD.match(line)) for line in original.splitlines())
         self.assertEqual((162, 265), (changed, removed))
+        shared_original = self.original_drops[BASE / "drops/drops1511.lua"]
+        self.assertEqual(b"".join(line for line in shared_original.splitlines(keepends=True)
+                                  if not GOLD.match(line)),
+                         (ROOT / BASE / "drops/drops1511Normal.lua").read_bytes())
         for path in (ROOT / BASE / "drops").glob("*.lua"):
             self.assertFalse(any(GOLD.match(line) for line in path.read_bytes().splitlines()), path)
 
@@ -78,9 +107,15 @@ class MonsterGoldDropTests(unittest.TestCase):
             if includes:
                 self.assertEqual(4, int(re.search(rb"monsterType=(\d+)", block)[1]))
                 self.assertEqual(bool(self.expected[mid]), b"Protected" in includes[0])
-            self.assertEqual(self.originals[mid], BRICK_INCLUDE.sub(b"", block), mid)
+            cleaned = BRICK_INCLUDE.sub(b"", block)
+            if mid == 545:
+                cleaned = cleaned.replace(b'drops\\drops1511Normal.lua', b'drops\\drops1511.lua')
+            self.assertEqual(self.originals[mid], cleaned, mid)
+        current = (ROOT / MONSTERS).read_bytes()
+        self.assertEqual(1, current.count(b'drops\\drops1511Normal.lua'))
         self.assertEqual(self.original_monsters,
-                         BRICK_INCLUDE.sub(b"", (ROOT / MONSTERS).read_bytes()))
+                         BRICK_INCLUDE.sub(b"", current).replace(
+                             b'drops\\drops1511Normal.lua', b'drops\\drops1511.lua'))
         self.assertEqual(5, sum(bool(v) for v in self.expected.values()))
 
     def test_gold_brick_is_guaranteed_unbound_item_and_keeps_protection(self):

@@ -81,6 +81,9 @@ class BossMaterialDropTests(unittest.TestCase):
                 expected.append(d)
             else:
                 remaining.append(line)
+        # A later refactor removed gold drops from every monster template.
+        remaining = [line for line in remaining
+                     if not re.match(rb"\s*\{type=[56],", line)]
         assert current.split(b"\n", 1)[1] == b"".join(remaining), path + ": unrelated bytes changed"
         assert len(expected) == len(migrated), path + ": missing or duplicate migration"
         for old, new in zip(expected, migrated):
@@ -226,7 +229,10 @@ LocalDT.BossMaterialDrops[999]={
     def test_protected_materials_and_mixed_equipment_groups_unchanged(self):
         for index in (2184,2201,2331,2332,2351):
             path=DATA+f"config/monster/drops/drops{index}.lua"
-            self.assertEqual(baseline(path),source(path))
+            original_without_gold = b"".join(
+                line for line in baseline(path).splitlines(keepends=True)
+                if not re.match(rb"\s*\{type=[56],", line))
+            self.assertEqual(original_without_gold,source(path))
         path=DATA+"config/monster/drops/drops2354.lua"
         self.assertEqual([x for x in rows(baseline(path)) if x['group']==13],
                          [x for x in rows(source(path)) if x['group']==13])

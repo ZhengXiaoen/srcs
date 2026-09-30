@@ -1195,6 +1195,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops2185.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -1500,6 +1501,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops2186.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -2871,6 +2873,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2213.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -3335,6 +3338,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2214.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyMove=true,
@@ -3878,6 +3882,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -4267,6 +4272,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -4808,6 +4814,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -5348,6 +5355,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -5889,6 +5897,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -6430,6 +6439,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -6895,6 +6905,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -7285,6 +7296,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -12734,6 +12746,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1507.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -13039,6 +13052,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1507.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -13344,6 +13358,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1507.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -13649,6 +13664,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1507.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -13954,6 +13970,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1507.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -14487,6 +14504,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1507.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -22108,6 +22126,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2140.lua"
 --#include "drops\drops2213.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -22337,6 +22356,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2140.lua"
 --#include "drops\drops2213.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -22566,6 +22586,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2140.lua"
 --#include "drops\drops2213.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -22795,6 +22816,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2140.lua"
 --#include "drops\drops2213.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -23024,6 +23046,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2140.lua"
 --#include "drops\drops2213.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -23328,6 +23351,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2140.lua"
 --#include "drops\drops2213.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -23557,6 +23581,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2140.lua"
 --#include "drops\drops2213.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -23786,6 +23811,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2140.lua"
 --#include "drops\drops2213.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -24015,6 +24041,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2140.lua"
 --#include "drops\drops2213.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -24241,6 +24268,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1516.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -32470,6 +32498,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1503.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -32546,6 +32575,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1504.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -32622,6 +32652,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1505.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -32698,6 +32729,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1506.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -32774,6 +32806,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1507.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -32850,6 +32883,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1508.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -32927,6 +32961,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2200.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -33231,6 +33266,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1503.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -33307,6 +33343,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1504.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -33383,6 +33420,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1505.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -33459,6 +33497,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1506.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -33535,6 +33574,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1507.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -33611,6 +33651,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1508.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -33688,6 +33729,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2200.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -33992,6 +34034,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1503.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -34068,6 +34111,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1504.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -34144,6 +34188,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1505.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -34220,6 +34265,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1506.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -34296,6 +34342,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1507.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -34372,6 +34419,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1508.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -34449,6 +34497,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2200.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -34753,6 +34802,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1503.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -34829,6 +34879,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1504.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -34905,6 +34956,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1505.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -34981,6 +35033,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1506.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -35057,6 +35110,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1507.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -35133,6 +35187,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1508.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -35210,6 +35265,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2200.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -35514,6 +35570,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1503.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -35590,6 +35647,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1504.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -35666,6 +35724,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1505.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -35742,6 +35801,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1506.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -35818,6 +35878,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1507.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -35894,6 +35955,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1508.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -35971,6 +36033,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2200.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -36275,6 +36338,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1503.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -36351,6 +36415,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1504.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -36427,6 +36492,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1505.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -36503,6 +36569,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1506.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -36579,6 +36646,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1507.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -36655,6 +36723,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1508.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -36732,6 +36801,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2200.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -37036,6 +37106,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1503.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -37112,6 +37183,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1504.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -37188,6 +37260,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1505.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -37264,6 +37337,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1506.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -37340,6 +37414,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1507.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -37416,6 +37491,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1508.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -37493,6 +37569,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2200.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -38274,6 +38351,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1503.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -38351,6 +38429,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1505.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -38428,6 +38507,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1507.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -38505,6 +38585,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2200.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -38657,6 +38738,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1503.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -38733,6 +38815,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1505.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -38809,6 +38892,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1507.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -38886,6 +38970,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2200.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -39038,6 +39123,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1503.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -39114,6 +39200,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1505.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -39190,6 +39277,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops1507.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -39267,6 +39355,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2200.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -42858,6 +42947,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -42935,6 +43025,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -43012,6 +43103,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -43089,6 +43181,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -43166,6 +43259,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -43243,6 +43337,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -43320,6 +43415,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -43397,6 +43493,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -43474,6 +43571,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -43551,6 +43649,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -43628,6 +43727,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -43705,6 +43805,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -43787,6 +43888,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2219.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -48301,6 +48403,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2142.lua"
 --#include "drops\drops2219.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -48461,6 +48564,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2213.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -48544,6 +48648,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2214.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -48628,6 +48733,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -48712,6 +48818,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -48796,6 +48903,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -48880,6 +48988,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -48957,6 +49066,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2168.lua"
 --#include "drops\drops2183.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -49034,6 +49144,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2168.lua"
 --#include "drops\drops2183.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -49111,6 +49222,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2169.lua"
 --#include "drops\drops2183.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -49267,6 +49379,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2356.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -49351,6 +49464,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2356.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -49436,6 +49550,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2327.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2356.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -49521,6 +49636,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2357.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -49606,6 +49722,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2357.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -49690,6 +49807,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2357.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -49775,6 +49893,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -49860,6 +49979,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -49945,6 +50065,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -50715,6 +50836,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2329.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -50800,6 +50922,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2329.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -50952,6 +51075,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1508.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -51030,6 +51154,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1509.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -51108,6 +51233,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1511.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -51186,6 +51312,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1512.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -51264,6 +51391,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1513.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -51342,6 +51470,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1514.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -51420,6 +51549,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1515.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -51498,6 +51628,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1516.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -51576,6 +51707,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1516.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -51654,6 +51786,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1518.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -51732,6 +51865,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1518.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -51810,6 +51944,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1518.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -51888,6 +52023,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1518.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -51966,6 +52102,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1518.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -52044,6 +52181,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1518.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -52122,6 +52260,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1518.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -52200,6 +52339,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1518.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -52278,6 +52418,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1518.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -52356,6 +52497,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1518.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -52434,6 +52576,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1518.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -52512,6 +52655,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1518.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -52590,6 +52734,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1518.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -52668,6 +52813,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1518.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -52746,6 +52892,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops1518.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -53131,6 +53278,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2356.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -53215,6 +53363,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2356.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -53300,6 +53449,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2327.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2356.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -53385,6 +53535,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2357.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -53470,6 +53621,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2357.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -53554,6 +53706,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2357.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -53639,6 +53792,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -53724,6 +53878,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -53807,6 +53962,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -53889,6 +54045,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2356.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -53973,6 +54130,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2356.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -54058,6 +54216,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2327.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2356.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -54143,6 +54302,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2357.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -54228,6 +54388,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2357.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -54312,6 +54473,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2357.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -54397,6 +54559,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -54482,6 +54645,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -54565,6 +54729,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -54727,6 +54892,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2213.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -54810,6 +54976,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2214.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -54894,6 +55061,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -54978,6 +55146,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -55061,6 +55230,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2213.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -55144,6 +55314,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2214.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -55228,6 +55399,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -55312,6 +55484,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -55396,6 +55569,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -55480,6 +55654,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -55564,6 +55739,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -55647,6 +55823,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -55729,6 +55906,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -55813,6 +55991,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -55897,6 +56076,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -55980,6 +56160,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -56063,6 +56244,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -56147,6 +56329,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -56231,6 +56414,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -56315,6 +56499,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -56399,6 +56584,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -56483,6 +56669,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -56564,6 +56751,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2213.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -56648,6 +56836,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2214.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -56733,6 +56922,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -56818,6 +57008,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -56903,6 +57094,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -56987,6 +57179,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -57072,6 +57265,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -57157,6 +57351,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -57242,6 +57437,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -57398,6 +57594,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2213.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -57474,6 +57671,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops2144.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -57550,6 +57748,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops2145.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -57626,6 +57825,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops2146.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -57702,6 +57902,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops2147.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -57778,6 +57979,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops2148.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -57854,6 +58056,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops2149.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -57930,6 +58133,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=31,
         drops={
 --#include "drops\drops2150.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -58011,6 +58215,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2140.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -58093,6 +58298,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2140.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -58176,6 +58382,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -58259,6 +58466,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -58342,6 +58550,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -58426,6 +58635,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -58509,6 +58719,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2329.lua"
 --#include "drops\drops2359.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyMove=true,
@@ -58591,6 +58802,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2157.lua"
 --#include "drops\drops2140.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -58667,6 +58879,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2157.lua"
 --#include "drops\drops2140.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -58745,6 +58958,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2157.lua"
 --#include "drops\drops2140.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -58823,6 +59037,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2157.lua"
 --#include "drops\drops2140.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -58901,6 +59116,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2157.lua"
 --#include "drops\drops2140.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -58979,6 +59195,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2151.lua"
 --#include "drops\drops2140.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -59055,6 +59272,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2157.lua"
 --#include "drops\drops2140.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -59131,6 +59349,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2157.lua"
 --#include "drops\drops2140.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -59207,6 +59426,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2157.lua"
 --#include "drops\drops2140.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyMove=true,
@@ -59284,6 +59504,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2157.lua"
 --#include "drops\drops2140.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -59360,6 +59581,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2157.lua"
 --#include "drops\drops2140.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -59436,6 +59658,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2157.lua"
 --#include "drops\drops2140.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -60414,6 +60637,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2372.lua"
 --#include "drops\drops2140.lua"
 --#include "drops\drops2213.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -60493,6 +60717,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2373.lua"
 --#include "drops\drops2141.lua"
 --#include "drops\drops2214.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -60572,6 +60797,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2374.lua"
 --#include "drops\drops2142.lua"
 --#include "drops\drops2215.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -62207,6 +62433,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2182.lua"
 --#include "drops\drops2140.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -62288,6 +62515,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2182.lua"
 --#include "drops\drops2140.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -62369,6 +62597,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2182.lua"
 --#include "drops\drops2140.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -62450,6 +62679,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2182.lua"
 --#include "drops\drops2140.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -62536,6 +62766,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2377.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2375.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -62623,6 +62854,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2377.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2375.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -62708,6 +62940,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2375.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -62794,6 +63027,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -62880,6 +63114,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -62958,6 +63193,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2184.lua"
 --#include "drops\drops2329.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrickProtected.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -63042,6 +63278,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2377.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -63127,6 +63364,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2377.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -63213,6 +63451,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2377.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -63297,6 +63536,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2377.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -63383,6 +63623,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -64378,6 +64619,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2329.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -66893,6 +67135,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2134.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -72676,6 +72919,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2356.lua"
 --#include "drops\drops2140.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -72758,6 +73002,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2356.lua"
 --#include "drops\drops2140.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -72842,6 +73087,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2213.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -72926,6 +73172,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2214.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -73011,6 +73258,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -73096,6 +73344,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -73181,6 +73430,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -73265,6 +73515,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -73348,6 +73599,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2329.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -73507,6 +73759,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2201.lua"
 --#include "drops\drops2329.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrickProtected.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -73590,6 +73843,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2213.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -73674,6 +73928,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2214.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -73759,6 +74014,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -73844,6 +74100,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -73929,6 +74186,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -74013,6 +74271,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -74098,6 +74357,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -74173,6 +74433,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2202.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -74249,6 +74510,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2202.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -74325,6 +74587,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2202.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -74401,6 +74664,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2202.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -74477,6 +74741,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2202.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -74553,6 +74818,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2202.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -74629,6 +74895,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2202.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -74705,6 +74972,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2202.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -74782,6 +75050,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2210.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -74858,6 +75127,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2211.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -74933,6 +75203,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2203.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -75009,6 +75280,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2203.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -75085,6 +75357,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2203.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -75161,6 +75434,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2203.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -75237,6 +75511,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2203.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -75313,6 +75588,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2203.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -75389,6 +75665,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2203.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -75465,6 +75742,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2203.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -75542,6 +75820,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2210.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -75618,6 +75897,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2211.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -75694,6 +75974,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2204.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -75771,6 +76052,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2204.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -75848,6 +76130,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2204.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -75925,6 +76208,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2204.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -76002,6 +76286,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2204.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -76079,6 +76364,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2204.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -76156,6 +76442,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2204.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -76233,6 +76520,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2204.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -76310,6 +76598,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2210.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -76386,6 +76675,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2211.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -76462,6 +76752,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2205.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -76539,6 +76830,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2205.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -76616,6 +76908,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2205.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -76693,6 +76986,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2205.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -76770,6 +77064,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2205.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -76847,6 +77142,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2205.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -76924,6 +77220,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2205.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -77001,6 +77298,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2205.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -77078,6 +77376,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2210.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -77154,6 +77453,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2211.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -77230,6 +77530,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2206.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -77307,6 +77608,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2206.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -77384,6 +77686,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2206.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -77461,6 +77764,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2206.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -77538,6 +77842,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2206.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -77615,6 +77920,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2206.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -77692,6 +77998,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2206.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -77769,6 +78076,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2206.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -77846,6 +78154,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2210.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -77922,6 +78231,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2211.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -77998,6 +78308,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2207.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -78074,6 +78385,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2207.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -78150,6 +78462,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2207.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -78226,6 +78539,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2207.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -78302,6 +78616,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2207.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -78378,6 +78693,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2207.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -78454,6 +78770,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2207.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -78530,6 +78847,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2207.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -78606,6 +78924,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2210.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -78682,6 +79001,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2211.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -78758,6 +79078,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2208.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -78834,6 +79155,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2208.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -78910,6 +79232,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2208.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -78986,6 +79309,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2208.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -79062,6 +79386,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2208.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -79138,6 +79463,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2208.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -79214,6 +79540,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2208.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -79290,6 +79617,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2208.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -79366,6 +79694,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2210.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -79442,6 +79771,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2211.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -79518,6 +79848,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2209.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -79594,6 +79925,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2209.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -79670,6 +80002,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2209.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -79746,6 +80079,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2209.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -79822,6 +80156,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2209.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -79898,6 +80233,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2209.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -79974,6 +80310,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2209.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -80050,6 +80387,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2209.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -80126,6 +80464,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2210.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -80202,6 +80541,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2211.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -80280,6 +80620,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2212.lua"
 --#include "drops\drops2329.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -80364,6 +80705,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2213.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -80448,6 +80790,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2213.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -80532,6 +80875,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2214.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -80610,6 +80954,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2222.lua"
 --#include "drops\drops2239.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -80688,6 +81033,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2223.lua"
 --#include "drops\drops2240.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -80766,6 +81112,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2224.lua"
 --#include "drops\drops2241.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -80844,6 +81191,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2225.lua"
 --#include "drops\drops2242.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -80922,6 +81270,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2226.lua"
 --#include "drops\drops2243.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -81002,6 +81351,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -81080,6 +81430,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -81158,6 +81509,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -81236,6 +81588,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -82417,6 +82770,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2210.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -82494,6 +82848,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2210.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -82571,6 +82926,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2210.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -82648,6 +83004,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2210.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -82725,6 +83082,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2210.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -82802,6 +83160,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2210.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -82879,6 +83238,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2210.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -82956,6 +83316,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2210.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -83033,6 +83394,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2211.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -83110,6 +83472,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2211.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -83187,6 +83550,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2211.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -83264,6 +83628,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2211.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -83341,6 +83706,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2211.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -83418,6 +83784,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2211.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -83495,6 +83862,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2211.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -83572,6 +83940,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2211.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -83649,6 +84018,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2244.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -83726,6 +84096,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2244.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -83803,6 +84174,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2244.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -83880,6 +84252,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2244.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -83957,6 +84330,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2244.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -84034,6 +84408,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2244.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -84111,6 +84486,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2244.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -84188,6 +84564,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2244.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -84265,6 +84642,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2245.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -84342,6 +84720,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2245.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -84419,6 +84798,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2245.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -84496,6 +84876,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2245.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -84573,6 +84954,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2245.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -84650,6 +85032,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2245.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -84727,6 +85110,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2245.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -84804,6 +85188,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2245.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -84881,6 +85266,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2246.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -84958,6 +85344,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2246.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -85035,6 +85422,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2246.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -85112,6 +85500,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2246.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -85189,6 +85578,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2246.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -85266,6 +85656,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2246.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -85343,6 +85734,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2246.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -85420,6 +85812,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2246.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -85578,6 +85971,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2353.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -85658,6 +86052,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2353.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -85740,6 +86135,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2358.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -85820,6 +86216,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2358.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -85900,6 +86297,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2358.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -85980,6 +86378,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2358.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -86060,6 +86459,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2358.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -86140,6 +86540,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2358.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -86220,6 +86621,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2358.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -86300,6 +86702,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2358.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -86380,6 +86783,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2358.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -86460,6 +86864,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2358.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -86540,6 +86945,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2358.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -86620,6 +87026,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2358.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -86701,6 +87108,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2329.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -88021,6 +88429,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2357.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -88104,6 +88513,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2357.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -88187,6 +88597,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2357.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -88270,6 +88681,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2357.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -88353,6 +88765,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2357.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -88436,6 +88849,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2357.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -88519,6 +88933,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2357.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -88602,6 +89017,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2357.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -88686,6 +89102,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2357.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -88770,6 +89187,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2357.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -88854,6 +89272,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2329.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -88933,6 +89352,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -89011,6 +89431,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -89089,6 +89510,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -89167,6 +89589,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -89245,6 +89668,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -89323,6 +89747,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -91845,6 +92270,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2213.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -91928,6 +92354,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2214.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -92011,6 +92438,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2215.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2327.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -92094,6 +92522,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2216.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -92177,6 +92606,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2217.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -92259,6 +92689,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -92341,6 +92772,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2329.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -92416,6 +92848,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2294.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -92493,6 +92926,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2294.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -92570,6 +93004,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2294.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -92647,6 +93082,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2294.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -92724,6 +93160,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2294.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -92801,6 +93238,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2294.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -92878,6 +93316,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2294.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -92955,6 +93394,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2294.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -93032,6 +93472,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2295.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -93109,6 +93550,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2295.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -93186,6 +93628,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2295.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -93263,6 +93706,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2295.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -93340,6 +93784,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2295.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -93417,6 +93862,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2295.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -93494,6 +93940,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2295.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -93571,6 +94018,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2295.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -93648,6 +94096,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2296.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -93725,6 +94174,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2296.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -93802,6 +94252,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2296.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -93879,6 +94330,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2296.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -93956,6 +94408,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2296.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -94033,6 +94486,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2296.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -94110,6 +94564,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2296.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -94187,6 +94642,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2296.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -94264,6 +94720,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2297.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -94341,6 +94798,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2297.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -94418,6 +94876,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2297.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -94495,6 +94954,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2297.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -94572,6 +95032,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2297.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -94649,6 +95110,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2297.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -94726,6 +95188,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2297.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -94803,6 +95266,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2297.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -94880,6 +95344,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2298.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -94957,6 +95422,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2298.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -95034,6 +95500,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2298.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -95111,6 +95578,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2298.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -95188,6 +95656,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2298.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -95265,6 +95734,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2298.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -95342,6 +95812,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2298.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -95419,6 +95890,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2298.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -95495,6 +95967,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2299.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -95571,6 +96044,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2300.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -95647,6 +96121,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2301.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -95723,6 +96198,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2302.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -95799,6 +96275,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2303.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -95875,6 +96352,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2304.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -95951,6 +96429,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2305.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -96027,6 +96506,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2306.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -96103,6 +96583,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2307.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -96179,6 +96660,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2308.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -96255,6 +96737,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2309.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -96331,6 +96814,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2310.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -96407,6 +96891,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2311.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -96483,6 +96968,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2312.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -96559,6 +97045,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2313.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -96635,6 +97122,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2314.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -96711,6 +97199,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2315.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -96787,6 +97276,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2316.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -96863,6 +97353,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2317.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -96939,6 +97430,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2318.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -97015,6 +97507,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2319.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -97091,6 +97584,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2320.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -97167,6 +97661,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         TouDingChengHao=32,
         drops={
 --#include "drops\drops2321.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -97247,6 +97742,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2327.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -97327,6 +97823,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2327.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -97407,6 +97904,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2327.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -97487,6 +97985,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2327.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -97567,6 +98066,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2327.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -97647,6 +98147,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2329.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -97733,6 +98234,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -97819,6 +98321,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -97905,6 +98408,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -97991,6 +98495,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -98077,6 +98582,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -98322,6 +98828,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -98407,6 +98914,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -98492,6 +99000,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -98577,6 +99086,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -98662,6 +99172,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -98746,6 +99257,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -98830,6 +99342,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -98915,6 +99428,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -98998,6 +99512,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -99082,6 +99597,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -99166,6 +99682,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -99250,6 +99767,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -99334,6 +99852,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -99418,6 +99937,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -99495,6 +100015,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2329.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrickProtected.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -99573,6 +100094,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2329.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrickProtected.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -99652,6 +100174,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2141.lua"
 --#include "drops\drops2214.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -99732,6 +100255,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2142.lua"
 --#include "drops\drops2215.lua"
 --#include "drops\drops2293.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -99813,6 +100337,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2215.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -99894,6 +100419,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2216.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -99975,6 +100501,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2217.lua"
 --#include "drops\drops2293.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -100060,6 +100587,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2376.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2356.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -100143,6 +100671,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2376.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2356.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -100226,6 +100755,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2376.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2356.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -100309,6 +100839,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2376.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2356.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -100392,6 +100923,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2376.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2357.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -100475,6 +101007,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2376.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2356.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -100558,6 +101091,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2376.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2356.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -100641,6 +101175,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2376.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2357.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -100724,6 +101259,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2376.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2357.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -100808,6 +101344,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2357.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -100891,6 +101428,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2376.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2357.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -100974,6 +101512,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2376.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2357.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -101058,6 +101597,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2357.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -101142,6 +101682,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2357.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -101227,6 +101768,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -101312,6 +101854,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -101397,6 +101940,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -101482,6 +102026,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -101567,6 +102112,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -101652,6 +102198,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -101734,6 +102281,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2327.lua"
 --#include "drops\drops2344.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -101817,6 +102365,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2327.lua"
 --#include "drops\drops2344.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -101900,6 +102449,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2327.lua"
 --#include "drops\drops2344.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -101983,6 +102533,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2327.lua"
 --#include "drops\drops2344.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -102066,6 +102617,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2327.lua"
 --#include "drops\drops2344.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -102149,6 +102701,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2344.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -102232,6 +102785,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2344.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -102315,6 +102869,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2344.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -102398,6 +102953,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2344.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -102481,6 +103037,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2344.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -102564,6 +103121,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2329.lua"
 --#include "drops\drops2344.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -102647,6 +103205,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2329.lua"
 --#include "drops\drops2344.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -102730,6 +103289,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2329.lua"
 --#include "drops\drops2344.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -102813,6 +103373,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2329.lua"
 --#include "drops\drops2344.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -102896,6 +103457,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2329.lua"
 --#include "drops\drops2344.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -102974,6 +103536,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -103051,6 +103614,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2329.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanDropCoinGround=true,
@@ -103719,6 +104283,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -103806,6 +104371,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -103893,6 +104459,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 DenyAutoAddHp=true,
@@ -103982,6 +104549,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -104069,6 +104637,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -104156,6 +104725,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -104243,6 +104813,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -104467,6 +105038,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2352.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -104544,6 +105116,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2352.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -104621,6 +105194,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2352.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -104698,6 +105272,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2352.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -104775,6 +105350,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2352.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -104852,6 +105428,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2352.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -104929,6 +105506,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2352.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -105006,6 +105584,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
         drops={
 --#include "drops\drops2352.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -108152,6 +108731,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrickProtected.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -108231,6 +108811,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2350.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,
@@ -108314,6 +108895,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
                 CanSeeHideActor=true,

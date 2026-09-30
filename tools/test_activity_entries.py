@@ -165,35 +165,40 @@ class ActivityEntriesTest(unittest.TestCase):
         defined = {entry["instanceName"]: entry for entry in navigation}
         self.assertNotIn("_loaderbasebutton_7", defined)
         self.assertNotIn("_loaderbasebutton_12", defined)
-        self.assertEqual(len(defined), 13)
+        self.assertNotIn("_loaderbasebutton_4", defined)
+        self.assertNotIn("_loaderbasebutton_5", defined)
+        self.assertNotIn("_loaderbasebutton_15", defined)
+        self.assertEqual(len(defined), 10)
         names, code, _ = self.body("QingDianActiveWin", "createChildren")
         ops = instructions(code)
         button_names = [names[ops[i - 1].operands[0]] for i, op in enumerate(ops)
                         if op.opcode == 0x4F and names[op.operands[0]] == "push"]
         self.assertEqual(button_names, ["_loaderbasebutton_" + str(i)
-                                      for i in [0, 1, 2, 3, 4, 5, 9, 10, 11, 6, 13, 14, 15]])
+                                      for i in [0, 1, 2, 3, 9, 10, 11, 6, 13, 14]])
         self.assertEqual({defined[b]["addBtnTxtBmp"].split(",")[0] for b in button_names},
-                         {"464", "434", "1145", "550", "439", "551", "600", "661", "840",
-                          "1102", "1250", "1042", "1251"})
+                         {"464", "434", "1145", "550", "600", "661", "840",
+                          "1102", "1250", "1042"})
         self.assertEqual(len([op for op in ops if op.opcode == 0x66
-                                    and names[op.operands[0]] in {"_loaderbasebutton_7", "_loaderbasebutton_12"}]), 0)
+                                    and names[op.operands[0]] in {"_loaderbasebutton_4", "_loaderbasebutton_5",
+                                                               "_loaderbasebutton_7", "_loaderbasebutton_12",
+                                                               "_loaderbasebutton_15"}]), 0)
         for key, treasure in zip(QD_ARRAYS.values(), ["", "B", "C", "D", "E"]):
             pages = [ref.name for ref in fields[key]]
             self.assertEqual(pages, ["QDLoginPage", "QDRechargePage", "QDAccRechargePage",
-                                    "QDFlashSalePage", "QDTreasurePage" + treasure, "QDBossPage",
+                                    "QDFlashSalePage",
                                     "QDCollectWordPage", "QDHongYunDangTouPage", "QDConsumePage",
-                                    "QDZhuanPanPage", "QDZhenBaoGePage", "QDHaoLiPage", "QDMoonCakePage"])
+                                    "QDZhuanPanPage", "QDZhenBaoGePage", "QDHaoLiPage"])
 
     def test_legacy_qingdian_links_preserve_page_destination(self):
         names, code, limits = self.body("QingDianActiveWin", "setNavIndex")
         for old in range(15):
             target, calls, maximum = execute(code, names, self.strings, {0: {}, 1: old})
             self.assertLessEqual(maximum, limits[0])
-            if old in (7, 11):
+            if old in (4, 5, 7, 11, 14):
                 self.assertFalse(calls)
                 self.assertNotIn("selectedIndex", target[0])
             else:
-                mapped = old - (old > 7) - (old > 11)
+                mapped = old - sum(old > index for index in (4, 5, 7, 11, 14))
                 self.assertEqual(target[0]["selectedIndex"], mapped)
                 self.assertEqual(calls, [("setNavIndex", [mapped])])
 
@@ -226,13 +231,14 @@ class ActivityEntriesTest(unittest.TestCase):
 
     def test_year_days_and_remaining_request_mapping(self):
         fields = self.constructor_fields("YearActiveWin", "PAGES")
+        self.assertIsNone(fields["PAGES"][5])
         self.assertIsNone(fields["PAGES"][6])
         self.assertEqual(fields["PAGES"][7], Ref("YearActiveFashionPage"))
         self.assertEqual(len(fields["PAGES"]), 12)
         for day in range(1, 9):
             for slot in range(12):
                 local, _ = self.filter_scenario("YearActiveWin", slot, day=day)
-                eligible = slot != 6 and not (slot == 8 and day > 5) and not (slot == 9 and day > 6)
+                eligible = slot not in (5, 6) and not (slot == 8 and day > 5) and not (slot == 9 and day > 6)
                 self.assertEqual(local[2], [1000 + slot] if eligible else [])
                 self.assertEqual(local[3], slot + 1)
         names, code, _ = self.body("YearActiveWin", "onAddedToStage")

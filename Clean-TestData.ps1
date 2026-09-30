@@ -12,8 +12,6 @@ $mysqld = Join-Path $mysqlDir 'bin\mysqld.exe'
 $ini = Join-Path $mysqlDir 'my.ini'
 $dataDir = Join-Path $mysqlDir 'data'
 $runtime = Join-Path $root 'Server\S1001\data\runtime'
-$startedMySql = $false
-$oldPassword = [Environment]::GetEnvironmentVariable('MYSQL_PWD', 'Process')
 
 function Invoke-MySql([string]$Sql) {
     $result = @(& $mysql '--protocol=tcp' '--host=127.0.0.1' '--port=3306' '--user=root' '--batch' '--skip-column-names' '--raw' '--default-character-set=utf8' "--execute=$Sql" 2>&1)
@@ -35,51 +33,43 @@ function Assert-ServerStopped {
     }
 }
 
-function Assert-ClockResettable {
-    $statePath = Join-Path $root 'GameClock.state.json'
+function Get-ClockResetBytes {
     $originalPath = Join-Path $root 'GameClock.LogicServer.original.txt'
-    $script:clockNeedsReset = Test-Path -LiteralPath $statePath
-    if (-not $script:clockNeedsReset) {
-        if (Test-Path -LiteralPath $originalPath) {
-            throw '存在开服配置原件，但没有游戏时间记录；请先检查 GameClock 文件。'
-        }
+    if (-not (Test-Path -LiteralPath $originalPath -PathType Leaf)) {
         return
-    }
-    if (-not (Test-Path -LiteralPath $originalPath)) {
-        throw '缺少开服配置原件，无法把游戏时间恢复到首次开服状态。'
-    }
-    $state = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
-    if ($state.phase -ne 'stopped' -or $state.needsRestore -ne $false) {
-        throw '游戏时间记录尚未正常结算；请先运行 3.一键停止.bat 并检查 GameClock 文件。'
-    }
-    if ($state.firstStart -isnot [bool]) {
-        throw '游戏时间记录缺少有效的首次启动标记，已中止清理。'
     }
     $configPath = Join-Path $root 'Server\S1001\LogicServer.txt'
     if (-not (Test-Path -LiteralPath $configPath -PathType Leaf)) {
         throw '缺少当前开服配置，已中止清理。'
     }
-    # 首次启动记录保存原件指纹；后续启动记录保存当前配置指纹。
-    $hashPath = if ($state.firstStart) { $originalPath } else { $configPath }
-    $hash = (Get-FileHash -LiteralPath $hashPath -Algorithm SHA256).Hash
-    if ($hash -cne [string]$state.configHash) {
-        throw '开服配置与时间记录的校验值不一致，已中止清理。'
-    }
     $original = [IO.File]::ReadAllBytes($originalPath)
     $current = [IO.File]::ReadAllBytes($configPath)
-    if ($original.Length -ne $current.Length) {
-        throw '开服配置除时间外已有修改，已中止清理以免覆盖修改。'
+    $encoding = [Text.Encoding]::GetEncoding(28591)
+    $pattern = '(?m)^[ \t]*ServerOpenTime[ \t]*=[ \t]*"(?<stamp>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})"[ \t]*,'
+    $originalMatches = [regex]::Matches($encoding.GetString($original), $pattern)
+    $currentMatches = [regex]::Matches($encoding.GetString($current), $pattern)
+    if ($originalMatches.Count -ne 1 -or $currentMatches.Count -ne 1) {
+        throw '无法唯一定位开服时间配置，已中止清理以免覆盖其他配置。'
     }
-    $view = [Text.Encoding]::GetEncoding(28591).GetString($current)
-    $matches = [regex]::Matches($view, '(?m)^[ \t]*ServerOpenTime[ \t]*=[ \t]*"(?<stamp>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})"[ \t]*,')
-    if ($matches.Count -ne 1 -or $matches[0].Groups['stamp'].Value -ne [string]$state.openTime) {
-        throw '开服时间配置与运行记录不一致，已中止清理。'
+    [Array]::Copy($original, $originalMatches[0].Groups['stamp'].Index,
+        $current, $currentMatches[0].Groups['stamp'].Index, 19)
+    return ,$current
+}
+
+function Get-RuntimeFiles {
+    $rootPrefix = [IO.Path]::GetFullPath($root).TrimEnd('\', '/') + '\'
+    $runtimePath = [IO.Path]::GetFullPath($runtime).TrimEnd('\', '/')
+    if (-not $runtimePath.StartsWith($rootPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+        throw "运行时目录不在本项目内，已中止清理：$runtimePath"
     }
-    $offset = $matches[0].Groups['stamp'].Index
-    [Array]::Copy($original, $offset, $current, $offset, 19)
-    if (-not [Linq.Enumerable]::SequenceEqual([byte[]]$original, [byte[]]$current)) {
-        throw '开服配置除时间外已有修改，已中止清理以免覆盖修改。'
+    if (-not (Test-Path -LiteralPath $runtimePath -PathType Container)) { return }
+    $files = @(Get-ChildItem -LiteralPath $runtimePath -Recurse -File -Force)
+    foreach ($file in $files) {
+        if (-not $file.FullName.StartsWith($runtimePath + '\', [StringComparison]::OrdinalIgnoreCase)) {
+            throw "运行时文件不在预期目录内，已中止清理：$($file.FullName)"
+        }
     }
+    return $files
 }
 
 function Start-LocalMySql {
@@ -161,65 +151,83 @@ function Get-TableCounts([string[]]$Tables) {
     return $counts
 }
 
-try {
-    Assert-ServerStopped
-    Assert-ClockResettable
-    foreach ($file in @($mysql,$mysqlAdmin,$mysqld,$ini)) {
-        if (-not (Test-Path -LiteralPath $file -PathType Leaf)) { throw "缺少程序或配置：$file" }
-    }
-    if (-not $DbPassword) {
-        $api = [IO.File]::ReadAllText((Join-Path $root 'web\api.php'))
-        $match = [regex]::Match($api, 'mysql_connect\(\s*"127\.0\.0\.1"\s*,\s*"root"\s*,\s*"(?<password>[^\"]+)"')
-        if (-not $match.Success) { throw '无法从 web/api.php 读取数据库密码，请使用 -DbPassword 参数。' }
-        $DbPassword = $match.Groups['password'].Value
-    }
-    [Environment]::SetEnvironmentVariable('MYSQL_PWD', $DbPassword, 'Process')
-    Start-LocalMySql
-    $tables = @(Get-TargetTables)
-    $before = Get-TableCounts $tables
-    $clockSnapshotNames = @(Get-ChildItem -LiteralPath $root -File -Filter 'GameClock.state.before-nextStart.*.json' |
-        Select-Object -ExpandProperty Name)
-    if ($ValidateOnly) {
-        $runtimeFileCount = @(Get-ChildItem -LiteralPath $runtime -Recurse -File -ErrorAction SilentlyContinue).Count
-        $recordCount = ($before.Values | Measure-Object -Sum).Sum
-        Write-Host "清理前检查通过：待清理数据库记录 $recordCount 条、运行时文件 $runtimeFileCount 个。"
-        return
-    }
+function Invoke-TestDataCleanup {
+    param([string]$DbPassword, [switch]$ValidateOnly)
 
-    $sql = @($tables | ForEach-Object { "TRUNCATE TABLE $_" })
-    $sql += @(
-        'ALTER TABLE cq_account.globaluser AUTO_INCREMENT=16777217',
-        'ALTER TABLE cq_name.charnames AUTO_INCREMENT=3',
-        'ALTER TABLE cq_name.guildnames AUTO_INCREMENT=2',
-        'ALTER TABLE cq_actor.actors AUTO_INCREMENT=2'
-    )
-    $null = Invoke-MySql (($sql -join ';') + ';')
-    $after = Get-TableCounts $tables
-    $remaining = @($after.GetEnumerator() | Where-Object { $_.Value -ne 0 })
-    if ($remaining.Count) {
-        throw '清理后的数据库核对失败；请检查未清空的数据表。'
+    $script:startedMySql = $false
+    $oldPassword = [Environment]::GetEnvironmentVariable('MYSQL_PWD', 'Process')
+    $lockStream = $null
+    try {
+        $lockStream = [IO.File]::Open((Join-Path $root 'GameClock.lock'), [IO.FileMode]::OpenOrCreate,
+            [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
+        Assert-ServerStopped
+        $clockResetBytes = Get-ClockResetBytes
+        $runtimeFiles = @(Get-RuntimeFiles)
+        foreach ($file in @($mysql,$mysqlAdmin,$mysqld,$ini)) {
+            if (-not (Test-Path -LiteralPath $file -PathType Leaf)) { throw "缺少程序或配置：$file" }
+        }
+        if (-not $DbPassword) {
+            $api = [IO.File]::ReadAllText((Join-Path $root 'web\api.php'))
+            $match = [regex]::Match($api, 'mysql_connect\(\s*"127\.0\.0\.1"\s*,\s*"root"\s*,\s*"(?<password>[^\"]+)"')
+            if (-not $match.Success) { throw '无法从 web/api.php 读取数据库密码，请使用 -DbPassword 参数。' }
+            $DbPassword = $match.Groups['password'].Value
+        }
+        [Environment]::SetEnvironmentVariable('MYSQL_PWD', $DbPassword, 'Process')
+        Start-LocalMySql
+        $tables = @(Get-TargetTables)
+        $before = Get-TableCounts $tables
+        $clockSnapshotNames = @(Get-ChildItem -LiteralPath $root -File -Filter 'GameClock.state.before-nextStart.*.json' |
+            Select-Object -ExpandProperty Name)
+        if ($ValidateOnly) {
+            $recordCount = ($before.Values | Measure-Object -Sum).Sum
+            Write-Host "清理前检查通过：待清理数据库记录 $recordCount 条、运行时文件 $($runtimeFiles.Count) 个。"
+            return
+        }
+
+        Assert-ServerStopped
+        $sql = @($tables | ForEach-Object { "TRUNCATE TABLE $_" })
+        $sql += @(
+            'ALTER TABLE cq_account.globaluser AUTO_INCREMENT=16777217',
+            'ALTER TABLE cq_name.charnames AUTO_INCREMENT=3',
+            'ALTER TABLE cq_name.guildnames AUTO_INCREMENT=2',
+            'ALTER TABLE cq_actor.actors AUTO_INCREMENT=2'
+        )
+        $null = Invoke-MySql (($sql -join ';') + ';')
+        $after = Get-TableCounts $tables
+        $remaining = @($after.GetEnumerator() | Where-Object { $_.Value -ne 0 })
+        if ($remaining.Count) {
+            throw '清理后的数据库核对失败；请检查未清空的数据表。'
+        }
+        foreach ($file in $runtimeFiles) { Remove-Item -LiteralPath $file.FullName -Force }
+        if ($null -ne $clockResetBytes) {
+            [IO.File]::WriteAllBytes((Join-Path $root 'Server\S1001\LogicServer.txt'), $clockResetBytes)
+        }
+        foreach ($name in (@('GameClock.LogicServer.original.txt', 'GameClock.state.json') + $clockSnapshotNames)) {
+            $path = Join-Path $root $name
+            if (Test-Path -LiteralPath $path -PathType Leaf) {
+                Remove-Item -LiteralPath $path -Force
+            }
+        }
+        $cleared = ($before.Values | Measure-Object -Sum).Sum
+        Write-Host "清理完成：数据库记录 $cleared 条，运行时文件 $($runtimeFiles.Count) 个。"
+        Write-Host '活动运行状态、旧开服时间记录和测试角色数据已清理；下次启动将按首次开服处理。'
+    } finally {
+        try {
+            if ($startedMySql) {
+                & $mysqlAdmin '--protocol=tcp' '--host=127.0.0.1' '--port=3306' '--user=root' 'shutdown' 2>$null | Out-Null
+            }
+        } finally {
+            [Environment]::SetEnvironmentVariable('MYSQL_PWD', $oldPassword, 'Process')
+            if ($null -ne $lockStream) { $lockStream.Dispose() }
+        }
     }
-    $runtimeFiles = @()
-    if (Test-Path -LiteralPath $runtime) { $runtimeFiles = @(Get-ChildItem -LiteralPath $runtime -Recurse -File) }
-    foreach ($file in $runtimeFiles) { Remove-Item -LiteralPath $file.FullName -Force }
-    if ($clockNeedsReset) {
-        Copy-Item -LiteralPath (Join-Path $root 'GameClock.LogicServer.original.txt') `
-            -Destination (Join-Path $root 'Server\S1001\LogicServer.txt') -Force
-        Remove-Item -LiteralPath (Join-Path $root 'GameClock.LogicServer.original.txt') -Force
-        Remove-Item -LiteralPath (Join-Path $root 'GameClock.state.json') -Force
+}
+
+if ($MyInvocation.InvocationName -ne '.') {
+    try {
+        Invoke-TestDataCleanup -DbPassword $DbPassword -ValidateOnly:$ValidateOnly
+    } catch {
+        [Console]::Error.WriteLine($_.Exception.Message)
+        exit 1
     }
-    foreach ($name in $clockSnapshotNames) {
-        Remove-Item -LiteralPath (Join-Path $root $name) -Force
-    }
-    $cleared = ($before.Values | Measure-Object -Sum).Sum
-    Write-Host "清理完成：数据库记录 $cleared 条，运行时文件 $($runtimeFiles.Count) 个。"
-    Write-Host '活动运行状态、旧开服时间记录和测试角色数据已清理；下次启动将按首次开服处理。'
-} catch {
-    Write-Error $_.Exception.Message
-    exit 1
-} finally {
-    if ($startedMySql) {
-        & $mysqlAdmin '--protocol=tcp' '--host=127.0.0.1' '--port=3306' '--user=root' 'shutdown' 2>$null | Out-Null
-    }
-    [Environment]::SetEnvironmentVariable('MYSQL_PWD', $oldPassword, 'Process')
 }

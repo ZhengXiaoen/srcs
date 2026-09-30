@@ -6,6 +6,7 @@
 !/GameClock.ps1
 !/GameClock.Tests.ps1
 !/Clean-TestData.ps1
+!/Clean-TestData.Tests.ps1
 !/5.一键清理测试数据.bat
 !/清理数据.使用说明.md
 !/GameClock.使用说明.md

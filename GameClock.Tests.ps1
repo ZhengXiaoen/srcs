@@ -197,19 +197,19 @@ try {
     $paths = New-TestRoot $testRoot 'success'
     [byte[]]$original = [IO.File]::ReadAllBytes($paths.Config)
     $firstPlan = Get-StartPlan (Read-OpenConfig $paths.Config) $null $script:FakeNow
-    Assert-Equal '2026-09-25 00:00:00' (Format-ClockTime $firstPlan.Target) 'first target is midnight'
-    Assert-Equal '2026-09-25 00:00:00' (Format-ClockTime $firstPlan.OpenTime) 'first open time is midnight'
+    Assert-Equal '2026-09-25 00:00:01' (Format-ClockTime $firstPlan.Target) 'first target avoids engine midnight boundary'
+    Assert-Equal '2026-09-25 00:00:01' (Format-ClockTime $firstPlan.OpenTime) 'first open time starts at engine day 1'
     $afternoonPlan = Get-StartPlan (Read-OpenConfig $paths.Config) $null (Parse-ClockTime '2026-09-25 15:00:00')
-    Assert-Equal '2026-09-25 00:00:00' (Format-ClockTime $afternoonPlan.Target) 'afternoon first target is midnight'
+    Assert-Equal '2026-09-25 00:00:01' (Format-ClockTime $afternoonPlan.Target) 'afternoon first target avoids engine midnight boundary'
     $differentHour = [pscustomobject]@{ OpenTime = Parse-ClockTime '2026-06-14 09:00:00' }
     $midnightPlan = Get-StartPlan $differentHour $null $script:FakeNow
-    Assert-Equal '2026-09-25 00:00:00' (Format-ClockTime $midnightPlan.Target) 'first target ignores old hour'
+    Assert-Equal '2026-09-25 00:00:01' (Format-ClockTime $midnightPlan.Target) 'first target ignores old hour'
     foreach ($timeSource in @('Config', 'System')) {
-        foreach ($stamp in @('2026-09-25 00:00:00', '2026-09-25 23:59:59', '2026-09-26 00:00:00')) {
+        foreach ($stamp in @('2026-09-25 00:00:00', '2026-09-25 23:59:59', '2026-09-26 00:00:00', '2026-09-30 23:59:59', '2026-10-01 00:00:00', '2026-12-31 23:59:59', '2027-01-01 00:00:00')) {
             $today = Parse-ClockTime $stamp
             $boundaryPlan = Get-StartPlan $differentHour $null $today $timeSource
-            Assert-Equal (Format-ClockTime $today.Date) (Format-ClockTime $boundaryPlan.OpenTime) 'first open time follows startup date'
-            $expectedTarget = if ($timeSource -eq 'System') { $today } else { $today.Date }
+            Assert-Equal (Format-ClockTime $today.Date.AddSeconds(1)) (Format-ClockTime $boundaryPlan.OpenTime) 'first open time follows startup date and avoids exact midnight'
+            $expectedTarget = if ($timeSource -eq 'System') { $today } else { $today.Date.AddSeconds(1) }
             Assert-Equal (Format-ClockTime $expectedTarget) (Format-ClockTime $boundaryPlan.Target) 'mode determines first session time'
         }
     }
@@ -229,15 +229,15 @@ try {
     Assert-Equal 'Normal' @($script:LaunchedWindows | Where-Object { $_.Name -eq 'LogicServerCQ64_R' })[0].WindowStyle 'Lua server console visible'
     $runningState = Read-ClockState $paths.State
     Assert-Equal 'running' $runningState.phase 'running state'
-    Assert-Equal '2026-09-25 00:00:00' $runningState.openTime 'open time'
-    Assert-Equal '2026-09-25 00:00:00' $runningState.sessionStart 'first session starts at midnight'
-    Assert-Equal '2026-09-25 00:00:00' (Format-ClockTime $script:FakeNow) 'applied game time'
+    Assert-Equal '2026-09-25 00:00:01' $runningState.openTime 'open time'
+    Assert-Equal '2026-09-25 00:00:01' $runningState.sessionStart 'first session starts at open time'
+    Assert-Equal '2026-09-25 00:00:01' (Format-ClockTime $script:FakeNow) 'applied game time'
     Assert-BytesEqual $original ([IO.File]::ReadAllBytes($paths.Backup)) 'original backup'
     $changed = Read-OpenConfig $paths.Config
     [byte[]]$expectedConfig = New-Object byte[] $original.Length
     [Array]::Copy($original, $expectedConfig, $original.Length)
     [Array]::Copy(
-        ([Text.Encoding]::ASCII.GetBytes('2026-09-25 00:00:00')), 0,
+        ([Text.Encoding]::ASCII.GetBytes('2026-09-25 00:00:01')), 0,
         $expectedConfig, $changed.StampOffset, 19
     )
     Assert-BytesEqual $expectedConfig ([IO.File]::ReadAllBytes($paths.Config)) 'config preservation'
@@ -256,7 +256,7 @@ try {
     Assert-Equal 'running' (Read-ClockState $paths.State).phase 'DB restart keeps time state'
 
     $script:FakeNow = Parse-ClockTime '2026-09-25 23:30:00'
-    $script:FakeUptime = [UInt64]84700000
+    $script:FakeUptime = [UInt64]84699000
     $script:FakeStopFails = $true
     Assert-Throws { Invoke-GameStop $paths } 'unfinished stop'
     Assert-Equal 'running' (Read-ClockState $paths.State).phase 'failed stop keeps state'
@@ -296,7 +296,7 @@ try {
     $script:FakeUptime = [UInt64]50000000
     Invoke-GameStart $paths 'RestoreReal'
     Assert-Equal '2026-09-26 01:30:00' (Format-ClockTime $script:FakeNow) 'manually edited time used on restart'
-    Assert-Equal '2026-09-25 00:00:00' (Format-ClockTime (Read-OpenConfig $paths.Config).OpenTime) 'open time stays fixed'
+    Assert-Equal '2026-09-25 00:00:01' (Format-ClockTime (Read-OpenConfig $paths.Config).OpenTime) 'open time stays fixed'
     Assert-BytesEqual $original ([IO.File]::ReadAllBytes($paths.Backup)) 'backup not overwritten'
     $script:FakeRunning = @()
     Assert-Throws { Invoke-GameStop $paths } 'vanished server cannot advance automatically'
@@ -316,7 +316,7 @@ try {
     Assert-Equal '2026-09-26 00:00:00' (Format-ClockTime (Ceiling-ClockSecond $secondBoundary)) 'last game time rounds up across midnight'
 
     $retryPaths = New-TestRoot $testRoot 'failed-restart-keeps-manual-bound'
-    Set-OpenConfig (Read-OpenConfig $retryPaths.Config) (Parse-ClockTime '2026-09-25 00:00:00') $retryPaths.Backup
+    Set-OpenConfig (Read-OpenConfig $retryPaths.Config) (Parse-ClockTime '2026-09-25 00:00:01') $retryPaths.Backup
     $retryState = $stoppedState | ConvertTo-Json | ConvertFrom-Json
     Write-ClockState $retryPaths.State $retryState
     $script:FakeNow = Parse-ClockTime '2026-09-26 08:00:00'
@@ -338,8 +338,8 @@ try {
     $script:FakeNow = Parse-ClockTime '2026-09-24 23:59:30'
     $script:FakeUptime = [UInt64]90060000
     Invoke-GameStop $driftPaths
-    Assert-Equal '2026-09-25 00:01:00' (Read-ClockState $driftPaths.State).lastStopGameTime 'small backward drift uses monotonic lower bound'
-    Assert-Equal '2026-09-25 00:01:00' (Read-ClockState $driftPaths.State).nextStart 'drift stop defaults to monotonic last game time'
+    Assert-Equal '2026-09-25 00:01:01' (Read-ClockState $driftPaths.State).lastStopGameTime 'small backward drift uses monotonic lower bound'
+    Assert-Equal '2026-09-25 00:01:01' (Read-ClockState $driftPaths.State).nextStart 'drift stop defaults to monotonic last game time'
 
     $restoreState = [pscustomobject]@{
         uptimeMs = '100000'
@@ -386,7 +386,7 @@ try {
     $script:FakeStopFails = $true
     Assert-Throws { Invoke-GameStart $blockedPaths 'RestoreReal' } 'startup rollback cannot stop process'
     Assert-Equal 'launching' (Read-ClockState $blockedPaths.State).phase 'failed rollback keeps pending state'
-    Assert-Equal '2026-09-25 00:00:00' (Format-ClockTime (Read-OpenConfig $blockedPaths.Config).OpenTime) 'failed rollback keeps matching config'
+    Assert-Equal '2026-09-25 00:00:01' (Format-ClockTime (Read-OpenConfig $blockedPaths.Config).OpenTime) 'failed rollback keeps matching config'
     $script:FakeStopFails = $false
     Invoke-GameStop $blockedPaths
     Assert-True (-not [IO.File]::Exists($blockedPaths.State)) 'stop repairs interrupted first start'
@@ -402,7 +402,7 @@ try {
     Assert-Throws { Invoke-GameStart $latePaths 'RestoreReal' } 'failure after Logic launch'
     Assert-Equal 'interrupted' (Read-ClockState $latePaths.State).phase 'Logic launch preserves state'
     Assert-True ([IO.File]::Exists($latePaths.Backup)) 'Logic launch preserves original backup'
-    Assert-Equal '2026-09-25 00:00:00' (Format-ClockTime (Read-OpenConfig $latePaths.Config).OpenTime) 'Logic launch preserves new open date'
+    Assert-Equal '2026-09-25 00:00:01' (Format-ClockTime (Read-OpenConfig $latePaths.Config).OpenTime) 'Logic launch preserves new open date'
     Assert-Equal 0 $script:FakeRunning.Count 'Logic launch failure still closes partial processes'
 
     $partialCrashPaths = New-TestRoot $testRoot 'logic-crashed-partial-services'
@@ -430,7 +430,7 @@ try {
     $script:FakeRunning = @($script:FakeRunning | Where-Object { $_ -ne 'DBServer64_R' })
     Assert-Throws { Invoke-GameStop $dbCrashPaths } 'database missing blocks automatic settlement'
     Assert-Equal 'interrupted' (Read-ClockState $dbCrashPaths.State).phase 'database outage is recorded'
-    Assert-Equal '2026-09-25 00:00:00' (Read-ClockState $dbCrashPaths.State).nextStart 'database outage does not advance time'
+    Assert-Equal '2026-09-25 00:00:01' (Read-ClockState $dbCrashPaths.State).nextStart 'database outage does not advance time'
 
     $fullCrashPaths = New-TestRoot $testRoot 'all-processes-vanished'
     $script:FakeNow = Parse-ClockTime '2026-09-25 08:00:00'
@@ -452,7 +452,7 @@ try {
     Assert-Throws { Invoke-GameStop $jumpPaths } 'clock jump blocks automatic settlement'
     $jumpState = Read-ClockState $jumpPaths.State
     Assert-Equal 'interrupted' $jumpState.phase 'clock jump keeps abnormal record'
-    Assert-Equal '2026-09-25 00:00:00' $jumpState.nextStart 'clock jump does not invent next time'
+    Assert-Equal '2026-09-25 00:00:01' $jumpState.nextStart 'clock jump does not invent next time'
     Assert-Equal 0 $script:FakeRunning.Count 'clock jump still closes server'
     Invoke-GameRecover $jumpPaths '2026-09-25 17:00:00'
     Assert-Equal '2026-09-25 17:00:00' (Read-ClockState $jumpPaths.State).nextStart 'clock jump recovery defaults to supplied last game time'
@@ -711,18 +711,18 @@ try {
     $restoresBefore = $script:RestoreCalls
     $systemPlan = Get-StartPlan (Read-OpenConfig $systemPaths.Config) $null $script:FakeNow 'System'
     Assert-Equal '2026-09-25 08:15:12' (Format-ClockTime $systemPlan.Target) 'system mode first start uses current time'
-    Assert-Equal '2026-09-25 00:00:00' (Format-ClockTime $systemPlan.OpenTime) 'system mode first open time is midnight'
+    Assert-Equal '2026-09-25 00:00:01' (Format-ClockTime $systemPlan.OpenTime) 'system mode first open time avoids engine midnight boundary'
     [byte[]]$systemOriginal = [IO.File]::ReadAllBytes($systemPaths.Config)
     Invoke-GameStart $systemPaths 'RestoreReal' 'System'
     Assert-Equal $clockCallsBefore $script:SetClockCalls 'system mode does not set computer clock'
     Assert-Equal '2026-09-25 08:15:12' (Format-ClockTime $script:FakeNow) 'system mode leaves current time unchanged'
     Assert-Equal 'System' (Read-ClockState $systemPaths.State).timeSource 'system time source is recorded'
     Assert-Equal '2026-09-25 08:15:12' (Read-ClockState $systemPaths.State).sessionStart 'system mode records actual session time'
-    Assert-Equal '2026-09-25 00:00:00' (Format-ClockTime (Read-OpenConfig $systemPaths.Config).OpenTime) 'system mode sets first open time to midnight'
+    Assert-Equal '2026-09-25 00:00:01' (Format-ClockTime (Read-OpenConfig $systemPaths.Config).OpenTime) 'system mode sets first open time to engine day 1'
     Assert-BytesEqual $systemOriginal ([IO.File]::ReadAllBytes($systemPaths.Backup)) 'system mode backs up original config'
     $systemConfig = Read-OpenConfig $systemPaths.Config
     [byte[]]$systemExpected = $systemOriginal.Clone()
-    [Array]::Copy(([Text.Encoding]::ASCII.GetBytes('2026-09-25 00:00:00')), 0,
+    [Array]::Copy(([Text.Encoding]::ASCII.GetBytes('2026-09-25 00:00:01')), 0,
         $systemExpected, $systemConfig.StampOffset, 19)
     Assert-BytesEqual $systemExpected $systemConfig.Bytes 'system mode only changes open time bytes'
     $script:FakeNow = Parse-ClockTime '2026-09-25 09:15:12'
@@ -740,7 +740,7 @@ try {
     $script:FakeUptime = [UInt64]4000000
     Invoke-GameStart $systemPaths 'RestoreReal' 'System'
     Assert-Equal '2026-09-25 10:00:00' (Read-ClockState $systemPaths.State).sessionStart 'system mode restart reads new computer time'
-    Assert-Equal '2026-09-25 00:00:00' (Format-ClockTime (Read-OpenConfig $systemPaths.Config).OpenTime) 'system mode restart preserves first open time'
+    Assert-Equal '2026-09-25 00:00:01' (Format-ClockTime (Read-OpenConfig $systemPaths.Config).OpenTime) 'system mode restart preserves first open time'
     Assert-Equal $clockCallsBefore $script:SetClockCalls 'system mode restart never sets computer clock'
     $script:FakeNow = Parse-ClockTime '2026-09-25 10:05:00'
     $script:FakeUptime = [UInt64]4300000

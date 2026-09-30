@@ -185,6 +185,8 @@ function Invoke-TestDataCleanup {
         }
 
         Assert-ServerStopped
+        $pendingPath = Join-Path $root 'Clean-TestData.pending'
+        [IO.File]::WriteAllText($pendingPath, (Get-Date).ToString('o'))
         $sql = @($tables | ForEach-Object { "TRUNCATE TABLE $_" })
         $sql += @(
             'ALTER TABLE cq_account.globaluser AUTO_INCREMENT=16777217',
@@ -208,6 +210,7 @@ function Invoke-TestDataCleanup {
                 Remove-Item -LiteralPath $path -Force
             }
         }
+        [IO.File]::Delete($pendingPath)
         $cleared = ($before.Values | Measure-Object -Sum).Sum
         Write-Host "清理完成：数据库记录 $cleared 条，运行时文件 $($runtimeFiles.Count) 个。"
         Write-Host '活动运行状态、旧开服时间记录和测试角色数据已清理；下次启动将按首次开服处理。'

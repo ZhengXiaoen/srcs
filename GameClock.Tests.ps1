@@ -214,6 +214,15 @@ try {
         }
     }
 
+    $pendingPath = [IO.Path]::Combine($paths.Root, 'Clean-TestData.pending')
+    [IO.File]::WriteAllText($pendingPath, 'cleanup interrupted')
+    Assert-Throws { Invoke-GameStart $paths 'RestoreReal' } 'unfinished cleanup blocks startup'
+    Assert-Equal 0 $script:LaunchedWindows.Count 'blocked startup launches no server'
+    Assert-Equal 0 $script:SetClockCalls 'blocked startup does not change clock'
+    Assert-True (-not [IO.File]::Exists($paths.State)) 'blocked startup writes no time state'
+    Assert-BytesEqual $original ([IO.File]::ReadAllBytes($paths.Config)) 'blocked startup preserves config'
+    [IO.File]::Delete($pendingPath)
+
     Invoke-GameStart $paths 'RestoreReal'
     Assert-Equal $script:Launchers.Count $script:LaunchedWindows.Count 'all startup consoles launched'
     Assert-Equal 0 @($script:LaunchedWindows | Where-Object { $_.WindowStyle -ne 'Normal' }).Count 'all startup consoles visible'

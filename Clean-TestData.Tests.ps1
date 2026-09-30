@@ -72,6 +72,7 @@ function New-CleanupFixture {
     $script:ConfigPath = Join-Path $root 'Server\S1001\LogicServer.txt'
     $script:OriginalPath = Join-Path $root 'GameClock.LogicServer.original.txt'
     $script:StatePath = Join-Path $root 'GameClock.state.json'
+    $script:PendingPath = Join-Path $root 'Clean-TestData.pending'
     $script:SnapshotPath = Join-Path $root 'GameClock.state.before-nextStart.fixture.json'
     $script:RuntimeFile = Join-Path $runtime 'rank\test.bin'
     $script:KeepFile = Join-Path $root 'Server\S1001\keep.log'
@@ -119,6 +120,7 @@ try {
         Assert-True (-not $FakeCleared) 'validation does not clear database'
         Invoke-TestDataCleanup -DbPassword 'fixture-password'
         Assert-True $FakeCleared 'old history does not block cleanup'
+        Assert-True (-not (Test-Path -LiteralPath $PendingPath)) 'successful cleanup removes pending marker'
         Assert-True (-not (Test-Path -LiteralPath $StatePath)) 'state removed'
         Assert-True (-not (Test-Path -LiteralPath $OriginalPath)) 'original removed'
         Assert-True (-not (Test-Path -LiteralPath $SnapshotPath)) 'snapshot removed'
@@ -142,6 +144,13 @@ try {
     Invoke-TestDataCleanup -DbPassword 'fixture-password'
     Assert-True (-not (Test-Path -LiteralPath $OriginalPath)) 'orphan original cleaned'
 
+    New-CleanupFixture 'interrupted-cleanup'
+    [IO.File]::WriteAllText($PendingPath, 'previous cleanup interrupted')
+    Invoke-TestDataCleanup -DbPassword 'fixture-password' -ValidateOnly
+    Assert-True (Test-Path -LiteralPath $PendingPath) 'validation keeps pending marker'
+    Invoke-TestDataCleanup -DbPassword 'fixture-password'
+    Assert-True (-not (Test-Path -LiteralPath $PendingPath)) 'retry clears pending marker'
+
     New-CleanupFixture 'live-server'
     $script:FakeRunning = @([pscustomobject]@{
         Name = 'LogicServerCQ64_R.exe'; ExecutablePath = "$root\Server\S1001\LogicServerCQ64_R.exe"
@@ -164,6 +173,14 @@ try {
         Set-Variable -Name $failure -Value $true -Scope Script
         Assert-Throws { Invoke-TestDataCleanup -DbPassword 'fixture-password' } $failure
         Assert-FixtureUntouched
+        if (@('SqlFailure', 'RemainingRecords') -contains $failure) {
+            Assert-True (Test-Path -LiteralPath $PendingPath) "$failure keeps pending marker"
+            Set-Variable -Name $failure -Value $false -Scope Script
+            Invoke-TestDataCleanup -DbPassword 'fixture-password'
+            Assert-True (-not (Test-Path -LiteralPath $PendingPath)) "$failure retry clears pending marker"
+        } else {
+            Assert-True (-not (Test-Path -LiteralPath $PendingPath)) "$failure before deletion has no marker"
+        }
         Assert-Equal $savedPassword ([Environment]::GetEnvironmentVariable('MYSQL_PWD', 'Process')) 'password restored after failure'
         $lock = [IO.File]::Open((Join-Path $root 'GameClock.lock'), [IO.FileMode]::Open,
             [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)

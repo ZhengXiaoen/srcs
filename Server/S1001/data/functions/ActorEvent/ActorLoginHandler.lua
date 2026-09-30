@@ -115,6 +115,9 @@ end
 EventCallDispatcher.defaultHandlerPlayerLogin = function (sysarg,arg)
 	local isFirstLogin = arg[1]
 	local isCrossDayLogin = arg[2]
+	local var = Actor.getStaticVar(sysarg)
+	if var.days == nil then var.days = {} end
+	if var.newdays == nil then var.newdays = {} end
 
     --腾讯的微端
     if System.getSpid()==99 then

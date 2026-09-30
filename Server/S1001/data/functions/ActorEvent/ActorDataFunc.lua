@@ -292,11 +292,11 @@ end
 ----------------------------------------------------------------------------------------
 --玩家登陆时读取玩家的.[数据参数：玩家的ActorID；]
 function loadActorData(sysarg) 
-	calcOldPlayerBack(sysarg)
 	local var = Actor.getStaticVar( sysarg )
 	if not var.days then
 		var.days = {};
 	end
+	calcOldPlayerBack(sysarg)
 	
 	local nLast = Actor.getLastLogoutTime(sysarg)	--上次下线的时间
 	if (nLast == 0) then							--新注册玩家

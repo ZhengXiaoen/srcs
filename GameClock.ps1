@@ -634,6 +634,9 @@ function Undo-PreparedStart {
 function Invoke-GameStart {
     param($Paths, [string]$Mode,
           [ValidateSet('Config', 'System')][string]$TimeSource = 'Config')
+    if ([IO.File]::Exists([IO.Path]::Combine($Paths.Root, 'Clean-TestData.pending'))) {
+        throw '上次测试数据清理未完成。请保持服务器关闭，重新运行“5.一键清理测试数据.bat”后再启动。'
+    }
     $config = Read-OpenConfig $Paths.Config
     $previousState = Read-ClockState $Paths.State
     $plan = Get-StartPlan $config $previousState (Get-Date) $TimeSource

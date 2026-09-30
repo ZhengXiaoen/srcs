@@ -920,7 +920,7 @@ OpenServerAward =
 							{type = 0,id = 574,count = 2,bind = 1},--圣珠结晶（1000）*2
 							{type = 0,id = 6691,count = 10,bind = 1},--西游时装碎片*10
 							{type = 0,id = 6363,count = 1,bind = 1},--豪礼宝箱*1
-							{type = 0,id = 6918,count = 1,bind = 1},--骷髅精灵幻形水晶*1
+							{type = 0,id = 6658,count = 10,bind = 1},--灵器礼盒*10
 						},	
 						
 						--奖励2
@@ -930,7 +930,7 @@ OpenServerAward =
 							{type = 0,id = 574,count = 3,bind = 1},--圣珠结晶（1000）*2
 							{type = 0,id = 6691,count = 10,bind = 1},--西游时装碎片*10
 							{type = 0,id = 6363,count = 1,bind = 1},--豪礼宝箱*1
-							{type = 0,id = 6919,count = 1,bind = 1},--黄泉教主幻形水晶*1
+							{type = 0,id = 6658,count = 10,bind = 1},--灵器礼盒*10
 						},	
 						
 						--奖励3
@@ -940,7 +940,7 @@ OpenServerAward =
 							{type = 0,id = 574,count = 4,bind = 1},--圣珠结晶（1000）*2
 							{type = 0,id = 6371,count = 1,bind = 1},--幻羽礼盒*1
 							{type = 0,id = 6363,count = 2,bind = 1},--豪礼宝箱*2
-							{type = 0,id = 6920,count = 1,bind = 1},--杜美莎幻形水晶*1
+							{type = 0,id = 6658,count = 10,bind = 1},--灵器礼盒*10
 						},	
 						
 						--奖励4
@@ -948,9 +948,9 @@ OpenServerAward =
 							{type = 0,id = 542,count = 3,bind = 1},--转生修为丹（小）*1
 							{type = 0,id = 539,count = 5,bind = 1},--宝石结晶（1000）*2
 							{type = 0,id = 574,count = 5,bind = 1},--圣珠结晶（1000）*2
-							{type = 0,id = 6658,count = 1,bind = 1},--灵器礼盒*1
+							{type = 0,id = 6659,count = 1,bind = 1},--传世礼盒*1
 							{type = 0,id = 6363,count = 3,bind = 1},--豪礼宝箱*3
-							{type = 0,id = 6921,count = 1,bind = 1},--帝王教主幻形水晶*1
+							{type = 0,id = 6658,count = 10,bind = 1},--灵器礼盒*10
 						},	
 					
 					}
@@ -967,7 +967,7 @@ OpenServerAward =
 							{type = 0,id = 6691,count = 10,bind = 1},--西游时装碎片*10
 							{type = 0,id = 7047,count = 1,bind = 1},--坐骑礼盒*1
 							{type = 0,id = 6363,count = 1,bind = 1},--豪礼宝箱*1
-							{type = 0,id = 6921,count = 1,bind = 1},--帝王教主幻形水晶*1
+							{type = 0,id = 7650,count = 1,bind = 1},--龙腾首饰礼盒*1
 						},	
 						
 						--奖励2
@@ -977,7 +977,7 @@ OpenServerAward =
 							{type = 0,id = 7046,count = 10,bind = 1},--三国时装碎片*10
 							{type = 0,id = 6659,count = 1,bind = 1},--传世礼盒*1
 							{type = 0,id = 6363,count = 2,bind = 1},--豪礼宝箱*2
-							{type = 0,id = 6922,count = 1,bind = 1},--双斧虎王幻形水晶*1
+							{type = 0,id = 7650,count = 1,bind = 1},--龙腾首饰礼盒*1
 						},	
 						
 						--奖励3
@@ -987,7 +987,7 @@ OpenServerAward =
 							{type = 0,id = 7046,count = 10,bind = 1},--三国时装碎片*10
 							{type = 0,id = 7043,count = 1,bind = 1},--足迹礼盒*1
 							{type = 0,id = 6363,count = 3,bind = 1},--豪礼宝箱*3
-							{type = 0,id = 6923,count = 1,bind = 1},--天蓬元帅幻形水晶*1
+							{type = 0,id = 7650,count = 1,bind = 1},--龙腾首饰礼盒*1
 						},	
 						
 						--奖励4
@@ -997,7 +997,7 @@ OpenServerAward =
 							{type = 0,id = 7046,count = 10,bind = 1},--三国时装碎片*10
 							{type = 0,id = 6675,count = 1,bind = 1},--女娲宝藏*1
 							{type = 0,id = 6363,count = 5,bind = 1},--豪礼宝箱*5
-							{type = 0,id = 6924,count = 1,bind = 1},--齐天大圣幻形水晶*1
+							{type = 0,id = 7650,count = 1,bind = 1},--龙腾首饰礼盒*1
 						},	
 					
 					}

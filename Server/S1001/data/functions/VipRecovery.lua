@@ -8,6 +8,8 @@ LocalDT.VipRecoveryAutoUseMaterialIds = {
 	[488] = true, [489] = true, [490] = true, -- 成就令牌
 	[531] = true, [532] = true, [533] = true, [534] = true, [535] = true, [536] = true, -- 护符碎片
 	[537] = true, [538] = true, [539] = true, -- 宝石结晶
+	[527] = true, [528] = true, [529] = true, [530] = true, -- 特戒结晶
+	[542] = true, [543] = true, [544] = true, -- 转生修为丹
 	[565] = true, [566] = true, [567] = true, [568] = true, [569] = true, [570] = true, -- 护盾碎片
 	[572] = true, [573] = true, [574] = true, -- 圣珠结晶
 	[6297] = true, [6374] = true, [6298] = true, -- 元神丹
@@ -231,7 +233,7 @@ function onVipAutomaticHs(sysarg)
 	if LocalDT.IsVipMaterialAutoUseEnabled(sysarg) then
 		status = "<(c0xFF00FF00)已开启>"
 	end
-	e = e .. string.format("  <#c0xFFFFFF00#材料自动使用/@onVipAutomaticHsEx,21|自动使用宝石、圣珠、护盾、护符、元神丹、神魂、斗笠精华、火龙结晶、战将灵力丹、成就令牌>%s ", status)
+	e = e .. string.format("  <#c0xFFFFFF00#材料自动使用/@onVipAutomaticHsEx,21|自动使用宝石、圣珠、护盾、护符、转生丹、元神丹、特戒结晶、神魂、斗笠精华、火龙结晶、战将灵力丹、成就令牌>%s ", status)
 	return e;
 end
 
@@ -290,6 +292,11 @@ function VipAutoUseMaterials(sysarg)
 	for _, config in ipairs(zAchievement) do
 		if LocalDT.VipRecoveryAutoUseMaterialIds[config.item_id] then
 			itemConfigs[config.item_id] = {func = onAchievementFunc, params = config}
+		end
+	end
+	for _, config in ipairs(CircleExp) do
+		if LocalDT.VipRecoveryAutoUseMaterialIds[config.item_id] then
+			itemConfigs[config.item_id] = {func = onCircleExp, params = config}
 		end
 	end
 	for _, config in ipairs(JSLingLiDanUseTable) do

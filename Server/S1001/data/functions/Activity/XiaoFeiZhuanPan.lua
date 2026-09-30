@@ -35,6 +35,7 @@ end
 function AskLucklyZP_canRunTime(sysarg)
 	
 	local var = Actor.getStaticVar(sysarg)
+	if var.newdays == nil then var.newdays = {} end
 	--消费
 	local dayConsumeYB_WUYI = var.dayConsumeYB_WUYI
 	if dayConsumeYB_WUYI == nil then
@@ -73,6 +74,7 @@ end
 --请求奖品信息
 function AskLucklyZP_awardInfo(sysarg)
 	local var = Actor.getStaticVar(sysarg)
+	if var.days == nil then var.days = {} end
 	if var.days.Luckly_ZPawardInfo==nil then 
 		AskLucklyZP_RefawardInfo(sysarg)
 		return 
@@ -138,6 +140,8 @@ function AskLucklyZP_lotteryDraw(sysarg)
 	local svar = System.getStaticVar()
 	
 	local var = Actor.getStaticVar(sysarg)
+	if var.days == nil then var.days = {} end
+	if var.newdays == nil then var.newdays = {} end
 
 	
 	if var.days.Luckly_ZPawardInfo==nil then 
@@ -300,6 +304,7 @@ end
 --请求刷新奖品
 function AskLucklyZP_RefawardInfo(sysarg)
 	local var = Actor.getStaticVar(sysarg)
+	if var.days == nil then var.days = {} end
 	--if var.days.Luckly_ZPawardInfo==nil then 
 	var.days.Luckly_ZPawardInfo ={}
 	--end
@@ -346,6 +351,8 @@ function AskLucklyZP_multiDraw(sysarg, drawCount)
 
 	local Yb   = XiaoFeiZhuanPan.cosumeEveryYB
 	local var  = Actor.getStaticVar(sysarg)
+	if var.days == nil then var.days = {} end
+	if var.newdays == nil then var.newdays = {} end
 	local svar = System.getStaticVar()
 
 	if var.days.Luckly_ZPawardInfo == nil then

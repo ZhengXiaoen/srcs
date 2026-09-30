@@ -4530,6 +4530,7 @@ end
 function OnActorTimer(sysarg, timerId)
 	local var = Actor.getStaticVar(sysarg)
 	if var ~= nil and var.days == nil then var.days = {} end
+	if var ~= nil and var.newdays == nil then var.newdays = {} end
 	return TimerFunc[timerId](sysarg)
 end
 

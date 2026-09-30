@@ -262,6 +262,7 @@ function OnNpcEvent(sysarg, npcId, funcName, ... )
 	local var = Actor.getStaticVar(sysarg);
 	if var == nil then return  end
 	if var.days == nil then var.days = {} end
+	if var.newdays == nil then var.newdays = {} end
     local ta = task_all[get_taskflags_val(sysarg)]
 	local pLv = Actor.getIntProperty(sysarg,PROP_CREATURE_LEVEL)
 	

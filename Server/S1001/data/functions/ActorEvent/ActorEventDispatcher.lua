@@ -108,6 +108,7 @@ function OnActorEvent(sysarg, eventId, ...)
   if sysarg ~= nil then
     local var = Actor.getStaticVar(sysarg)
     if var ~= nil and var.days == nil then var.days = {} end
+    if var ~= nil and var.newdays == nil then var.newdays = {} end
   end
   local ret = false
   local fnTable = EventCallDispatcher[eventId]

@@ -148,6 +148,11 @@ function OnConsumeYuanBaoEvent(sysarg, nYuanBao, nLogId)
 	System.sendCommonLog(LogIds.xiaofeiLog,Actor.getIntProperty(sysarg,PROP_ENTITY_ID),Actor.getName(sysarg),nLogId,nYuanBao,dayConsumeYB_WUYI,"消费日志总数")
 	
 	OnLuaEvent(LuaEventId.ActorConsumeYb, sysarg, nYuanBao)
+	local newdays = var.newdays
+	if newdays == nil then
+		newdays = {}
+		var.newdays = newdays
+	end
 	
 	--System.trace(Actor.getIntProperty(sysarg,PROP_ENTITY_ID).." dayconsumeLog:"..var.dayConsumeYB_WUYI)
 	
@@ -175,10 +180,10 @@ function OnConsumeYuanBaoEvent(sysarg, nYuanBao, nLogId)
 			var.dayCountRunLuck = var.dayCountRunLuck - addTime*Yb
 			
 			--转盘可以转的次数
-			if var.newdays.ZPcanDoTime ==nil then 
-				var.newdays.ZPcanDoTime = addTime
+			if newdays.ZPcanDoTime ==nil then
+				newdays.ZPcanDoTime = addTime
 			else 
-				var.newdays.ZPcanDoTime = var.newdays.ZPcanDoTime + addTime
+				newdays.ZPcanDoTime = newdays.ZPcanDoTime + addTime
 			end	
 		end
 		
@@ -187,10 +192,10 @@ function OnConsumeYuanBaoEvent(sysarg, nYuanBao, nLogId)
 		
 		local netPack = DataPack.allocPacket(sysarg,151,LogicCmd.miscSysEx.sub.sXiaoFeiZhuanPan)
 		DataPack.writeByte(netPack,1)
-		if var.newdays.ZPcanDoTime ==nil then 
+		if newdays.ZPcanDoTime ==nil then
 			DataPack.writeInt(netPack,0)
 		else
-			DataPack.writeInt(netPack,var.newdays.ZPcanDoTime)
+			DataPack.writeInt(netPack,newdays.ZPcanDoTime)
 		end
 		DataPack.writeUInt(netPack,dayConsumeYB_WUYI)
 		DataPack.flush(netPack)
@@ -199,10 +204,10 @@ function OnConsumeYuanBaoEvent(sysarg, nYuanBao, nLogId)
 	else 
 		local netPack = DataPack.allocPacket(sysarg,151,LogicCmd.miscSysEx.sub.sXiaoFeiZhuanPan)
 		DataPack.writeByte(netPack,1)
-		if var.newdays.ZPhasDoTime ==nil then 
+		if newdays.ZPhasDoTime ==nil then
 			DataPack.writeInt(netPack,math.floor(dayConsumeYB_WUYI/Yb))
 		else
-			DataPack.writeInt(netPack,math.floor(dayConsumeYB_WUYI/Yb)-var.newdays.ZPhasDoTime)
+			DataPack.writeInt(netPack,math.floor(dayConsumeYB_WUYI/Yb)-newdays.ZPhasDoTime)
 		end
 		DataPack.writeUInt(netPack,dayConsumeYB_WUYI)
 		DataPack.flush(netPack)

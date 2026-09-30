@@ -429,11 +429,6 @@ local myBrotherId = Actor.getSocialRelationId(sysarg,7)
 	
 end
 
---告诉前端，结义任务细信息
-function TellClientBrotherTaskInfo(sysarg)
-	LocalDT.SendBrotherTaskInfo(sysarg)
-end
-
 --同意了别人和我结义
 function BrotherSuccess(m_pEntity,pEntity)
 	if m_pEntity~=nil and pEntity~=nil then 

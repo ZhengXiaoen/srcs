@@ -2235,8 +2235,9 @@ function GetBossKillPayMoneyReward(nBossLevel, nBossMaxHp)
 	return math.floor(nBossLevel * nRate * nLuckRate + 0.5), nBossLevel, nLuckRate, bLuckyTriggered, bLuckyExtraTriggered
 end
 
-LocalDT.SendBrotherTaskInfo = function(sysarg)
+function TellClientBrotherTaskInfo(sysarg)
 	local var = Actor.getStaticVar(sysarg)
+	if var.days == nil then var.days = {} end
 	if var.newdays == nil then var.newdays = {} end
 	if var.newdays.BrotherTask == nil then var.newdays.BrotherTask = {} end
 
@@ -2590,7 +2591,7 @@ function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nL
 		if OnFinish_Liveness ~= nil then
 			if var.days.LivenessData == nil or (var.days.LivenessData.meirishouchong or 0) == 0 then
 				OnFinish_Liveness(sysarg, 2)
-				LocalDT.SendBrotherTaskInfo(sysarg)
+				TellClientBrotherTaskInfo(sysarg)
 			end
 			if var.days.PeyNum >= 1000 then
 				OnFinish_Liveness(sysarg, 7)

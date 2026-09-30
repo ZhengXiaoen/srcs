@@ -56,6 +56,7 @@ function Read-StartTimeSource {
     Write-Host '请选择启动模式：'
     Write-Host '  1. 读取 GameClock.state.json 中的下次游戏时间'
     Write-Host '  2. 使用当前电脑时间，不调整电脑时钟'
+    Write-Host '  首次开服配置均设为当天 00:00；模式 1 同时调整电脑时间，模式 2 只修改开服配置。'
     while ($true) {
         $selection = Read-Host '请输入 1 或 2，然后按回车确认（不会自动选择）'
         if ($null -eq $selection) {
@@ -302,12 +303,12 @@ function Get-StartPlan {
         $target = if ($TimeSource -eq 'System') {
             Parse-ClockTime (Format-ClockTime $Today)
         } else {
-            $Today.Date.AddHours(10)
+            $Today.Date
         }
         return [pscustomobject]@{
             FirstStart = $true
             Target = $target
-            OpenTime = $target
+            OpenTime = $Today.Date
         }
     }
     if ($State.phase -ne 'stopped' -or $State.needsRestore) {
@@ -747,7 +748,7 @@ function Invoke-GameStart {
     $sourceLabel = if ($TimeSource -eq 'System') { '当前电脑时间' } else { '时间记录' }
     Write-Host "服务器已启动。时间来源：$sourceLabel；游戏时间：$(Format-ClockTime $plan.Target)"
     if ($plan.FirstStart) {
-        Write-Host "已将开服配置同步到启动当天，并备份原件：$($Paths.Backup)"
+        Write-Host "已将开服配置设为启动当天 00:00，并备份原件：$($Paths.Backup)"
     }
 }
 
@@ -911,7 +912,7 @@ function Invoke-GamePreview {
     $plan = Get-StartPlan $config $clockState (Get-Date) $TimeSource
     if ($TimeSource -eq 'System') {
         if ($plan.FirstStart) {
-            Write-Host "首次启动将把开服配置设为当前电脑时间：$(Format-ClockTime $plan.Target)；不会调整电脑时钟。"
+            Write-Host "首次启动将把开服配置设为当天 00:00：$(Format-ClockTime $plan.OpenTime)；使用当前电脑时间：$(Format-ClockTime $plan.Target)，不会调整电脑时钟。"
         } else {
             Write-Host "模式 2 将使用当前电脑时间：$(Format-ClockTime $plan.Target)；不会调整电脑时钟。"
         }

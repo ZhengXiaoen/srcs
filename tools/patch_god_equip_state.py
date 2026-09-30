@@ -19,7 +19,7 @@ CLIENT = ROOT / "web/GameFrame.swf"
 CLASS_NAME = "GodEquipUpgradePage"
 
 
-def inspect_abc(data: bytes):
+def inspect_abc(data: bytes, class_name: str = CLASS_NAME):
     reader = ABCReader(data)
     reader.skip(4)
     for _ in range(2):
@@ -113,7 +113,7 @@ def inspect_abc(data: bytes):
             reader.u30()
         reader.u30()
         methods = traits()
-        if names[name] == CLASS_NAME:
+        if names[name] == class_name:
             if targets is not None:
                 raise ValueError("Duplicate upgrade page class")
             targets = methods

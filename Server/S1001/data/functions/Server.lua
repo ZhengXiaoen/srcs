@@ -134,6 +134,7 @@ function OnStartedLogicServer()
 	end
 	
 	OnLuaEvent(LuaEventId.ServerStarted)
+	System.addTimer("EnsureDaJiDaLiActivity", 60 * 1000, -1)
 	
 	if crossDayStarted then
 		checkDaJiDaLiAndOneYearDayCount()
@@ -185,6 +186,7 @@ function OnStopLogicServer()
 	
 	 System.deleteTimer("VIPnotice_on_timer")
 	 System.deleteTimer("OpenServerDayIn4")
+	 System.deleteTimer("EnsureDaJiDaLiActivity")
 	 
 	 OnLuaEvent(LuaEventId.ServerStop)
 end
@@ -594,6 +596,10 @@ function OnReloadScriptFinish()
 	
 	load_static_data_from_file() -- 装载 LuaStaticData
 	load_dyanmic_data_from_file() -- 装载 LuaDyanmicData
+	EnsureDaJiDaLiActivity()
+	if not System.hasTimer("EnsureDaJiDaLiActivity") then
+		System.addTimer("EnsureDaJiDaLiActivity", 60 * 1000, -1)
+	end
 
     
 end
@@ -933,30 +939,8 @@ function checkDaJiDaLiAndOneYearDayCount()
 	
 	local y,m,d,nHour,nMinute,nSecond = System.GetSystemTimeInMiniTime(System.getCurrMiniTime())
 	
-	--大吉大利活动开启
-	if svar.isDringDaJiDaLi ~=nil and svar.isDringDaJiDaLi ~=0 then 
-		local Year = svar.StartDaJiDaLiYear 
-		local Month = svar.SpringDaJiDaLiMonth
-		local Day = svar.StartDaJiDaLiDay
-		if Year ~= nil and Month ~= nil and Day ~= nil then
-			local startDt = System.encodeNumTime(Year,Month,Day,0,0,0)
-			local curDt = System.encodeNumTime(y,m,d,0,0,0)
-			local diffTime = curDt - startDt
-			if diffTime > 0 then
-				local openDay = (math.floor(diffTime/86400)+1)
-				if svar.isDringDaJiDaLi ~= openDay then
-					local oldDay = svar.isDringDaJiDaLi
-					svar.isDringDaJiDaLi = openDay
-					System.trace("修复大吉大利活动当前活动天数，oldDay" .. oldDay .. ",newDay="..openDay)
-					if openDay >= 4 then
-						System.trace("修复大吉大利活动当前活动天数之后，活动结束")
-						EndDaJiDaLi()
-					end
-				end
-			end			
-		end	
-	end
-	
+	EnsureDaJiDaLiActivity()
+
 	--周年活动结束
 	if svar.isDringOneYearAct ~=nil and svar.isDringOneYearAct ~=0 then 
 		local Year = svar.StartOneYear_Year

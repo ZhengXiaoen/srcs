@@ -4,7 +4,7 @@
 --大吉大利协议派发
 handleDaJiDaLi = function (sysarg, sysid, packet)
 	--是否在开关时间内
-	if not RepairDaJiDaLiOpenDate() then return end
+	if not EnsureDaJiDaLiActivity() then return end
 	local svar = System.getStaticVar()
 	if svar.isDringDaJiDaLi ==nil or svar.isDringDaJiDaLi<1 or svar.isDringDaJiDaLi>3 then 
 		return 
@@ -1221,20 +1221,24 @@ function RepairDaJiDaLiOpenDate()
 	local oy, om, od = System.GetSystemTimeInMiniTime(openTime)
 	local openDate = System.encodeNumTime(oy, om, od, 0, 0, 0)
 	local sy, sm, sd = svar.StartDaJiDaLiYear, svar.SpringDaJiDaLiMonth, svar.StartDaJiDaLiDay
-	local startDate = nil
-	if sy ~= nil and sm ~= nil and sd ~= nil then
+	local startDate = svar.DaJiDaLiCycleStart
+	if startDate == nil and sy ~= nil and sm ~= nil and sd ~= nil then
 		startDate = System.encodeNumTime(sy, sm, sd, 0, 0, 0)
+	end
+	local y, m, d = System.GetSystemTimeInMiniTime(now)
+	local today = System.encodeNumTime(y, m, d, 0, 0, 0)
+	if startDate ~= nil and startDate > today then
+		startDate = today - (svar.isDringDaJiDaLi - 1) * 86400
 	end
 	local rebased = startDate == nil or startDate < openDate
 	if rebased then
-		svar.StartDaJiDaLiYear = oy
-		svar.SpringDaJiDaLiMonth = om
-		svar.StartDaJiDaLiDay = od
 		startDate = openDate
 	end
+	if svar.DaJiDaLiCycleStart ~= startDate then
+		svar.DaJiDaLiCycleStart = startDate
+		System.saveStaticVar()
+	end
 
-	local y, m, d = System.GetSystemTimeInMiniTime(now)
-	local today = System.encodeNumTime(y, m, d, 0, 0, 0)
 	local expectedDay = math.floor((today - startDate) / 86400) + 1
 	if expectedDay < 1 or expectedDay > 3 then
 		EndDaJiDaLi()
@@ -1253,7 +1257,7 @@ function RepairDaJiDaLiOpenDate()
 end
 
 --开始大吉大利活动
-StartDaJiDaLi = function(nowOpenday) --开几天，当前是第几天
+StartDaJiDaLi = function(nowOpenday, cycleStart) --开几天，当前是第几天
 	if System.getCurrMiniTime() < System.getServerOpenTime() then return end
 	--print("111111")
 	--以免活动期间挂机了，这个挺麻烦的。。
@@ -1262,11 +1266,13 @@ StartDaJiDaLi = function(nowOpenday) --开几天，当前是第几天
 		svar.isDringDaJiDaLi = 1
 	else 
 		nowOpenday = tonumber(nowOpenday)
-		if nowOpenday>3 then 
-			return 
+		if nowOpenday<1 or nowOpenday>3 then
+			return
 		end
 		svar.isDringDaJiDaLi = nowOpenday
 	end
+	local y, m, d = System.GetSystemTimeInMiniTime(System.getCurrMiniTime())
+	svar.DaJiDaLiCycleStart = cycleStart or (System.encodeNumTime(y, m, d, 0, 0, 0) - (svar.isDringDaJiDaLi - 1) * 86400)
 	
 	
 	--计算一种开启了多少次大吉大利，下一次开的时候，数据是要清空的
@@ -1315,26 +1321,36 @@ end
 
 -- 活动结束后按三天一轮重新开启；保留后台指定的未来开启日期。
 function EnsureDaJiDaLiActivity()
-	if not RepairDaJiDaLiOpenDate() then return end
+	if System.isCrossServer() or not RepairDaJiDaLiOpenDate() then return false end
 	local svar = System.getStaticVar()
-	if svar.isDringDaJiDaLi ~= nil and svar.isDringDaJiDaLi >= 1 and svar.isDringDaJiDaLi <= 3 then return end
+	if svar.isDringDaJiDaLi ~= nil and svar.isDringDaJiDaLi >= 1 and svar.isDringDaJiDaLi <= 3 then return true end
 
-	local y, m, d = System.getDate()
+	local y, m, d = System.GetSystemTimeInMiniTime(System.getCurrMiniTime())
 	local today = System.encodeNumTime(y, m, d, 0, 0, 0)
+	local scheduledDate
 	if svar.StartDaJiDaLiYear ~= nil and svar.SpringDaJiDaLiMonth ~= nil and svar.StartDaJiDaLiDay ~= nil then
-		local scheduledDate = System.encodeNumTime(svar.StartDaJiDaLiYear, svar.SpringDaJiDaLiMonth, svar.StartDaJiDaLiDay, 0, 0, 0)
-		if scheduledDate > today then return end
+		scheduledDate = System.encodeNumTime(svar.StartDaJiDaLiYear, svar.SpringDaJiDaLiMonth, svar.StartDaJiDaLiDay, 0, 0, 0)
+		if scheduledDate > today then return false end
 	end
 
+	local startDate = svar.DaJiDaLiCycleStart or scheduledDate or today
+	local oy, om, od = System.GetSystemTimeInMiniTime(System.getServerOpenTime())
+	local openDate = System.encodeNumTime(oy, om, od, 0, 0, 0)
+	if startDate < openDate then startDate = openDate end
+	if scheduledDate ~= nil and scheduledDate > startDate then startDate = scheduledDate end
+	local elapsedDays = math.floor((today - startDate) / 86400)
+	local cycleStart = startDate + math.floor(elapsedDays / 3) * 3 * 86400
+	y, m, d = System.GetSystemTimeInMiniTime(cycleStart)
 	svar.StartDaJiDaLiYear = y
 	svar.SpringDaJiDaLiMonth = m
 	svar.StartDaJiDaLiDay = d
-	StartDaJiDaLi(1)
+	StartDaJiDaLi(elapsedDays % 3 + 1, cycleStart)
+	return true
 end
 	
 --是否是春节活动中
 handleDaJiDaLiIsOpen = function (sysarg, sysid, packet)
-	RepairDaJiDaLiOpenDate()
+	EnsureDaJiDaLiActivity()
 	local svar = System.getStaticVar()
 
 	local netPack = DataPack.allocPacket(sysarg,151,LogicCmd.miscSysEx.sub.sDaJiDaLi_isOpen)

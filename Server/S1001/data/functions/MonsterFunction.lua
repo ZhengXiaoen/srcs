@@ -48,60 +48,18 @@ function CheckAndSetIsDropItemWhenMonsterKilled(monster, killer, monId)
 	return false
 end
 
---#include "data\config\monster\BossMaterialDropCfg.lua" once
-
--- 使用与真荒古灵力丹相同的 createItem + createDropItem 接口，按数量创建一组材料。
-LocalDT.DropBossMaterials = function(monster, killer, monId)
-	local dropIds = LocalDT.BossMaterialDropMonsters[monId]
-	if monster == nil or killer == nil or dropIds == nil then return end
-	local totals = {}
-	local order = {}
-	for _, dropId in ipairs(dropIds) do
-		for _, cfg in ipairs(LocalDT.BossMaterialDrops[dropId]) do
-			-- propability 表示几分之一：1 为必掉，0 为禁用，各条记录独立判定。
-			if cfg.propability > 0 and (cfg.propability == 1 or System.getRandomNumber(cfg.propability) == 0) then
-				-- 引擎优先使用正数 count；仅 count <= 0 时使用 mincount/maxcount。
-				local count = cfg.count
-				if count <= 0 and cfg.mincount ~= nil and cfg.maxcount ~= nil and cfg.mincount >= 0 and cfg.maxcount > 0 and cfg.maxcount >= cfg.mincount then
-					count = cfg.mincount + System.getRandomNumber(cfg.maxcount - cfg.mincount + 1)
-				end
-				if count > 0 then
-					local key = cfg.id .. ":" .. cfg.bind
-					if totals[key] == nil then
-						totals[key] = {id=cfg.id, bind=cfg.bind, count=0}
-						table.insert(order, key)
-					end
-					totals[key].count = totals[key].count + count
-				end
-			end
-		end
-	end
-	for _, key in ipairs(order) do
-		local cfg = totals[key]
-		local maxStack = LocalDT.BossMaterialMaxStack[cfg.id]
-		while cfg.count > 0 do
-			local count = math.min(cfg.count, maxStack)
-			local item = Item.createItem(cfg.id, count, 0, 0, cfg.bind)
-			if item ~= nil then
-				if not Item.createDropItem(monster, item, LogIds.BossMaterialDrop, "BossMaterialDrop", nil) then
-					Item.releaseItemPtr(item)
-					System.trace("BossMaterialDrop createDropItem failed: " .. monId .. ":" .. cfg.id)
-				end
-			else
-				System.trace("BossMaterialDrop createItem failed: " .. monId .. ":" .. cfg.id)
-			end
-			cfg.count = cfg.count - count
-		end
-	end
-end
-
 --当一个怪物被杀死的时候回调
 function HandlerMonsterByKilled(monster, killer, monId, fubenId, sceneId, fuBenPtr)
 	-- 真荒古之地专属掉落，宠物或战将击杀也会触发
 	if killer ~= nil and monId == 635 and Actor.getSceneId(monster) == 286 then
-		Item.createDropItem(monster, Item.createItem(552, math.random(3, 5), 0, 0, 0), LogIds.HuangGuBossDrop, "HuangGuBoss", nil)
+		-- 每件灵力丹单独落地，保留原来的总数量与概率。
+		for i = 1, math.random(3, 5) do
+			Item.createDropItem(monster, Item.createItem(552, 1, 0, 0, 0), LogIds.HuangGuBossDrop, "HuangGuBoss", nil)
+		end
 		if System.getRandomNumber(100) < 30 then
-			Item.createDropItem(monster, Item.createItem(553, math.random(1, 2), 0, 0, 0), LogIds.HuangGuBossDrop, "HuangGuBoss", nil)
+			for i = 1, math.random(1, 2) do
+				Item.createDropItem(monster, Item.createItem(553, 1, 0, 0, 0), LogIds.HuangGuBossDrop, "HuangGuBoss", nil)
+			end
 		end
 	end
   -- 处理怪物被杀
@@ -112,9 +70,6 @@ function HandlerMonsterByKilled(monster, killer, monId, fubenId, sceneId, fuBenP
 	
 	-- 返回值： 杀死该怪物后是否要掉落物品(true:掉落；false:不掉)
 	local isDropItem = CheckAndSetIsDropItemWhenMonsterKilled(monster, killer, monId)
-	if isDropItem then
-		LocalDT.DropBossMaterials(monster, killer, monId)
-	end
 	return isDropItem
 end
 

@@ -17,7 +17,7 @@ MONSTERS = BASE / "StdMonster.txt"
 GOLD = re.compile(rb"\s*\{type=[56],")
 BRICK_INCLUDE = re.compile(
     rb'--#include "drops\\dropsBossGoldBrick(?:Protected)?\.lua"\r?\n')
-BASELINE = "d5a72c8"
+BASELINE = "d5a72c8^"
 
 
 def old(path):
@@ -89,7 +89,7 @@ class MonsterGoldDropTests(unittest.TestCase):
             rows = [fields(line) for line in (ROOT / BASE / "drops" / filename).read_bytes().splitlines()
                     if line.startswith(b"{type=")]
             self.assertEqual(1, len(rows))
-            self.assertEqual({"type": 0, "id": 83, "count": 1, "propability": 1,
+            self.assertEqual({"type": 0, "id": 508, "count": 1, "propability": 1,
                               "bind": 0, "group": 0, "LootTime": loot},
                              {k: rows[0][k] for k in ("type", "id", "count", "propability",
                                                      "bind", "group", "LootTime")})
@@ -111,7 +111,7 @@ class MonsterGoldDropTests(unittest.TestCase):
         expanded = expand((ROOT / MONSTERS).resolve())
         lua = LuaRuntime(encoding=None, unpack_returned_tuples=True)
         self.assertTrue(lua.eval(b"function(s) return assert(loadstring(s)) ~= nil end")(expanded))
-        self.assertEqual(582, expanded.count(b"type=0,id=83,count=1,"))
+        self.assertEqual(582, expanded.count(b"type=0,id=508,count=1,"))
 
     def test_frontend_item_and_pack_copy_match_server(self):
         from patch_guild_quest_config import read_cbp, read_pack
@@ -122,16 +122,16 @@ class MonsterGoldDropTests(unittest.TestCase):
             self.assertEqual(path.read_bytes(), pack[path.name], path.name)
             _, tree = read_cbp(path.read_bytes())
             for node in tree.children:
-                if any(c.name == "id" and int(c.number()) == 83 for c in node.children):
+                if any(c.name == "id" and int(c.number()) == 508 for c in node.children):
                     found.append(node)
         self.assertTrue(found)
         for item in found:
-            self.assertEqual("金砖", item.child("name").value.decode("utf-8"))
+            self.assertEqual("金砖(绑金)", item.child("name").value.decode("gbk"))
             self.assertIn(b"600,000", item.child("desc").value)
             self.assertEqual(200, item.child("dup").number())
             self.assertEqual(102, item.child("type").number())
         normal = (ROOT / "Server/S1001/data/config/item/NormalItemDatas.lua").read_bytes()
-        self.assertRegex(normal, rb"item_id\s*=\s*83,\s*value\s*=\s*600000")
+        self.assertRegex(normal, rb"item_id\s*=\s*508,\s*value\s*=\s*600000")
         _, monster = read_cbp((client / "monster.cbp").read_bytes())
         self.assertEqual((client / "monster.cbp").read_bytes(), pack["monster.cbp"])
         self.assertTrue(all({c.name for c in node.children} ==

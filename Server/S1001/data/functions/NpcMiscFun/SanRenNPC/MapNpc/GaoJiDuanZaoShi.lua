@@ -926,7 +926,7 @@ t.onshipinghecheng =function(sysarg,i,j)
 		local nNewItem = Item.createItem(addItemId,1,0,0,0,0);
 		if nNewItem ~= nil then 
 			Item.addItem(sysarg,nNewItem,"饰品合成",2670);
-			local zhaoHuanQiangDu = 2 + System.getRandomNumber(5); --产生0~3
+			local zhaoHuanQiangDu = 6;
 			Item.setItemProperty(sysarg,nNewItem,Item.ipTaoStrong,zhaoHuanQiangDu);
 		end
 		

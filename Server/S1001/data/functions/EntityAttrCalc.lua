@@ -57,13 +57,9 @@ function OnPetRerestProperty(sysarg,petPtr,nMaxHp,nMaxMp,nPhysicalAttackMin,nPhy
            nTaoStrong = nTaoStrong + Actor.getHorseTaoStrong(sysarg)
 		   
 		   --加上翅膀装备的召唤强度
-		   local var = Actor.getStaticVar(sysarg)
-		   local SwingTaoStrongPoints =var.SwingTaoStrongPoints
-		   if SwingTaoStrongPoints==nil then 
-				SwingTaoStrongPoints=0
-		   end
+		   local swingEquipment = Actor.getUIntProperty(sysarg, PROP_ACTOR_SWINGEQUITMNET)
 		   for i=1,4 do 	
-				local zhaoHuanQiangDu = System.getIntByte(SwingTaoStrongPoints, i - 1)
+				local zhaoHuanQiangDu = System.getIntByte(swingEquipment, i - 1) > 0 and 6 or 0
 				nTaoStrong = nTaoStrong + zhaoHuanQiangDu
 		   end
 		   

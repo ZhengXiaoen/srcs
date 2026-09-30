@@ -151,7 +151,7 @@ function HeChengHandle(sysarg,sysid,packet)
     
     local btTaoStrong = 0
     if itemCfg.isRandTaoStrong ~= nil and itemCfg.isRandTaoStrong == 1 then
-    	btTaoStrong = System.getRandomNumber(4) + 1
+        btTaoStrong = 6
     end
     
 	--给东西

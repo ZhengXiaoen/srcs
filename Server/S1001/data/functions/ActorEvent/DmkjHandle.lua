@@ -1000,7 +1000,7 @@ DmkjOpFuncList[DmkjOpId.enExChangeItem] = function (sysarg,args)
     if nItemType ~= Item.itFunctionItem then
         Item.setItemProperty(sysarg, nNewItem, Item.ipItemLuck, nLucky);
     
-        Item.setItemProperty(sysarg, nNewItem, Item.ipTaoStrong, nTaoStrong);
+        Item.setItemProperty(sysarg, nNewItem, Item.ipTaoStrong, LocalDT.IsFixedTaoStrongEquipment(award.id) and 6 or nTaoStrong);
 	    if Item.getItemProperty(sysarg,nNewItem,Item.ipItemType) < Item.itEquipMax then
 		    Item.setItemProperty(sysarg, nNewItem, Item.ipItemStrongLimit, nStrongLimit);
 	    end

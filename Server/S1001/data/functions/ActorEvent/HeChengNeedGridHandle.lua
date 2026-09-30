@@ -71,7 +71,7 @@ HandleHeCheng_ZhiZhunTuLong =function(sysarg,packet)
 	--给合成的物品
 	local btTaoStrong = 0
     if cfg.isRandTaoStrong ~= nil and cfg.isRandTaoStrong == 1 then
-    	btTaoStrong = System.getRandomNumber(4) + 1
+        btTaoStrong = 6
     end
     
 	--给东西

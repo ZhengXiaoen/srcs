@@ -664,13 +664,13 @@ t.DoRongLian =function(sysarg,i,index,n)
 		Actor.sendTipmsg(sysarg, string.format("您的背包里没有足够的熔炼材料"), 256)
         return 
     end
-	local zhaoHuanQiangDu = 0
+	local zhaoHuanQiangDu = 6;
 	if Item.removeItem(sysarg, needItem,1, "熔炼删除", LogIds.ronglian) == 1 then 
 		Actor.removeItem(sysarg,5938,needRLstoreCount,-1,-1,-1,"熔炼删除",LogIds.ronglian)
 		if index ==1 then	--练出普通的东西
 			--Actor.addItem(sysarg,toItemId,0,0,1,0,0,"熔炼获得",LogIds.ronglian)
 			if nJob==3 then
-				zhaoHuanQiangDu = 1 + System.getRandomNumber(6); --产生0~5
+				zhaoHuanQiangDu = 6;
 			end
 			local nNewItem = Item.createItem(toItemId,1,0,0,0,0)
 			if nNewItem ~= nil then 
@@ -680,7 +680,7 @@ t.DoRongLian =function(sysarg,i,index,n)
 		elseif index ==2 then 	--练出王
 			
 			if t.data[t.getDataIndexById(sysarg,baseItemId)][4]==3 then
-				zhaoHuanQiangDu = 3 + System.getRandomNumber(4); --产生0~3
+				zhaoHuanQiangDu = 6;
 			end
 			local nNewItem = Item.createItem(toItemId,1,0,0,0,0,t.data[t.getDataIndexById(sysarg,toItemId)][2])
 			if nNewItem ~= nil then 
@@ -745,9 +745,9 @@ t.onHuiShouNew = function(sysarg,a,b,c)
 	--每一把武器都计算一下
     for i = a,b do
 		local proIdx = d[i][2];
-		local zhaoHuanQiangDu = 0;
+		local zhaoHuanQiangDu = 6;
 		if d[i][4] == 3 then
-			zhaoHuanQiangDu = 3;
+			zhaoHuanQiangDu = 6;
 		end
 		
 		
@@ -1016,9 +1016,9 @@ t.onItemLvUp = function(sysarg,a,b,c)
     for i = a,b do
 		local proIdx = d[i][2];
 		local getId = d[i-27][1];
-		local zhaoHuanQiangDu = 0;
+		local zhaoHuanQiangDu = 6;
 		if d[i][4] == 3 then
-			zhaoHuanQiangDu = 3;
+			zhaoHuanQiangDu = 6;
 		end
 		if c == 1 then
 			e = e .. string.format("  %s  <点击获得/@onItemLvUp_only,%s,%s|需要材料:#%s + %s%s颗 + %s万绑金或金币>\\\\", Item.getItemLinkMsg(d[i][1]), i, c, Item.getItemName(getId).."·王", Item.getItemName(delItemId), math.floor(d[i][3] / 2), d[i][5] );
@@ -1102,9 +1102,9 @@ t.onItemLvUp_only = function(sysarg,a,c)  --c代表是王，还是帝的合成
 		proIdx = 0;
 	end
 
-	local zhaoHuanQiangDu = 0;
+	local zhaoHuanQiangDu = 6;
 	if d[i][4] == 3 then
-		zhaoHuanQiangDu = 3 + System.getRandomNumber(4); --产生0~3
+		zhaoHuanQiangDu = 6;
 	end
 	local nNewItem = Item.createItem(add_nitem,1,0,0,0,0,proIdx);
 	if nNewItem ~= nil then 
@@ -1136,9 +1136,9 @@ t.onDzwdZ = function(sysarg,a,b,c)
 	local e = "\\  <(c0xFFb6946c)请选择需要锻造的装备:> <返  回/@main>\\\\";
     for i = a,b do
 		local proIdx = d[i][2];
-		local zhaoHuanQiangDu = 0;
+		local zhaoHuanQiangDu = 6;
 		if d[i][4] == 3 then
-			zhaoHuanQiangDu = 3;
+			zhaoHuanQiangDu = 6;
 		end
 		if c == 1 then 
 			e = e .. string.format("  %s  <点击锻造/@onDzwdZ_only,%s,%s|需要材料:#%s x3 + %s绑金或金币>\\\\", "<#c0x00FF00FF#王·"..Item.getItemName(d[i][1]).."/v1,"..d[i][1]..",0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"..proIdx..",0,0,0,0,"..zhaoHuanQiangDu..",0,0,0,0,0>", i,c, Item.getItemName(d[i][1]), d[i][5]);
@@ -1248,9 +1248,9 @@ t.onDzwdZ_only = function(sysarg,a,c)  --c代表是王，还是帝的合成
 		proIdx = proIdx +1
 	end
 	Actor.changeMoney(sysarg, MC, -del_ngold,  LogIds.sanweizhenhuoHeCheng,strlog);
-	local zhaoHuanQiangDu = 0
+	local zhaoHuanQiangDu = 6;
 	if d[i][4] == 3 then
-		zhaoHuanQiangDu = 3 + System.getRandomNumber(4); --产生0~3
+		zhaoHuanQiangDu = 6;
 	end
 	local nNewItem = Item.createItem(add_nitem,1,0,0,0,0,proIdx)
 	if nNewItem ~= nil then 

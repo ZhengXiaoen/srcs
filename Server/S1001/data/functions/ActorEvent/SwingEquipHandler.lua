@@ -477,7 +477,7 @@ function TakeOnSwingEquipment(sysarg,packet)
 		return 
 	end 
 	
-	local zhaohuanqiangdu = Item.getItemProperty(sysarg,itemPer,Item.ipTaoStrong)
+	local zhaohuanqiangdu = 6
 	--print("swingzhaohuanqiangdu="..zhaohuanqiangdu)
 	
 	--把穿上的物品扣除了
@@ -559,7 +559,7 @@ function TakeOffSwingEquipment(sysarg,index)
 		
 	Actor.setUIntProperty(sysarg, PROP_ACTOR_SWINGEQUITMNET,mySwingEquipment)
 	
-	local zhaoHuanQiangDu = System.getIntByte(SwingTaoStrongPoints, index - 1)
+	local zhaoHuanQiangDu = 6
 	var.SwingTaoStrongPoints = System.setIntByte(var.SwingTaoStrongPoints, index - 1,0)
 		
 	Item.addItem(sysarg,nNewItem,"翅膀装备脱下",LogIds.swingequiptakeoff)
@@ -580,6 +580,12 @@ function GetSwingEquipmentInfo(sysarg)
 	if SwingTaoStrongPoints==nil then 
 		SwingTaoStrongPoints=0
 	end
+	local equipment = Actor.getUIntProperty(sysarg, PROP_ACTOR_SWINGEQUITMNET)
+	for index = 0, 3 do
+		SwingTaoStrongPoints = System.setIntByte(SwingTaoStrongPoints, index,
+			System.getIntByte(equipment, index) > 0 and 6 or 0)
+	end
+	var.SwingTaoStrongPoints = SwingTaoStrongPoints
 	
 	local netPack = DataPack.allocPacket(sysarg, 52, 6) -- 下发召唤强度
 	DataPack.writeInt(netPack, SwingTaoStrongPoints) -- 数量为1		

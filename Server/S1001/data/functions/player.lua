@@ -111,6 +111,32 @@ LocalDT.NormalizeSkyRingMaterialStacks = function(sysarg)
 	end
 end
 
+-- 普通装备、特殊装备、坐骑/翅膀装备及战将装备统一使用召唤强度+6。
+LocalDT.IsFixedTaoStrongEquipment = function(itemId)
+	local itemType = Item.getItemPropertyById(itemId, Item.ipItemType)
+	return itemType ~= nil and ((itemType > 0 and itemType < 100) or itemType == 115 or
+		(itemType >= 120 and itemType <= 130) or (itemType >= 201 and itemType <= 205))
+end
+
+LocalDT.NormalizeEquipmentTaoStrong = function(sysarg, itemPtr)
+	if itemPtr and LocalDT.IsFixedTaoStrongEquipment(Item.getItemId(itemPtr)) and
+		Item.getItemProperty(sysarg, itemPtr, Item.ipTaoStrong, 0) ~= 6 then
+		Item.setItemProperty(sysarg, itemPtr, Item.ipTaoStrong, 6)
+		return true
+	end
+	return false
+end
+
+LocalDT.NormalizeBagEquipmentTaoStrong = function(sysarg, itemId)
+	if itemId ~= nil and not LocalDT.IsFixedTaoStrongEquipment(itemId) then return end
+	for index = 0, Item.getBagItemCount(sysarg) - 1 do
+		local itemPtr = Item.getItemPtrByIndex(sysarg, index)
+		if itemPtr and (itemId == nil or Item.getItemId(itemPtr) == itemId) then
+			LocalDT.NormalizeEquipmentTaoStrong(sysarg, itemPtr)
+		end
+	end
+end
+
 -- 定时 BOSS 的截止时间和当前怪物写入服务器持久变量，重启后可恢复。
 LocalDT.GetSRRefreshMonsterSave = function()
 	local svar = System.getStaticVar()
@@ -182,6 +208,12 @@ function OnPlayerLogin(sysarg, isCrossDay)
 	
 	local actorName = Actor.getName(sysarg)
 	LocalDT.NormalizeSkyRingMaterialStacks(sysarg)
+	LocalDT.NormalizeBagEquipmentTaoStrong(sysarg)
+	for slot = 0, itMaxEquipPos do
+		LocalDT.NormalizeEquipmentTaoStrong(sysarg, Item.getEquipByPos(sysarg, slot))
+	end
+	GetSwingEquipmentInfo(sysarg)
+	Actor.collectOperate(sysarg, 0)
 	
 	-- 变态版一上线就是VIP5，开服清档后关闭
 	-- if Actor.getIntProperty(sysarg, PROP_ACTOR_VIP_GRADE) < 5 then
@@ -4237,6 +4269,9 @@ end
 
 --//佩戴装备触发(装备ID, 装备数量)
 function OnPlayerDressEquiment(sysarg, equimentId, equimentCount, slotPos)
+	if slotPos ~= nil and LocalDT.NormalizeEquipmentTaoStrong(sysarg, Item.getEquipByPos(sysarg, slotPos)) then
+		Actor.collectOperate(sysarg, 0)
+	end
 
 	--OnTakeOnEquimentAutoLearnSkill(sysarg, equimentId)
 
@@ -4298,6 +4333,7 @@ end
 --因为一次可能加几个格子的物品,而且存在叠加的情况,所以提供物品指针是不合理的.
 --参数分别代表：玩家指针,物品id,物品数量
 function OnAddItemEvent(sysarg,itemId,itemCount)
+	LocalDT.NormalizeBagEquipmentTaoStrong(sysarg, itemId)
 	
 	--得到东西检测完成条件
 	local var = Actor.getStaticVar(sysarg)

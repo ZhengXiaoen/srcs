@@ -305,7 +305,7 @@ function OnTreasureTrove(sysarg,msgid,packet,debug)
      --给予道具奖励
      --背包不够空间就发到邮箱
      local bind = 0
-     local btTaoStrong = System.getRandomNumber(6)+1
+     local btTaoStrong = LocalDT.IsFixedTaoStrongEquipment(awardItem) and 6 or 0
      if Item.getBagEmptyGridCount(sysarg) > 0 then
         Actor.addItem(sysarg,awardItem,0,0,1,bind,0,"领取宝藏",GameLog.treasure,-1,0,-1,1,btTaoStrong)
         Actor.sendTipmsg(sysarg, "领取<"..sItemName..">战将灵力值+"..nLingLi.."!", ttFlyTip)

@@ -1,5 +1,5 @@
 --lua script
-local LocalDT={}
+local LocalDT = LocalDT or {}
 
 --这个文件是所有的怪物相关的脚本逻辑的总函数
 --包括怪物的死亡，怪物的刷新处理的一些逻辑的入口在这里

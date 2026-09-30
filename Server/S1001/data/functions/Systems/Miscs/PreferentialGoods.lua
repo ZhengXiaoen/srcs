@@ -227,6 +227,7 @@ function GetWholePeople(sysarg,packet)
 	if not config then return end
 
 	local var = Actor.getStaticVar(sysarg)
+	if var.days == nil then var.days = {} end
 	local sVar = System.getStaticVar()
 	
 	if not var.days.BetaWholePeople then
@@ -530,6 +531,7 @@ function SendUpdatePacksInfo(sysarg)
 	end
 
 	local var = Actor.getStaticVar(sysarg)
+	if var.days == nil then var.days = {} end
 	local sVar = System.getStaticVar()	
 	
 	if not var.PreferentialGoods then

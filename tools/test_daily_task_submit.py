@@ -171,6 +171,15 @@ class DailyTaskSubmitTests(unittest.TestCase):
         self.assert_rewards()
         self.assertEqual(1, self.evaluate("state.days.KoRccmTime"))
 
+    def test_exp_callback_clears_daily_state(self):
+        self.lua.execute('''Actor.addExp = function(_, value)
+            exp = exp + value
+            state.days = nil
+        end''')
+        self.submit()
+        self.assert_rewards()
+        self.assertEqual(1, self.evaluate("state.days.KoRccmTime"))
+
     def test_unfinished_task_has_no_reward(self):
         self.lua.execute("state.RiChangRenWuFinish = 0")
         self.submit()

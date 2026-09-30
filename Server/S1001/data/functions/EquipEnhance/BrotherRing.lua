@@ -355,6 +355,7 @@ local myBrotherId = Actor.getSocialRelationId(sysarg,7)
 	end
 	
     local var = Actor.getStaticVar(sysarg)
+	if var.days == nil then var.days = {} end
 	if var.newdays==nil then 
 		var.newdays={}
 	end
@@ -375,9 +376,9 @@ local myBrotherId = Actor.getSocialRelationId(sysarg,7)
 	if x==1 then 
 		if var.newdays.brotherTaskCon[1]==nil then 
 			var.newdays.brotherTaskCon[1]={}
-			var.newdays.brotherTaskCon[1][y]=0
 		end
-	
+		if var.newdays.brotherTaskCon[1][y]==nil then var.newdays.brotherTaskCon[1][y]=0 end
+
 		if var.newdays.brotherTaskCon[1][y]<BrotherTasks[1][y].needKillCount then 
 			Actor.sendTipmsg(sysarg,"任务条件还没有完成",ttFlyTip)
 			return 

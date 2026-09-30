@@ -425,6 +425,7 @@ t.rcWanChengRenWu = function(sysarg)
 		Var.RiChangRenWuFinish=0
 		Actor.addExp(sysarg,rewardExp)
 		Actor.addInnerExp(sysarg,rewardInnerExp)
+		Var.days = Var.days or {}
 		
 		--广播日常除魔
 		if Var.days.KoRccmTime ==nil then 

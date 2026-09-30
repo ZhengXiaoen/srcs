@@ -105,6 +105,10 @@ LocalDT.ScriptDelayConfig = {}
 --param args:对应的参数列表
 function OnActorEvent(sysarg, eventId, ...)
   --print("eventID:"..eventId)
+  if sysarg ~= nil then
+    local var = Actor.getStaticVar(sysarg)
+    if var ~= nil and var.days == nil then var.days = {} end
+  end
   local ret = false
   local fnTable = EventCallDispatcher[eventId]
   if fnTable then 	  

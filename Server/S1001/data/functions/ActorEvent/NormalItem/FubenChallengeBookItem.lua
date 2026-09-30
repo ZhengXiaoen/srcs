@@ -22,7 +22,7 @@ function FubenChallengeBookItem(sysarg,itemidx,itemPtr,ItemTable)
      fbBT[ItemTable.type] = t
   end  
      
-  if ( math.floor(fbBT[ItemTable.type]/LocalDT.TimeRewardConst.DAYTIME) ~= math.floor(t/LocalDT.TimeRewardConst.DAYTIME) ) then
+  if ( math.floor(fbBT[ItemTable.type]/LocalDT.TimeMoneyRewardConst.DAYTIME) ~= math.floor(t/LocalDT.TimeMoneyRewardConst.DAYTIME) ) then
   	fbBC[1] = 2
   	fbBC[2] = 1
   	fbBC[3] = 1

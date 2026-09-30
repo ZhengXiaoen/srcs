@@ -258,6 +258,7 @@ function OnFinish_Liveness(sysarg,n)
 
 	local n= tonumber(n)
 	local var = Actor.getStaticVar(sysarg)
+	if var.days == nil then var.days = {} end
 	if var.days.LivenessData ==nil then 
 		var.days.LivenessData={}
 	end

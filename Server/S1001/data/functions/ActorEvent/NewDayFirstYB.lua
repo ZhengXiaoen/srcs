@@ -14,6 +14,7 @@ function GetNewDayFirstYB(sysarg, sysid, packet)
 		--end
 		
 		local var = Actor.getStaticVar(sysarg)
+		if var.days == nil then var.days = {} end
 		if var.days.LivenessData ==nil then 
 			var.days.LivenessData={}
 		end
@@ -78,6 +79,7 @@ end
 
 function SendNewDayFirstYBInfo(sysarg)
 	local var = Actor.getStaticVar(sysarg)
+	if var.days == nil then var.days = {} end
 	if var.days.getND_YBAward ==nil then 
 		var.days.getND_YBAward = 0
 	end

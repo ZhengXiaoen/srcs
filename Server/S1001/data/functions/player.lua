@@ -222,6 +222,7 @@ function OnPlayerLogin(sysarg, isCrossDay)
 	local var = Actor.getStaticVar(sysarg);
 	EnsureRecurringActivities()
 	local svar = System.getStaticVar()
+	local canStartOpenActivities = System.getCurrMiniTime() >= System.getServerOpenTime()
 
 	if type(var.zkillmon)=='number' then 
 		var.zkillmon=nil
@@ -4528,6 +4529,8 @@ end
 
 --//玩家定时器回调
 function OnActorTimer(sysarg, timerId)
+	local var = Actor.getStaticVar(sysarg)
+	if var ~= nil and var.days == nil then var.days = {} end
 	return TimerFunc[timerId](sysarg)
 end
 
@@ -4640,6 +4643,7 @@ end
 function OnPayExtractWing(sysarg,nYuanBao)
 	if nYuanBao then
 		local var = Actor.getStaticVar(sysarg);
+		if var.days == nil then var.days = {} end
 
 		--首次提取元宝
 		if Actor.getActorFlag(sysarg,14) < 1 then

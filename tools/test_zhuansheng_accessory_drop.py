@@ -39,7 +39,7 @@ def runtime():
         drops = {}; created = {}; ordinaryCalls = 0; commonCalls = 0
         failCreate = false; killerType = 0
         System = {
-            getDaysSinceCombineServer = function() return combineDays end,
+            getDaysSinceCombineServer = function() error('temple drops must not depend on merging') end,
             getRandomNumber = function(n) assert(n == 100); return roll end
         }
         math.random = function(a, b)
@@ -106,11 +106,10 @@ class TempleFragmentTests(unittest.TestCase):
                                          tuple(drop[k] for k in (b"id", b"count", b"bind")))
         self.assertEqual(g[b"ordinaryCalls"], g[b"commonCalls"])
 
-    def test_uncombined_wrong_map_wrong_monster_and_pet_warrior(self):
+    def test_uncombined_server_wrong_map_wrong_monster_and_pet_warrior(self):
         lua = runtime()
         g = lua.globals()
         for scene, monster, days, killer in (
-            (287, 647, 0, 1), (287, 647, -1, 1), (296, 1343, 0, 1),
             (288, 647, 1, 1), (101, 647, 1, 1), (287, 545, 1, 1),
             (296, 656, 1, 1), (296, 657, 1, 1), (287, 647, 1, None),
         ):
@@ -118,6 +117,24 @@ class TempleFragmentTests(unittest.TestCase):
             g[b"drops"] = lua.table()
             self.assertTrue(g[b"HandlerMonsterByKilled"](99, killer, monster, 0, scene, None))
             self.assertEqual(0, len(g[b"drops"]))
+        for scene, monsters, rate, low, high in TIERS:
+            for monster in monsters:
+                for days in (0, 1):
+                    g[b"scene"], g[b"combineDays"] = scene, days
+                    g[b"drops"] = lua.table()
+                    g[b"HandlerMonsterByKilled"](99, 1, monster, 0, scene, None)
+                    self.assertEqual(1, len(g[b"drops"]))
+        for monster in (1343, 1344, 1345):
+            g[b"scene"], g[b"combineDays"] = 296, 0
+            for upper, count in ((False, 2), (True, 3)):
+                g[b"upper"] = upper
+                for roll in range(100):
+                    g[b"roll"] = roll
+                    g[b"drops"] = lua.table()
+                    g[b"HandlerMonsterByKilled"](99, 1, monster, 0, 296, None)
+                    self.assertEqual(1, len(g[b"drops"]))
+                    self.assertEqual(count, g[b"drops"][1][b"count"])
+        g[b"roll"] = 0
         for killer_type in (0, 2, 3):
             g[b"scene"], g[b"combineDays"], g[b"killerType"] = 296, 1, killer_type
             g[b"drops"] = lua.table()
@@ -179,7 +196,8 @@ class TempleFragmentTests(unittest.TestCase):
                 desc = re.search(rf'i{item}="([^"\r\n]+)"', language)[1].replace("\\\\", "\\")
                 self.assertEqual(desc, node.child("desc").value.decode("utf-8"))
                 expected.child(node.name).child("desc").value = node.child("desc").value
-                self.assertIn("合服后转生神殿天、地、暗BOSS掉落", desc)
+                self.assertIn("转生神殿天、地、暗BOSS掉落", desc)
+                self.assertNotIn("合服", desc)
             self.assertEqual(expected, after)
 
     def test_temple_entry_shows_same_config_values(self):
@@ -192,6 +210,7 @@ class TempleFragmentTests(unittest.TestCase):
         ''')
         lua.execute((DATA / "functions/NpcMiscFun/SanRenNPC/MapNpc/ZhuanShengDiGong.lua").read_bytes().removeprefix(b"\xef\xbb\xbf"))
         text = lua.globals()[b"GetNpcZhuanShengDiGong"]()[b"main"](1).decode("utf-8")
+        self.assertNotIn("合服", text)
         for _, _, rate, low, high in TIERS:
             count = str(low) if low == high else f"{low}-{high}"
             self.assertIn(f"碎片掉率 {rate}%，每次 {count} 个", text)

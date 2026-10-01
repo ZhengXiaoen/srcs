@@ -30,7 +30,6 @@ local LocalDT = LocalDT or {}
 LocalDT.DropZhuanShengAccessory = function(monster, monId)
 	local cfg = ZhuanShengAccessoryDropCfg.tiers[Actor.getSceneId(monster)]
 	if not cfg or (monId ~= cfg.monsters[1] and monId ~= cfg.monsters[2] and monId ~= cfg.monsters[3]) then return end
-	if System.getDaysSinceCombineServer() <= 0 then return end
 	if System.getRandomNumber(100) >= cfg.rate then return end
 	local itemId = ZhuanShengAccessoryDropCfg.items[math.random(1, #ZhuanShengAccessoryDropCfg.items)]
 	local count = math.random(cfg.mincount, cfg.maxcount)

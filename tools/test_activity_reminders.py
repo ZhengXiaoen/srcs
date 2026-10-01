@@ -196,7 +196,7 @@ class ActivityRemindersTests(unittest.TestCase):
                                      'daJiDaLiDataProvider': {'cfgs': self.dj_cfgs},
                                      'oneYearActiveProvider': {'data': self.cfg_year}},
                         'MsgButtonTypes': {'RIGHT_TOP_HONG_LI_BTN': 'hong', 'RIGHT_Top_DAJIDALI': 'dj',
-                                           'RIGHT_Top_YearActive': 'year'},
+                                           'RIGHT_Top_YearActive': 'year', 'RIGHT_QING_DIAN': 'qd'},
                         'CliffordEvent': {k: k for k in ('HONG_LI_DAY', 'HONG_LI_ACC_RECHARGE_STATU',
                              'HONG_LI_EVERYDAY_LOGIN', 'HONG_LI_EVERYDAY_ECHARGE', 'HONG_LI_TURN_TIME')},
                         'DaJiDaLiEvent': {'OPEN_DAY': 'OPEN_DAY', 'STATU_CHANGE': 'STATU_CHANGE'},
@@ -225,6 +225,7 @@ class ActivityRemindersTests(unittest.TestCase):
         if name == 'getRoleMoneyByType': return obj['money']
         if name == 'getBagItemCountById': return obj['bag'].get(args[0], 0)
         if name == 'getEffect': return None
+        if name == 'checkQDShowEffect': return self.run_method(6403, obj)
         if name in ('getBtn', 'getPaneBtnByType'): return self.buttons.get(args[0])
         if name == 'delBtn': self.buttons.pop(args[0], None); return None
         if name == 'addBtn2': self.buttons[args[0]] = {'effect': True}; return None
@@ -459,7 +460,7 @@ class ActivityRemindersTests(unittest.TestCase):
     def test_all_modified_bytecode_paths_have_balanced_stack_and_local_limits(self):
         # Explore the control-flow graph, including paths not taken by claim
         # scenarios; Flash verifies these paths before executing a method.
-        for module, methods in ((False, (2648, 2720, 4078, 4080, 6333, 6335, 6353, 6377, 6380, 6382, 6437, 6497, 28528)),
+        for module, methods in ((False, (2648, 2720, 4078, 4080, 6333, 6334, 6335, 6353, 6357, 6377, 6379, 6380, 6382, 6403, 6408, 6437, 6497, 28528)),
                                 (True, (7, 8, 9, 10, 11, 41))):
             names, _, bodies = self.symbols[module]
             for method in methods:
@@ -499,7 +500,7 @@ class ActivityRemindersTests(unittest.TestCase):
                     pending.extend((target, new_depth) for target in targets)
 
     def test_all_activity_back_edges_have_flash_verifier_labels(self):
-        for module, methods in ((False, (2648, 4080, 6335, 6497)), (True, (7, 8, 10))):
+        for module, methods in ((False, (2648, 4080, 6334, 6335, 6403, 6497)), (True, (7, 8, 10))):
             for method in methods:
                 a, size, _ = self.symbols[module][2][method]
                 code = self.abc[module][a:a + size]
@@ -512,11 +513,16 @@ class ActivityRemindersTests(unittest.TestCase):
         for module, path, expected in ((False, CLIENT, {2648, 4080, 6335}), (True, MODULE, {10})):
             previous = subprocess.check_output(['git', 'show', '5fd7a08:' + path.relative_to(ROOT).as_posix()], cwd=ROOT)
             raw, (_, _, a, b) = abc_section(previous); old, _ = normalize(raw[a:b])
+            repaired = patch_swf(previous, module)
+            release = subprocess.check_output(['git', 'show', '22bfbc8:' + path.relative_to(ROOT).as_posix()], cwd=ROOT)
+            self.assertEqual(repaired, release)
+            raw, (_, _, a, b) = abc_section(repaired); fixed, _ = normalize(raw[a:b])
+            _, _, fixed_bodies = inspect_abc(fixed, 'HongLiActiveWin' if module else 'NavTopRightArea')
             _, _, bodies = inspect_abc(old, 'HongLiActiveWin' if module else 'NavTopRightArea')
             invalid = set(); changed = set()
             for method, (a, size, limits) in bodies.items():
-                b, length, new_limits = self.symbols[module][2][method]
-                before, after = old[a:a + size], self.abc[module][b:b + length]
+                b, length, new_limits = fixed_bodies[method]
+                before, after = old[a:a + size], fixed[b:b + length]
                 if before == after and limits == new_limits: continue
                 changed.add(method)
                 self.assertEqual(limits, new_limits)
@@ -531,7 +537,8 @@ class ActivityRemindersTests(unittest.TestCase):
             self.assertEqual(changed, expected)
             # Verifies ABC metadata, constant pools and every non-code SWF tag,
             # as well as upgrading the deployed version without duplicate edits.
-            self.assertEqual(patch_swf(previous, module), path.read_bytes())
+            from patch_main_activity_reminders import patch_swf as main_entries
+            self.assertEqual(repaired if module else main_entries(repaired), path.read_bytes())
 
     def test_loop_label_relocation_preserves_forward_backward_and_self_branches(self):
         c = Code(); c.add(b'\xd0\x30')
@@ -555,7 +562,8 @@ class ActivityRemindersTests(unittest.TestCase):
         self.assertEqual(c.finish(), after)
 
     def test_only_expected_methods_and_no_other_packaged_resources_change(self):
-        expected = {False: {2648, 2720, 4078, 4080, 6333, 6335, 6353, 6377, 6380, 6382, 6437, 6497, 28528},
+        from patch_main_activity_reminders import METHODS, patch_swf as main_entries
+        expected = {False: {2648, 2720, 4078, 4080, 6333, 6335, 6353, 6377, 6380, 6382, 6437, 6497, 28528} | METHODS,
                     True: {7, 8, 9, 10, 11, 41}}
         for module in (False, True):
             _, _, old = inspect_abc(self.before[module], 'HongLiActiveWin' if module else 'NavTopRightArea')
@@ -566,7 +574,8 @@ class ActivityRemindersTests(unittest.TestCase):
             self.assertEqual(changed, expected[module])
             path = MODULE if module else CLIENT
             old_swf = baseline_swf(path)
-            self.assertEqual(patch_swf(old_swf, module), path.read_bytes())
+            upgraded = patch_swf(old_swf, module)
+            self.assertEqual(upgraded if module else main_entries(upgraded), path.read_bytes())
             self.assertEqual(patch_swf(path.read_bytes(), module), path.read_bytes())
 
     def test_client_server_and_language_pack_rewards_match(self):

@@ -1489,7 +1489,8 @@ function GetQD_FeiZhuanPan(sysarg)
 	
 	cfg = cfg[var.QDHD_Data.XFZP]
 	
-	local needSpend = cfg.needPay
+	-- 门槛按本轮活动总天数缩放，向上取整，末档恰为天数×300万元宝。
+	local needSpend = math.ceil(cfg.needPay * (svar.QingDian_openDay or 3) / 3)
 	
 	if var.QDHD_Data.XFZPCosume==nil or needSpend>var.QDHD_Data.XFZPCosume then 
 		Actor.sendTipmsg(sysarg,"消费不足",ttFlyTip)

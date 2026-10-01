@@ -729,7 +729,8 @@ function GetOneYearXiaoFeiZhuanPan(sysarg)
 	
 	cfg = cfg[var.OneYearAct_Data.XFZP]
 	
-	local needSpend = cfg.needPay
+	-- 门槛按本轮活动总天数缩放，向上取整，末档恰为天数×300万元宝。
+	local needSpend = math.ceil(cfg.needPay * (svar.StartOneYear_OpenDay or 7) / 7)
 	
 	if var.OneYearAct_Data.XFZPCosume==nil or needSpend>var.OneYearAct_Data.XFZPCosume then 
 		Actor.sendTipmsg(sysarg,"消费不足",ttFlyTip)

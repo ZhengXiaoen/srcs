@@ -270,7 +270,7 @@ function OnNpcEvent(sysarg, npcId, funcName, ... )
 	if npcId > 0  then
 		if ta ~= nil then
 	        --优先读取主线任务
-	        if funcName == "onAcceptTask" and ta.lv <= pLv and ta.type ~= 4 then
+	        if funcName == "onAcceptTask" and ta.npcid == npcId and ta.lv <= pLv and ta.type ~= 4 then
 	            MasterStokeAcceptTask(sysarg,npcId)
 	            return "null" --不打开npc对话框了
 	        elseif funcName == "main" and ta.lv <= pLv  and ta.type ~= 4 then

@@ -85,6 +85,10 @@ MasterStokeAcceptTask = function(sysarg,npcid)
          --print("找不到任务:"..tvar)
         return 
     end--没有任务了
+	-- NPC 的旧对话或自动提交不能完成其他 NPC 的主线。
+	if ta.npcid ~= npcid or Actor.getIntProperty(sysarg, PROP_CREATURE_LEVEL) < ta.lv then
+		return
+	end
 	
 	local cond=false 
 	if ta.mapid == 1 then 
@@ -95,7 +99,16 @@ MasterStokeAcceptTask = function(sysarg,npcid)
 		end
 	end
 	
-	if (actormapid == ta.mapid or cond==true ) and ta.type == 2 or ta.type == 4 or  ta.type==1 then
+	-- 传送引导在到达目标地图后由 14 号定时器提交。
+	if ta.type == 4 and (tvar == 30 or tvar == 49 or tvar == 72) then
+		local dvar = Actor.getDyanmicVar(sysarg)
+		local nextTask = task_all[ta.nvar]
+		if dvar.nowNumberOfStep == 2 and nextTask ~= nil and actormapid == nextTask.mapid then
+			cond = true
+		end
+	end
+
+	if (actormapid == ta.mapid or cond==true) and (ta.type == 2 or ta.type == 4 or ta.type == 1) then
 		local nItemId = 0;
 		local nSex = Actor.getIntProperty(sysarg, PROP_ACTOR_SEX);
 		local njob = Actor.getIntProperty(sysarg, PROP_ACTOR_VOCATION);

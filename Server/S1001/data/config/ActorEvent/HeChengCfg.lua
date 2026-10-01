@@ -491,10 +491,10 @@ HeChengCfg =
 --战灵道具合成12
 {
 	{
-     {id1=7052,needcount1=1,id2=7052,needcount2=2,neeMoney=10000,moneyType=1,id3=7053,isbind=0,isRandTaoStrong=1},--灵·南明离火
-     {id1=7053,needcount1=1,id2=7053,needcount2=2,neeMoney=10000,moneyType=1,id3=7054,isbind=0,isRandTaoStrong=1},--仙·南明离火
-     {id1=7054,needcount1=1,id2=7054,needcount2=2,neeMoney=10000,moneyType=1,id3=7055,isbind=0,isRandTaoStrong=1},--圣·南明离火
-     {id1=7055,needcount1=1,id2=7055,needcount2=2,neeMoney=10000,moneyType=1,id3=7056,isbind=0,isRandTaoStrong=1},--神·南明离火
+     {id1=7052,needcount1=1,id2=7052,needcount2=2,neeMoney=10000,moneyType=1,id3=7053,isbind=0,isRandTaoStrong=0},--灵·南明离火
+     {id1=7053,needcount1=1,id2=7053,needcount2=2,neeMoney=10000,moneyType=1,id3=7054,isbind=0,isRandTaoStrong=0},--仙·南明离火
+     {id1=7054,needcount1=1,id2=7054,needcount2=2,neeMoney=10000,moneyType=1,id3=7055,isbind=0,isRandTaoStrong=0},--圣·南明离火
+     {id1=7055,needcount1=1,id2=7055,needcount2=2,neeMoney=10000,moneyType=1,id3=7056,isbind=0,isRandTaoStrong=0},--神·南明离火
     },
 },
 

@@ -2096,7 +2096,7 @@ QingDianXunBaoF = --周年庆寻宝
 				--累计1天超过needPay
 				{
 					award ={
-					{type = 0, id = 7695,count = 1,bind = 1},--至尊屠龙卷
+					{type = 0, id = 7039,count = 8,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7650,count = 2,bind = 1},--龙腾首饰箱
 					{type = 0, id = 5384,count = 2,bind = 1},--4阶宝石袋
                     {type = 0, id = 527,count = 15,bind = 1},--特戒结晶
@@ -2106,7 +2106,7 @@ QingDianXunBaoF = --周年庆寻宝
 				--累计2天超过needPay
 				{
 					award ={
-					{type = 0, id = 7039,count = 3,bind = 1},--屠龙至尊碎片
+					{type = 0, id = 7039,count = 12,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7650,count = 3,bind = 1},--龙腾首饰箱
 					{type = 0, id = 5384,count = 3,bind = 1},--4阶宝石袋
                     {type = 0, id = 527,count = 20,bind = 1},--特戒结晶
@@ -2116,7 +2116,7 @@ QingDianXunBaoF = --周年庆寻宝
 				--累计3天超过needPay
 				{
 					award ={
-					{type = 0, id = 7695,count = 1,bind = 1},--至尊屠龙卷
+					{type = 0, id = 7039,count = 16,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7650,count = 4,bind = 1},--龙腾首饰箱
 					{type = 0, id = 5384,count = 4,bind = 1},--4阶宝石袋
                     {type = 0, id = 527,count = 25,bind = 1},--特戒结晶

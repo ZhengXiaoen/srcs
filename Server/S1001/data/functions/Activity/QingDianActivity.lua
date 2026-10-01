@@ -4,6 +4,17 @@
 --#include "data\functions\new_activity\qingdian\treasure_hunt.lua" once -- 庆典活动--寻宝
 
 
+-- 每两小时为一轮，查看状态保存在角色数据中，重新登录不会重复提醒。
+LocalDT.ShenMiStoreCycle = function()
+	local now = System.getCurrMiniTime()
+	local nYear,nMonth,nDay,nHour,nMin,nSec = System.GetSystemTimeInMiniTime(now)
+	return now - (nHour % 2 * 3600 + nMin * 60 + nSec)
+end
+
+LocalDT.ShenMiStoreUnread = function(sysarg)
+	return Actor.getStaticVar(sysarg).ShenMiStoreViewedCycle ~= LocalDT.ShenMiStoreCycle() and 1 or 0
+end
+
 QingDianActivitys = function (sysarg, sysid, packet)
 	if not Actor.IsActorInited(sysarg) then
 		return
@@ -33,6 +44,8 @@ QingDianActivitys = function (sysarg, sysid, packet)
 			FreshenTheShenMiStore(sysarg)
 		elseif optType==3 then --请求神秘商店的所有记录
 			SendShenMiStoreAllR(sysarg)
+		elseif optType==4 then --点开商店，取消本轮提醒
+			Actor.getStaticVar(sysarg).ShenMiStoreViewedCycle = LocalDT.ShenMiStoreCycle()
 		end
 	elseif msgid==7 then  --购买翅膀
 		BuyQingDianActivitySwing(sysarg,DataPack.readByte(packet))
@@ -1660,7 +1673,7 @@ GetQingDianActivityInfo = function(sysarg,index)
 		DataPack.writeByte(netPack,var.ShenMiStorebuyFlag[2])
 		DataPack.writeByte(netPack,var.ShenMiStorebuyFlag[3])
 		DataPack.writeByte(netPack,var.ShenMiStorebuyFlag[4])
-		DataPack.writeByte(netPack,0) -- 当前商品查询/购买回包，不重新提示
+		DataPack.writeByte(netPack,LocalDT.ShenMiStoreUnread(sysarg)) -- 本轮未查看才高亮
 		DataPack.flush(netPack)
 		
 		--print(var.randTable[1])
@@ -2052,11 +2065,6 @@ Fre_ShenMiStoreTime =function()
 			local playerList = LuaHelp.getAllActorList()  --获取在线玩家对象列表
 			for k, v in ipairs(playerList or {}) do
 				RandTheShenMiStore(v)
-				
-				if Actor.getIntProperty(v,PROP_CREATURE_LEVEL)>=80 then 
-					local actorID = Actor.getIntProperty(v, PROP_ENTITY_ID);
-					System.AddMail(actorID,0,0,"神秘商店已刷新","亲爱的玩家，\\\\神秘商店已刷新,超级特价商品不容错过.机不可失失不再来啊!")
-				end
 			end		
 			--广播给在线的所有人 神秘商店已刷新，超级特价商品不容错过。我也要买
 			--System.broadcastTipmsg("神秘商店刷新",ttChatWindow)
@@ -2347,7 +2355,7 @@ RandTheShenMiStore = function(sysarg)
 	DataPack.writeByte(netPack,0)
 	DataPack.writeByte(netPack,0)
 	DataPack.writeByte(netPack,0)
-	DataPack.writeByte(netPack,1) -- 商品实际刷新，客户端重新提示未查看商品
+	DataPack.writeByte(netPack,LocalDT.ShenMiStoreUnread(sysarg)) -- 手动刷新不改变本轮查看状态
 	
 	--调试，看看随机到什么商品
 	--print(var.randTable[1])
@@ -2391,6 +2399,7 @@ StartShenMiActivity = function( openday , nowOpenday)
 		local netPack = DataPack.allocPacket(player,151,LogicCmd.miscSysEx.sub.sShenMiShangDianIsOpen)
 		DataPack.writeByte(netPack,svar.isDringShenMiSD)	--开启第几天
 		DataPack.writeByte(netPack,svar.SHENMISTORE_openDay)	--一共开启几天
+		DataPack.writeByte(netPack,LocalDT.ShenMiStoreUnread(player))
 		DataPack.flush(netPack)
 	end
 	
@@ -2416,6 +2425,7 @@ EndShenMiActivity = function()
 		local netPack = DataPack.allocPacket(player,151,LogicCmd.miscSysEx.sub.sShenMiShangDianIsOpen)
 		DataPack.writeByte(netPack,0)
 		DataPack.writeByte(netPack,0)
+		DataPack.writeByte(netPack,0) --关闭活动时取消提醒
 		DataPack.flush(netPack)
 	end
 end
@@ -2445,6 +2455,7 @@ ShenMiShangDianIsOpen = function (sysarg, sysid, packet)
 	else 
 		DataPack.writeByte(netPack,svar.SHENMISTORE_openDay)
 	end
+	DataPack.writeByte(netPack,LocalDT.ShenMiStoreUnread(sysarg)) --登录和开关查询同步本轮提醒
 	DataPack.flush(netPack)
 end
 

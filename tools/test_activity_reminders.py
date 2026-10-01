@@ -75,7 +75,7 @@ def execute(code, names, strings, locals_, globals_, invoke, start=0, end=None):
                          else strings[args[0]] if kind == 0x2c else args[0])
         elif kind in (0x09, 0x80, 0x82): pass
         elif kind == 0x30: stack.pop()
-        elif kind == 0x60: stack.append(globals_.get(names[args[0]], {'class': names[args[0]]}))
+        elif kind in (0x5d, 0x60): stack.append(globals_.get(names[args[0]], {'class': names[args[0]]}))
         elif kind == 0x66:
             name = names[args[0]]; key = name if name else stack.pop(); obj = stack.pop()
             if name == 'length': value = len(obj)
@@ -92,6 +92,10 @@ def execute(code, names, strings, locals_, globals_, invoke, start=0, end=None):
             obj = stack.pop(); name = names[args[0]]
             result = None if kind == 0x4e else invoke(obj, name, values)
             if kind == 0x46: stack.append(result)
+        elif kind == 0x4a:
+            count = args[1]; values = stack[-count:] if count else []
+            if count: del stack[-count:]
+            obj = stack.pop(); stack.append(invoke(obj, '__construct__', values))
         elif kind == 0x56:
             count = args[0]; values = stack[-count:] if count else []
             if count: del stack[-count:]

@@ -25,6 +25,20 @@ local LocalDT = LocalDT or {}
 	----#include "data\functions\FuBenNpcFunc\jizhanshaolin" once
 	----#include "data\functions\FuBenNpcFunc\padaTimeConfig" once
 --#include "data\functions\player.lua" once -- 角色处理
+--#include "data\config\monster\ZhuanShengAccessoryDropCfg.lua" once
+
+LocalDT.DropZhuanShengAccessory = function(monster, monId)
+	local cfg = ZhuanShengAccessoryDropCfg.tiers[Actor.getSceneId(monster)]
+	if not cfg or (monId ~= cfg.monsters[1] and monId ~= cfg.monsters[2] and monId ~= cfg.monsters[3]) then return end
+	if System.getDaysSinceCombineServer() <= 0 then return end
+	if System.getRandomNumber(100) >= cfg.rate then return end
+	local itemId = ZhuanShengAccessoryDropCfg.items[math.random(1, #ZhuanShengAccessoryDropCfg.items)]
+	local count = math.random(cfg.mincount, cfg.maxcount)
+	local item = Item.createItem(itemId, count, 0, 0, 1)
+	if item then
+		Item.createDropItem(monster, item, LogIds.ZhuanShengAccessoryDrop, "ZhuanShengAccessory", nil)
+	end
+end
 
 function CheckAndSetIsDropItemWhenMonsterKilled(monster, killer, monId)
 	local isDropOneTimes = OneTimesDropMonsters[monId]
@@ -50,6 +64,7 @@ end
 
 --当一个怪物被杀死的时候回调
 function HandlerMonsterByKilled(monster, killer, monId, fubenId, sceneId, fuBenPtr)
+	if killer ~= nil then LocalDT.DropZhuanShengAccessory(monster, monId) end
 	-- 真荒古之地专属掉落，宠物或战将击杀也会触发
 	if killer ~= nil and monId == 635 and Actor.getSceneId(monster) == 286 then
 		-- 每件灵力丹单独落地，保留原来的总数量与概率。

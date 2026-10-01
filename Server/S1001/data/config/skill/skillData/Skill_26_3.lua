@@ -82,7 +82,7 @@
 	trainConds=
 	{
 		{cond=1,value=38,consume=false},--表示等级要1级
-		{cond=21,value=1000,consume=false},--表示需要熟练度
+		{cond=21,value=10,consume=false},--表示需要熟练度
 	},
 	
 	spellConds=

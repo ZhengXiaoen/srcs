@@ -50,7 +50,7 @@
 	trainConds=
 	{
 		--{cond=1,value=40,consume=false},--��ʾ�ȼ�Ҫ40��
-		{cond=21,value=80000,consume=false},--表示需要熟练度
+		{cond=21,value=10,consume=false},--表示需要熟练度
 		{cond=6,value=1},
 	
 	},

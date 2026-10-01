@@ -39,7 +39,7 @@
         --升级条件
 	trainConds={
 			{cond=1,value=53,consume=false},--表示等级需求
-			{cond=21,value=500,consume=false},--技能熟练度value为熟练度的数值
+			{cond=21,value=10,consume=false},--技能熟练度value为熟练度的数值
 			},
 	--释放条件
 	spellConds={

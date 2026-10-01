@@ -108,7 +108,7 @@
 	trainConds=
 	{
 		--{cond=1,value=100,consume=false},--表示等级
-		{cond=21,value=50000,consume=false},
+		{cond=21,value=10,consume=false},
 		{cond=6,value=2},
 	},
 	

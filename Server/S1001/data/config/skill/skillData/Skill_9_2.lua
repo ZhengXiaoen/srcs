@@ -104,7 +104,7 @@
 	--锟斤拷锟斤拷锟斤拷锟斤拷
 	{
 		--{cond=1,value=25,consume=false},--锟斤拷示锟饺硷拷
-		{cond=21,value=1500,consume=false},--锟斤拷示锟斤拷要锟斤拷锟斤拷锟斤拷
+		{cond=21,value=10,consume=false},--锟斤拷示锟斤拷要锟斤拷锟斤拷锟斤拷
 		{cond=6,value=2},
 	},
 	

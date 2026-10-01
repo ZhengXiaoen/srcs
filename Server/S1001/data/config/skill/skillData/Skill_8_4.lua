@@ -208,7 +208,7 @@
 	trainConds=
 		{
 			--{cond=1,value=30,consume=false},--�����ȼ�30
-			{cond=21,value=5000,consume=false},--����������
+			{cond=21,value=10,consume=false},--����������
 			{cond=6,value=2},
 		},
         --�ͷ�����

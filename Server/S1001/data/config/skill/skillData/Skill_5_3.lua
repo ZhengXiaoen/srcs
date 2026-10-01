@@ -317,7 +317,7 @@
 	trainConds=
 	{
 		--{cond=1,value=52,consume=false},--��ʾ�ȼ�Ҫ1��
-		{cond=21,value=4500,consume=false},--��ʾ��Ҫ������
+		{cond=21,value=10,consume=false},--��ʾ��Ҫ������
 		{cond=6,value=1},
 		--{cond=3,value=1414,consume=true},--��ʾ��Ҫ�鱾
 	},

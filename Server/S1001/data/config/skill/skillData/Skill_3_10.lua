@@ -131,7 +131,7 @@
 	trainConds=
 	{
 		--{cond=6,value=1,consume=false},--սʿְҵ
-		{cond=21,value=200000,consume=false},
+		{cond=21,value=10,consume=false},
 		{cond=6,value=1},
 	},
 	

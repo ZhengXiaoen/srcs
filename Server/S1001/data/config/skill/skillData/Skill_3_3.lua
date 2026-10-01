@@ -122,7 +122,7 @@
 	trainConds=
 	{
 		--{cond=1,value=75,consume=false},--表示等级要3级
-		{cond=21,value=4500,consume=false},--表示需要熟练度
+		{cond=21,value=10,consume=false},--表示需要熟练度
 		{cond=6,value=1},
 	},
 	spellConds=

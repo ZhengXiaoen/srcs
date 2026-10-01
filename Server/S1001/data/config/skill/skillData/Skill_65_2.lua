@@ -104,7 +104,7 @@
 	--升级条件
 	{
 		{cond=1,value=60,consume=false},--表示等级要70级
-		{cond=21,value=2000,consume=false},--表示需要熟练度
+		{cond=21,value=10,consume=false},--表示需要熟练度
 	},
 	
 	spellConds=

@@ -104,7 +104,7 @@
 	trainConds=
 	{
 		--{cond=1,value=30,consume=false},--±íÊ¾µÈ¼¶
-		{cond=21,value=1500,consume=false},--±íÊ¾ÐèÒªÊìÁ·¶È
+		{cond=21,value=10,consume=false},--±íÊ¾ÐèÒªÊìÁ·¶È
 		{cond=6,value=3},
 	},
 	

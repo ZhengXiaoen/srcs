@@ -79,7 +79,7 @@
 	trainConds=
 	{
 		{cond=1,value=30,consume=false},--��ʾ�ȼ�Ҫ30��
-		{cond=21,value=650,consume=false},--��ʾ��Ҫ������
+		{cond=21,value=10,consume=false},--��ʾ��Ҫ������
 	},
 	
 	spellConds=

@@ -140,7 +140,7 @@
 	trainConds=
 	{
 		--{cond=1,value=45,consume=false},--��ʾ�ȼ�
-		{cond=21,value=200000,consume=false},--��ʾ��Ҫ������
+		{cond=21,value=10,consume=false},--��ʾ��Ҫ������
 		{cond=6,value=2},
 	},
 	

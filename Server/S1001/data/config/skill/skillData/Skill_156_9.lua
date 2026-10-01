@@ -105,7 +105,7 @@
 	{
 		--{cond=1,value=95,consume=false},--��ʾ�ȼ�
 		{cond=6,value=2},
-		{cond=21,value=200000,consume=false},--��ʾ��Ҫ������
+		{cond=21,value=10,consume=false},--��ʾ��Ҫ������
 	},
 	
 	spellConds=

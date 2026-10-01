@@ -39,7 +39,7 @@
         --��������
 	trainConds={
 			{cond=1,value=50,consume=false},--��ʾ�ȼ�����
-			{cond=21,value=0,consume=false},--����������valueΪ�����ȵ���ֵ
+			{cond=21,value=10,consume=false},--����������valueΪ�����ȵ���ֵ
 			--{cond=3,value=859,consume=false},--��ʾ��Ҫ�鱾
 			},
 	--�ͷ�����

@@ -78,7 +78,7 @@
 	trainConds=
 	{
 		--{cond=1,value=90,consume=false},--��ʾ�ȼ�
-		{cond=21,value=50000,consume=false},
+		{cond=21,value=10,consume=false},
 		{cond=6,value=3},
 	},
 	

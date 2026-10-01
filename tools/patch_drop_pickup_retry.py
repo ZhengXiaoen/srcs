@@ -12,8 +12,13 @@ on the next selection, rather than ignored until settings are manually saved.
 Keep the existing isCheck reads for server-originated exclusions and preserve
 pickup protection, backpack capacity and the player's enabled categories.
 
-Patch five request assignments in four methods and two category-cache writes,
-preserving all constants, other method bodies, SWF tags and pickup categories.
+For item-ID categories with a single option, always use range zero, matching the
+settings page. Reject saved indexes equal to the range count before accessing
+idRange[index], so a stale category cannot throw and abort later material checks.
+
+Patch five request assignments, two category-cache writes and two range-selection
+instructions, preserving constant pools, other method bodies, SWF tags and
+pickup categories.
 Relocate existing branches, switches and exception offsets rather than
 recompiling the Flash application.
 """
@@ -174,6 +179,30 @@ def patch_abc(source):
         # Same-length Boolean substitution retains every branch and method limit.
         position = start + positions[0]
         edits.append((position, position + 1, b"\x27"))
+    names, lookup, bodies = inspect_abc(source, "SystemConfigDataMgr")
+    expected_names = {10213: "options", 3237: "length", 10212: "idRange"}
+    if lookup is None or any(names[index] != name for index, name in expected_names.items()):
+        raise ValueError("Unexpected item-ID pickup range properties")
+    start, length, _ = bodies[lookup["getPickUpStatusByItemId"][0]]
+    code = source[start:start + length]
+    # options.length > 1: single-option categories have no selectable index.
+    options = b"\x66" + encode_u30(10213) + b"\x66" + encode_u30(3237) + b"\x24\x00\x0e"
+    # Valid range condition: length > index, rather than length >= index.
+    ranges = b"\x66" + encode_u30(10212) + b"\x66" + encode_u30(3237) + b"\x62\x09\x0c"
+    for old, offset, value in ((options, len(options) - 2, b"\x01"),
+                               (ranges, len(ranges) - 1, b"\x0d")):
+        new = old[:offset] + value + old[offset + 1:]
+        positions = [op.start for op in instructions(code)
+                     if code[op.start:op.start + len(old)] == old]
+        patched = [op.start for op in instructions(code)
+                   if code[op.start:op.start + len(new)] == new]
+        if not positions and len(patched) == 1:
+            continue
+        if len(positions) != 1 or patched:
+            raise ValueError("Unexpected item-ID pickup range selection")
+        position = start + positions[0] + offset
+        # Same-length operand/opcode changes retain all branch destinations.
+        edits.append((position, position + 1, value))
     for class_name, methods in TARGETS.items():
         names, traits, bodies = inspect_abc(source, class_name)
         if traits is None:
@@ -216,7 +245,7 @@ def patch_abc(source):
     for a, b, value in sorted(edits, reverse=True):
         result[a:b] = value
     # Reparse the entire ABC, and verify it contains only the intended edits.
-    for class_name in (*TARGETS, "LogicManager"):
+    for class_name in (*TARGETS, "LogicManager", "SystemConfigDataMgr"):
         inspect_abc(result, class_name)
     restored = bytearray(result)
     shift = 0
@@ -290,7 +319,7 @@ def main():
             raise ValueError("Pickup retry patch is missing")
     elif source != result:
         CLIENT.write_bytes(result)
-    print("Verified pickup retries and uncached category checks; unrelated client bytes preserved")
+    print("Verified pickup retries, uncached checks and safe range selection; unrelated client bytes preserved")
 
 
 if __name__ == "__main__":

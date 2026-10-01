@@ -460,7 +460,7 @@ class ActivityRemindersTests(unittest.TestCase):
     def test_all_modified_bytecode_paths_have_balanced_stack_and_local_limits(self):
         # Explore the control-flow graph, including paths not taken by claim
         # scenarios; Flash verifies these paths before executing a method.
-        for module, methods in ((False, (2648, 2720, 4078, 4080, 6333, 6334, 6335, 6353, 6357, 6377, 6379, 6380, 6382, 6403, 6408, 6437, 6497, 28528)),
+        for module, methods in ((False, (2648, 2720, 4078, 4080, 6333, 6334, 6335, 6353, 6357, 6377, 6379, 6380, 6382, 6393, 6403, 6405, 6408, 6437, 6497, 6692, 8763, 28528)),
                                 (True, (7, 8, 9, 10, 11, 41))):
             names, _, bodies = self.symbols[module]
             for method in methods:
@@ -480,8 +480,9 @@ class ActivityRemindersTests(unittest.TestCase):
                     elif k in (0x46, 0x4f, 0x4e, 0x4a):
                         consumed = args[1] + 1; added = int(k in (0x46, 0x4a))
                     elif k in (0x49, 0x56): consumed = args[0] + int(k == 0x49); added = int(k == 0x56)
+                    elif k == 0x55: consumed, added = args[0] * 2, 1
                     elif k == 0x2a: consumed, added = 1, 2
-                    elif k in (0x73, 0x76, 0x80, 0x82, 0x85, 0x93, 0x96, 0xb2): consumed, added = 1, 1
+                    elif k in (0x73, 0x74, 0x76, 0x80, 0x82, 0x85, 0x93, 0x96, 0xb2): consumed, added = 1, 1
                     elif k == 0x87: consumed, added = 2, 1
                     elif k in (0x1e, 0x23): consumed, added = 2, 1
                     elif k == 0x32: added = 1
@@ -500,7 +501,7 @@ class ActivityRemindersTests(unittest.TestCase):
                     pending.extend((target, new_depth) for target in targets)
 
     def test_all_activity_back_edges_have_flash_verifier_labels(self):
-        for module, methods in ((False, (2648, 4080, 6334, 6335, 6403, 6497)), (True, (7, 8, 10))):
+        for module, methods in ((False, (2648, 4080, 6334, 6335, 6403, 6497, 8763)), (True, (7, 8, 10))):
             for method in methods:
                 a, size, _ = self.symbols[module][2][method]
                 code = self.abc[module][a:a + size]
@@ -538,7 +539,8 @@ class ActivityRemindersTests(unittest.TestCase):
             # Verifies ABC metadata, constant pools and every non-code SWF tag,
             # as well as upgrading the deployed version without duplicate edits.
             from patch_main_activity_reminders import patch_swf as main_entries
-            self.assertEqual(repaired if module else main_entries(repaired), path.read_bytes())
+            from patch_mystery_shop_reminder import patch_swf as shop_reminder
+            self.assertEqual(repaired if module else shop_reminder(main_entries(repaired)), path.read_bytes())
 
     def test_loop_label_relocation_preserves_forward_backward_and_self_branches(self):
         c = Code(); c.add(b'\xd0\x30')
@@ -563,7 +565,8 @@ class ActivityRemindersTests(unittest.TestCase):
 
     def test_only_expected_methods_and_no_other_packaged_resources_change(self):
         from patch_main_activity_reminders import METHODS, patch_swf as main_entries
-        expected = {False: {2648, 2720, 4078, 4080, 6333, 6335, 6353, 6377, 6380, 6382, 6437, 6497, 28528} | METHODS,
+        from patch_mystery_shop_reminder import METHODS as SHOP_METHODS, patch_swf as shop_reminder
+        expected = {False: {2648, 2720, 4078, 4080, 6333, 6335, 6353, 6377, 6380, 6382, 6437, 6497, 28528} | METHODS | SHOP_METHODS,
                     True: {7, 8, 9, 10, 11, 41}}
         for module in (False, True):
             _, _, old = inspect_abc(self.before[module], 'HongLiActiveWin' if module else 'NavTopRightArea')
@@ -575,7 +578,7 @@ class ActivityRemindersTests(unittest.TestCase):
             path = MODULE if module else CLIENT
             old_swf = baseline_swf(path)
             upgraded = patch_swf(old_swf, module)
-            self.assertEqual(upgraded if module else main_entries(upgraded), path.read_bytes())
+            self.assertEqual(upgraded if module else shop_reminder(main_entries(upgraded)), path.read_bytes())
             self.assertEqual(patch_swf(path.read_bytes(), module), path.read_bytes())
 
     def test_client_server_and_language_pack_rewards_match(self):

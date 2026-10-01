@@ -1660,6 +1660,7 @@ GetQingDianActivityInfo = function(sysarg,index)
 		DataPack.writeByte(netPack,var.ShenMiStorebuyFlag[2])
 		DataPack.writeByte(netPack,var.ShenMiStorebuyFlag[3])
 		DataPack.writeByte(netPack,var.ShenMiStorebuyFlag[4])
+		DataPack.writeByte(netPack,0) -- 当前商品查询/购买回包，不重新提示
 		DataPack.flush(netPack)
 		
 		--print(var.randTable[1])
@@ -2346,6 +2347,7 @@ RandTheShenMiStore = function(sysarg)
 	DataPack.writeByte(netPack,0)
 	DataPack.writeByte(netPack,0)
 	DataPack.writeByte(netPack,0)
+	DataPack.writeByte(netPack,1) -- 商品实际刷新，客户端重新提示未查看商品
 	
 	--调试，看看随机到什么商品
 	--print(var.randTable[1])

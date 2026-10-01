@@ -218,15 +218,16 @@ class MainActivityRemindersTests(unittest.TestCase):
         self.run_method(2720, self.hong); self.assertEqual(self.hong['jingjiLogin'], -1)
 
     def test_patch_changes_only_expected_methods_and_resource_bytes(self):
+        from patch_mystery_shop_reminder import METHODS as SHOP_METHODS, patch_swf as shop_reminder
         baseline = subprocess.check_output(['git', 'show', BASELINE + ':web/GameFrame.swf'], cwd=ROOT)
-        self.assertEqual(patch_swf(baseline), CLIENT.read_bytes())
+        self.assertEqual(shop_reminder(patch_swf(baseline)), CLIENT.read_bytes())
         self.assertEqual(patch_swf(CLIENT.read_bytes()), CLIENT.read_bytes())
         raw, (_, _, a, b) = abc_section(baseline); before, _ = normalize(raw[a:b])
         _, _, old = inspect_abc(before, 'NavTopRightArea'); changed = set()
         for method, (a, size, limits) in old.items():
             b, length, new_limits = self.symbols[False][2][method]
             if before[a:a + size] != self.abc[False][b:b + length] or limits != new_limits: changed.add(method)
-        self.assertEqual(changed, METHODS)
+        self.assertEqual(changed, METHODS | SHOP_METHODS)
 
 
 if __name__ == '__main__': unittest.main(verbosity=2)

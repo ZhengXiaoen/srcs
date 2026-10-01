@@ -204,7 +204,11 @@ class CelebrationSpinTests(unittest.TestCase):
         info, info_limits = self.body("YearActiveZhuanPanPage", "infoBack")
         qd_red, qd_limits = self.body("QingDianActiveWin", "updateTurn")
         year_red, year_limits = self.body("YearAcitveDataMgr", "canGetAward")
-        red_start = next(o.start for o in instructions(year_red) if o.opcode == 0x60 and o.operands == (1740,))
+        # Locate the spin table, since earlier cases may also read GameData.
+        red_read = next(o.start for o in instructions(year_red)
+                        if o.opcode == 0x66 and o.operands == (23982,))
+        red_start = max(o.start for o in instructions(year_red)
+                        if o.start < red_read and o.opcode == 0x60 and o.operands == (1740,))
         for key, baseline, classes in (("XiaoFeiZhuanPan", 7, set()),
                                        ("XiaoFeiZhuanPanNew", 3, {"QDZhuanPanPage"}),
                                        ("XiaoFeiZhuanPan", 1, {"NewYearZhuanPanPage"})):

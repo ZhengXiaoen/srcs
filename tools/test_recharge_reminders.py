@@ -211,10 +211,23 @@ class RechargeRemindersTests(unittest.TestCase):
     def test_only_three_related_method_bodies_changed(self):
         _, _, before = inspect_abc(self.baseline, "JingJiWin")
         _, _, after = self.classes["JingJiWin"]
+        # Later activity fixes edit other methods independently; these three
+        # recharge methods must still match their own patch applied to baseline.
+        expected_swf = patch_swf(subprocess.check_output(
+            ["git", "show", BASELINE_REF + ":web/GameFrame.swf"], cwd=ROOT))
+        data, (_, _, start, end) = abc_section(expected_swf)
+        expected_abc = data[start:end]
+        _, _, expected_bodies = inspect_abc(expected_abc, "JingJiWin")
         changed = set()
         for method, (start, size, limits) in before.items():
+            if method not in {5581, 6438, 6624}:
+                continue
             new_start, new_size, new_limits = after[method]
             self.assertEqual(limits, new_limits)
+            expected_start, expected_size, expected_limits = expected_bodies[method]
+            self.assertEqual(new_limits, expected_limits)
+            self.assertEqual(self.abc[new_start:new_start + new_size],
+                             expected_abc[expected_start:expected_start + expected_size])
             if self.baseline[start:start + size] != self.abc[new_start:new_start + new_size]:
                 changed.add(method)
         self.assertEqual(changed, {5581, 6438, 6624})

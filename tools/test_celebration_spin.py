@@ -247,6 +247,58 @@ class CelebrationSpinTests(unittest.TestCase):
         source = CLIENT.read_bytes()
         self.assertEqual(source, patch_swf(source))
 
+    def test_previously_claimed_rewards_show_next_unclaimed_threshold(self):
+        info, limits = self.body("YearActiveZhuanPanPage", "infoBack")
+        for key, baseline, classes in (("XiaoFeiZhuanPan", 7, set()),
+                                       ("XiaoFeiZhuanPanNew", 3, {"QDZhuanPanPage"})):
+            cfg = self.tiers[key]
+            for days in (1, 3, 7):
+                thresholds = [math.ceil(t["needPay"] * days / baseline) for t in cfg]
+                for claimed in range(1, 13):
+                    old_consumption = math.ceil(cfg[claimed - 1]["needPay"] * days / baseline / 2)
+                    for consume in (old_consumption, thresholds[-1]):
+                        mgr = {"totalDay": days}
+                        globals_ = {"GlobalData": {"yearAcitveDataMgr": mgr},
+                                    "QingDianActiveWin": {"totalOpenDay": days},
+                                    "FilterUtils": {"DefaultGrayFilters": "gray"}}
+                        page = {"classes": classes, "consume": consume, "claimed": claimed,
+                                "_cfg": cfg, "_cells": [{} for _ in range(12)],
+                                "_randomIndex": list(range(13)), "_label_2": {}, "_label_3": {}}
+                        _, maximum = execute(info, self.names, {0: page}, globals_)
+                        available = max(claimed, sum(consume >= t for t in thresholds))
+                        self.assertEqual(available - claimed, page["_remainTime"])
+                        self.assertGreaterEqual(page["_remainTime"], 0)
+                        if available < 12:
+                            self.assertIn(str(thresholds[available] - consume), page["_label_3"]["caption"])
+                        self.assertLessEqual(maximum, limits[0])
+
+    def test_same_cycle_preserves_saved_draw_and_consumption_records(self):
+        lua = LuaRuntime(unpack_returned_tuples=True)
+        lua.execute('''
+            state = {OneYear_Minitime=100, QDHD_MiNitime=200,
+                     OneYearAct_Data={XFZP=10, XFZPCosume=7500000},
+                     QDHD_Data={XFZP=12, XFZPCosume=4000000}}
+            svar = {StartOneYear_Minitime=100, StartQDHD_MiNitime=200}
+            Actor = {getStaticVar=function() return state end}
+            System = {getStaticVar=function() return svar end, isCrossServer=function() return false end}
+        ''')
+        text = (ROOT / "Server/S1001/data/functions/player.lua").read_text("utf-8-sig")
+        for name in ("ClearOneYear_Data", "ClearQingDian_Data"):
+            source = text[text.index("function " + name):]
+            source = source[:re.search(r"^end\s*$", source, re.M).end()]
+            lua.execute(source)
+        for _ in range(3):
+            lua.globals().ClearOneYear_Data(1)
+            lua.globals().ClearQingDian_Data(1)
+        self.assertEqual(10, lua.globals().state.OneYearAct_Data.XFZP)
+        self.assertEqual(7500000, lua.globals().state.OneYearAct_Data.XFZPCosume)
+        self.assertEqual(12, lua.globals().state.QDHD_Data.XFZP)
+        self.assertEqual(4000000, lua.globals().state.QDHD_Data.XFZPCosume)
+        lua.globals().svar.StartQDHD_MiNitime = 201
+        lua.globals().ClearQingDian_Data(1)
+        self.assertEqual(0, len(lua.globals().state.QDHD_Data))
+        self.assertEqual(10, lua.globals().state.OneYearAct_Data.XFZP)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)

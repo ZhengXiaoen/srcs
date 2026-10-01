@@ -74,14 +74,15 @@ def patch_abc(source):
                      if code[op.start:op.start + len(old)] == old]
         patched = [op.start for op in instructions(code)
                    if code[op.start:op.start + len(new)] == new]
+        edits = []
         if patched:
             if len(patched) != count or len(positions) != count:
                 raise ValueError("Partially patched celebration gate")
-            continue
-        if len(positions) != count:
-            raise ValueError(f"Unexpected threshold reads in {cls}.{method_name}")
-        edits = [(p, p + len(old), new) for p in positions]
-        if kind == "year":
+        else:
+            if len(positions) != count:
+                raise ValueError(f"Unexpected threshold reads in {cls}.{method_name}")
+            edits = [(p, p + len(old), new) for p in positions]
+        if kind == "year" and not patched:
             # The server and spin page use table zero throughout the activity.
             # The old red dot selected curDay-1 and disappeared after day one.
             old_index = (q(0x60, 1507) + q(0x66, 31288) + q(0x66, 3394) + b"\x93")
@@ -90,6 +91,33 @@ def patch_abc(source):
             pos = code.index(old_index)
             edits.append((pos, pos + len(old_index), b"\x24\x00"))
         updated, moved = relocate(code, edits)
+        if kind == "shared":
+            # Retain already claimed tiers when upgrading an active activity.
+            # Start counting at getIndex and skip those tiers before evaluating
+            # new thresholds, so the deficit refers to the next unclaimed tier.
+            old_init = b"\xd0\x24\x00" + q(0x68, 18024)
+            new_init = b"\xd0\xd0" + q(0x46, 18040, 0) + q(0x68, 18024)
+            if old_init in updated:
+                if updated.count(old_init) != 1:
+                    raise ValueError("Unexpected spin count initializer")
+                ops = instructions(updated)
+                loop = next(op.start for op in ops if op.opcode == 0xD6 and
+                            updated[op.end:op.end + 2] == b"\xd0\x46")
+                start_guard = next(op.end for op in ops if op.start == loop)
+                increment = next(op.start for op in ops if op.opcode == 0xC2 and op.operands == (4,))
+                guard = b"\x62\x04\xd0" + q(0x46, 18040, 0) + b"\x15"
+                guard += (increment - start_guard).to_bytes(3, "little")
+                init_pos = updated.index(old_init)
+                updated, compatibility_moved = relocate(updated, [
+                    (init_pos, init_pos + len(old_init), new_init),
+                    (start_guard, start_guard, guard),
+                ])
+                old_moved = moved
+                moved = lambda offset, a=old_moved, b=compatibility_moved: b(a(offset))
+            elif updated.count(new_init) != 1:
+                raise ValueError("Missing claimed-tier compatibility initializer")
+        if updated == code:
+            continue
         # Update method limits/length and relocate all existing exceptions.
         reader = ABCReader(source)
         reader.pos = start + size

@@ -21,6 +21,38 @@ MODULE = ROOT / 'web/v2/modules/hongli/HongLi.swf'
 BASELINE = 'f919d2a'
 
 
+def mark_loop_targets(code):
+    """Place AVM2 labels at back edges and relocate branches/exceptions.
+
+    Flash rejects a backward branch unless its target has an OP_label or was
+    already visited as a forward target (Verifier::checkTarget, error #1021).
+    Label every back edge so generated loops do not depend on verifier order.
+    """
+    ops = instructions(code)
+    targets = sorted({target for op in ops for _, target, _ in op.branches
+                      if target <= op.start and code[target] != 0x09})
+    if not targets: return code, lambda p: p
+
+    def moved(p):
+        # Branches and exception boundaries land before the inserted label.
+        return p + sum(target < p for target in targets)
+
+    def instruction_pos(p):
+        return p + sum(target <= p for target in targets)
+
+    result = bytearray()
+    for op in ops:
+        if op.start in targets: result.append(0x09)
+        result.extend(code[op.start:op.end])
+    for op in ops:
+        for field, target, base in op.branches:
+            new_base = instruction_pos(op.start) + base - op.start
+            pos = instruction_pos(field)
+            result[pos:pos + 3] = encode_s24(moved(target) - new_base)
+    instructions(result)
+    return bytes(result), moved
+
+
 def relocate(code, edits):
     """Move existing branches, including a branch whose end abuts an insertion."""
     ops = instructions(code); edits = sorted(edits)
@@ -71,7 +103,7 @@ class Code:
     def finish(self):
         for pos, name in self.branches:
             self.code[pos:pos + 3] = encode_s24(self.labels[name] - pos - 3)
-        return bytes(self.code)
+        return mark_loop_targets(bytes(self.code))[0]
 
 
 def get(n):
@@ -377,7 +409,8 @@ def patch_abc(source, module=False):
         # Generated total-recharge body also serves as the idempotence marker.
         a, b, _ = bodies[10]
         if normalized[a:a + b].startswith(b'\xd0\x30' + prop(cfg, 259)):
-            return source
+            # Upgrade the previously shipped body without reapplying edits.
+            return patch_loop_labels(source, (10,))
         refresh = b''.join(call(get(0), m, b'\x20', void=True) for m in (50, 49, 47, 46))
         for mid, listener in ((7, 241), (8, 243)):
             def listeners(code, listener=listener):
@@ -408,7 +441,8 @@ def patch_abc(source, module=False):
         # A recognizable generated method makes the patch idempotent.
         generated = dj_entry()
         a, b, _ = bodies[6382]
-        if normalized[a:a + b] == generated: return source
+        if normalized[a:a + b] == generated:
+            return patch_loop_labels(source, (2648, 4080, 6335))
         edit(6335, hong_entry, stack=13, locals_=10)
         edit(6382, lambda _: generated, stack=3, locals_=4)
         edit(2648, dj_awards, stack=4, locals_=18)
@@ -455,6 +489,32 @@ def patch_abc(source, module=False):
     for a, b, value in reversed(undo): restored[a:b] = value
     if restored != normalized: raise ValueError('Unrelated ABC resource changed')
     result = bytearray(result)
+    for pos in positions: result[pos] = 0
+    return bytes(result)
+
+
+def patch_loop_labels(source, methods):
+    """Repair installed activity bodies without changing any other ABC bytes."""
+    abc, positions = normalize(source)
+    _, _, bodies = inspect_abc(abc, 'NavTopRightArea')
+    edits = []
+    for method in methods:
+        start, size, limits = bodies[method]
+        code, moved = mark_loop_targets(abc[start:start + size])
+        if code == abc[start:start + size]: continue
+        r = ABCReader(abc); r.pos = start + size; exceptions = []
+        for _ in range(r.u30()):
+            a, b, target, kind, var = (r.u30() for _ in range(5))
+            exceptions.append((moved(a), moved(b), moved(target), kind, var))
+        header = b''.join(encode_u30(v) for v in (method, *limits, size))
+        if abc[start - len(header):start] != header:
+            raise ValueError('Unexpected method header')
+        value = b''.join(encode_u30(v) for v in (method, *limits, len(code))) + code
+        value += encode_u30(len(exceptions)) + b''.join(encode_u30(v) for row in exceptions for v in row)
+        edits.append((start - len(header), r.pos, value))
+    if not edits: return source
+    result = bytearray(abc)
+    for start, end, value in sorted(edits, reverse=True): result[start:end] = value
     for pos in positions: result[pos] = 0
     return bytes(result)
 

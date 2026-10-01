@@ -11,7 +11,8 @@ import unittest
 import zlib
 
 from patch_activity_entries import strings_of
-from patch_activity_reminders import BASELINE, CLIENT, MODULE, ROOT, normalize, patch_swf
+from patch_activity_reminders import (BASELINE, CLIENT, MODULE, ROOT, Code,
+                                      mark_loop_targets, normalize, patch_swf)
 from patch_drop_pickup_retry import abc_section, instructions
 from patch_god_equip_state import inspect_abc
 from patch_guild_quest_config import read_cbp, read_pack
@@ -496,6 +497,62 @@ class ActivityRemindersTests(unittest.TestCase):
                     targets = [t for _, t, _ in op.branches]
                     if k not in (0x10, 0x1b): targets.append(op.end)
                     pending.extend((target, new_depth) for target in targets)
+
+    def test_all_activity_back_edges_have_flash_verifier_labels(self):
+        for module, methods in ((False, (2648, 4080, 6335, 6497)), (True, (7, 8, 10))):
+            for method in methods:
+                a, size, _ = self.symbols[module][2][method]
+                code = self.abc[module][a:a + size]
+                for op in instructions(code):
+                    for _, target, _ in op.branches:
+                        if target <= op.start:
+                            self.assertEqual(code[target], 0x09, (module, method, op.start, target))
+
+    def test_previous_release_reproduces_invalid_loops_and_only_four_bodies_are_repaired(self):
+        for module, path, expected in ((False, CLIENT, {2648, 4080, 6335}), (True, MODULE, {10})):
+            previous = subprocess.check_output(['git', 'show', '5fd7a08:' + path.relative_to(ROOT).as_posix()], cwd=ROOT)
+            raw, (_, _, a, b) = abc_section(previous); old, _ = normalize(raw[a:b])
+            _, _, bodies = inspect_abc(old, 'HongLiActiveWin' if module else 'NavTopRightArea')
+            invalid = set(); changed = set()
+            for method, (a, size, limits) in bodies.items():
+                b, length, new_limits = self.symbols[module][2][method]
+                before, after = old[a:a + size], self.abc[module][b:b + length]
+                if before == after and limits == new_limits: continue
+                changed.add(method)
+                self.assertEqual(limits, new_limits)
+                self.assertEqual(mark_loop_targets(before)[0], after)
+                known_targets = set()
+                for op in instructions(before):
+                    for _, target, _ in op.branches:
+                        if target <= op.start and target not in known_targets and before[target] != 0x09:
+                            invalid.add(method)
+                        known_targets.add(target)
+            self.assertEqual(invalid, expected)
+            self.assertEqual(changed, expected)
+            # Verifies ABC metadata, constant pools and every non-code SWF tag,
+            # as well as upgrading the deployed version without duplicate edits.
+            self.assertEqual(patch_swf(previous, module), path.read_bytes())
+
+    def test_loop_label_relocation_preserves_forward_backward_and_self_branches(self):
+        c = Code(); c.add(b'\xd0\x30')
+        c.branch(0x10, 'forward')
+        c.label('loop'); c.add(b'\x02')
+        c.label('forward'); c.branch(0x10, 'loop')
+        c.label('self'); c.branch(0x10, 'self')
+        c.add(b'\x47')
+        for pos, name in c.branches:
+            from patch_drop_pickup_retry import encode_s24
+            c.code[pos:pos + 3] = encode_s24(c.labels[name] - pos - 3)
+        before = bytes(c.code); after, moved = mark_loop_targets(before)
+        new_ops = {o.start: o for o in instructions(after)}
+        for op in instructions(before):
+            pos = moved(op.start) + int(after[moved(op.start)] == 0x09)
+            self.assertEqual(after[pos:pos + 1], before[op.start:op.start + 1])
+            self.assertEqual(tuple(t for _, t, _ in new_ops[pos].branches),
+                             tuple(moved(t) for _, t, _ in op.branches))
+        self.assertEqual(moved(len(before)), len(after))
+        self.assertEqual(mark_loop_targets(after)[0], after)
+        self.assertEqual(c.finish(), after)
 
     def test_only_expected_methods_and_no_other_packaged_resources_change(self):
         expected = {False: {2648, 2720, 4078, 4080, 6333, 6335, 6353, 6377, 6380, 6382, 6437, 6497, 28528},

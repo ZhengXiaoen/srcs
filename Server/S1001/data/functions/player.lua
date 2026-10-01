@@ -6843,7 +6843,7 @@ function qdhdkq(sysarg)
     -- 保存系统静态变量
     System.saveStaticVar()
 
-	OnYbConsumeRanking_ActivityStart(svar.StartQDHDtime)
+	OnYbConsumeRanking_ActivityStart(1, svar.isDringQingDianActivity, svar.QingDian_openDay)
 
     -- 启动庆典活动每日充值排行榜
     daily_pay_ranking_start(svar.isDringQingDianActivity, 3, 0)

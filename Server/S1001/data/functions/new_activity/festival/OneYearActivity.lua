@@ -1014,7 +1014,7 @@ StartOneYearActivity = function(openday , nowOpenday) --开几天，当前是第
 	-----------------------------------
 	
 	--开启排行
-	OnYbConsumeRanking_ActivityStart(nil)
+	OnYbConsumeRanking_ActivityStart(0, svar.isDringOneYearAct, svar.StartOneYear_OpenDay)
 	System.trace("one year activity start")
 	
 	local playerList = LuaHelp.getAllActorList()
@@ -1047,7 +1047,7 @@ EndOneYearActivity = function()
 	System.setActivtyExpRate(0, 0)
 	
 	--结束排行
-	OnYbConsumeRanking_ActivityEnd()
+	OnYbConsumeRanking_ActivityEnd(0)
 	System.trace("one year activity end")
 	
 	local playerList = LuaHelp.getAllActorList()

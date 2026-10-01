@@ -90,7 +90,7 @@ PublicTestCfg =
 	YbConsumeRanking = {
 		minConsume = 25000,
 		awardList = {
-			-- 周年庆典、万服庆典共用消费榜；奖品与散人红利充值榜一致。
+			-- 周年庆典、万服庆典共用消费榜并分别发奖；奖品与散人红利充值榜一致。
 			{
 				minConsume = 2000000,
 				mailAward = "7039,5,1/6820,1,1/6364,1,1/5384,5,1",

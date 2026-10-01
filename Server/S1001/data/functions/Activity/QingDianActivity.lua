@@ -1921,7 +1921,7 @@ StartQingDianActivity = function(openday , nowOpenday,nType) --开几天，当�
 	System.trace("qingdian startQDHDtime = "..startQDHDtime)
 	
 	ClearHongYunDangTouSystemData()
-	OnYbConsumeRanking_ActivityStart(startQDHDtime)
+	OnYbConsumeRanking_ActivityStart(1, svar.isDringQingDianActivity, svar.QingDian_openDay)
 	
 	local playerList = LuaHelp.getAllActorList()
 	if not playerList then return end
@@ -1950,7 +1950,7 @@ EndQingDianActivity = function()
 	svar.isDringQingDianActivity = nil
 	System.saveStaticVar()
 	
-	OnYbConsumeRanking_ActivityEnd()
+	OnYbConsumeRanking_ActivityEnd(1)
 	
 	local playerList = LuaHelp.getAllActorList()
 	if not playerList then return end

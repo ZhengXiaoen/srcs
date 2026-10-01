@@ -9,6 +9,39 @@ YbConsumeRanking_minYb = 0
 YbConsumeRanking_isModified = false
 YbConsumeRanking_inTime = false
 
+LocalDT.YbConsumeRankingActivityNames = {[0] = "周年庆典", [1] = "万服庆典", [2] = "春节活动"}
+
+LocalDT.YbConsumeRankingDate = function(time)
+	local year, month, day = System.GetSystemTimeInMiniTime(time)
+	return System.encodeNumTime(year, month, day, 0, 0, 0)
+end
+
+-- 引擎静态变量中的子表是 userdata，不能使用 next/pairs 检查。
+LocalDT.HasYbConsumeRankingActivity = function(activities)
+	return (activities[0] or 0) > 0 or (activities[1] or 0) > 0 or (activities[2] or 0) > 0
+end
+
+-- 与充值排行一样保存各活动剩余结算天数，活动关闭后仍保留最后一天的奖励。
+LocalDT.InitYbConsumeRankingActivities = function()
+	local svar = System.getStaticVar()
+	if svar.YbConsumeRankingActivities == nil then
+		svar.YbConsumeRankingActivities = {}
+		if svar.StartOneYear_OpenDay ~= nil and svar.isDringOneYearAct ~= nil and
+			svar.isDringOneYearAct >= 1 and svar.isDringOneYearAct <= svar.StartOneYear_OpenDay then
+			svar.YbConsumeRankingActivities[0] = svar.StartOneYear_OpenDay - svar.isDringOneYearAct + 1
+		end
+		if svar.QingDian_openDay ~= nil and svar.isDringQingDianActivity ~= nil and
+			svar.isDringQingDianActivity >= 1 and svar.isDringQingDianActivity <= svar.QingDian_openDay then
+			svar.YbConsumeRankingActivities[1] = svar.QingDian_openDay - svar.isDringQingDianActivity + 1
+		end
+		if is_spring_festival_time() then svar.YbConsumeRankingActivities[2] = 1 end
+	end
+	if svar.YbConsumeRankingLastSettleDate == nil then
+		svar.YbConsumeRankingLastSettleDate = LocalDT.YbConsumeRankingDate(System.getCurrMiniTime())
+	end
+	return svar.YbConsumeRankingActivities
+end
+
 function IsYbConsumeRankingTime()	
 	--[[
 	if PublicTestCfg.gameIndex ~= 0 and System.GetGameIndex() ~= PublicTestCfg.gameIndex then
@@ -53,14 +86,16 @@ function YbConsumeRanking_load()
 		return
 	end 
 	
-	if not IsYbConsumeRankingTime() then
+	if not LocalDT.HasYbConsumeRankingActivity(LocalDT.InitYbConsumeRankingActivities()) and not IsYbConsumeRankingTime() then
 		return
 	end
 	
 	YbConsumeRanking_inTime = true
 	
 	-- 定时 3 分钟保存
-	System.addTimer("YbConsumeRanking_OnTimer", 3 * 60 * 1000, -1)
+	if not System.hasTimer("YbConsumeRanking_OnTimer") then
+		System.addTimer("YbConsumeRanking_OnTimer", 3 * 60 * 1000, -1)
+	end
 		
 	print("----------- 开始装载[元宝消耗]排行榜 -----------")		
 	
@@ -201,7 +236,8 @@ function YbConsumeRanking_is_old_data(line)
 		return false
 	end
 
-	return true
+	-- 跨天重启时先结算上次保存的榜单，再清空；已经结算过的旧文件仍丢弃。
+	return LocalDT.YbConsumeRankingDate(time) ~= System.getStaticVar().YbConsumeRankingLastSettleDate
 end
 
 -- 返回值：0:成功并继续解析下一行；1:失败并继续解析下一行；2:旧排行榜数据
@@ -491,25 +527,23 @@ function YbConsumeRanking_SendRankingData(sysarg, rankBegin, count)
 end
 
 -- 服务器跨天
-function OnYbConsumeRankingNewDayArrive()	
-	if not YbConsumeRanking_inTime then
-		--[[
-		if IsYbConsumeRankingTime() then -- 活动时间到来了
-			YbConsumeRanking = {} -- 清空旧数据
-			YbConsumeRanking_minYb = 0
-			YbConsumeRanking_isModified = true
-			YbConsumeRanking_inTime = true
-	
-			System.addTimer("YbConsumeRanking_OnTimer", 3 * 60 * 1000, -1)
+function OnYbConsumeRankingNewDayArrive()
+	local today = LocalDT.YbConsumeRankingDate(System.getCurrMiniTime())
+	local activities = LocalDT.InitYbConsumeRankingActivities()
+	local svar = System.getStaticVar()
+	if svar.YbConsumeRankingLastSettleDate >= today then return end
+	local settledActivities = {}
+	for actType = 0, 2 do
+		local leftDays = activities[actType] or 0
+		if leftDays > 0 then
+			settledActivities[actType] = leftDays
+			activities[actType] = leftDays > 1 and leftDays - 1 or nil
 		end
-		--]]
-		return
 	end
-				
-	-- 活动时间结束
-	print("发送元宝消耗排行榜离线邮件")
-	
-	YbConsumeRanking_sendAwardMails()
+	if is_spring_festival_time() then activities[2] = 1 end
+	svar.YbConsumeRankingLastSettleDate = today
+	System.saveStaticVar()
+	YbConsumeRanking_sendAwardMails(settledActivities)
 	
 	YbConsumeRanking = {} -- 清空，避免下次装载到旧数据
 	YbConsumeRanking_isModified = true
@@ -518,7 +552,7 @@ function OnYbConsumeRankingNewDayArrive()
 	YbConsumeRanking_minYb = 0
 	YbConsumeRanking_isModified = false
 	
-	YbConsumeRanking_inTime = IsYbConsumeRankingTime()	
+	YbConsumeRanking_inTime = LocalDT.HasYbConsumeRankingActivity(activities)
 		
 	
 	if YbConsumeRanking_inTime then
@@ -644,59 +678,44 @@ function OnRankingConsumeYbEvent(sysarg, nYuanBao)
 --	--------------------------这个是计算庆典活动消费转盘，能够得到多少次转盘机会-------------------------------
 end
 
-function OnYbConsumeRanking_ActivityStart(startQDHDtime)
-
-	-- 清空数据前，如果是在活动中则先发奖励
-	if YbConsumeRanking_inTime ~= nil and YbConsumeRanking_inTime == true then
-		print("开始活动前已经有一个活动在开始了。发送元宝消耗排行榜离线邮件")	
-		YbConsumeRanking_sendAwardMails()
-		
-		YbConsumeRanking = {} -- 清空，避免下次装载到旧数据
-		YbConsumeRanking_isModified = true
-		YbConsumeRanking_save()		
-		
+-- actType: 0周年庆典；1万服庆典；2春节活动。
+function OnYbConsumeRanking_ActivityStart(actType, curDay, openNDay)
+	if LocalDT.YbConsumeRankingActivityNames[actType] == nil then return end
+	if curDay == nil or openNDay == nil or curDay < 1 or curDay > openNDay then return end
+	OnYbConsumeRankingNewDayArrive()
+	local activities = LocalDT.InitYbConsumeRankingActivities()
+	-- 同时开启另一个活动时保留共用榜单，不提前发奖或清榜。
+	if not YbConsumeRanking_inTime then
+		YbConsumeRanking = {}
 		YbConsumeRanking_minYb = 0
-		YbConsumeRanking_isModified = false
+		YbConsumeRanking_isModified = true
 	end
-
-	YbConsumeRanking = {} -- 清空旧数据
-	YbConsumeRanking_minYb = 0
-	YbConsumeRanking_isModified = true
+	activities[actType] = openNDay - curDay + 1
 	YbConsumeRanking_inTime = true
+	System.saveStaticVar()
 			
 	-- 定时 3 分钟保存
 	if not System.hasTimer("YbConsumeRanking_OnTimer") then
 		System.addTimer("YbConsumeRanking_OnTimer", 3 * 60 * 1000, -1)
 	end
 	
-	print("庆典活动-消费排名 开始")
+	print(LocalDT.YbConsumeRankingActivityNames[actType].."-消费排名 开始")
 end
 
 -- 活动时间结束
-function OnYbConsumeRanking_ActivityEnd()
-	print("庆典活动-消费排名 结束")
-	
-	if YbConsumeRanking_inTime then
-		YbConsumeRanking_sendAwardMails()
-	end
-	
-	if #YbConsumeRanking ~= 0 then
-		YbConsumeRanking = {} -- 清空，避免下次装载到旧数据
-		YbConsumeRanking_isModified = true		
-	end	
-	
-	YbConsumeRanking_save()	
-	
-	YbConsumeRanking_minYb = 0
-	YbConsumeRanking_isModified = false
-	
-	YbConsumeRanking_inTime = false
-	
-	System.deleteTimer("YbConsumeRanking_OnTimer")
-	print("元宝消耗排行榜活动 结束")
+function OnYbConsumeRanking_ActivityEnd(actType)
+	if LocalDT.YbConsumeRankingActivityNames[actType] == nil then return end
+	-- 当天关闭仍在零点结算，避免活动定时器先关闭导致漏奖。
+	OnYbConsumeRankingNewDayArrive()
+	local activities = LocalDT.InitYbConsumeRankingActivities()
+	if activities[actType] ~= nil then activities[actType] = 1 end
+	System.saveStaticVar()
+	print(LocalDT.YbConsumeRankingActivityNames[actType].."-消费排名 结束，保留当日待结算奖励")
 end
 
-function YbConsumeRanking_sendAwardMails()
+function YbConsumeRanking_sendAwardMails(activities)
+	activities = activities or LocalDT.InitYbConsumeRankingActivities()
+	if not LocalDT.HasYbConsumeRankingActivity(activities) then return end
 	
 	local count = 0
 	local listCount = #YbConsumeRanking
@@ -708,7 +727,7 @@ function YbConsumeRanking_sendAwardMails()
 	if listCount >= 1 then
 		local item = YbConsumeRanking[1]
 		if item.yb >= awardList[1].minConsume then
-			YbConsumeRanking_sendAwardMailToActor(item.id, 1, 1)
+			YbConsumeRanking_sendAwardMailToActor(item.id, 1, 1, activities)
 			print("[1] id=" .. item.id .. ",yb=" .. item.yb)
 			offset_count = offset_count + 1
 		end
@@ -720,7 +739,7 @@ function YbConsumeRanking_sendAwardMails()
 	if (listCount - offset_count) >= 1 then
 		local item = YbConsumeRanking[offset_count+1]
 		if item.yb >= awardList[2].minConsume then
-			YbConsumeRanking_sendAwardMailToActor(item.id, 2, 2)
+			YbConsumeRanking_sendAwardMailToActor(item.id, 2, 2, activities)
 			print("[2],id=" .. item.id .. ",yb=" .. item.yb)
 			offset_count = offset_count + 1		
 		end
@@ -732,7 +751,7 @@ function YbConsumeRanking_sendAwardMails()
 	if (listCount - offset_count) >= 1 then
 		local item = YbConsumeRanking[offset_count+1]
 		if item.yb >= awardList[3].minConsume then
-			YbConsumeRanking_sendAwardMailToActor(item.id, 3, 3)
+			YbConsumeRanking_sendAwardMailToActor(item.id, 3, 3, activities)
 			print("[3],id=" .. item.id .. ",yb=" .. item.yb)
 			offset_count = offset_count + 1
 		end
@@ -745,7 +764,7 @@ function YbConsumeRanking_sendAwardMails()
 	for i = offset_count+1, listCount do
 		local item = YbConsumeRanking[i]
 		if item.yb >= awardList[4].minConsume then
-			YbConsumeRanking_sendAwardMailToActor(item.id, 4, j)
+			YbConsumeRanking_sendAwardMailToActor(item.id, 4, j, activities)
 			print("[".. j .. "],id=" .. item.id .. ",yb=" .. item.yb)
 			j = j + 1
 		end
@@ -754,22 +773,24 @@ function YbConsumeRanking_sendAwardMails()
 
 end
 
-function YbConsumeRanking_sendAwardMailToActor(actorId, awardIdx, ranking)
-	local title = "消费排行"
-	local desc = string.format("您在消费排行活动中，获得第%d名，将获得以下奖品：", ranking)
-	
-	System.AddMail(actorId,6,0,title,desc,0,0,PublicTestCfg.YbConsumeRanking.awardList[awardIdx].mailAward)
-	
+function YbConsumeRanking_sendAwardMailToActor(actorId, awardIdx, ranking, activities)
+	for actType = 0, 2 do
+		if (activities[actType] or 0) > 0 then
+			local title = LocalDT.YbConsumeRankingActivityNames[actType].."每日消费排行"
+			local desc = string.format("您在%s活动中，获得第%d名，将获得以下奖品：", title, ranking)
+			System.AddMail(actorId,6,0,title,desc,0,0,PublicTestCfg.YbConsumeRanking.awardList[awardIdx].mailAward)
+		end
+	end
 end
 
 
 function spring_YbConsumeRanking_activity_start_or_end(is_start, is_started_server)
 	if is_start then
 		if is_started_server ~= nil and is_started_server == false then -- 不是服务器启动时
-			OnYbConsumeRanking_ActivityStart(nil)
+			OnYbConsumeRanking_ActivityStart(2, 1, 1)
 		end
 	else
-		OnYbConsumeRanking_ActivityEnd()
+		OnYbConsumeRanking_ActivityEnd(2)
 	end
 end
 

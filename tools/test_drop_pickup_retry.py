@@ -228,9 +228,9 @@ class PickupRetryTests(unittest.TestCase):
         clock, switches, state, drop, _, select, _ = self.environment()
         switches[8] = False
         self.assertIsNone(select())
-        self.assertTrue(drop["isCheck"])
+        self.assertFalse(drop["isCheck"])
         switches[8] = True
-        drop["isCheck"] = False  # actual refreshDropPacketList on a setting change
+        self.assertIs(select(), drop)  # no manual settings save or drop refresh
         state["capacity"] = False
         self.assertIsNone(select())
         state["capacity"] = True

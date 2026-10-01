@@ -6,9 +6,16 @@ stack was then skipped indefinitely. Use the existing canPickTime gate instead:
 wait at least one second (the sender's duplicate-request interval), then retry.
 Only the server's DROP_ITEM_DEL packet removes a successfully collected stack.
 
-Patch five assignments in four methods, preserving all constants, other method
-bodies, SWF tags and pickup categories. Relocate existing branches, switches and
-exception offsets rather than recompiling the Flash application.
+Also stop caching a failed category check as isCheck=true in the two automatic
+selectors. A disabled or temporarily unavailable category must be checked again
+on the next selection, rather than ignored until settings are manually saved.
+Keep the existing isCheck reads for server-originated exclusions and preserve
+pickup protection, backpack capacity and the player's enabled categories.
+
+Patch five request assignments in four methods and two category-cache writes,
+preserving all constants, other method bodies, SWF tags and pickup categories.
+Relocate existing branches, switches and exception offsets rather than
+recompiling the Flash application.
 """
 from __future__ import annotations
 
@@ -28,6 +35,8 @@ TARGETS = {
     "GameLogic": {"onPathTargetArrived": 2, "onMouseDown": 1, "onMouseClick": 1},
 }
 Q_NAMES = {"isAlreadyPickup": 7569, "canPickTime": 7597, "getTimer": 43278}
+SELECTOR_TARGETS = ("getNearestDropPacket", "getDropPacketByXY")
+IS_CHECK = 7570
 
 
 @dataclass(frozen=True)
@@ -146,6 +155,25 @@ def relocate(code, edits):
 
 def patch_abc(source):
     edits = []
+    names, selectors, bodies = inspect_abc(source, "LogicManager")
+    if selectors is None or names[IS_CHECK] != "isCheck":
+        raise ValueError("Missing automatic pickup selector or isCheck property")
+    for method_name in SELECTOR_TARGETS:
+        start, length, _ = bodies[selectors[method_name][0]]
+        code = source[start:start + length]
+        old = b"\x26\x61" + encode_u30(IS_CHECK)
+        new = b"\x27\x61" + encode_u30(IS_CHECK)
+        positions = [op.start for op in instructions(code)
+                     if code[op.start:op.start + len(old)] == old]
+        patched = [op.start for op in instructions(code)
+                   if code[op.start:op.start + len(new)] == new]
+        if not positions and len(patched) == 1:
+            continue
+        if len(positions) != 1 or patched:
+            raise ValueError(f"Unexpected category cache in {method_name}")
+        # Same-length Boolean substitution retains every branch and method limit.
+        position = start + positions[0]
+        edits.append((position, position + 1, b"\x27"))
     for class_name, methods in TARGETS.items():
         names, traits, bodies = inspect_abc(source, class_name)
         if traits is None:
@@ -188,7 +216,7 @@ def patch_abc(source):
     for a, b, value in sorted(edits, reverse=True):
         result[a:b] = value
     # Reparse the entire ABC, and verify it contains only the intended edits.
-    for class_name in TARGETS:
+    for class_name in (*TARGETS, "LogicManager"):
         inspect_abc(result, class_name)
     restored = bytearray(result)
     shift = 0
@@ -262,7 +290,7 @@ def main():
             raise ValueError("Pickup retry patch is missing")
     elif source != result:
         CLIENT.write_bytes(result)
-    print("Verified five pickup retry assignments, branch targets, exceptions and unrelated client bytes")
+    print("Verified pickup retries and uncached category checks; unrelated client bytes preserved")
 
 
 if __name__ == "__main__":

@@ -436,7 +436,7 @@ function OldPlayerReturnGiveAward(sysarg,msgid,packet)
         var.oldplayret.login.tag[nTag] = 1
         Actor.sendTipmsg(sysarg,"领取成功!",ttFlyTip)
     elseif nIndex == 2 then --回归首充
-        if var.days ~= nil and var.days.PeyNum > 0 then
+        if var.days ~= nil and (var.days.PeyNum or 0) > 0 then
             if var.oldplayret.fristpay == 1 then
                  Actor.sendTipmsg(sysarg,"已经领取过了,无法再次领取!",ttFlyTip)
                  return
@@ -462,7 +462,7 @@ function OldPlayerReturnGiveAward(sysarg,msgid,packet)
             Actor.sendTipmsg(sysarg,"索引错误!"..nTag,ttFlyTip)
             return
         end
-        if var.days == nil or var.days.PeyNum < cfg.PayFeelBack[nTag].money then
+        if var.days == nil or (var.days.PeyNum or 0) < cfg.PayFeelBack[nTag].money then
             Actor.sendTipmsg(sysarg,"冲值元宝不足"..cfg.PayFeelBack[nTag].money,ttFlyTip)
             return
         end

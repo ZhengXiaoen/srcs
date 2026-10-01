@@ -171,6 +171,11 @@ end
 
 --//登录游戏触发
 function OnPlayerLogin(sysarg, isCrossDay)	
+	do
+		local var = Actor.getStaticVar(sysarg)
+		if var.days == nil then var.days = {} end
+		if var.newdays == nil then var.newdays = {} end
+	end
 
 	--转换旧的增值卡数据
 	--TransformZengZhiKaData(sysarg)
@@ -748,6 +753,7 @@ function GlobalHandleGiveRankPoint(sysarg,bType,bWin,nAddYuanguPoint,nAddRankPoi
 end
 function OnRankGiveAward(sysarg)
     local var = Actor.getStaticVar(sysarg)
+    if var.days == nil then var.days = {} end
     if var.rankType == nil then return end
    
     if var.rankwin ~= nil    then
@@ -1561,6 +1567,8 @@ function OnPlayerDie(sysarg, killer)
 	local fubenId = Actor.getFubenId(sysarg)
 	local nSceneId = Actor.getSceneId(sysarg)
 	local var = Actor.getStaticVar(sysarg)
+	if var.days == nil then var.days = {} end
+	if var.newdays == nil then var.newdays = {} end
 	
 	-- 暂存一下被击杀数据, handleSendActorByKilledMail() 用到
 	local myDVar = Actor.getDyanmicVar(sysarg)
@@ -2592,6 +2600,9 @@ function OnMonsterByKilled(monster, sysarg, monId, fubenId, sceneId,fuBenPtr)
 	--//读取私人变量d
 	local var = Actor.getStaticVar(sysarg);
 	if var == nil then return end -- 玩家登出时这里有可能为 nil
+	if var.days == nil then var.days = {} end
+	if var.newdays == nil then var.newdays = {} end
+	if var.d == nil then var.d = {} end
 	local d = var.d;
 	
 	local entityType = Actor.getEntityType(monster)
@@ -4260,6 +4271,8 @@ function OnAddItemEvent(sysarg,itemId,itemCount)
 	
 	--得到东西检测完成条件
 	local var = Actor.getStaticVar(sysarg)
+	if var.days == nil then var.days = {} end
+	if var.newdays == nil then var.newdays = {} end
 	
 	--用私人变量保存矿石，然后直接扣
 	--if itemId>=4699 and itemId<= 4702 then 
@@ -4559,14 +4572,16 @@ function OnVipLevelUp(sysarg,newVipLevel,oldVipLevel)
 	}
 	--//读取私人变量d
 	local var = Actor.getStaticVar(sysarg);
+	if var.days == nil then var.days = {} end
+	if var.d == nil then var.d = {} end
 	local d = var.d;
 
 	if newVipLevel >= 10 then newVipLevel = 10; end
 	if oldVipLevel >= 10 then oldVipLevel = 10; end
 	local nAddNum = vip_data[newVipLevel+1].nAddUseNum - vip_data[oldVipLevel+1].nAddUseNum
-	d[16] = d[16] + nAddNum
-	d[17] = d[17] + nAddNum
-	d[28] = d[28] + nAddNum		
+	d[16] = (d[16] or 0) + nAddNum
+	d[17] = (d[17] or 0) + nAddNum
+	d[28] = (d[28] or 0) + nAddNum
 	
 	--清空VIP领取标识
 	if var.days.vipPrivilege then
@@ -6442,6 +6457,7 @@ end
 
 function ClearBiaoChe(sysarg)
     local sVar = Actor.getStaticVar(sysarg)
+    if sVar.days == nil then sVar.days = {} end
     sVar.days.darttms = 0
 end
 

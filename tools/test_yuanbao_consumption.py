@@ -72,6 +72,18 @@ class YuanBaoConsumptionTests(unittest.TestCase):
         self.assertTrue(self.lua.eval("state.newdays ~= nil"))
         self.assertEqual(1, self.lua.eval("packets[1].int"))
 
+    def test_consume_callbacks_receive_initialized_daily_tables(self):
+        self.lua.execute('''
+            OnRankingConsumeYbEvent = function()
+                assert(state.days ~= nil and state.newdays ~= nil)
+            end
+            OnLuaEvent = function()
+                assert(state.days ~= nil and state.newdays ~= nil)
+            end
+            OnConsumeYuanBaoEvent(1, 150, 178)
+        ''')
+        self.assertTrue(self.lua.eval("state.days ~= nil"))
+
     def test_existing_draw_count_is_preserved(self):
         self.lua.execute('''
             state.newdays = {ZPhasDoTime = 1}

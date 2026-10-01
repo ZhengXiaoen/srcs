@@ -70,6 +70,9 @@ end
 
 --消费元宝，该函数可热更(@rsf)
 function OnConsumeYuanBaoEvent(sysarg, nYuanBao, nLogId)
+	local actorVar = Actor.getStaticVar(sysarg)
+	if actorVar.days == nil then actorVar.days = {} end
+	if actorVar.newdays == nil then actorVar.newdays = {} end
 					
     --老兵回归，重刷
      local sys = System.getStaticVar()
@@ -354,6 +357,7 @@ function GetPeyYuanBaoHandlerEx(sysarg, args)
 	--print("WithDrawYuanBaoHandler")
 	local nYuanBao = args[1]	--获取充值元宝数目
 	local var = Actor.getStaticVar(sysarg)
+	if var.days == nil then var.days = {} end
 	if not var.nYuanBao_timedGift then
 		var.nYuanBao_timedGift = 0
 	end
@@ -701,6 +705,7 @@ end
 --下发今天充值的元宝数
 function SendTodayPay(sysarg)
 	local var = Actor.getStaticVar(sysarg)
+	if var.days == nil then var.days = {} end
 	local pay = var.days.PeyNum
 	
 	--0也要发，因为有可能是隔天

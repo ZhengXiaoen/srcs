@@ -2632,14 +2632,14 @@ function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nL
 		end
 		local szCritTrigger = "<(c0xFFd4ab6f)触发>" .. szCritName
 		if bGoldenLuckyTriggered or bGoldenGodTriggered then
-			szCritTrigger = "<(c0xFFd4ab6f)因为><(c0xFFFF00FF)钞能力> <(c0xFFFFD700)黄金权益><(c0xFF00FFFF) 额外判定触发>"
+			szCritTrigger = "<(c0xFFd4ab6f)因为><(c0xFFFF00FF)钞能力><(c0xFFFFD700)黄金权益><(c0xFF00FFFF)额外判定触发>"
 			if bLuckyExtraTriggered and not bGoldenGodTriggered then
 				-- 幸运补判成功、神级首次成功时，明确区分两种暴击的来源。
 				szCritTrigger = szCritTrigger .. "<(c0xFF00FF00)幸运暴击><(c0xFFd4ab6f)，继而触发>" .. szCritName
 			else
 				szCritTrigger = szCritTrigger .. szCritName
 				if bGoldenLuckyTriggered and bGoldenGodTriggered then
-					szCritTrigger = szCritTrigger .. "<(c0xFF00FFFF)（幸运暴击也由权益额外判定触发）>"
+					szCritTrigger = szCritTrigger .. "<(c0xFF00FFFF)（黄金权益双重判定触发）>"
 				end
 			end
 		end

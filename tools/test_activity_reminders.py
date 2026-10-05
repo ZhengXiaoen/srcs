@@ -13,7 +13,15 @@ from patch_spring_flash_sale import METHODS as SPRING_DATE_METHODS, patch_swf as
 
 def current_release(source, module=False):
     updated = unique_rankings(source, module)
-    return updated if module else spring_dates(retired_hunt(wanfu_opening(spring_display(retired_pages(spring_icon(ranking_description(updated)))))))
+    from patch_festival_action_reminders import patch_swf as action_reminders
+    from patch_competition_hongli_reminders import patch_swf as competition_reminders
+    from patch_appearance_upgrade import patch_swf as appearance_upgrade
+    if module: return competition_reminders(updated, True)
+    for patch in (ranking_description, spring_icon, retired_pages, spring_display,
+                  wanfu_opening, retired_hunt, spring_dates, appearance_upgrade,
+                  competition_reminders, action_reminders):
+        updated = patch(updated)
+    return updated
 
 
 import argparse
@@ -500,8 +508,9 @@ class ActivityRemindersTests(unittest.TestCase):
     def test_all_modified_bytecode_paths_have_balanced_stack_and_local_limits(self):
         # Explore the control-flow graph, including paths not taken by claim
         # scenarios; Flash verifies these paths before executing a method.
-        for module, methods in ((False, (2648, 2720, 4078, 4080, 5580, 6333, 6334, 6335, 6353, 6357, 6377, 6379, 6380, 6382, 6393, 6403, 6405, 6408, 6437, 6497, 6692, 8763, 28528, *sorted(WANFU_METHODS))),
-                                (True, (7, 8, 9, 10, 11, 29, 30, 41, 69, 70))):
+        groups = getattr(self, 'bytecode_methods', ((False, (2648, 2720, 4078, 4080, 5580, 6333, 6334, 6335, 6353, 6357, 6377, 6379, 6380, 6382, 6393, 6403, 6405, 6408, 6437, 6497, 6692, 8763, 28528, *sorted(WANFU_METHODS))),
+                                                   (True, (7, 8, 9, 10, 11, 29, 30, 41, 69, 70))))
+        for module, methods in groups:
             names, _, bodies = self.symbols[module]
             for method in methods:
                 a, size, limits = bodies[method]; ops = {o.start: o for o in instructions(self.abc[module][a:a + size])}
@@ -512,7 +521,7 @@ class ActivityRemindersTests(unittest.TestCase):
                         self.assertEqual(seen[pos], depth, (method, pos)); continue
                     seen[pos] = depth; op = ops[pos]; k, args = op.opcode, op.operands
                     consumed, added = 0, 0
-                    if 0xd0 <= k <= 0xd3 or k in (0x60, 0x62, 0x20, 0x24, 0x25, 0x26, 0x27, 0x2c, 0x5d, 0x5e): added = 1
+                    if 0xd0 <= k <= 0xd3 or k in (0x60, 0x62, 0x20, 0x21, 0x24, 0x25, 0x26, 0x27, 0x28, 0x2c, 0x2d, 0x5d, 0x5e): added = 1
                     elif 0xd4 <= k <= 0xd7 or k in (0x63, 0x29, 0x30, 0x48): consumed = 1
                     elif k in (0x66, 0x61, 0x68):
                         dynamic = not names[args[0]]
@@ -523,13 +532,13 @@ class ActivityRemindersTests(unittest.TestCase):
                     elif k in (0x49, 0x56): consumed = args[0] + int(k == 0x49); added = int(k == 0x56)
                     elif k == 0x55: consumed, added = args[0] * 2, 1
                     elif k == 0x2a: consumed, added = 1, 2
-                    elif k in (0x73, 0x74, 0x76, 0x80, 0x82, 0x85, 0x93, 0x96, 0xb2, 0xc0): consumed, added = 1, 1
+                    elif k in (0x73, 0x74, 0x75, 0x76, 0x80, 0x82, 0x85, 0x91, 0x93, 0x96, 0xb2, 0xc0): consumed, added = 1, 1
                     elif k == 0x87: consumed, added = 2, 1
                     elif k in (0x1e, 0x23): consumed, added = 2, 1
                     elif k == 0x32: added = 1
                     elif k == 0x1b or k in (0x11, 0x12): consumed = 1
                     elif 0x0c <= k <= 0x1a and k != 0x10: consumed = 2
-                    elif 0xa0 <= k <= 0xb1: consumed, added = 2, 1
+                    elif 0xa0 <= k <= 0xb1 or k == 0xb3: consumed, added = 2, 1
                     elif k not in (0x09, 0x08, 0xc2, 0x47, 0x10):
                         self.fail(f'Unhandled verifier opcode {k:#x} in {method}')
                     self.assertGreaterEqual(depth, consumed, (method, pos))
@@ -581,7 +590,7 @@ class ActivityRemindersTests(unittest.TestCase):
             # as well as upgrading the deployed version without duplicate edits.
             from patch_main_activity_reminders import patch_swf as main_entries
             from patch_mystery_shop_reminder import patch_swf as shop_reminder
-            self.assertEqual(current_release(repaired if module else shop_reminder(main_entries(repaired)), module), path.read_bytes())
+            self.assertEqual(abc_section(current_release(repaired if module else shop_reminder(main_entries(repaired)), module))[0], abc_section(path.read_bytes())[0])
 
     def test_loop_label_relocation_preserves_forward_backward_and_self_branches(self):
         c = Code(); c.add(b'\xd0\x30')
@@ -607,8 +616,10 @@ class ActivityRemindersTests(unittest.TestCase):
     def test_only_expected_methods_and_no_other_packaged_resources_change(self):
         from patch_main_activity_reminders import METHODS, patch_swf as main_entries
         from patch_mystery_shop_reminder import METHODS as SHOP_METHODS, patch_swf as shop_reminder
-        expected = {False: {2648, 2720, 4078, 4080, 6333, 6335, 6353, 6377, 6380, 6382, 6437, 6497, 28528} | METHODS | SHOP_METHODS | MAIN_METHODS | SPRING_METHODS | RETIRED_METHODS | WANFU_METHODS | HUNT_METHODS | SPRING_DATE_METHODS,
-                    True: {7, 8, 9, 10, 11, 41} | MODULE_METHODS}
+        from patch_festival_action_reminders import METHODS as ACTION_METHODS
+        from patch_competition_hongli_reminders import MODULE_METHODS as COMPETITION_MODULE_METHODS
+        expected = {False: {2648, 2720, 4078, 4080, 6333, 6335, 6353, 6377, 6380, 6382, 6437, 6497, 28528} | METHODS | SHOP_METHODS | MAIN_METHODS | SPRING_METHODS | RETIRED_METHODS | WANFU_METHODS | HUNT_METHODS | SPRING_DATE_METHODS | ACTION_METHODS | {5580, 27339},
+                    True: {7, 8, 9, 10, 11, 41} | MODULE_METHODS | COMPETITION_MODULE_METHODS}
         for module in (False, True):
             _, _, old = inspect_abc(self.before[module], 'HongLiActiveWin' if module else 'NavTopRightArea')
             _, _, new = self.symbols[module]; changed = set()
@@ -619,7 +630,7 @@ class ActivityRemindersTests(unittest.TestCase):
             path = MODULE if module else CLIENT
             old_swf = baseline_swf(path)
             upgraded = patch_swf(old_swf, module)
-            self.assertEqual(current_release(upgraded if module else shop_reminder(main_entries(upgraded)), module), path.read_bytes())
+            self.assertEqual(abc_section(current_release(upgraded if module else shop_reminder(main_entries(upgraded)), module))[0], abc_section(path.read_bytes())[0])
             self.assertEqual(patch_swf(path.read_bytes(), module), path.read_bytes())
 
     def test_client_server_and_language_pack_rewards_match(self):

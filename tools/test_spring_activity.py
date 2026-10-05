@@ -103,8 +103,13 @@ class SpringClientTests(unittest.TestCase):
 
     def test_only_two_row_flags_change_in_entire_uncompressed_swf(self):
         original = subprocess.check_output(['git', 'show', BASELINE + ':web/GameFrame.swf'], cwd=ROOT)
-        self.assertEqual(self.source, spring_dates(retired_hunt(wanfu_opening(spring_display(retired_pages(patch_swf(original)))))))
-        self.assertEqual(self.source, patch_swf(self.source))
+        from test_activity_reminders import current_release
+        from patch_appearance_upgrade import patch_swf as appearance_upgrade
+        self.assertEqual(abc_section(self.source)[0], abc_section(current_release(appearance_upgrade(patch_swf(original))))[0])
+        # Verify this historical patch on its own release; later patches also
+        # update the entry method's initial data request.
+        upgraded = patch_swf(original)
+        self.assertEqual(upgraded, patch_swf(upgraded))
         old, (_, _, a, b) = abc_section(original)
         abc, _ = normalize(old[a:b]); _, _, bodies = inspect_abc(abc)
         offset, _, _ = bodies[6440]

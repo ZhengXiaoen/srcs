@@ -13,6 +13,7 @@ from patch_guild_quest_config import read_pack
 from patch_open_server_reminders import BASELINE, METHODS, patch_swf
 from test_activity_reminders import execute
 from patch_jingji_material_reminders import METHODS as MATERIAL_METHODS, patch_swf as material_reminders
+from patch_jingji_material_tabs import METHODS as TAB_METHODS, patch_swf as tab_reminders
 
 
 class OpenServerReminderTests(unittest.TestCase):
@@ -119,14 +120,17 @@ class OpenServerReminderTests(unittest.TestCase):
         data['isTwiceRecharge'] = 1; self.assertFalse(self.badge(730))
 
     def test_patch_is_reproducible_idempotent_and_preserves_unrelated_methods(self):
-        self.assertEqual(self.source, material_reminders(patch_swf(self.baseline)))
+        self.assertEqual(self.source, tab_reminders(material_reminders(patch_swf(self.baseline))))
         self.assertEqual(self.source, patch_swf(self.source))
         changed = set()
         for mid, (a, size, limits) in self.old_bodies.items():
             b, length, new_limits = self.bodies[mid]
-            self.assertEqual((4, 10, *limits[2:]) if mid in MATERIAL_METHODS else limits, new_limits, mid)
+            expected = ((4, 10, *limits[2:]) if mid in MATERIAL_METHODS else
+                        (max(limits[0], 4), max(limits[1], 4 if mid == 15825 else 10), *limits[2:])
+                        if mid in TAB_METHODS else limits)
+            self.assertEqual(expected, new_limits, mid)
             if self.old[a:a + size] != self.abc[b:b + length]: changed.add(mid)
-        self.assertEqual(METHODS | MATERIAL_METHODS, changed)
+        self.assertEqual(METHODS | MATERIAL_METHODS | TAB_METHODS, changed)
         self.assertEqual(self.old_strings, self.strings)
         for mid in changed:
             a, size, limits = self.bodies[mid]; code = self.abc[a:a + size]

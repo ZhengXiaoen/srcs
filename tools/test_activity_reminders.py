@@ -113,6 +113,8 @@ def execute(code, names, strings, locals_, globals_, invoke, start=0, end=None):
             stack.append(value)
         elif kind in (0x61, 0x68):
             name = names[args[0]]; value = stack.pop(); key = name if name else stack.pop(); obj = stack.pop()
+            if isinstance(obj, list) and isinstance(key, int) and key >= len(obj):
+                obj.extend([None] * (key + 1 - len(obj)))
             obj[key] = value
         elif kind in (0x46, 0x4f, 0x4e):
             count = args[1]; values = stack[-count:] if count else []

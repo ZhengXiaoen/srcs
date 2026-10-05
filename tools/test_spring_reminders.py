@@ -15,6 +15,7 @@ from patch_spring_reminders import BASELINE, METHODS, PARAMETER_METHODS, patch_s
 from test_activity_reminders import config_value, execute
 from patch_open_server_reminders import METHODS as OPENING_METHODS, patch_swf as opening_reminders
 from patch_jingji_material_reminders import METHODS as MATERIAL_METHODS, patch_swf as material_reminders
+from patch_jingji_material_tabs import METHODS as TAB_METHODS, patch_swf as tab_reminders
 
 
 class SpringReminderTests(unittest.TestCase):
@@ -167,14 +168,14 @@ class SpringReminderTests(unittest.TestCase):
 
     def test_patch_is_reproducible_idempotent_and_changes_only_spring(self):
         source = subprocess.check_output(['git', 'show', BASELINE + ':web/GameFrame.swf'], cwd=ROOT)
-        self.assertEqual(self.source, material_reminders(opening_reminders(patch_swf(source))))
+        self.assertEqual(self.source, tab_reminders(material_reminders(opening_reminders(patch_swf(source)))))
         self.assertEqual(self.source, patch_swf(self.source))
         raw, (_, _, a, b) = abc_section(source); before, _ = normalize(raw[a:b]); _, _, old = inspect_abc(before)
         changed = set()
         for mid, (a, size, limits) in old.items():
             b, length, new_limits = self.bodies[mid]
             if before[a:a + size] != self.abc[b:b + length] or limits != new_limits: changed.add(mid)
-        self.assertEqual((METHODS - PARAMETER_METHODS) | OPENING_METHODS | MATERIAL_METHODS, changed)
+        self.assertEqual((METHODS - PARAMETER_METHODS) | OPENING_METHODS | MATERIAL_METHODS | TAB_METHODS, changed)
         self.assertEqual(strings_of(before), self.strings)
         for mid in changed:
             a, size, limits = self.bodies[mid]; code = self.abc[a:a + size]

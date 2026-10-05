@@ -13,6 +13,7 @@ from patch_god_equip_state import inspect_abc
 from patch_guild_quest_config import read_cbp, read_pack
 from patch_jingji_material_reminders import BASELINE, METHODS, patch_swf
 from test_activity_reminders import config_value, execute
+from patch_jingji_material_tabs import METHODS as TAB_METHODS, patch_swf as tab_reminders
 
 KEYS = ('GemRank', 'PeartRank', 'RingRank', 'MountRank')
 CONFIG = 'Server/S1001/data/config/new_activity/festival/activity_jingji.lua'
@@ -158,13 +159,13 @@ class JingjiMaterialReminderTests(unittest.TestCase):
 
     def test_resource_scope_and_existing_event_listeners(self):
         source = subprocess.check_output(['git', 'show', BASELINE + ':web/GameFrame.swf'], cwd=ROOT)
-        self.assertEqual(self.source, patch_swf(source)); self.assertEqual(self.source, patch_swf(self.source))
+        self.assertEqual(self.source, tab_reminders(patch_swf(source))); self.assertEqual(self.source, patch_swf(self.source))
         raw, (_, _, a, b) = abc_section(source); before, _ = normalize(raw[a:b]); _, _, old = inspect_abc(before)
         changed = set()
         for mid, (a, size, limits) in old.items():
             b, length, after_limits = self.bodies[mid]
             if before[a:a + size] != self.abc[b:b + length] or limits != after_limits: changed.add(mid)
-        self.assertEqual(METHODS, changed); self.assertEqual(strings_of(before), self.strings)
+        self.assertEqual(METHODS | TAB_METHODS, changed); self.assertEqual(strings_of(before), self.strings)
         for mid, listener, handler in ((6333, 13671, 8121), (6377, 13672, 8121),
                                        (5570, 13671, 6766), (5571, 13672, 6766)):
             a, size, _ = self.bodies[mid]

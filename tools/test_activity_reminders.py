@@ -497,8 +497,8 @@ class ActivityRemindersTests(unittest.TestCase):
     def test_all_modified_bytecode_paths_have_balanced_stack_and_local_limits(self):
         # Explore the control-flow graph, including paths not taken by claim
         # scenarios; Flash verifies these paths before executing a method.
-        for module, methods in ((False, (2648, 2720, 4078, 4080, 6333, 6334, 6335, 6353, 6357, 6377, 6379, 6380, 6382, 6393, 6403, 6405, 6408, 6437, 6497, 6692, 8763, 28528, *sorted(WANFU_METHODS))),
-                                (True, (7, 8, 9, 10, 11, 41))):
+        for module, methods in ((False, (2648, 2720, 4078, 4080, 5580, 6333, 6334, 6335, 6353, 6357, 6377, 6379, 6380, 6382, 6393, 6403, 6405, 6408, 6437, 6497, 6692, 8763, 28528, *sorted(WANFU_METHODS))),
+                                (True, (7, 8, 9, 10, 11, 29, 30, 41, 69, 70))):
             names, _, bodies = self.symbols[module]
             for method in methods:
                 a, size, limits = bodies[method]; ops = {o.start: o for o in instructions(self.abc[module][a:a + size])}

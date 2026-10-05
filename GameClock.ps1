@@ -1,6 +1,6 @@
 ﻿[CmdletBinding()]
 param(
-    [ValidateSet('Start', 'Stop', 'RestartDB', 'Preview', 'Recover')]
+    [ValidateSet('Start', 'Stop', 'Restart', 'RestartDB', 'Preview', 'Recover')]
     [string]$Action,
 
     [string]$Root,
@@ -938,6 +938,17 @@ function Invoke-GameStop {
     Write-Host "服务器已关闭；最后游戏时间：$lastGameStamp。下次默认从这个时间继续，可手动修改 nextStart。"
 }
 
+function Invoke-GameRestart {
+    param($Paths, [string]$Mode,
+          [ValidateSet('Config', 'System')][string]$TimeSource = 'Config')
+    Write-Host '正在停止服务器……'
+    Invoke-GameStop $Paths
+    Write-Host '停止完成，正在按所选模式启动服务器……'
+    # Read the start plan after stopping so Config uses the newly saved time
+    # and System uses the clock after any real-time restoration.
+    Invoke-GameStart $Paths $Mode $TimeSource
+}
+
 function Invoke-GamePreview {
     param($Paths, [ValidateSet('Config', 'System')][string]$TimeSource = 'Config')
     $config = Read-OpenConfig $Paths.Config
@@ -1109,7 +1120,7 @@ if (-not [string]::IsNullOrEmpty($Action)) {
         if ($LauncherWindow) {
             [Console]::OutputEncoding = New-Object Text.UTF8Encoding($false)
         }
-        if ($Action -eq 'Start' -and $SelectStartMode) {
+        if (@('Start', 'Restart') -contains $Action -and $SelectStartMode) {
             $TimeSource = Read-StartTimeSource
         }
         if ([string]::IsNullOrWhiteSpace($Root)) {
@@ -1168,6 +1179,8 @@ if (-not [string]::IsNullOrEmpty($Action)) {
                     Invoke-GameStart $paths $AfterStop $TimeSource
                 } elseif ($Action -eq 'Stop') {
                     Invoke-GameStop $paths
+                } elseif ($Action -eq 'Restart') {
+                    Invoke-GameRestart $paths $AfterStop $TimeSource
                 } elseif ($Action -eq 'RestartDB') {
                     Invoke-GameRestartDB $paths
                 } else {
@@ -1177,7 +1190,7 @@ if (-not [string]::IsNullOrEmpty($Action)) {
                 $lockStream.Dispose()
             }
         }
-        if ($LauncherWindow -and @('Start', 'Stop') -contains $Action) {
+        if ($LauncherWindow -and @('Start', 'Stop', 'Restart') -contains $Action) {
             Write-Host '操作完成，窗口将在 3 秒后关闭。'
             Start-Sleep -Seconds 3
         }
@@ -1192,7 +1205,7 @@ if (-not [string]::IsNullOrEmpty($Action)) {
             }
         }
         [Console]::Error.WriteLine($actionError)
-        if ($LauncherWindow -and @('Start', 'Stop') -contains $Action -and
+        if ($LauncherWindow -and @('Start', 'Stop', 'Restart') -contains $Action -and
             -not [Console]::IsInputRedirected) {
             Write-Host '发生异常，按任意键退出。'
             try {

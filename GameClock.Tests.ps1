@@ -161,6 +161,9 @@ try {
     Assert-True ($launcherText -notmatch '[^\x00-\x7F]') 'batch launcher contains no encoding-sensitive text'
     Assert-True ($launcherText -match '-Action Start -SelectStartMode -LauncherWindow') 'batch requests PowerShell mode selection'
     Assert-True ($launcherText -notmatch 'set /p|\bstartMode\b|chcp') 'batch no longer handles menu input or encoding'
+    $restartLauncher = [IO.File]::ReadAllText((Join-Path $PSScriptRoot '3-1.一键重启.bat'))
+    Assert-True ($restartLauncher -notmatch '[^\x00-\x7F]') 'restart batch contains no encoding-sensitive text'
+    Assert-True ($restartLauncher -match '-Action Restart -SelectStartMode -LauncherWindow') 'restart selects mode before stopping'
 } finally {
     Remove-Item -LiteralPath Function:\Read-Host
 }
@@ -746,6 +749,47 @@ try {
     $script:FakeUptime = [UInt64]4300000
     Invoke-GameStop $systemPaths
     Assert-Equal $clockCallsBefore $script:SetClockCalls 'system mode remains clock-free across two sessions'
+
+    $restartPaths = New-TestRoot $testRoot 'full-restart'
+    $script:FakeRunning = @()
+    $script:FakeNow = Parse-ClockTime '2026-09-25 08:00:00'
+    $script:FakeUptime = [UInt64]5000000
+    $script:FakeTimeServiceRunning = $false
+    Invoke-GameStart $restartPaths 'RestoreReal' 'Config'
+    $script:FakeNow = $script:FakeNow.AddMinutes(1)
+    $script:FakeUptime += [UInt64]60000
+    $expectedRestartTime = Format-ClockTime $script:FakeNow
+    $openBeforeRestart = (Read-ClockState $restartPaths.State).openTime
+    $launchCountBefore = $script:LaunchedWindows.Count
+    Invoke-GameRestart $restartPaths 'RestoreReal' 'Config'
+    $restartState = Read-ClockState $restartPaths.State
+    Assert-Equal 'running' $restartState.phase 'full restart finishes running'
+    Assert-Equal $expectedRestartTime $restartState.sessionStart 'Config restart uses freshly saved stop time'
+    Assert-Equal $openBeforeRestart $restartState.openTime 'full restart preserves open date'
+    Assert-Equal ($launchCountBefore + $script:Launchers.Count) $script:LaunchedWindows.Count 'full restart launches each server once'
+
+    $script:FakeStopFails = $true
+    $launchCountBefore = $script:LaunchedWindows.Count
+    Assert-Throws { Invoke-GameRestart $restartPaths 'RestoreReal' 'System' } 'full restart aborts after failed stop'
+    Assert-Equal $launchCountBefore $script:LaunchedWindows.Count 'failed stop launches nothing'
+    Assert-Equal 'running' (Read-ClockState $restartPaths.State).phase 'failed restart preserves running record'
+    $script:FakeStopFails = $false
+
+    $script:FakeNow = $script:FakeNow.AddMinutes(1)
+    $script:FakeUptime += [UInt64]60000
+    $clockCallsBefore = $script:SetClockCalls
+    Invoke-GameRestart $restartPaths 'RestoreReal' 'System'
+    $restartState = Read-ClockState $restartPaths.State
+    Assert-Equal 'System' $restartState.timeSource 'restart can switch to selected System mode'
+    Assert-Equal '2026-09-25 09:00:00' $restartState.sessionStart 'System restart uses clock after real-time restoration'
+    Assert-Equal $clockCallsBefore $script:SetClockCalls 'System restart does not set clock during start'
+    Assert-Equal $openBeforeRestart $restartState.openTime 'System restart preserves open date'
+    Invoke-GameStop $restartPaths
+    $script:FakeNow = $script:FakeNow.AddMinutes(1)
+    $script:FakeUptime += [UInt64]60000
+    Invoke-GameRestart $restartPaths 'RestoreReal' 'System'
+    Assert-Equal 'running' (Read-ClockState $restartPaths.State).phase 'restart also starts an already stopped server'
+    Invoke-GameStop $restartPaths
 
     Write-Host 'GameClock tests passed (clock and process operations were simulated).'
 } finally {

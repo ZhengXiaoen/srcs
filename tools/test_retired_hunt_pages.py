@@ -16,6 +16,7 @@ from patch_activity_reminders import normalize, call, number
 from patch_drop_pickup_retry import abc_section, instructions
 from patch_god_equip_state import inspect_abc
 from test_activity_reminders import execute
+from patch_spring_flash_sale import METHODS as SPRING_DATE_METHODS, patch_swf as spring_dates
 
 ROOT=CLIENT.parents[1]
 SERVER=ROOT/'Server/S1001/data'
@@ -203,13 +204,13 @@ class HuntClientTests(unittest.TestCase):
 
     def test_swf_only_changes_audited_methods_and_preserves_other_abc_records(self):
         oldsource=subprocess.check_output(['git','show',BASELINE+':web/GameFrame.swf'],cwd=ROOT)
-        self.assertEqual(self.source,patch_swf(oldsource));self.assertEqual(self.source,patch_swf(self.source))
+        self.assertEqual(self.source,spring_dates(patch_swf(oldsource)));self.assertEqual(self.source,patch_swf(self.source))
         raw,(_,_,a,b)=abc_section(oldsource);old,_=normalize(raw[a:b]);_,_,oldb=inspect_abc(old)
         changed=set()
         for mid,(a,size,limits) in oldb.items():
             b,length,newlimits=self.bodies[mid]
             if old[a:a+size]!=self.abc[b:b+length] or limits!=newlimits:changed.add(mid)
-        self.assertEqual(METHODS,changed)
+        self.assertEqual(METHODS | SPRING_DATE_METHODS,changed)
 
     def test_pack_changes_only_switches_and_keeps_all_rewards(self):
         directory=CLIENT.parent/'v2/lang/zh-cn';pack=directory/'zh-cn.dat'

@@ -18,6 +18,7 @@ from patch_guild_quest_config import read_cbp, read_pack, write_node
 from patch_spring_recharge import patch_config as spring_recharge, server_rewards
 from patch_retired_hunt_pages import METHODS as HUNT_METHODS, SPRING_BUTTONS, patch_swf as retired_hunt, patch_config as hunt_config, SWITCHES as HUNT_SWITCHES
 from test_activity_reminders import execute
+from patch_spring_flash_sale import METHODS as SPRING_DATE_METHODS, patch_swf as spring_dates
 
 SERVER = ROOT / 'Server/S1001/data'
 LUA_FILES = ('config/activity/SpringFestivalCfg.lua', 'config/activity/QingDianActivityCfg.lua',
@@ -223,13 +224,13 @@ class RetiredClientTests(unittest.TestCase):
         baseline=subprocess.check_output(['git','show',DISPLAY_BASELINE+':web/GameFrame.swf'],cwd=ROOT)
         displayed = spring_display(baseline)
         self.assertEqual(displayed, spring_display(displayed))
-        self.assertEqual(self.source,retired_hunt(wanfu_opening(displayed)))
+        self.assertEqual(self.source,spring_dates(retired_hunt(wanfu_opening(displayed))))
         raw,(_,_,a,b)=abc_section(baseline);before,_=normalize(raw[a:b]);_,_,old=inspect_abc(before)
         changed=set()
         for method,(a,size,limits) in old.items():
             b,length,newlimits=self.bodies[method]
             if before[a:a+size]!=self.abc[b:b+length] or limits!=newlimits:changed.add(method)
-        self.assertEqual(DISPLAY_METHODS | WANFU_METHODS | HUNT_METHODS,changed);self.assertEqual(strings_of(before),self.strings)
+        self.assertEqual(DISPLAY_METHODS | WANFU_METHODS | HUNT_METHODS | SPRING_DATE_METHODS,changed);self.assertEqual(strings_of(before),self.strings)
         # Recharge rewards were subsequently revised; other Spring sections and
         # packed resources remain identical to the retired-page release.
         path='Server/S1001/data/config/activity/SpringFestivalCfg.lua'
@@ -286,10 +287,12 @@ class RetiredClientTests(unittest.TestCase):
             self.assertFalse(any(o.opcode in (0x66,0x68) and o.operands[0] in (7630,7654,7675) for o in instructions(code)))
 
     def test_spring_entry_never_glows_from_collect_words_and_preserves_retained_rewards(self):
-        mgr={'_cfg':{'time':[2026,10,12,2026,10,23]},'openDay':1}
+        mgr={'_cfg':{'time':[2026,10,12,2026,10,23],'XianShiQiangGou':[None]*12},'openDay':1}
         for login,charge in ((False,False),(True,False),(False,True)):
             def invoke(o,n,a):
-                if n=='getCurrentServerDate':return {'date':12,'month':9,'fullYear':2026}
+                if n=='getCurrentServerDate':return {'time':0}
+                if n=='__construct__':return {'time':0}
+                if n=='floor':return int(a[0])
                 if n=='checkCollectWord':return self.run_code(3326,{0:mgr})
                 if n=='checkNewYearCollect':return self.run_code(3328,{0:mgr})
                 if n=='checkLoginCanGet':return login
@@ -299,13 +302,13 @@ class RetiredClientTests(unittest.TestCase):
 
     def test_full_patch_is_reproducible_idempotent_and_branch_targets_keep_loop_labels(self):
         baseline=subprocess.check_output(['git','show',BASELINE+':web/GameFrame.swf'],cwd=ROOT)
-        self.assertEqual(self.source,retired_hunt(wanfu_opening(spring_display(patch_swf(baseline)))));self.assertEqual(self.source,patch_swf(self.source))
+        self.assertEqual(self.source,spring_dates(retired_hunt(wanfu_opening(spring_display(patch_swf(baseline))))));self.assertEqual(self.source,patch_swf(self.source))
         raw,(_,_,a,b)=abc_section(baseline);before,_=normalize(raw[a:b]);_,_,old=inspect_abc(before)
         changed=set()
         for method,(a,size,limits) in old.items():
             b,length,newlimits=self.bodies[method]
             if before[a:a+size]!=self.abc[b:b+length] or limits!=newlimits:changed.add(method)
-        self.assertEqual(METHODS | WANFU_METHODS | HUNT_METHODS,changed);self.assertEqual(strings_of(before),self.strings)
+        self.assertEqual(METHODS | WANFU_METHODS | HUNT_METHODS | SPRING_DATE_METHODS,changed);self.assertEqual(strings_of(before),self.strings)
         for method in METHODS:
             code,limits=self.body(method);ops=instructions(code)
             for o in ops:

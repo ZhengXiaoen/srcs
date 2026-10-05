@@ -9,10 +9,11 @@ from patch_retired_festival_pages import METHODS as RETIRED_METHODS, patch_swf a
 from patch_wanfu_opening import METHODS as WANFU_METHODS, patch_swf as wanfu_opening
 from patch_spring_display import patch_swf as spring_display
 from patch_retired_hunt_pages import METHODS as HUNT_METHODS, patch_swf as retired_hunt
+from patch_spring_flash_sale import METHODS as SPRING_DATE_METHODS, patch_swf as spring_dates
 
 def current_release(source, module=False):
     updated = unique_rankings(source, module)
-    return updated if module else retired_hunt(wanfu_opening(spring_display(retired_pages(spring_icon(ranking_description(updated))))))
+    return updated if module else spring_dates(retired_hunt(wanfu_opening(spring_display(retired_pages(spring_icon(ranking_description(updated)))))))
 
 
 import argparse
@@ -238,7 +239,7 @@ class ShopReminderTests(unittest.TestCase):
         for method, (a, size, limits) in old.items():
             b, size2, limits2 = self.bodies[method]
             if before[a:a + size] != self.abc[b:b + size2] or limits != limits2: changed.add(method)
-        self.assertEqual(changed, METHODS | MAIN_METHODS | SPRING_METHODS | RETIRED_METHODS | WANFU_METHODS | HUNT_METHODS)
+        self.assertEqual(changed, METHODS | MAIN_METHODS | SPRING_METHODS | RETIRED_METHODS | WANFU_METHODS | HUNT_METHODS | SPRING_DATE_METHODS)
 
     def test_server_query_and_refresh_packets_preserve_goods_and_buy_flags(self):
         lua = server_runtime(); g = lua.globals()

@@ -98,6 +98,7 @@ def execute(code, names, strings, locals_, globals_, invoke, start=0, end=None):
             stack.append(None if kind == 0x20 else True if kind == 0x26 else False if kind == 0x27
                          else strings[args[0]] if kind == 0x2c else args[0])
         elif kind in (0x09, 0x80, 0x82): pass
+        elif kind == 0x85: stack.append(str(stack.pop()))
         elif kind == 0x96: stack.append(not truth(stack.pop()))
         elif kind == 0x30: stack.pop()
         elif kind in (0x5d, 0x5e, 0x60): stack.append(globals_.get(names[args[0]], {'class': names[args[0]]}))
@@ -155,7 +156,7 @@ def execute(code, names, strings, locals_, globals_, invoke, start=0, end=None):
             cls, obj = stack.pop(), stack.pop(); stack.append(obj.get('class') == cls.get('class'))
         elif kind in (0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa6, 0xa8, 0xab, 0xad, 0xae, 0xaf, 0xb0):
             right, left = stack.pop(), stack.pop()
-            value = {0xa0: lambda: left + right, 0xa1: lambda: left - right,
+            value = {0xa0: lambda: str(left) + str(right) if isinstance(left, str) or isinstance(right, str) else left + right, 0xa1: lambda: left - right,
                      0xa2: lambda: left * right, 0xa3: lambda: left / right, 0xa4: lambda: left % right,
                      0xa6: lambda: int(left) >> (int(right) & 31), 0xa8: lambda: int(left) & int(right),
                      0xab: lambda: equal(left, right), 0xad: lambda: left < right,

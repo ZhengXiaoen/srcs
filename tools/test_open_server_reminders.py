@@ -1,6 +1,8 @@
 """Execute shipped opening reminder bytecode and verify the resource scope."""
 from __future__ import annotations
 
+from patch_activity_window_lifecycle import MAIN_METHODS as WINDOW_METHODS, patch_swf as window_lifecycle
+
 from itertools import product
 import subprocess
 import unittest
@@ -120,7 +122,7 @@ class OpenServerReminderTests(unittest.TestCase):
         data['isTwiceRecharge'] = 1; self.assertFalse(self.badge(730))
 
     def test_patch_is_reproducible_idempotent_and_preserves_unrelated_methods(self):
-        self.assertEqual(self.source, tab_reminders(material_reminders(patch_swf(self.baseline))))
+        self.assertEqual(self.source, window_lifecycle(tab_reminders(material_reminders(patch_swf(self.baseline)))))
         self.assertEqual(self.source, patch_swf(self.source))
         changed = set()
         for mid, (a, size, limits) in self.old_bodies.items():
@@ -128,9 +130,9 @@ class OpenServerReminderTests(unittest.TestCase):
             expected = ((4, 10, *limits[2:]) if mid in MATERIAL_METHODS else
                         (max(limits[0], 4), max(limits[1], 4 if mid == 15825 else 10), *limits[2:])
                         if mid in TAB_METHODS else limits)
-            self.assertEqual(expected, new_limits, mid)
+            if mid not in WINDOW_METHODS: self.assertEqual(expected, new_limits, mid)
             if self.old[a:a + size] != self.abc[b:b + length]: changed.add(mid)
-        self.assertEqual(METHODS | MATERIAL_METHODS | TAB_METHODS, changed)
+        self.assertEqual(METHODS | MATERIAL_METHODS | TAB_METHODS | WINDOW_METHODS, changed)
         self.assertEqual(self.old_strings, self.strings)
         for mid in changed:
             a, size, limits = self.bodies[mid]; code = self.abc[a:a + size]

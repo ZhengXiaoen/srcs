@@ -55,22 +55,14 @@ function AppearanceMakeCategory(sysarg,group,page)
     local cfg = LocalDT.AppearanceMakeGroups[group]
     if not cfg then return end
     page = page == nil and 1 or tonumber(page)
-    local pageCount = math.ceil(#cfg.starts/4)
-    if not page or page%1 ~= 0 or page < 1 or page > pageCount then return end
+    if not page or page%1 ~= 0 or page < 1 or page > math.ceil(#cfg.starts/4) then return end
     local str = "\\  <(c0xFFffff00)" .. cfg.label .. "介绍：>"
         .. "\\               <(c0xFFb6946c)1." .. cfg.source .. "获得.>"
         .. "\\               <(c0xFFb6946c)2.支持背包中的堆叠道具.>"
         .. "\\               <(c0xFFb6946c)3.三个相同道具合成高一级.>\\<(idecoLine#350)>           "
-    for series=(page-1)*4+1,math.min(page*4,#cfg.starts) do
+    for series=1,#cfg.starts do
         str = str .. "\\                      <" .. Item.getItemName(cfg.starts[series])
-            .. "合成/@AppearanceMakeList," .. group .. "," .. series .. ">\\"
-    end
-    str = str .. "\\"
-    if page > 1 then
-        str = str .. "    <上一页/@AppearanceMakeCategory," .. group .. "," .. (page-1) .. ">"
-    end
-    if page < pageCount then
-        str = str .. "    <下一页/@AppearanceMakeCategory," .. group .. "," .. (page+1) .. ">"
+            .. "合成/@AppearanceMakeList," .. group .. "," .. series .. ">"
     end
     return str
 end
@@ -86,10 +78,10 @@ function AppearanceMakeList(sysarg,group,series)
     local str = "\\ <(c0xFFb6946c)3个相同的" .. cfg.label .. "可合成1个高级" .. cfg.label .. "：>\\<(idecoLine#350)> \\"
     for index=(series-1)*3+1,series*3 do
         local recipe = recipes[index]
-        str = str .. string.format("   %s <(c0xFFb6946c)*> <(c0xFF00ff00)3> <(c0xFFb6946c)= %s   <合成/@AppearanceMake,%d,%d>\\",
+        str = str .. string.format("   %s <(c0xFFb6946c)*> <(c0xFF00ff00)3> <(c0xFFb6946c)= >%s   <合成/@AppearanceMake,%d,%d>\\",
             Item.getItemLinkMsg(recipe.itemid), Item.getItemLinkMsg(recipe.destid),group,index)
     end
-    return str .. "\\\\\t\t\t<返回主页/@AppearanceMakeCategory," .. group .. "," .. math.ceil(series/4) .. "> "
+    return str .. "\\\\\t\t\t<返回主页/@AppearanceMakeCategory," .. group .. "> "
 end
 
 function AppearanceMake(sysarg,group,index)

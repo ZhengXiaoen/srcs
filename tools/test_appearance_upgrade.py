@@ -44,7 +44,7 @@ Actor={
  end,
  sendTipmsg=function(_,msg)tips[#tips+1]=msg end
 }
-Item={getItemName=tostring,getItemLinkMsg=function(id)return 'ITEM'..id end}
+Item={getItemName=tostring,getItemLinkMsg=function(id)return '<(itemlink#49407#v1,'..id..')ITEM'..id..'>' end}
 Awards={CheckBagGridCount=function(_,award)
  assert(#award==1 and award[1].count==1);return not fullBag end}
 ''')
@@ -78,14 +78,19 @@ class AppearanceUpgradeTests(unittest.TestCase):
         self.assertEqual(MATERIALS,found)
 
     def test_bound_and_mixed_stacks_keep_result_bound(self):
-        for bound,unbound in [(200,0),(1,2),(2,200),(3,3)]:
-            lua=runtime();lua.execute(f'bag={{[6888]={{[0]={unbound},[1]={bound}}}}}')
-            lua.globals().AppearanceMake(1,1,1)
-            self.assertEqual(1,lua.globals().bag[6889][1])
-            self.assertEqual(max(0,bound-3),lua.globals().bag[6888][1])
-            self.assertEqual(unbound-(3-min(bound,3)),lua.globals().bag[6888][0])
+        lua=runtime()
+        for group in [1,2,3]:
+            for index,recipe in lua.globals().LocalDT.AppearanceMakeRecipes(group).items():
+                item,dest=recipe.itemid,recipe.destid
+                for bound,unbound in [(200,0),(1,2),(2,200),(3,3)]:
+                    with self.subTest(group=group,index=index,bound=bound,unbound=unbound):
+                        lua.execute(f'bag={{[{item}]={{[0]={unbound},[1]={bound}}}}};added={{}};removals={{}}')
+                        lua.globals().AppearanceMake(1,group,index)
+                        self.assertEqual(1,lua.globals().bag[dest][1])
+                        self.assertEqual(max(0,bound-3),lua.globals().bag[item][1])
+                        self.assertEqual(unbound-(3-min(bound,3)),lua.globals().bag[item][0])
 
-    def test_category_pages_series_links_and_return_follow_shield_layout(self):
+    def test_all_categories_fit_one_page_and_series_keep_three_recipe_details(self):
         lua=runtime()
         for group,starts,entry in [(1,RIDES,'RideAppearanceMakeInit'),(2,FEET,'FootAppearanceMakeInit'),
                                    (3,DRESSES,'FashionAppearanceMakeInit')]:
@@ -95,23 +100,26 @@ class AppearanceUpgradeTests(unittest.TestCase):
             self.assertIn('<(c0xFFffff00)',home)
             self.assertIn('<(idecoLine#350)>',home)
             self.assertNotIn('<合成/',home)
+            self.assertNotIn('上一页',home)
+            self.assertNotIn('下一页',home)
+            self.assertEqual(5+len(starts),home.count('\\'))
             for page in range(1,(len(starts)+3)//4+1):
                 category=lua.globals().AppearanceMakeCategory(1,group,page)
-                series_range=range((page-1)*4+1,min(page*4,len(starts))+1)
+                self.assertEqual(home,category)
+                series_range=range(1,len(starts)+1)
                 links=re.findall(r'<(\d+)合成/@AppearanceMakeList,(\d+),(\d+)>',category)
                 self.assertEqual([(str(starts[series-1]),str(group),str(series)) for series in series_range],links)
                 for _,link_group,link_series in links:
                     series=int(link_series)
                     listing=lua.globals().AppearanceMakeList(1,link_group,link_series)
-                    self.assertIn(f'<返回主页/@AppearanceMakeCategory,{group},{page}>',listing)
-                    self.assertIn('<(c0xFFb6946c)= ',listing)
+                    self.assertIn(f'<返回主页/@AppearanceMakeCategory,{group}>',listing)
+                    self.assertIn('<(c0xFFb6946c)= ><(itemlink#',listing)
+                    self.assertNotRegex(listing,r'<[^>]*<')
                     for index in range((series-1)*3+1,series*3+1):
                         recipe=lua.globals().LocalDT.AppearanceMakeRecipes(group)[index]
                         self.assertEqual(starts[series-1]+(index-1)%3,recipe.itemid)
                         self.assertIn(f'ITEM{recipe.itemid}',listing)
                         self.assertIn(f'ITEM{recipe.destid}',listing)
-                if page>1:self.assertIn(f'<上一页/@AppearanceMakeCategory,{group},{page-1}>',category)
-                if page<(len(starts)+3)//4:self.assertIn(f'<下一页/@AppearanceMakeCategory,{group},{page+1}>',category)
         for group,page in [(None,1),('bad',1),(4,1),(1,'bad'),(1,0),(1,3),(1,1.5)]:
             self.assertIsNone(lua.globals().AppearanceMakeCategory(1,group,page))
         for group,series in [(1,0),(1,7),(1,'bad'),(1,1.5),(2,9),(3,6)]:
@@ -133,12 +141,59 @@ class AppearanceUpgradeTests(unittest.TestCase):
             self.assertNotIn(last+1,{r.itemid for r in lua.globals().LocalDT.AppearanceMakeRecipes(group).values()})
 
     def test_failure_refunds_exact_bound_and_unbound_quantities(self):
-        for failure in ['failRemove=1','failRemove=2','partialRemove=1','failAward=6889']:
-            lua=runtime();lua.execute('bag={[6888]={[0]=200,[1]=2}};'+failure)
-            lua.globals().AppearanceMake(1,1,1)
-            self.assertEqual(200,lua.globals().bag[6888][0])
-            self.assertEqual(2,lua.globals().bag[6888][1])
-            self.assertIsNone(lua.globals().bag[6889])
+        lua=runtime()
+        for group in [1,2,3]:
+            for index,recipe in lua.globals().LocalDT.AppearanceMakeRecipes(group).items():
+                item,dest=recipe.itemid,recipe.destid
+                failures=[(2,200,'failRemove=1'),(2,200,'failRemove=2'),
+                          (2,200,'partialRemove=1'),(1,200,'partialRemove=2'),
+                          (2,200,f'failAward={dest}'),(200,0,f'failAward={dest}'),
+                          (0,200,f'failAward={dest}')]
+                for bound,unbound,failure in failures:
+                    with self.subTest(group=group,index=index,failure=failure,bound=bound):
+                        lua.execute(f'bag={{[{item}]={{[0]={unbound},[1]={bound}}}}};added={{}};removals={{}};'
+                                    f'calls=0;failRemove=nil;partialRemove=nil;failAward=nil;{failure}')
+                        lua.globals().AppearanceMake(1,group,index)
+                        self.assertEqual(unbound,lua.globals().bag[item][0])
+                        self.assertEqual(bound,lua.globals().bag[item][1])
+                        self.assertIsNone(lua.globals().bag[dest])
+
+    def test_deployed_client_entries_recipes_and_item_links_match_server(self):
+        lua=runtime();client=ROOT/'web/v2/lang/zh-cn'
+        packed=dict(read_pack((client/'zh-cn.dat').read_bytes()))
+        for name in ['heChengCfg.cbp','stditems4.cbp']:
+            self.assertEqual((client/name).read_bytes(),packed[name])
+        _,config=read_cbp(packed['heChengCfg.cbp'])
+        for group in [1,2]:
+            rows=[row for series in config.child(str(group+7)).children for row in series.children]
+            recipes=lua.globals().LocalDT.AppearanceMakeRecipes(group)
+            self.assertEqual(len(recipes),len(rows))
+            for index,row in enumerate(rows,1):
+                self.assertEqual((recipes[index].itemid,recipes[index].itemid,recipes[index].destid,1,2,0),
+                                 tuple(row.child(name).number() for name in
+                                       ['id1','id2','id3','needcount1','needcount2','neeMoney']))
+        _,items=read_cbp(packed['stditems4.cbp'])
+        items={int(row.child('id').number()):row for row in items.children}
+        language=LuaRuntime(unpack_returned_tuples=True)
+        source=(ROOT/'Server/S1001/data/language/Zh-CN/Item.lua').read_text(encoding='utf-8-sig')
+        strings=dict(re.findall(r'\b([ni]\d+)="((?:\\.|[^"\\\r\n])*)"',source))
+        for group in [1,2,3]:
+            for recipe in lua.globals().LocalDT.AppearanceMakeRecipes(group).values():
+                for item in [recipe.itemid,recipe.destid]:
+                    self.assertEqual(language.eval('"'+strings['n'+str(item)]+'"'),items[item].child('name').value.decode('utf-8'))
+                    self.assertEqual(language.eval('"'+strings['i'+str(item)]+'"'),items[item].child('desc').value.decode('utf-8'))
+                self.assertIn('三个可合成',items[recipe.itemid].child('desc').value.decode('utf-8'))
+        for file,class_name,entries in [('web/GameFrame.swf','FashionCombineWin',
+                                         ['FootAppearanceMakeInit','FashionAppearanceMakeInit']),
+                                        ('web/v2/modules/mount/Mount.swf','MountIllusionCombinWin',
+                                         ['RideAppearanceMakeInit'])]:
+            data,(_,_,start,end)=abc_section((ROOT/file).read_bytes());abc=data[start:end]
+            names,catalog,bodies=inspect_abc(abc)
+            method=catalog[class_name]['instance']['show'][0];start,size,_=bodies[method]
+            operations=instructions(abc[start:start+size]);strings=pools(abc)['strings'][3]
+            self.assertEqual(entries,[strings[operation.operands[0]] for operation in operations if operation.opcode==0x2c])
+            calls=[names[operation.operands[0]] for operation in operations if operation.opcode==0x4f]
+            self.assertEqual(['sendTalkToNPC']*len(entries),calls)
 
     def test_legacy_recipes_and_click_entry_allowlist(self):
         lua=runtime()

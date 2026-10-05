@@ -335,7 +335,7 @@ def main():
         pos=source.index(b'\r\n',source.index(anchor))+2;source=source[:pos]+line+source[pos:]
     updates[global_file]=source
     whitelist=ROOT/'Server/S1001/data/functions/GlobalNpcFunctions.lua';source=whitelist.read_bytes()
-    for name in ['AppearanceMakeInit','RideAppearanceMakeInit','FashionAppearanceMakeInit','FootAppearanceMakeInit','AppearanceMakeList','AppearanceMake']:
+    for name in ['AppearanceMakeInit','RideAppearanceMakeInit','FashionAppearanceMakeInit','FootAppearanceMakeInit','AppearanceMakeCategory','AppearanceMakeList','AppearanceMake']:
         line=b'\t'+name.encode()+b' =1,\r\n'
         if line not in source:
             pos=source.index(b'\tShenDunMakeInit =1,');source=source[:pos]+line+source[pos:]

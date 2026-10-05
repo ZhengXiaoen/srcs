@@ -2,9 +2,12 @@
 --#include "data\config\ActorEvent\HeChengCfg.lua" once
 
 LocalDT.AppearanceMakeGroups = {
-    {name="坐骑合成", recipeGroup=9},
-    {name="足迹合成", recipeGroup=10},
-    {name="时装合成", starts={6715,6719,6723,6727,7703}},
+    {name="坐骑合成", label="坐骑", source="探索宝藏", recipeGroup=9,
+        starts={6888,6892,6896,6900,6941,7630}},
+    {name="足迹合成", label="足迹", source="探索宝藏", recipeGroup=10,
+        starts={6967,6971,6975,6979,7786,7790,7794,7798}},
+    {name="时装合成", label="时装", source="探索宝藏、四帝宫",
+        starts={6715,6719,6723,6727,7703}},
 }
 
 LocalDT.AppearanceMakeRecipes = function(group)
@@ -30,33 +33,63 @@ end
 function AppearanceMakeInit(sysarg)
     local str = "\\ <(c0xFFb6946c)3个相同道具可合成1个高一级道具，点击合成即可。>\\<(idecoLine#350)>\\"
     for group, cfg in ipairs(LocalDT.AppearanceMakeGroups) do
-        str = str .. "\\                 <" .. cfg.name .. "/@AppearanceMakeList," .. group .. ">\\"
+        str = str .. "\\                      <" .. cfg.name .. "/@AppearanceMakeCategory," .. group .. ">\\"
     end
     return str
 end
 
 function RideAppearanceMakeInit(sysarg)
-    return AppearanceMakeList(sysarg,1)
+    return AppearanceMakeCategory(sysarg,1)
 end
 
 function FashionAppearanceMakeInit(sysarg)
-    return AppearanceMakeList(sysarg,3)
+    return AppearanceMakeCategory(sysarg,3)
 end
 
 function FootAppearanceMakeInit(sysarg)
-    return AppearanceMakeList(sysarg,2)
+    return AppearanceMakeCategory(sysarg,2)
 end
 
-function AppearanceMakeList(sysarg,group)
+function AppearanceMakeCategory(sysarg,group,page)
     group = tonumber(group)
+    local cfg = LocalDT.AppearanceMakeGroups[group]
+    if not cfg then return end
+    page = page == nil and 1 or tonumber(page)
+    local pageCount = math.ceil(#cfg.starts/4)
+    if not page or page%1 ~= 0 or page < 1 or page > pageCount then return end
+    local str = "\\  <(c0xFFffff00)" .. cfg.label .. "介绍：>"
+        .. "\\               <(c0xFFb6946c)1." .. cfg.source .. "获得.>"
+        .. "\\               <(c0xFFb6946c)2.支持背包中的堆叠道具.>"
+        .. "\\               <(c0xFFb6946c)3.三个相同道具合成高一级.>\\<(idecoLine#350)>           "
+    for series=(page-1)*4+1,math.min(page*4,#cfg.starts) do
+        str = str .. "\\                      <" .. Item.getItemName(cfg.starts[series])
+            .. "合成/@AppearanceMakeList," .. group .. "," .. series .. ">\\"
+    end
+    str = str .. "\\"
+    if page > 1 then
+        str = str .. "    <上一页/@AppearanceMakeCategory," .. group .. "," .. (page-1) .. ">"
+    end
+    if page < pageCount then
+        str = str .. "    <下一页/@AppearanceMakeCategory," .. group .. "," .. (page+1) .. ">"
+    end
+    return str
+end
+
+function AppearanceMakeList(sysarg,group,series)
+    group = tonumber(group)
+    local cfg = LocalDT.AppearanceMakeGroups[group]
+    if not cfg then return end
+    if series == nil then return AppearanceMakeCategory(sysarg,group) end
+    series = tonumber(series)
+    if not series or series%1 ~= 0 or series < 1 or series > #cfg.starts then return end
     local recipes = LocalDT.AppearanceMakeRecipes(group)
-    if not recipes then return end
-    local str = "\\ <(c0xFFb6946c)3个相同道具合成1个高一级道具，支持堆叠材料。>\\<(idecoLine#350)>\\"
-    for index, recipe in ipairs(recipes) do
-        str = str .. string.format("   %s <(c0xFFb6946c)*> <(c0xFF00ff00)3> <(c0xFFb6946c)=> %s   <合成/@AppearanceMake,%d,%d>\\",
+    local str = "\\ <(c0xFFb6946c)3个相同的" .. cfg.label .. "可合成1个高级" .. cfg.label .. "：>\\<(idecoLine#350)> \\"
+    for index=(series-1)*3+1,series*3 do
+        local recipe = recipes[index]
+        str = str .. string.format("   %s <(c0xFFb6946c)*> <(c0xFF00ff00)3> <(c0xFFb6946c)= %s   <合成/@AppearanceMake,%d,%d>\\",
             Item.getItemLinkMsg(recipe.itemid), Item.getItemLinkMsg(recipe.destid),group,index)
     end
-    return str .. "\\                 <返回主页/@AppearanceMakeInit>"
+    return str .. "\\\\\t\t\t<返回主页/@AppearanceMakeCategory," .. group .. "," .. math.ceil(series/4) .. "> "
 end
 
 function AppearanceMake(sysarg,group,index)
@@ -87,7 +120,7 @@ function AppearanceMake(sysarg,group,index)
     if removedBound == bound and removedUnbound == unbound then
         if Actor.addItem(sysarg,recipe.destid,0,0,1,bind,0,"外观合成",LogIds.exHeChengZhuangBei) == 1 then
             Actor.sendTipmsg(sysarg,"合成成功！获得"..Item.getItemName(recipe.destid),ttFlyTip)
-            return AppearanceMakeList(sysarg,group)
+            return AppearanceMakeList(sysarg,group,math.ceil(index/3))
         end
     end
     -- 扣除或发放失败时返还已经扣除的材料，不继续发放成品。

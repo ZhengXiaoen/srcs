@@ -85,6 +85,7 @@ GlobalNpcFunctionsFilter = {
 	RideAppearanceMakeInit =1,
 	FashionAppearanceMakeInit =1,
 	FootAppearanceMakeInit =1,
+	AppearanceMakeCategory =1,
 	AppearanceMakeList =1,
 	AppearanceMake =1,
 	ShenDunMakeInit =1,

@@ -59,13 +59,17 @@ class AppearanceUpgradeTests(unittest.TestCase):
         for group,size in [(1,18),(2,24),(3,15)]:
             recipes=lua.globals().LocalDT.AppearanceMakeRecipes(group)
             self.assertEqual(size,len(recipes))
-            listing=lua.globals().AppearanceMakeList(1,group)
-            self.assertEqual(size,listing.count('<合成/'))
+            for series in range(1,size//3+1):
+                listing=lua.globals().AppearanceMakeList(1,group,series)
+                self.assertEqual(3,listing.count('<合成/'))
+                self.assertEqual([(str(group),str(index)) for index in range((series-1)*3+1,series*3+1)],
+                                 re.findall(r'<合成/@AppearanceMake,(\d+),(\d+)>',listing))
             for index,recipe in recipes.items():
                 item,dest=recipe.itemid,recipe.destid;found.add(item)
                 lua.execute(f'bag={{[{item}]={{[0]=200,[1]=0}}}};added={{}};removals={{}}')
                 result=lua.globals().AppearanceMake(1,group,index)
-                self.assertIn('支持堆叠材料',result)
+                self.assertIn('可合成1个高级',result)
+                self.assertEqual(lua.globals().AppearanceMakeList(1,group,(index+2)//3),result)
                 self.assertEqual(197,lua.globals().bag[item][0])
                 self.assertEqual(1,lua.globals().bag[dest][0])
                 award=lua.globals().added[1]
@@ -80,6 +84,40 @@ class AppearanceUpgradeTests(unittest.TestCase):
             self.assertEqual(1,lua.globals().bag[6889][1])
             self.assertEqual(max(0,bound-3),lua.globals().bag[6888][1])
             self.assertEqual(unbound-(3-min(bound,3)),lua.globals().bag[6888][0])
+
+    def test_category_pages_series_links_and_return_follow_shield_layout(self):
+        lua=runtime()
+        for group,starts,entry in [(1,RIDES,'RideAppearanceMakeInit'),(2,FEET,'FootAppearanceMakeInit'),
+                                   (3,DRESSES,'FashionAppearanceMakeInit')]:
+            home=lua.globals().AppearanceMakeCategory(1,group)
+            self.assertEqual(home,lua.globals()[entry](1))
+            self.assertEqual(home,lua.globals().AppearanceMakeList(1,group))
+            self.assertIn('<(c0xFFffff00)',home)
+            self.assertIn('<(idecoLine#350)>',home)
+            self.assertNotIn('<合成/',home)
+            for page in range(1,(len(starts)+3)//4+1):
+                category=lua.globals().AppearanceMakeCategory(1,group,page)
+                series_range=range((page-1)*4+1,min(page*4,len(starts))+1)
+                links=re.findall(r'<(\d+)合成/@AppearanceMakeList,(\d+),(\d+)>',category)
+                self.assertEqual([(str(starts[series-1]),str(group),str(series)) for series in series_range],links)
+                for _,link_group,link_series in links:
+                    series=int(link_series)
+                    listing=lua.globals().AppearanceMakeList(1,link_group,link_series)
+                    self.assertIn(f'<返回主页/@AppearanceMakeCategory,{group},{page}>',listing)
+                    self.assertIn('<(c0xFFb6946c)= ',listing)
+                    for index in range((series-1)*3+1,series*3+1):
+                        recipe=lua.globals().LocalDT.AppearanceMakeRecipes(group)[index]
+                        self.assertEqual(starts[series-1]+(index-1)%3,recipe.itemid)
+                        self.assertIn(f'ITEM{recipe.itemid}',listing)
+                        self.assertIn(f'ITEM{recipe.destid}',listing)
+                if page>1:self.assertIn(f'<上一页/@AppearanceMakeCategory,{group},{page-1}>',category)
+                if page<(len(starts)+3)//4:self.assertIn(f'<下一页/@AppearanceMakeCategory,{group},{page+1}>',category)
+        for group,page in [(None,1),('bad',1),(4,1),(1,'bad'),(1,0),(1,3),(1,1.5)]:
+            self.assertIsNone(lua.globals().AppearanceMakeCategory(1,group,page))
+        for group,series in [(1,0),(1,7),(1,'bad'),(1,1.5),(2,9),(3,6)]:
+            self.assertIsNone(lua.globals().AppearanceMakeList(1,group,series))
+        root=lua.globals().AppearanceMakeInit(1)
+        for group in [1,2,3]:self.assertIn(f'/@AppearanceMakeCategory,{group}>',root)
 
     def test_short_materials_full_bag_and_invalid_requests_do_not_consume(self):
         for bound,unbound,full in [(0,2,False),(1,1,False),(0,200,True)]:
@@ -113,13 +151,13 @@ class AppearanceUpgradeTests(unittest.TestCase):
                     found.add(row.id1)
             self.assertEqual({x+i for x in starts for i in range(3)},found)
         source=(ROOT/'Server/S1001/data/functions/GlobalNpcFunctions.lua').read_bytes()
-        for name in ['AppearanceMakeInit','AppearanceMakeList','AppearanceMake','RideAppearanceMakeInit',
+        for name in ['AppearanceMakeInit','AppearanceMakeCategory','AppearanceMakeList','AppearanceMake','RideAppearanceMakeInit',
                      'FashionAppearanceMakeInit','FootAppearanceMakeInit']:
             self.assertIn(name.encode()+b' =1,',source)
         self.assertNotRegex(SCRIPT.read_text(encoding='utf-8'),r'(?m)^local ')
         # Script has no per-chunk locals even when included after many modules.
-        lua.execute('function merged() '+ ';'.join('local x%d=0'%i for i in range(180))+
-                    '; local LocalDT={}; '+SCRIPT.read_text(encoding='utf-8-sig')+'\n end')
+        combined=';'.join('local x%d=0'%i for i in range(180))+'; local LocalDT={}; '+SCRIPT.read_text(encoding='utf-8-sig')
+        self.assertTrue(lua.eval('function(source) return assert(loadstring(source)) ~= nil end')(combined))
 
     def test_legacy_stack_request_delegates_without_four_grid_consumption(self):
         lua=runtime()

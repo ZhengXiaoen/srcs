@@ -14,6 +14,7 @@ from patch_wanfu_opening import patch_swf as wanfu_opening
 from patch_spring_display import patch_swf as spring_display
 from patch_retired_hunt_pages import patch_swf as retired_hunt
 from patch_spring_flash_sale import patch_swf as spring_dates
+from patch_spring_reminders import BASELINE as REMINDER_BASELINE, patch_swf as spring_reminders
 from patch_activity_entries import strings_of
 from patch_activity_reminders import normalize
 from patch_drop_pickup_retry import abc_section
@@ -103,8 +104,12 @@ class SpringClientTests(unittest.TestCase):
 
     def test_only_two_row_flags_change_in_entire_uncompressed_swf(self):
         original = subprocess.check_output(['git', 'show', BASELINE + ':web/GameFrame.swf'], cwd=ROOT)
-        self.assertEqual(self.source, spring_dates(retired_hunt(wanfu_opening(spring_display(retired_pages(patch_swf(original)))))))
-        self.assertEqual(self.source, patch_swf(self.source))
+        routed = patch_swf(original)
+        # The reminder patch has its own recent baseline; older snapshots also
+        # contain unrelated follow-up changes outside Spring entry routing.
+        previous = subprocess.check_output(['git', 'show', REMINDER_BASELINE + ':web/GameFrame.swf'], cwd=ROOT)
+        self.assertEqual(self.source, spring_reminders(previous))
+        self.assertEqual(routed, patch_swf(routed))
         old, (_, _, a, b) = abc_section(original)
         abc, _ = normalize(old[a:b]); _, _, bodies = inspect_abc(abc)
         offset, _, _ = bodies[6440]

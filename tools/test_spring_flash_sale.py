@@ -196,7 +196,8 @@ class SpringFlashSaleTests(unittest.TestCase):
 
     def test_only_audited_methods_change_and_config_pack_remain_identical(self):
         original = subprocess.check_output(['git', 'show', BASELINE + ':web/GameFrame.swf'], cwd=ROOT)
-        self.assertEqual(self.source, patch_swf(original))
+        from patch_spring_reminders import METHODS as REMINDER_METHODS, PARAMETER_METHODS, patch_swf as spring_reminders
+        self.assertEqual(self.source, spring_reminders(patch_swf(original)))
         self.assertEqual(self.source, patch_swf(self.source))
         raw, (_, _, start, end) = abc_section(original)
         before, _ = normalize(raw[start:end])
@@ -214,7 +215,7 @@ class SpringFlashSaleTests(unittest.TestCase):
                 for _ in range(reader.u30()):
                     row = [reader.u30() for _ in range(5)]
                     self.assertTrue(set(row[:3]) <= boundaries)
-        self.assertEqual(METHODS, changed)
+        self.assertEqual(METHODS | (REMINDER_METHODS - PARAMETER_METHODS), changed)
         for path in ('web/v2/lang/zh-cn/SpringFestivalCfg.cbp', 'web/v2/lang/zh-cn/zh-cn.dat', 'Server/S1001/data/' + CONFIG_PATH):
             self.assertEqual(subprocess.check_output(['git', 'show', BASELINE + ':' + path], cwd=ROOT), (ROOT / path).read_bytes())
         directory = ROOT / 'web/v2/lang/zh-cn'

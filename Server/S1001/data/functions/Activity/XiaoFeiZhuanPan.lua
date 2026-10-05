@@ -26,6 +26,8 @@ handXiaoFeiZhuanPanEx =function(sysarg,msgid,packet)
 		AskLucklyZP_multiDraw(sysarg, 10)
 	elseif optType==8 then --百连抽（消耗100次抽奖机会）
 		AskLucklyZP_multiDraw(sysarg, 100)
+	elseif optType==9 then --自动快速抽奖，每批最多100次，客户端收到结果后继续
+		AskLucklyZP_multiDraw(sysarg, 100, true)
 	end
 end
 
@@ -345,15 +347,35 @@ end
 
 ------------------------------------------------------------消费转盘系统-----------------------------------------------------		
 
---十连抽/百连抽通用实现
+--自动抽奖每批都返回次数；失败也返回，客户端据此停止，避免反复请求。
+LocalDT.XFZPAutoReply = function(sysarg, success)
+	local var = Actor.getStaticVar(sysarg)
+	local days = var.newdays or {}
+	local consume = var.dayConsumeYB_WUYI or 0
+	local remaining = days.ZPcanDoTime or 0
+	if not ZP_IsUseOld() then
+		remaining = math.floor(consume / XiaoFeiZhuanPan.cosumeEveryYB) - (days.ZPhasDoTime or 0)
+	end
+	local packet = DataPack.allocPacket(sysarg, 151, LogicCmd.miscSysEx.sub.sXiaoFeiZhuanPan)
+	DataPack.writeByte(packet, success and 9 or 10)
+	DataPack.writeInt(packet, math.max(remaining, 0))
+	DataPack.writeUInt(packet, consume)
+	DataPack.flush(packet)
+end
+
+--十连抽/百连抽/自动抽奖通用实现
 --drawCount: 抽奖次数(10=十连 100=百连)
-function AskLucklyZP_multiDraw(sysarg, drawCount)
+function AskLucklyZP_multiDraw(sysarg, drawCount, isAuto)
 
 	local Yb   = XiaoFeiZhuanPan.cosumeEveryYB
 	local var  = Actor.getStaticVar(sysarg)
 	if var.days == nil then var.days = {} end
 	if var.newdays == nil then var.newdays = {} end
 	local svar = System.getStaticVar()
+	--先结算已扣次数的单抽奖励，避免自动抽奖与手动抽奖交错时漏奖。
+	if isAuto then
+		AskLucklyZP_getAward(sysarg)
+	end
 
 	if var.days.Luckly_ZPawardInfo == nil then
 		AskLucklyZP_RefawardInfo(sysarg)
@@ -369,13 +391,20 @@ function AskLucklyZP_multiDraw(sysarg, drawCount)
 		availTimes = math.floor(dayConsumeYB_WUYI / Yb) - hasDoTime
 	end
 
-	if availTimes < drawCount then
+	if isAuto then
+		drawCount = math.min(100, availTimes)
+		if drawCount < 1 then
+			Actor.sendTipmsg(sysarg, "没有抽奖次数", ttFlyTip)
+			LocalDT.XFZPAutoReply(sysarg, false)
+			return
+		end
+	elseif availTimes < drawCount then
 		Actor.sendTipmsg(sysarg, string.format("抽奖次数不足，需要%d次，当前剩余%d次", drawCount, availTimes), ttFlyTip)
 		return
 	end
 
 	-- 背包检查：至少有1格才受理
-	if Item.getBagEmptyGridCount(sysarg) < 1 then
+	if not isAuto and Item.getBagEmptyGridCount(sysarg) < 1 then
 		Actor.sendTipmsg(sysarg, "背包已满，无法进行多连抽", ttFlyTip)
 		return
 	end
@@ -426,7 +455,9 @@ function AskLucklyZP_multiDraw(sysarg, drawCount)
 			Awards.Give(sysarg, {awardCfg}, LogIds.xiaofeizhuanpan, string.format("消费转盘%d连抽", drawCount))
 		end
 
-		tipStr = tipStr .. awardCfg.name .. " "
+		if not isAuto then
+			tipStr = tipStr .. awardCfg.name .. " "
+		end
 
 		-- 写全局滚动日志
 		if svar.Luckly_ZPLog == nil then
@@ -448,6 +479,9 @@ function AskLucklyZP_multiDraw(sysarg, drawCount)
 			"背包不足，奖励已补发到邮件", 0, 0, table.concat(mailItems, "/"))
 	end
 
+	if isAuto then
+		tipStr = string.format("自动抽奖已完成%d次，奖励已发放", drawCount)
+	end
 	Actor.sendTipmsg(sysarg, tipStr, ttFlyTip)
 	System.broadcastTipmsg(string.format(
 		"<(n%s)>玩家进行了消费转盘%d连抽，获得了丰厚奖励！<我也要去/@@showWin,246,2>",
@@ -455,6 +489,10 @@ function AskLucklyZP_multiDraw(sysarg, drawCount)
 
 	-- 刷新剩余次数给客户端
 	AskLucklyZP_canRunTime(sysarg)
+	if isAuto then
+		AskLucklyZP_logInfo(sysarg)
+		LocalDT.XFZPAutoReply(sysarg, true)
+	end
 end
 
 --@func xfzp10 消费转盘十连抽（GM命令）

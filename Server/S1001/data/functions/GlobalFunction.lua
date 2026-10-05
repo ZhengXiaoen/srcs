@@ -60,6 +60,7 @@ local LocalDT = {}
 --#include "data\functions\GuildFubenBossFunc.lua" once --行会boss
 --#include "data\functions\LongTengMake.lua" once --龙腾合成
 --#include "data\functions\ShenDunMake.lua" once --神盾合成
+--#include "data\functions\AppearanceMake.lua" once
 --#include "data\functions\ImmortalEquipMake.lua" once --仙装合成
 function main(sysarg)
 	return "global"

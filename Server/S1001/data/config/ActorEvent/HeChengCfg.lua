@@ -254,76 +254,76 @@ HeChengCfg =
 {
 
 	{
-{id1=6888,needcount1=2,id2=6888,needcount2=2,neeMoney=0,moneyType=1,id3=6889,isbind=0,},--灵·蓝凤凰
+{id1=6888,needcount1=1,id2=6888,needcount2=2,neeMoney=0,moneyType=1,id3=6889,isbind=0,},--灵·蓝凤凰
 	},
 
 	{
-{id1=6889,needcount1=2,id2=6889,needcount2=2,neeMoney=0,moneyType=1,id3=6890,isbind=0,},--圣·蓝凤凰
+{id1=6889,needcount1=1,id2=6889,needcount2=2,neeMoney=0,moneyType=1,id3=6890,isbind=0,},--圣·蓝凤凰
 	},
 
 	{
-{id1=6890,needcount1=2,id2=6890,needcount2=2,neeMoney=0,moneyType=1,id3=6891,isbind=0,},--神·蓝凤凰
+{id1=6890,needcount1=1,id2=6890,needcount2=2,neeMoney=0,moneyType=1,id3=6891,isbind=0,},--神·蓝凤凰
 	},
 
 	{
-{id1=6892,needcount1=2,id2=6892,needcount2=2,neeMoney=0,moneyType=1,id3=6893,isbind=0,},--灵·深海鱼王
+{id1=6892,needcount1=1,id2=6892,needcount2=2,neeMoney=0,moneyType=1,id3=6893,isbind=0,},--灵·深海鱼王
 	},
 
 	{
-{id1=6893,needcount1=2,id2=6893,needcount2=2,neeMoney=0,moneyType=1,id3=6894,isbind=0,},--圣·深海鱼王
+{id1=6893,needcount1=1,id2=6893,needcount2=2,neeMoney=0,moneyType=1,id3=6894,isbind=0,},--圣·深海鱼王
 	},
 
 	{
-{id1=6894,needcount1=2,id2=6894,needcount2=2,neeMoney=0,moneyType=1,id3=6895,isbind=0,},--神·深海鱼王
+{id1=6894,needcount1=1,id2=6894,needcount2=2,neeMoney=0,moneyType=1,id3=6895,isbind=0,},--神·深海鱼王
 	},
 
 	{
-{id1=6896,needcount1=2,id2=6896,needcount2=2,neeMoney=0,moneyType=1,id3=6897,isbind=0,},--灵·远古苍龙
+{id1=6896,needcount1=1,id2=6896,needcount2=2,neeMoney=0,moneyType=1,id3=6897,isbind=0,},--灵·远古苍龙
 	},
 
 	{
-{id1=6897,needcount1=2,id2=6897,needcount2=2,neeMoney=0,moneyType=1,id3=6898,isbind=0,},--圣·远古苍龙
+{id1=6897,needcount1=1,id2=6897,needcount2=2,neeMoney=0,moneyType=1,id3=6898,isbind=0,},--圣·远古苍龙
 	},
 
 	{
-{id1=6898,needcount1=2,id2=6898,needcount2=2,neeMoney=0,moneyType=1,id3=6899,isbind=0,},--神·远古苍龙
+{id1=6898,needcount1=1,id2=6898,needcount2=2,neeMoney=0,moneyType=1,id3=6899,isbind=0,},--神·远古苍龙
 	},
 
 	{
-{id1=6900,needcount1=2,id2=6900,needcount2=2,neeMoney=0,moneyType=1,id3=6901,isbind=0,},--灵·灵狐武者
+{id1=6900,needcount1=1,id2=6900,needcount2=2,neeMoney=0,moneyType=1,id3=6901,isbind=0,},--灵·灵狐武者
 	},
 
 	{
-{id1=6901,needcount1=2,id2=6901,needcount2=2,neeMoney=0,moneyType=1,id3=6902,isbind=0,},--圣·灵狐武者
+{id1=6901,needcount1=1,id2=6901,needcount2=2,neeMoney=0,moneyType=1,id3=6902,isbind=0,},--圣·灵狐武者
 	},
 
 	{
-{id1=6902,needcount1=2,id2=6902,needcount2=2,neeMoney=0,moneyType=1,id3=6903,isbind=0,},--神·灵狐武者
+{id1=6902,needcount1=1,id2=6902,needcount2=2,neeMoney=0,moneyType=1,id3=6903,isbind=0,},--神·灵狐武者
 	},
 
 	{
-{id1=6941,needcount1=2,id2=6941,needcount2=2,neeMoney=0,moneyType=1,id3=6942,isbind=0,},--王·麒麟
+{id1=6941,needcount1=1,id2=6941,needcount2=2,neeMoney=0,moneyType=1,id3=6942,isbind=0,},--王·麒麟
 	},
 
 	{
-{id1=6942,needcount1=2,id2=6942,needcount2=2,neeMoney=0,moneyType=1,id3=6943,isbind=0,},--帝·麒麟
+{id1=6942,needcount1=1,id2=6942,needcount2=2,neeMoney=0,moneyType=1,id3=6943,isbind=0,},--帝·麒麟
 	},
 
 	{
-{id1=6943,needcount1=2,id2=6943,needcount2=2,neeMoney=0,moneyType=1,id3=6944,isbind=0,},--神·麒麟
+{id1=6943,needcount1=1,id2=6943,needcount2=2,neeMoney=0,moneyType=1,id3=6944,isbind=0,},--神·麒麟
 	},
 
 
 	{
-{id1=7630,needcount1=2,id2=7630,needcount2=2,neeMoney=0,moneyType=1,id3=7631,isbind=0,},--王·翼龙
+{id1=7630,needcount1=1,id2=7630,needcount2=2,neeMoney=0,moneyType=1,id3=7631,isbind=0,},--王·翼龙
 	},
 
 	{
-{id1=7631,needcount1=2,id2=7631,needcount2=2,neeMoney=0,moneyType=1,id3=7632,isbind=0,},--帝·翼龙
+{id1=7631,needcount1=1,id2=7631,needcount2=2,neeMoney=0,moneyType=1,id3=7632,isbind=0,},--帝·翼龙
 	},
 
 	{
-{id1=7632,needcount1=2,id2=7632,needcount2=2,neeMoney=0,moneyType=1,id3=7633,isbind=0,},--神·翼龙
+{id1=7632,needcount1=1,id2=7632,needcount2=2,neeMoney=0,moneyType=1,id3=7633,isbind=0,},--神·翼龙
 	},
 
 },
@@ -332,95 +332,95 @@ HeChengCfg =
 {
 
 	{
-{id1=6967,needcount1=2,id2=6967,needcount2=2,neeMoney=0,moneyType=1,id3=6968,isbind=0,},--王·足迹1
+{id1=6967,needcount1=1,id2=6967,needcount2=2,neeMoney=0,moneyType=1,id3=6968,isbind=0,},--王·足迹1
 	},
 
 	{
-{id1=6968,needcount1=2,id2=6968,needcount2=2,neeMoney=0,moneyType=1,id3=6969,isbind=0,},--帝·足迹1
+{id1=6968,needcount1=1,id2=6968,needcount2=2,neeMoney=0,moneyType=1,id3=6969,isbind=0,},--帝·足迹1
 	},
 
 	{
-{id1=6969,needcount1=2,id2=6969,needcount2=2,neeMoney=0,moneyType=1,id3=6970,isbind=0,},--神·足迹1
+{id1=6969,needcount1=1,id2=6969,needcount2=2,neeMoney=0,moneyType=1,id3=6970,isbind=0,},--神·足迹1
 	},
 
 	{
-{id1=6971,needcount1=2,id2=6971,needcount2=2,neeMoney=0,moneyType=1,id3=6972,isbind=0,},--王·足迹2
+{id1=6971,needcount1=1,id2=6971,needcount2=2,neeMoney=0,moneyType=1,id3=6972,isbind=0,},--王·足迹2
 	},
 
 	{
-{id1=6972,needcount1=2,id2=6972,needcount2=2,neeMoney=0,moneyType=1,id3=6973,isbind=0,},--帝·足迹2
+{id1=6972,needcount1=1,id2=6972,needcount2=2,neeMoney=0,moneyType=1,id3=6973,isbind=0,},--帝·足迹2
 	},
 
 	{
-{id1=6973,needcount1=2,id2=6973,needcount2=2,neeMoney=0,moneyType=1,id3=6974,isbind=0,},--神·足迹2
+{id1=6973,needcount1=1,id2=6973,needcount2=2,neeMoney=0,moneyType=1,id3=6974,isbind=0,},--神·足迹2
 	},
 
 	{
-{id1=6975,needcount1=2,id2=6975,needcount2=2,neeMoney=0,moneyType=1,id3=6976,isbind=0,},--王·足迹3
+{id1=6975,needcount1=1,id2=6975,needcount2=2,neeMoney=0,moneyType=1,id3=6976,isbind=0,},--王·足迹3
 	},
 
 	{
-{id1=6976,needcount1=2,id2=6976,needcount2=2,neeMoney=0,moneyType=1,id3=6977,isbind=0,},--帝·足迹3
+{id1=6976,needcount1=1,id2=6976,needcount2=2,neeMoney=0,moneyType=1,id3=6977,isbind=0,},--帝·足迹3
 	},
 
 	{
-{id1=6977,needcount1=2,id2=6977,needcount2=2,neeMoney=0,moneyType=1,id3=6978,isbind=0,},--神·足迹3
+{id1=6977,needcount1=1,id2=6977,needcount2=2,neeMoney=0,moneyType=1,id3=6978,isbind=0,},--神·足迹3
 	},
 
 	{
-{id1=6979,needcount1=2,id2=6979,needcount2=2,neeMoney=0,moneyType=1,id3=6980,isbind=0,},--王·足迹4
+{id1=6979,needcount1=1,id2=6979,needcount2=2,neeMoney=0,moneyType=1,id3=6980,isbind=0,},--王·足迹4
 	},
 
 	{
-{id1=6980,needcount1=2,id2=6980,needcount2=2,neeMoney=0,moneyType=1,id3=6981,isbind=0,},--帝·足迹4
+{id1=6980,needcount1=1,id2=6980,needcount2=2,neeMoney=0,moneyType=1,id3=6981,isbind=0,},--帝·足迹4
 	},
 
 	{
-{id1=6981,needcount1=2,id2=6981,needcount2=2,neeMoney=0,moneyType=1,id3=6982,isbind=0,},--神·足迹4
+{id1=6981,needcount1=1,id2=6981,needcount2=2,neeMoney=0,moneyType=1,id3=6982,isbind=0,},--神·足迹4
 	},
 	{
-{id1=7786,needcount1=2,id2=7786,needcount2=2,neeMoney=0,moneyType=1,id3=7787,isbind=0,},--王·足迹4
-	},
-
-	{
-{id1=7787,needcount1=2,id2=7787,needcount2=2,neeMoney=0,moneyType=1,id3=7788,isbind=0,},--帝·足迹4
+{id1=7786,needcount1=1,id2=7786,needcount2=2,neeMoney=0,moneyType=1,id3=7787,isbind=0,},--王·足迹4
 	},
 
 	{
-{id1=7788,needcount1=2,id2=7788,needcount2=2,neeMoney=0,moneyType=1,id3=7789,isbind=0,},--神·足迹4
-	},
-	{
-{id1=7790,needcount1=2,id2=7790,needcount2=2,neeMoney=0,moneyType=1,id3=7791,isbind=0,},--王·足迹4
+{id1=7787,needcount1=1,id2=7787,needcount2=2,neeMoney=0,moneyType=1,id3=7788,isbind=0,},--帝·足迹4
 	},
 
 	{
-{id1=7791,needcount1=2,id2=7791,needcount2=2,neeMoney=0,moneyType=1,id3=7792,isbind=0,},--帝·足迹4
+{id1=7788,needcount1=1,id2=7788,needcount2=2,neeMoney=0,moneyType=1,id3=7789,isbind=0,},--神·足迹4
+	},
+	{
+{id1=7790,needcount1=1,id2=7790,needcount2=2,neeMoney=0,moneyType=1,id3=7791,isbind=0,},--王·足迹4
 	},
 
 	{
-{id1=7792,needcount1=2,id2=7792,needcount2=2,neeMoney=0,moneyType=1,id3=7793,isbind=0,},--神·足迹4
-	},
-	{
-{id1=7794,needcount1=2,id2=7794,needcount2=2,neeMoney=0,moneyType=1,id3=7795,isbind=0,},--王·足迹4
+{id1=7791,needcount1=1,id2=7791,needcount2=2,neeMoney=0,moneyType=1,id3=7792,isbind=0,},--帝·足迹4
 	},
 
 	{
-{id1=7795,needcount1=2,id2=7795,needcount2=2,neeMoney=0,moneyType=1,id3=7796,isbind=0,},--帝·足迹4
+{id1=7792,needcount1=1,id2=7792,needcount2=2,neeMoney=0,moneyType=1,id3=7793,isbind=0,},--神·足迹4
+	},
+	{
+{id1=7794,needcount1=1,id2=7794,needcount2=2,neeMoney=0,moneyType=1,id3=7795,isbind=0,},--王·足迹4
 	},
 
 	{
-{id1=7796,needcount1=2,id2=7796,needcount2=2,neeMoney=0,moneyType=1,id3=7797,isbind=0,},--神·足迹4
-	},
-	{
-{id1=7798,needcount1=2,id2=7798,needcount2=2,neeMoney=0,moneyType=1,id3=7799,isbind=0,},--王·足迹4
+{id1=7795,needcount1=1,id2=7795,needcount2=2,neeMoney=0,moneyType=1,id3=7796,isbind=0,},--帝·足迹4
 	},
 
 	{
-{id1=7799,needcount1=2,id2=7799,needcount2=2,neeMoney=0,moneyType=1,id3=7800,isbind=0,},--帝·足迹4
+{id1=7796,needcount1=1,id2=7796,needcount2=2,neeMoney=0,moneyType=1,id3=7797,isbind=0,},--神·足迹4
+	},
+	{
+{id1=7798,needcount1=1,id2=7798,needcount2=2,neeMoney=0,moneyType=1,id3=7799,isbind=0,},--王·足迹4
 	},
 
 	{
-{id1=7800,needcount1=2,id2=7800,needcount2=2,neeMoney=0,moneyType=1,id3=7801,isbind=0,},--神·足迹4
+{id1=7799,needcount1=1,id2=7799,needcount2=2,neeMoney=0,moneyType=1,id3=7800,isbind=0,},--帝·足迹4
+	},
+
+	{
+{id1=7800,needcount1=1,id2=7800,needcount2=2,neeMoney=0,moneyType=1,id3=7801,isbind=0,},--神·足迹4
 	},
 },
 

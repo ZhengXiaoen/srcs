@@ -15,6 +15,7 @@ import unittest
 
 from patch_box_stacking import DUP, ITEM_DIR, ROOT, SERVER, appearance_groups, server_items, stack_limit
 from patch_guild_quest_config import read_cbp, read_pack
+from patch_appearance_upgrade import MATERIALS, patch_description
 import test_thor_legend_stacking as thor
 
 
@@ -147,6 +148,9 @@ class AppearanceStackingTests(unittest.TestCase):
                     self.assertEqual(1, row.child("dup").number())
                     row.child("dup").set_number(200)
                     found.add(item)
+                if item in MATERIALS:
+                    desc = row.child("desc")
+                    desc.value = patch_description(desc.value)
             self.assertEqual(expected, after, path)
         self.assertEqual(NEW, found)
         current = read_pack((client / "zh-cn.dat").read_bytes())
@@ -157,7 +161,7 @@ class AppearanceStackingTests(unittest.TestCase):
             if old != new:
                 changed.add(old[0])
                 self.assertEqual((client / old[0]).read_bytes(), new[1])
-        self.assertEqual({"stditems.cbp", "stditems4.cbp"}, changed)
+        self.assertEqual({"stditems.cbp", "stditems4.cbp", "heChengCfg.cbp"}, changed)
 
     def test_cleanup_preserves_quantity_binding_base_attributes_and_ride_gear(self):
         lua = activation_runtime()

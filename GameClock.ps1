@@ -634,6 +634,55 @@ function Undo-PreparedStart {
     }
 }
 
+function Install-MountStackPatch {
+    param($Paths)
+    $directory = [IO.Path]::Combine($Paths.Root, 'Server', 'S1001', 'x64')
+    $packagePath = [IO.Path]::Combine($directory, 'mount-stack.patch.json')
+    if (-not [IO.File]::Exists($packagePath)) { return }
+    if (@(Get-RunningServerNames $Paths).Count -gt 0) {
+        throw '坐骑堆叠补丁只能在服务器关闭后安装。'
+    }
+    $package = [IO.File]::ReadAllText($packagePath, [Text.Encoding]::UTF8) | ConvertFrom-Json
+    $exePath = [IO.Path]::Combine($directory, 'LogicServerCQ64_R.exe')
+    $source = [IO.File]::ReadAllBytes($exePath)
+    $sha = [Security.Cryptography.SHA256]::Create()
+    try {
+        $sourceHash = ([BitConverter]::ToString($sha.ComputeHash($source))).Replace('-', '').ToLowerInvariant()
+        if ($sourceHash -eq $package.targetSha256) { return }
+        if ($sourceHash -ne $package.sourceSha256 -or $source.Length -ne $package.sourceLength) {
+            throw '逻辑服版本与坐骑堆叠补丁不匹配，未修改程序。'
+        }
+        $result = New-Object byte[] ([int]$package.targetLength)
+        [Array]::Copy($source, $result, $source.Length)
+        foreach ($edit in $package.edits) {
+            $before = [Convert]::FromBase64String($edit.before)
+            $after = [Convert]::FromBase64String($edit.after)
+            $offset = [int]$edit.offset
+            if ($offset -lt 0 -or $offset + $before.Length -gt $source.Length -or
+                $offset + $after.Length -gt $result.Length) {
+                throw '坐骑堆叠补丁范围错误，未修改程序。'
+            }
+            for ($index = 0; $index -lt $before.Length; $index++) {
+                if ($source[$offset + $index] -ne $before[$index]) {
+                    throw '坐骑堆叠补丁校验失败，未修改程序。'
+                }
+            }
+            [Array]::Copy($after, 0, $result, $offset, $after.Length)
+        }
+        $resultHash = ([BitConverter]::ToString($sha.ComputeHash($result))).Replace('-', '').ToLowerInvariant()
+        if ($resultHash -ne $package.targetSha256) {
+            throw '坐骑堆叠补丁结果校验失败，未修改程序。'
+        }
+        # Replace on the same volume only after both complete files are verified.
+        $temporary = $exePath + '.mount-stack.new'
+        [IO.File]::WriteAllBytes($temporary, $result)
+        [IO.File]::Replace($temporary, $exePath, $exePath + '.before-mount-stack.bak')
+        Write-Host '已安装坐骑堆叠使用补丁。'
+    } finally {
+        $sha.Dispose()
+    }
+}
+
 function Invoke-GameStart {
     param($Paths, [string]$Mode,
           [ValidateSet('Config', 'System')][string]$TimeSource = 'Config')
@@ -649,6 +698,7 @@ function Invoke-GameStart {
     if ((@(Get-RunningServerNames $Paths)).Count -gt 0) {
         throw '服务器进程已经在运行，不能重复启动。'
     }
+    Install-MountStackPatch $Paths
     foreach ($launcher in $script:Launchers) {
         $directory = [IO.Path]::Combine($Paths.Root, $launcher.Directory)
         $exe = [IO.Path]::Combine($directory, $launcher.File)

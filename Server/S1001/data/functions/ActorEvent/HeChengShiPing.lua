@@ -31,6 +31,15 @@ function HeChengHandle(sysarg,sysid,packet)
 		print("传的参数不对 index="..index)
 		return 
 	end
+	-- 兼容旧客户端合成消息，统一按总数量3合1并保留材料绑定。
+	if ndiffType == 9 or ndiffType == 10 then
+		local recipeIndex = index
+		for previous=1,nType-1 do
+			recipeIndex = recipeIndex + #type1Cfg[previous]
+		end
+		AppearanceMake(sysarg,ndiffType-8,recipeIndex)
+		return
+	end
 	
 	--print("ndiffType="..ndiffType..",nType="..nType..",index="..index)
 	local awardCount = 1

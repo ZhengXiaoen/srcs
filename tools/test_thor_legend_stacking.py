@@ -11,6 +11,7 @@ import unittest
 
 from patch_box_stacking import ROOT, SERVER, patch_client, patch_text, server_items, stack_limit, targets
 from patch_guild_quest_config import read_cbp, read_pack
+from patch_appearance_upgrade import patch_items, patch_recipes
 
 
 BASELINE = "eea0975"
@@ -100,7 +101,7 @@ class ThorLegendStackingTests(unittest.TestCase):
                 self.assertEqual(106, row.child("type").number())
                 changed.add(item)
         self.assertEqual(MATERIALS, changed)
-        _, expected = read_cbp(patch_client(original(path), limits)[0])
+        _, expected = read_cbp(patch_items(patch_client(original(path), limits)[0]))
         self.assertEqual(expected, after)
         pack = path.parent / "zh-cn.dat"
         previous = read_pack(original(pack))
@@ -109,7 +110,10 @@ class ThorLegendStackingTests(unittest.TestCase):
         for old, new in zip(previous, current):
             self.assertEqual(old[0], new[0])
             if old[0].startswith("stditems") and old[0].endswith(".cbp"):
-                self.assertEqual(patch_client(old[1], limits)[0], new[1])
+                self.assertEqual(patch_items(patch_client(old[1], limits)[0]), new[1])
+                self.assertEqual((path.parent / old[0]).read_bytes(), new[1])
+            elif old[0] == "heChengCfg.cbp":
+                self.assertEqual(patch_recipes(old[1]), new[1])
                 self.assertEqual((path.parent / old[0]).read_bytes(), new[1])
             else:
                 self.assertEqual(old, new)

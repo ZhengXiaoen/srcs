@@ -136,13 +136,35 @@ LocalDT.IsThorLegendMaterial = function(itemId)
 		(itemId >= 7928 and itemId <= 7967))
 end
 
-LocalDT.NormalizeThorLegendMaterialStacks = function(sysarg, itemId)
-	if itemId ~= nil and not LocalDT.IsThorLegendMaterial(itemId) then return end
+-- 激活类道具保留配置属性，仅清除礼盒误附加的随机召唤强度；坐骑装备仍使用固定+6。
+LocalDT.IsStackableActivationItem = function(itemId)
+	return itemId ~= nil and (LocalDT.IsThorLegendMaterial(itemId) or
+		(itemId >= 5947 and itemId <= 5950) or
+		(itemId >= 6013 and itemId <= 6015) or
+		(itemId >= 6272 and itemId <= 6275) or
+		(itemId >= 6650 and itemId <= 6652) or
+		(itemId >= 6715 and itemId <= 6730) or
+		(itemId >= 6888 and itemId <= 6903) or
+		(itemId >= 6938 and itemId <= 6944) or
+		(itemId >= 6967 and itemId <= 6982) or
+		itemId == 7040 or itemId == 7077 or
+		(itemId >= 7199 and itemId <= 7200) or
+		(itemId >= 7630 and itemId <= 7633) or
+		(itemId >= 7653 and itemId <= 7656) or
+		(itemId >= 7658 and itemId <= 7689) or itemId == 7696 or
+		(itemId >= 7701 and itemId <= 7706) or
+		(itemId >= 7711 and itemId <= 7712) or itemId == 7719 or
+		(itemId >= 7786 and itemId <= 7804) or
+		(itemId >= 7822 and itemId <= 7824))
+end
+
+LocalDT.NormalizeActivationItemStacks = function(sysarg, itemId)
+	if itemId ~= nil and not LocalDT.IsStackableActivationItem(itemId) then return end
 	for index = 0, Item.getBagItemCount(sysarg) - 1 do
 		local itemPtr = Item.getItemPtrByIndex(sysarg, index)
 		if itemPtr then
 			local currentId = Item.getItemId(itemPtr)
-			if LocalDT.IsThorLegendMaterial(currentId) and
+			if LocalDT.IsStackableActivationItem(currentId) and
 				(itemId == nil or currentId == itemId) and
 				Item.getItemProperty(sysarg, itemPtr, Item.ipTaoStrong, 0) ~= 0 then
 				Item.setItemProperty(sysarg, itemPtr, Item.ipTaoStrong, 0)
@@ -249,7 +271,7 @@ function OnPlayerLogin(sysarg, isCrossDay)
 	local actorName = Actor.getName(sysarg)
 	LocalDT.NormalizeSkyRingMaterialStacks(sysarg)
 	LocalDT.NormalizeNanMingLiHuoStacks(sysarg)
-	LocalDT.NormalizeThorLegendMaterialStacks(sysarg)
+	LocalDT.NormalizeActivationItemStacks(sysarg)
 	LocalDT.NormalizeBagEquipmentTaoStrong(sysarg)
 	for slot = 0, itMaxEquipPos do
 		LocalDT.NormalizeEquipmentTaoStrong(sysarg, Item.getEquipByPos(sysarg, slot))
@@ -4377,7 +4399,7 @@ end
 --参数分别代表：玩家指针,物品id,物品数量
 function OnAddItemEvent(sysarg,itemId,itemCount)
 	LocalDT.NormalizeNanMingLiHuoStacks(sysarg, itemId)
-	LocalDT.NormalizeThorLegendMaterialStacks(sysarg, itemId)
+	LocalDT.NormalizeActivationItemStacks(sysarg, itemId)
 	LocalDT.NormalizeBagEquipmentTaoStrong(sysarg, itemId)
 	
 	--得到东西检测完成条件

@@ -1854,8 +1854,10 @@ function onItemBoxFor2017(sysarg,itemidx,itemPtr,ItemTable,delType,itemUserNum)
 			if Actor.removeItemByPtr(sysarg,itemPtr,1,true,itemName) ~= 1 then
 				return false
 			end
-			if item_id == 7827 or LocalDT.IsThorLegendMaterial(additemid) then -- 戒指、传世和雷神材料不附加随机装备属性
+			if item_id == 7827 or LocalDT.IsStackableActivationItem(additemid) then -- 激活道具保留配置属性，不附加随机装备属性
 				Actor.addItem(sysarg, additemid, 0, 0, 1, bind, 0, "开启装备箱", 1);
+			elseif additemid >= 6865 and additemid <= 6884 then -- 坐骑装备按固定召唤强度+6生成，避免随机属性影响堆叠
+				Actor.addItem(sysarg, additemid, 0, 0, 1, bind, 0, "开启装备箱", 1, -1, 0, -1, 1, 6);
 			else
 				Actor.addItem(sysarg, additemid, 0, 0, 1, bind, 0, "开启装备箱" ,1,-1, 0, -1, 1, System.getRandomNumber(6)+1);
 			end

@@ -3,14 +3,13 @@
 from __future__ import annotations
 
 import argparse
-from copy import deepcopy
 from pathlib import Path
 import re
 import subprocess
 import sys
 import unittest
 
-from patch_box_stacking import DUP, ROOT, server_items, stack_limit
+from patch_box_stacking import ROOT, SERVER, patch_client, patch_text, server_items, stack_limit, targets
 from patch_guild_quest_config import read_cbp, read_pack
 
 
@@ -69,16 +68,17 @@ System = {
 
 
 class ThorLegendStackingTests(unittest.TestCase):
-    def test_only_96_material_stack_limits_change(self):
+    def test_96_materials_remain_stackable_with_configured_extensions(self):
+        limits, _ = targets(original(SERVER))
         paths = [ROOT / "Server/S1001/data/config/item/StdItems.txt",
                  ROOT / "Server/S1001/data/config/item/stdItemForClient/StdItems4.txt"]
         for path in paths:
             before, after = original(path), path.read_bytes()
-            self.assertEqual(DUP.sub(rb"\1LIMIT\3", before), DUP.sub(rb"\1LIMIT\3", after))
+            self.assertEqual(patch_text(before, limits)[0], after)
             old, new = server_items(before), server_items(after)
             changed = {item for item in old if old[item] != new[item]}
-            self.assertEqual(MATERIALS, changed)
-            for item in changed:
+            self.assertTrue(MATERIALS <= changed)
+            for item in MATERIALS:
                 self.assertEqual(1, stack_limit(old[item]))
                 self.assertEqual(200, stack_limit(new[item]))
                 self.assertRegex(new[item], rb"(?m)^  type=106,")
@@ -88,18 +88,19 @@ class ThorLegendStackingTests(unittest.TestCase):
             self.assertTrue(compile_source(path.read_bytes().removeprefix(b"\xef\xbb\xbf")))
 
     def test_client_and_pack_change_only_matching_dup_fields(self):
+        limits, _ = targets(original(SERVER))
         path = ROOT / "web/v2/lang/zh-cn/stditems4.cbp"
         _, before = read_cbp(original(path))
         _, after = read_cbp(path.read_bytes())
-        expected = deepcopy(before)
         changed = set()
-        for row in expected.children:
+        for row in before.children:
             item = int(row.child("id").number())
             if item in MATERIALS:
-                row.child("dup").set_number(200)
+                self.assertEqual(1, row.child("dup").number())
                 self.assertEqual(106, row.child("type").number())
                 changed.add(item)
         self.assertEqual(MATERIALS, changed)
+        _, expected = read_cbp(patch_client(original(path), limits)[0])
         self.assertEqual(expected, after)
         pack = path.parent / "zh-cn.dat"
         previous = read_pack(original(pack))
@@ -107,8 +108,9 @@ class ThorLegendStackingTests(unittest.TestCase):
         self.assertEqual(len(previous), len(current))
         for old, new in zip(previous, current):
             self.assertEqual(old[0], new[0])
-            if old[0] == path.name:
-                self.assertEqual(path.read_bytes(), new[1])
+            if old[0].startswith("stditems") and old[0].endswith(".cbp"):
+                self.assertEqual(patch_client(old[1], limits)[0], new[1])
+                self.assertEqual((path.parent / old[0]).read_bytes(), new[1])
             else:
                 self.assertEqual(old, new)
 
@@ -121,7 +123,7 @@ class ThorLegendStackingTests(unittest.TestCase):
             lua.execute(f"table.insert(bag,{{id={item},count=3,bind=0,tao=2}})")
         lua.execute("bag[#bag+1]={id=6404,count=1,bind=1,tao=6};"
                     "bag[#bag+1]={id=7537,count=1,bind=1,tao=6};"
-                    "LocalDT.NormalizeThorLegendMaterialStacks(1)")
+                    "LocalDT.NormalizeActivationItemStacks(1)")
         for index in range(len(lua.globals().bag)):
             row = lua.globals().bag[index + 1]
             if row.id in MATERIALS:
@@ -131,13 +133,13 @@ class ThorLegendStackingTests(unittest.TestCase):
                 self.assertEqual((1, 1, 6), (row.count, row.bind, row.tao))
         self.assertEqual(0, lua.globals().removed)
         lua.execute("bag={{id=7078,count=3,bind=0,tao=4},{id=7080,count=2,bind=1,tao=5}};"
-                    "LocalDT.NormalizeThorLegendMaterialStacks(1,6404)")
+                    "LocalDT.NormalizeActivationItemStacks(1,6404)")
         self.assertEqual((4, 5), (lua.globals().bag[1].tao, lua.globals().bag[2].tao))
-        lua.execute("LocalDT.NormalizeThorLegendMaterialStacks(1,7078)")
+        lua.execute("LocalDT.NormalizeActivationItemStacks(1,7078)")
         self.assertEqual((0, 5), (lua.globals().bag[1].tao, lua.globals().bag[2].tao))
         source = PLAYER.read_text(encoding="utf-8-sig")
-        self.assertIn("LocalDT.NormalizeThorLegendMaterialStacks(sysarg)\n", source)
-        self.assertIn("LocalDT.NormalizeThorLegendMaterialStacks(sysarg, itemId)\n", source)
+        self.assertIn("LocalDT.NormalizeActivationItemStacks(sysarg)\n", source)
+        self.assertIn("LocalDT.NormalizeActivationItemStacks(sysarg, itemId)\n", source)
 
     def test_box_materials_have_no_random_attribute_and_consume_one(self):
         lua = runtime()

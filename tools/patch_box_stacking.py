@@ -1,10 +1,11 @@
-"""Enable stacking for boxes and Thor/Legend materials in all client copies.
+"""Enable stacking for boxes, activation items and ride gear in all client copies.
 
 Change only dup. Preserve existing stack limits above one, item attributes,
 rewards, localization, and every unrelated language-pack entry.
 Use --check to audit the deployed server and client resources without writing.
-Thor/Legend activation materials use type 106. Actual equipped items, including
-type 64..71 Legend equipment and type 115 spirit equipment, are excluded.
+Thor/Legend activation materials use type 106. Type 64..71 Legend equipment
+and type 115 spirit equipment are excluded.
+Ride, shield and fashion item IDs come from their actual system configurations.
 """
 
 from __future__ import annotations
@@ -45,6 +46,32 @@ def stack_limit(block: bytes) -> int:
     return int(matches[0][2])
 
 
+def appearance_groups() -> dict[str, set[int]]:
+    def config(path: str) -> bytes:
+        source = (ROOT / "Server/S1001/data/config" / path).read_bytes()
+        return re.sub(rb"--[^\r\n]*", b"", source)
+
+    def ids(field: bytes, source: bytes) -> set[int]:
+        return {int(value) for value in re.findall(rb"\b" + field + rb"\s*=\s*(\d+)", source)}
+
+    shields = re.search(rb"\bShenDunIds\s*=\s*\{([^}]+)\}",
+                        config("equipSynthesis/ShenDunCfg.lua"))
+    gear = re.search(rb"\bequips\s*=\s*\{(.*?)\n\s*\},",
+                     config("ride/RideGameConfig.lua"), re.S)
+    if shields is None or gear is None:
+        raise ValueError("Missing shield or ride equipment configuration")
+    groups = {
+        "ride": ids(b"horseId", config("ride/HuanhuaHorseCfg.lua")) |
+                ids(b"needItemId", config("ride/SuperHorseCfg.lua")),
+        "ride_gear": {int(value) for value in re.findall(rb"\d+", gear[1])},
+        "shield": {int(value) for value in re.findall(rb"\d+", shields[1])},
+        "fashion": ids(b"itemId", config("modules/fashion_dress_cfg.lua")),
+    }
+    if any(not group for group in groups.values()):
+        raise ValueError("Empty appearance item group")
+    return groups
+
+
 def targets(source: bytes) -> tuple[dict[int, int], dict[int, str]]:
     all_names = {int(item): name for item, name in re.findall(
         r'\bn(\d+)="([^"\r\n]*)"', LANGUAGE.read_text(encoding="utf-8-sig"))}
@@ -61,11 +88,22 @@ def targets(source: bytes) -> tuple[dict[int, int], dict[int, str]]:
         if name not in items[item].splitlines()[1].decode("gbk"):
             raise ValueError("Localized and server material names differ")
     names.update(materials)
+    groups = appearance_groups()
+    for group, ids in groups.items():
+        for item in ids:
+            if item not in items or item not in all_names:
+                raise ValueError(f"Missing {group} item {item}")
+            kind = int(re.search(rb"(?m)^  type=(\d+),", items[item])[1])
+            allowed = (122, 123, 124, 125) if group == "ride_gear" else (102, 106)
+            if kind not in allowed:
+                raise ValueError(f"Unexpected {group} item type for {item}")
+            names[item] = all_names[item]
     limits = {}
     for item in names:
         block = items[item]
         kind = re.search(rb"(?m)^  type=(\d+),", block)
-        if kind is None or int(kind[1]) not in (102, 106):
+        allowed = (122, 123, 124, 125) if item in groups["ride_gear"] else (102, 106)
+        if kind is None or int(kind[1]) not in allowed:
             raise ValueError(f"Item {item} is not a functional/reward item")
         limit = stack_limit(block)
         if limit < 1:
@@ -179,7 +217,7 @@ def main():
     else:
         for path, output in outputs.items():
             path.write_bytes(output)
-    print(f"Verified {len(limits)} gift/box/material items; existing stackable limits preserved.")
+    print(f"Verified {len(limits)} box/activation/ride items; existing stackable limits preserved.")
     print(f"Updated {len(outputs)} files; {changes[SERVER.relative_to(ROOT).as_posix()]} "
           "server items newly stackable.")
     for path, count in changes.items():

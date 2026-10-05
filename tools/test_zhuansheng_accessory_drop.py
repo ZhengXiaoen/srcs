@@ -1,4 +1,4 @@
-"""Verify temple fragment probabilities, boundaries, scope and client resources."""
+"""Verify independent temple fragment/finished drops, scope and client resources."""
 from __future__ import annotations
 
 import argparse
@@ -24,6 +24,9 @@ TIERS = [
     (296, (1343, 1344, 1345), 100, 2, 3),
 ]
 IDS = {5152, 5153, 5154, 5155}
+FINISHED_IDS = {5140, 5141, 5142, 5143}
+FINISHED_RATES = {293: 5, 294: 7, 295: 11, 296: 15}
+FINISHED_BASELINE = "c8dbcbb"
 BASELINE = "451cefe"
 
 
@@ -36,11 +39,15 @@ def runtime():
     lua = LuaRuntime(encoding=None)
     lua.execute(b'''
         scene = 287; combineDays = 1; roll = 0; kind = 1; upper = false
+        finishedRoll = 99; randomCalls = 0
         drops = {}; created = {}; ordinaryCalls = 0; commonCalls = 0
         failCreate = false; killerType = 0
         System = {
             getDaysSinceCombineServer = function() error('temple drops must not depend on merging') end,
-            getRandomNumber = function(n) assert(n == 100); return roll end
+            getRandomNumber = function(n)
+                assert(n == 100); randomCalls = randomCalls + 1
+                return randomCalls == 1 and roll or finishedRoll
+            end
         }
         math.random = function(a, b)
             if a == 1 and b == 4 then return kind end
@@ -70,6 +77,13 @@ def runtime():
     lua.execute((DATA / "functions/LogIds.lua").read_bytes().removeprefix(b"\xef\xbb\xbf"))
     lua.execute((DATA / "config/monster/ZhuanShengAccessoryDropCfg.lua").read_bytes())
     lua.execute((DATA / "functions/MonsterFunction.lua").read_bytes())
+    lua.execute(b'''
+        originalHandler = HandlerMonsterByKilled
+        HandlerMonsterByKilled = function(...)
+            randomCalls = 0
+            return originalHandler(...)
+        end
+    ''')
     return lua
 
 
@@ -177,7 +191,8 @@ class TempleFragmentTests(unittest.TestCase):
     def test_server_client_pack_descriptions_and_other_resources_unchanged(self):
         from patch_guild_quest_config import read_cbp, read_pack
         client = ROOT / "web/v2/lang/zh-cn"
-        previous = read_pack(old(client / "zh-cn.dat"))
+        previous = read_pack(subprocess.check_output(
+            ["git", "show", FINISHED_BASELINE + ":web/v2/lang/zh-cn/zh-cn.dat"], cwd=ROOT))
         current = read_pack((client / "zh-cn.dat").read_bytes())
         self.assertEqual([n for n, _ in previous], [n for n, _ in current])
         changed = {a[0] for a, b in zip(previous, current) if a != b}
@@ -191,14 +206,107 @@ class TempleFragmentTests(unittest.TestCase):
             _, before = read_cbp(dict(previous)[name])
             _, after = read_cbp(data)
             expected = copy.deepcopy(before)
-            for item in IDS:
+            for item in FINISHED_IDS:
                 node = next(n for n in after.children if n.child("id").number() == item)
                 desc = re.search(rf'i{item}="([^"\r\n]+)"', language)[1].replace("\\\\", "\\")
                 self.assertEqual(desc, node.child("desc").value.decode("utf-8"))
                 expected.child(node.name).child("desc").value = node.child("desc").value
-                self.assertIn("转生神殿天、地、暗BOSS掉落", desc)
-                self.assertNotIn("合服", desc)
+                self.assertIn("7转及以上转生神殿天、地、暗BOSS直接掉落", desc)
+                self.assertIn("7-8转5%、9-10转7%、11-12转11%、13-15转15%", desc)
+                self.assertNotIn("只在合服后", desc)
             self.assertEqual(expected, after)
+
+    def test_finished_drops_every_boss_exact_percent_four_items_and_one_bound_item(self):
+        lua = runtime()
+        g = lua.globals()
+        self.assertEqual(sorted(FINISHED_IDS), list(g[b"ZhuanShengAccessoryDropCfg"][b"finishedItems"].values()))
+        for scene, monsters, *_ in TIERS:
+            g[b"scene"] = scene
+            rate = FINISHED_RATES.get(scene, 0)
+            self.assertEqual(rate or None, g[b"ZhuanShengAccessoryDropCfg"][b"tiers"][scene][b"finishedRate"])
+            for monster in monsters:
+                successes = 0
+                g[b"roll"] = 99
+                for value in range(100):
+                    g[b"finishedRoll"] = value
+                    g[b"drops"] = lua.table()
+                    g[b"HandlerMonsterByKilled"](99, 1, monster, 0, scene, None)
+                    finished = [drop for drop in g[b"drops"].values() if drop[b"id"] in FINISHED_IDS]
+                    self.assertEqual(int(value < rate), len(finished))
+                    successes += len(finished)
+                self.assertEqual(rate, successes)
+                if not rate:
+                    continue
+                g[b"finishedRoll"] = 0
+                for kind in range(1, 5):
+                    g[b"kind"] = kind
+                    for upper in (False, True):
+                        g[b"upper"] = upper
+                        g[b"drops"] = lua.table()
+                        g[b"HandlerMonsterByKilled"](99, 1, monster, 0, scene, None)
+                        finished = [drop for drop in g[b"drops"].values() if drop[b"id"] in FINISHED_IDS]
+                        self.assertEqual([(5139 + kind, 1, 1)],
+                                         [tuple(drop[key] for key in (b"id", b"count", b"bind")) for drop in finished])
+
+    def test_fragment_and_finished_rolls_are_independent_and_survive_failed_item_creation(self):
+        lua = runtime()
+        g = lua.globals()
+        for scene, monsters, rate, *_ in TIERS:
+            if scene not in FINISHED_RATES:
+                continue
+            g[b"scene"] = scene
+            for fragment_roll in range(100):
+                for finished_roll in range(100):
+                    g[b"roll"], g[b"finishedRoll"] = fragment_roll, finished_roll
+                    g[b"drops"] = lua.table()
+                    g[b"HandlerMonsterByKilled"](99, 1, monsters[0], 0, scene, None)
+                    drops = list(g[b"drops"].values())
+                    self.assertEqual(int(fragment_roll < rate), sum(drop[b"id"] in IDS for drop in drops))
+                    self.assertEqual(int(finished_roll < FINISHED_RATES[scene]), sum(drop[b"id"] in FINISHED_IDS for drop in drops))
+        lua.execute(b'''
+            scene = 293; roll = 0; finishedRoll = 0; drops = {}
+            create = Item.createItem
+            Item.createItem = function(id, ...)
+                if id >= 5152 and id <= 5155 then return nil end
+                return create(id, ...)
+            end
+            HandlerMonsterByKilled(99, 1, 653, 0, 293, nil)
+        ''')
+        self.assertEqual(1, len(g[b"drops"]))
+        self.assertIn(g[b"drops"][1][b"id"], FINISHED_IDS)
+
+    def test_finished_drops_respect_map_boss_killer_scope_and_have_no_merge_requirement(self):
+        lua = runtime()
+        g = lua.globals()
+        g[b"finishedRoll"] = 0
+        for scene, monster, killer in ((101, 653, 1), (293, 647, 1), (294, 653, 1),
+                                       (296, 656, 1), (296, 1343, None)):
+            g[b"scene"] = scene
+            g[b"drops"] = lua.table()
+            g[b"HandlerMonsterByKilled"](99, killer, monster, 0, scene, None)
+            self.assertEqual(0, len(g[b"drops"]))
+        for scene, monsters, *_ in TIERS:
+            if scene not in FINISHED_RATES:
+                continue
+            g[b"scene"], g[b"roll"] = scene, 99
+            for monster in monsters:
+                for killer_type in (0, 2, 3):
+                    g[b"killerType"], g[b"combineDays"] = killer_type, 0
+                    g[b"drops"] = lua.table()
+                    g[b"HandlerMonsterByKilled"](99, 1, monster, 0, scene, None)
+                    self.assertEqual(1, sum(drop[b"id"] in FINISHED_IDS for drop in g[b"drops"].values()))
+
+    def test_changed_scripts_compile_together_without_new_outer_locals(self):
+        lua = runtime()
+        files = ("config/monster/ZhuanShengAccessoryDropCfg.lua", "functions/MonsterFunction.lua",
+                 "functions/NpcMiscFun/SanRenNPC/MapNpc/ZhuanShengDiGong.lua")
+        sources = []
+        for relative in files:
+            source = (DATA / relative).read_bytes().removeprefix(b"\xef\xbb\xbf")
+            baseline = subprocess.check_output(["git", "show", FINISHED_BASELINE + ":Server/S1001/data/" + relative], cwd=ROOT)
+            self.assertEqual(re.findall(rb"(?m)^local .*$", baseline), re.findall(rb"(?m)^local .*$", source))
+            sources.append(source)
+        self.assertTrue(lua.eval(b"function(s) return assert(loadstring(s)) ~= nil end")(b"\n".join(sources)))
 
     def test_temple_entry_shows_same_config_values(self):
         lua = runtime()
@@ -214,6 +322,9 @@ class TempleFragmentTests(unittest.TestCase):
         for _, _, rate, low, high in TIERS:
             count = str(low) if low == high else f"{low}-{high}"
             self.assertIn(f"碎片掉率 {rate}%，每次 {count} 个", text)
+        for rate in FINISHED_RATES.values():
+            self.assertIn(f"成品独立掉率 {rate}%，每次 1 件", text)
+        self.assertEqual(4, text.count("成品独立掉率"))
 
 
 if __name__ == "__main__":

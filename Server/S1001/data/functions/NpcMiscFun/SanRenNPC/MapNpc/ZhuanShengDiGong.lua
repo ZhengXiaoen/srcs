@@ -94,7 +94,7 @@ t.main = function(sysarg)
 		end
 		local dropCfg = ZhuanShengAccessoryDropCfg.tiers[d[i].mapid];
 		local dropCount = dropCfg.mincount == dropCfg.maxcount and tostring(dropCfg.mincount) or (dropCfg.mincount.."-"..dropCfg.maxcount);
-        local str = string.format("      <"..ckstr.."/@EnterScene,%s|进入需要 %s 张 %s#刷新时间 %s 分钟#主宰饰品碎片掉率 %s%%，每次 %s 个#天、地、暗掉率相同，四种碎片随机一种>   ", d[i].mapname, i, d[i].dev, Item.getItemName(d[i].zmid), d[i].refTime, dropCfg.rate, dropCount);
+        local str = string.format("      <"..ckstr.."/@EnterScene,%s|进入需要 %s 张 %s#刷新时间 %s 分钟#主宰饰品碎片掉率 %s%%，每次 %s 个#天、地、暗掉率相同，四种碎片随机一种%s>   ", d[i].mapname, i, d[i].dev, Item.getItemName(d[i].zmid), d[i].refTime, dropCfg.rate, dropCount, dropCfg.finishedRate and ("#主宰饰品成品独立掉率 "..dropCfg.finishedRate.."%，每次 1 件，四种成品随机一种") or "");
 		--local str = string.format("    <"..ckstr.."/@EnterScene,%s|进入需要 %s 张 %s#刷新时间 %s 分钟##当前BOSS状态: %s>\\\\", d[i].mapname, i, d[i].dev, Item.getItemName(d[i].zmid),d[i].refTime, bh[1][i]);
 		--local str2 = string.format("    <"..ckstr.."/@EnterScene2,%s|进入需要 %s 张 %s#刷新时间 %s 分钟##当前BOSS状态: %s##&00FF00&主要掉落衣服>", d2[i].mapname, i, d2[i].dev, Item.getItemName(d2[i].zmid), d2[i].refTime,bh[2][i]);
 		--local str3 = string.format("    <"..ckstr.."/@EnterScene3,%s|进入需要 %s 张 %s#刷新时间 %s 分钟##当前BOSS状态: %s##&00FF00&主要掉落武器>\\\\", d3[i].mapname, i, d3[i].dev, Item.getItemName(d3[i].zmid),d2[i].refTime, bh[3][i]);

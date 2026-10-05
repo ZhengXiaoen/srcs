@@ -27,16 +27,21 @@ local LocalDT = LocalDT or {}
 --#include "data\functions\player.lua" once -- 角色处理
 --#include "data\config\monster\ZhuanShengAccessoryDropCfg.lua" once
 
-LocalDT.DropZhuanShengAccessory = function(monster, monId)
-	local cfg = ZhuanShengAccessoryDropCfg.tiers[Actor.getSceneId(monster)]
-	if not cfg or (monId ~= cfg.monsters[1] and monId ~= cfg.monsters[2] and monId ~= cfg.monsters[3]) then return end
-	if System.getRandomNumber(100) >= cfg.rate then return end
-	local itemId = ZhuanShengAccessoryDropCfg.items[math.random(1, #ZhuanShengAccessoryDropCfg.items)]
-	local count = math.random(cfg.mincount, cfg.maxcount)
+LocalDT.DropZhuanShengAccessoryItem = function(monster, items, rate, mincount, maxcount)
+	if not rate or System.getRandomNumber(100) >= rate then return end
+	local itemId = items[math.random(1, #items)]
+	local count = math.random(mincount, maxcount)
 	local item = Item.createItem(itemId, count, 0, 0, 1)
 	if item then
 		Item.createDropItem(monster, item, LogIds.ZhuanShengAccessoryDrop, "ZhuanShengAccessory", nil)
 	end
+end
+
+LocalDT.DropZhuanShengAccessory = function(monster, monId)
+	local cfg = ZhuanShengAccessoryDropCfg.tiers[Actor.getSceneId(monster)]
+	if not cfg or (monId ~= cfg.monsters[1] and monId ~= cfg.monsters[2] and monId ~= cfg.monsters[3]) then return end
+	LocalDT.DropZhuanShengAccessoryItem(monster, ZhuanShengAccessoryDropCfg.items, cfg.rate, cfg.mincount, cfg.maxcount)
+	LocalDT.DropZhuanShengAccessoryItem(monster, ZhuanShengAccessoryDropCfg.finishedItems, cfg.finishedRate, 1, 1)
 end
 
 function CheckAndSetIsDropItemWhenMonsterKilled(monster, killer, monId)

@@ -11,6 +11,7 @@ import unittest
 from patch_activity_entries import strings_of
 from patch_activity_reminders import CLIENT, ROOT, normalize
 from patch_activity_window_lifecycle import BASELINE, MODULE, ORIGINAL_MODULE, patch_swf
+from patch_wanfu_dragon_reminders import patch_swf as wanfu_dragon_reminders
 from patch_drop_pickup_retry import abc_section, instructions
 from patch_god_equip_state import inspect_abc
 from patch_guild_quest_config import read_cbp, read_pack
@@ -70,6 +71,7 @@ class WindowLifecycleTests(unittest.TestCase):
             if target is obj and type_ == event: self.invoke(callback[2], callback[1], [None])
 
     def invoke(self, obj, name, args):
+        if name == 'getBtnByType': return None
         ids = {'onDayChange': 22111, 'onChange': 22110, 'createPage': 22112, 'onStateChange': 22109}
         if name in ids: return self.run_code(ids[name], obj, args[0] if args else None)
         if name in ('updateAwards', 'updateLabels') and '_timer' in obj:
@@ -197,7 +199,7 @@ class WindowLifecycleTests(unittest.TestCase):
 
     def test_patch_is_reproducible_scoped_and_module_route_exists(self):
         original = subprocess.check_output(['git', 'show', f'{BASELINE}:web/GameFrame.swf'], cwd=ROOT)
-        self.assertEqual(self.sources[0], patch_swf(original))
+        self.assertEqual(self.sources[0], wanfu_dragon_reminders(patch_swf(original)))
         self.assertEqual(self.sources[1], patch_swf(ORIGINAL_MODULE.read_bytes(), True))
         self.assertEqual('3600b87d72321bf34e936de23df08b1f3bf493c5321b6bd0d9fa466e3da0ae76', hashlib.sha256(ORIGINAL_MODULE.read_bytes()).hexdigest())
         for module, source in enumerate(self.sources): self.assertEqual(source, patch_swf(source, bool(module)))

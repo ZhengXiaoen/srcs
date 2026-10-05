@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from patch_activity_window_lifecycle import MAIN_METHODS as WINDOW_METHODS, patch_swf as window_lifecycle
+from patch_wanfu_dragon_reminders import METHODS as REMINDER_METHODS, patch_swf as wanfu_dragon
 
 from itertools import product
 import subprocess
@@ -118,13 +119,13 @@ class JingjiMaterialTabTests(JingjiMaterialReminderTests):
 
     def test_resource_scope_and_existing_event_listeners(self):
         source = subprocess.check_output(['git', 'show', BASELINE + ':web/GameFrame.swf'], cwd=ROOT)
-        self.assertEqual(self.source, window_lifecycle(patch_swf(source))); self.assertEqual(self.source, patch_swf(self.source))
+        self.assertEqual(self.source, wanfu_dragon(window_lifecycle(patch_swf(source)))); self.assertEqual(self.source, patch_swf(self.source))
         raw, (_, _, a, b) = abc_section(source); before, _ = normalize(raw[a:b]); _, _, old = inspect_abc(before)
         changed = set()
         for mid, (a, size, limits) in old.items():
             b, length, after_limits = self.bodies[mid]
             if before[a:a + size] != self.abc[b:b + length] or limits != after_limits: changed.add(mid)
-        self.assertEqual(METHODS | WINDOW_METHODS, changed)
+        self.assertEqual(METHODS | WINDOW_METHODS | REMINDER_METHODS, changed)
         lo, hi, count, fields = page_traits(before); new_lo, new_hi, new_count, new_fields = page_traits(self.abc)
         self.assertEqual((count + 1, fields + [MARKS]), (new_count, new_fields))
         self.assertTrue(self.abc[new_lo:new_hi].endswith(SLOT))

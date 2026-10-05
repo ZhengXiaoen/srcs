@@ -1854,7 +1854,7 @@ function onItemBoxFor2017(sysarg,itemidx,itemPtr,ItemTable,delType,itemUserNum)
 			if Actor.removeItemByPtr(sysarg,itemPtr,1,true,itemName) ~= 1 then
 				return false
 			end
-			if item_id == 7827 then -- 神戒宝盒产出的是可叠加的戒指材料，不应附加随机装备属性
+			if item_id == 7827 or LocalDT.IsThorLegendMaterial(additemid) then -- 戒指、传世和雷神材料不附加随机装备属性
 				Actor.addItem(sysarg, additemid, 0, 0, 1, bind, 0, "开启装备箱", 1);
 			else
 				Actor.addItem(sysarg, additemid, 0, 0, 1, bind, 0, "开启装备箱" ,1,-1, 0, -1, 1, System.getRandomNumber(6)+1);

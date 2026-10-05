@@ -1,8 +1,10 @@
-"""Enable stacking for gift packs and boxes, including all client copies.
+"""Enable stacking for boxes and Thor/Legend materials in all client copies.
 
 Change only dup. Preserve existing stack limits above one, item attributes,
 rewards, localization, and every unrelated language-pack entry.
 Use --check to audit the deployed server and client resources without writing.
+Thor/Legend activation materials use type 106. Actual equipped items, including
+type 64..71 Legend equipment and type 115 spirit equipment, are excluded.
 """
 
 from __future__ import annotations
@@ -23,6 +25,7 @@ CLIENT_DIR = ROOT / "web/v2/lang/zh-cn"
 PACK = CLIENT_DIR / "zh-cn.dat"
 STACK_LIMIT = 200
 BOX_NAME = re.compile(r"礼包|箱|盒")
+MATERIAL_NAME = re.compile(r"^(?:雷神|传世)")
 ITEM_BLOCK = re.compile(rb"(?m)^\{\r?\n  id=(\d+),.*?(?=^\},?\r?$)", re.S)
 DUP = re.compile(rb"(?m)^(  dup=)(\d+)(,\r?$)")
 
@@ -43,20 +46,27 @@ def stack_limit(block: bytes) -> int:
 
 
 def targets(source: bytes) -> tuple[dict[int, int], dict[int, str]]:
-    names = {int(item): name for item, name in re.findall(
-        r'\bn(\d+)="([^"\r\n]*)"', LANGUAGE.read_text(encoding="utf-8-sig"))
-        if BOX_NAME.search(name)}
+    all_names = {int(item): name for item, name in re.findall(
+        r'\bn(\d+)="([^"\r\n]*)"', LANGUAGE.read_text(encoding="utf-8-sig"))}
+    names = {item: name for item, name in all_names.items() if BOX_NAME.search(name)}
     items = server_items(source)
     comments = {item for item, block in items.items()
                 if BOX_NAME.search(block.splitlines()[1].decode("gbk"))}
     if comments != names.keys():
         raise ValueError("Localized and server gift/box lists differ")
+    materials = {item: name for item, name in all_names.items()
+                 if MATERIAL_NAME.search(name) and
+                 re.search(rb"(?m)^  type=(\d+),", items[item])[1] == b"106"}
+    for item, name in materials.items():
+        if name not in items[item].splitlines()[1].decode("gbk"):
+            raise ValueError("Localized and server material names differ")
+    names.update(materials)
     limits = {}
     for item in names:
         block = items[item]
         kind = re.search(rb"(?m)^  type=(\d+),", block)
         if kind is None or int(kind[1]) not in (102, 106):
-            raise ValueError(f"Item {item} is not a functional/reward box")
+            raise ValueError(f"Item {item} is not a functional/reward item")
         limit = stack_limit(block)
         if limit < 1:
             raise ValueError(f"Invalid stack limit for item {item}")
@@ -169,7 +179,7 @@ def main():
     else:
         for path, output in outputs.items():
             path.write_bytes(output)
-    print(f"Verified {len(limits)} gift/box items; existing stackable limits preserved.")
+    print(f"Verified {len(limits)} gift/box/material items; existing stackable limits preserved.")
     print(f"Updated {len(outputs)} files; {changes[SERVER.relative_to(ROOT).as_posix()]} "
           "server items newly stackable.")
     for path, count in changes.items():

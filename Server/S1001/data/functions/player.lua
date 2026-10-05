@@ -127,6 +127,30 @@ LocalDT.NormalizeNanMingLiHuoStacks = function(sysarg, itemId)
 	end
 end
 
+-- 传世激活道具和雷神各阶道具不带装备属性，按同类材料堆叠。
+LocalDT.IsThorLegendMaterial = function(itemId)
+	return itemId ~= nil and (itemId == 6392 or itemId == 6393 or
+		(itemId >= 6396 and itemId <= 6401) or
+		(itemId >= 7078 and itemId <= 7085) or
+		(itemId >= 7094 and itemId <= 7133) or
+		(itemId >= 7928 and itemId <= 7967))
+end
+
+LocalDT.NormalizeThorLegendMaterialStacks = function(sysarg, itemId)
+	if itemId ~= nil and not LocalDT.IsThorLegendMaterial(itemId) then return end
+	for index = 0, Item.getBagItemCount(sysarg) - 1 do
+		local itemPtr = Item.getItemPtrByIndex(sysarg, index)
+		if itemPtr then
+			local currentId = Item.getItemId(itemPtr)
+			if LocalDT.IsThorLegendMaterial(currentId) and
+				(itemId == nil or currentId == itemId) and
+				Item.getItemProperty(sysarg, itemPtr, Item.ipTaoStrong, 0) ~= 0 then
+				Item.setItemProperty(sysarg, itemPtr, Item.ipTaoStrong, 0)
+			end
+		end
+	end
+end
+
 -- 普通装备、特殊装备、坐骑/翅膀装备及战将装备统一使用召唤强度+6。
 LocalDT.IsFixedTaoStrongEquipment = function(itemId)
 	local itemType = Item.getItemPropertyById(itemId, Item.ipItemType)
@@ -225,6 +249,7 @@ function OnPlayerLogin(sysarg, isCrossDay)
 	local actorName = Actor.getName(sysarg)
 	LocalDT.NormalizeSkyRingMaterialStacks(sysarg)
 	LocalDT.NormalizeNanMingLiHuoStacks(sysarg)
+	LocalDT.NormalizeThorLegendMaterialStacks(sysarg)
 	LocalDT.NormalizeBagEquipmentTaoStrong(sysarg)
 	for slot = 0, itMaxEquipPos do
 		LocalDT.NormalizeEquipmentTaoStrong(sysarg, Item.getEquipByPos(sysarg, slot))
@@ -4352,6 +4377,7 @@ end
 --参数分别代表：玩家指针,物品id,物品数量
 function OnAddItemEvent(sysarg,itemId,itemCount)
 	LocalDT.NormalizeNanMingLiHuoStacks(sysarg, itemId)
+	LocalDT.NormalizeThorLegendMaterialStacks(sysarg, itemId)
 	LocalDT.NormalizeBagEquipmentTaoStrong(sysarg, itemId)
 	
 	--得到东西检测完成条件

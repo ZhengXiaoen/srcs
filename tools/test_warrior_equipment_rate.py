@@ -6,11 +6,14 @@ import subprocess
 import sys
 import unittest
 
-from patch_warrior_equipment_rate import ROOT, CLIENT, PACK, LANGUAGE, RULE, warrior_ids, patch_client, patch_language
+from patch_box_stacking import ROOT, server_items
 from patch_guild_quest_config import read_cbp, read_pack
 
 PLAYER = ROOT / "Server/S1001/data/functions/player.lua"
 BOX = ROOT / "Server/S1001/data/functions/Qfunctions.lua"
+CLIENT = ROOT / "web/v2/lang/zh-cn/stditems1.cbp"
+PACK = CLIENT.parent / "zh-cn.dat"
+LANGUAGE = ROOT / "Server/S1001/data/language/Zh-CN/Item.lua"
 BASELINE = "c9a3c2c6dde6ca598a010806e1566a12c25692bc"
 
 
@@ -86,18 +89,21 @@ randomCalls=0
         lua.execute(source[begin:end])
         lua.execute("onFuWenBox(1,0,{}, {item_id=5366,index=13},0,1); assert(created.rate==10 and randomCalls==0)")
 
-    def test_client_changes_only_target_descriptions(self):
-        ids = warrior_ids()
-        before = baseline(CLIENT)
-        self.assertEqual(patch_client(before, ids), CLIENT.read_bytes())
-        old = read_cbp(before)[1]
-        new = read_cbp(CLIENT.read_bytes())[1]
-        changed = {int(a.child('id').number()) for a,b in zip(old.children,new.children) if a != b}
-        self.assertEqual(ids,changed)
-        self.assertEqual(patch_language(baseline(LANGUAGE),ids),LANGUAGE.read_bytes())
-        for old,new in zip(read_pack(baseline(PACK)),read_pack(PACK.read_bytes())):
-            self.assertEqual(old[0],new[0])
-            self.assertEqual(CLIENT.read_bytes() if old[0]==CLIENT.name else old[1],new[1])
+    def test_client_keeps_original_descriptions_and_matching_caps(self):
+        for path in (CLIENT, PACK, LANGUAGE):
+            self.assertEqual(baseline(path), path.read_bytes())
+        items = server_items((ROOT / "Server/S1001/data/config/item/StdItems.txt").read_bytes())
+        ids = {item for item, block in items.items()
+               if 201 <= int(re.search(rb"(?m)^  type=(\d+),", block)[1]) <= 205}
+        self.assertEqual(50, len(ids))
+        rows = read_cbp(CLIENT.read_bytes())[1].children
+        for row in rows:
+            item = int(row.child('id').number())
+            if item in ids:
+                self.assertEqual(10, row.child('heroDamageRate').number())
+                self.assertIn(b'heroDamageRate=10,', items[item])
+        packed = dict(read_pack(PACK.read_bytes()))
+        self.assertEqual(CLIENT.read_bytes(), packed[CLIENT.name])
 
     def test_modified_lua_compiles(self):
         lua = LuaRuntime(encoding=None)

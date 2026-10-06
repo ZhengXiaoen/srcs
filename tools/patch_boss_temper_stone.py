@@ -57,10 +57,11 @@ def derive_tiers():
 
 def config_bytes(tiers):
     lines = [
-        "-- 锤炼石随机掉落 0–3 个，最高装备为 7 转及以上的 BOSS 保底 1 个（随机 1–3 个）。",
+        "-- 锤炼石实际掉率按最高装备转生等级从 1 转 5% 递增至 13 转 20%，成功后随机 1–3 个。",
         "-- 由 tools/patch_boss_temper_stone.py 生成；装备或掉落模板变更后重新生成。",
         "LocalDT.BossTemperStoneDrop = {",
-        "\titemId = 5648, bind = 1, guaranteedTier = 7, maxCount = 3,",
+        "\titemId = 5648, bind = 1, maxCount = 3,",
+        "\tminRate = 500, maxRate = 2000, maxRateTier = 13, -- 万分比",
         "\tmonsters = {",
     ]
     lines.extend(f"\t\t[{mid}] = {tier}," for mid, tier in sorted(tiers.items()))

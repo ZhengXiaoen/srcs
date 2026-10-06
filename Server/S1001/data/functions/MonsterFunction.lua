@@ -114,12 +114,11 @@ LocalDT.DropBossMaterials = function(monster, killer, monId)
 			end
 		end
 	end
-	-- 最后抽取新增材料数量，保持原有材料的抽取顺序；锤炼石只生成一组。
+	-- 最后判定锤炼石，按最高装备转生等级递增掉率，成功后生成一组。
 	if stoneTier ~= nil then
-		local minCount = stoneTier >= stoneCfg.guaranteedTier and 1 or 0
-		local maxCount = stoneCfg.maxCount
-		local count = minCount + System.getRandomNumber(maxCount - minCount + 1)
-		if count > 0 then
+		local rate = stoneCfg.minRate + math.floor((math.min(stoneTier, stoneCfg.maxRateTier) - 1) * (stoneCfg.maxRate - stoneCfg.minRate) / (stoneCfg.maxRateTier - 1))
+		if System.getRandomNumber(10000) < rate then
+			local count = 1 + System.getRandomNumber(stoneCfg.maxCount)
 			local key = stoneCfg.itemId .. ":" .. stoneCfg.bind
 			totals[key] = {id=stoneCfg.itemId, bind=stoneCfg.bind, count=count}
 			table.insert(order, key)

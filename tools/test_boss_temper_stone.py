@@ -22,6 +22,14 @@ class BossTemperStoneTests(unittest.TestCase):
     def runtime(self, original_materials=False):
         lua = material.BossMaterialDropTests().runtime()
         lua.execute(CONFIG.read_bytes())
+        lua.execute("""
+chanceRoll=0
+originalRandom=System.getRandomNumber
+System.getRandomNumber=function(n)
+ local value=originalRandom(n)
+ return n==10000 and chanceRoll or value
+end
+""")
         if not original_materials:
             lua.execute("LocalDT.BossMaterialDropMonsters={}")
         return lua
@@ -38,13 +46,13 @@ class BossTemperStoneTests(unittest.TestCase):
     def test_every_boss_every_possible_quantity_single_bound_stack(self):
         lua = self.runtime()
         for mid, tier in self.tiers.items():
-            low, high = (1 if tier >= 7 else 0), 3
+            low, high = 1, 3
             for value in range(high-low+1):
                 lua.execute(f"randomValue={value};drops={{}};messages={{}};draws=0;drop({{}},{{}},{mid})")
                 rows = list(lua.globals().drops.values())
                 expected = low+value
                 self.assertEqual(int(expected > 0), len(rows), mid)
-                self.assertEqual(1, lua.globals().draws)
+                self.assertEqual(2, lua.globals().draws)
                 self.assertEqual(int(expected > 0), len(lua.globals().messages))
                 if expected == 0:
                     self.assertEqual(0, lua.globals().errors)
@@ -53,15 +61,35 @@ class BossTemperStoneTests(unittest.TestCase):
                 self.assertEqual((5648,1,expected), (item.id,item.bind,item.count), mid)
                 self.assertIn(f" x{expected}", lua.globals().messages[1].msg)
 
-    def test_guarantee_starts_at_seven_and_cap_applies_to_future_tiers(self):
+    def test_probability_threshold_every_roll_and_future_tier_cap(self):
         lua = self.runtime()
-        for tier, expected in ((1,(0,3)),(6,(0,3)),(7,(1,3)),(13,(1,3)),(30,(1,3))):
+        for tier in (*range(1,14),30):
+            expected = 500+(min(tier,13)-1)*125
             lua.execute(f"LocalDT.BossTemperStoneDrop.monsters[999999]={tier}")
-            for value, count in ((0,expected[0]),(expected[1]-expected[0],expected[1])):
-                lua.execute(f"drops={{}};randomValue={value};drop({{}},{{}},999999)")
-                self.assertEqual(int(count > 0),len(lua.globals().drops))
-                if count > 0:
-                    self.assertEqual(count, lua.globals().drops[1].count)
+            lua.execute(f"""
+successes=0
+for roll=0,9999 do
+ chanceRoll=roll;drops={{}};messages={{}};draws=0
+ drop({{}},{{}},999999)
+ if roll<{expected} then
+  assert(#drops==1 and drops[1].id==5648 and drops[1].count==1)
+  assert(draws==2 and #messages==1)
+  successes=successes+1
+ else
+  assert(#drops==0 and draws==1 and #messages==0 and errors==0 and released==0)
+ end
+end
+""")
+            self.assertEqual(expected,lua.globals().successes,tier)
+
+    def test_every_boss_probability_success_and_failure_boundaries(self):
+        lua = self.runtime()
+        for mid,tier in self.tiers.items():
+            rate=500+(tier-1)*125
+            for roll,expected in ((rate-1,1),(rate,0)):
+                lua.execute(f"chanceRoll={roll};drops={{}};messages={{}};drop({{}},{{}},{mid})")
+                self.assertEqual(expected,len(lua.globals().drops),mid)
+                self.assertEqual(expected,len(lua.globals().messages),mid)
 
     def test_player_pet_hero_and_one_time_guard(self):
         for kind in (0,2,3):
@@ -93,13 +121,13 @@ class BossTemperStoneTests(unittest.TestCase):
             base = material.BossMaterialDropTests().runtime()
             changed = self.runtime(original_materials=True)
             for lua in (base,changed):
-                lua.execute("sequence=0;System.getRandomNumber=function(n) sequence=sequence+1;return sequence%n end")
+                lua.execute("sequence=0;System.getRandomNumber=function(n) sequence=sequence+1;if n==10000 then return 0 end;return sequence%n end")
                 lua.execute(f"drop({{}},{{}},{mid})")
             original = material.BossMaterialDropTests().actual(base)
             current = material.BossMaterialDropTests().actual(changed)
             current.pop((5648,1),None)
             self.assertEqual(original,current,mid)
-            self.assertEqual(base.globals().sequence+1, changed.globals().sequence,mid)
+            self.assertEqual(base.globals().sequence+2, changed.globals().sequence,mid)
 
     def test_native_stone_rows_removed_and_every_other_byte_preserved(self):
         removed = 0

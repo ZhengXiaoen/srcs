@@ -5864,11 +5864,6 @@ function SRRefreshMonsterEx()
 		local scene = Fuben.getSceneHandleById(r.mapid)
 		local liveId, liveIndex = LocalDT.GetSRRefreshMonsterLiveId(scene, r)
 		local nextTime = tonumber(record.nextTime) or 0
-		if nextTime > 0 then
-			-- 启动恢复只执行一次，已死亡 BOSS 的截止时间额外提前 30 分钟。
-			nextTime = nextTime - 30 * 60
-			record.nextTime = nextTime
-		end
 		if liveId ~= 0 then
 			s[r.bj], remaining[r.bj], nextboss[r.bj] = 1, 0, liveIndex
 			record.activeId, record.nextIndex, record.nextTime = liveId, liveIndex, 0

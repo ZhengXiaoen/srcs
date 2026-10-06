@@ -22,14 +22,14 @@ end
 
 
 -- 开始闭关修炼活动
-function StartActivity_BGXL()
+function StartActivity_BGXL(sysarg, startTime, endTime)
 	if System.isCrossServer() ==true then
 		return 
 	end
 	print("闭关修炼活动 开始")	
 	
 	local sdVar = System.getDyanmicVar()
-	sdVar.bgxlTime = System.getCurrMiniTime()
+	sdVar.bgxlTime = startTime or System.getCurrMiniTime()
 	sdVar.bgxlIfCan_broadcastTipmsg=1
 	--sdVar.bgxlmultipleAwakeTime = nil
 	

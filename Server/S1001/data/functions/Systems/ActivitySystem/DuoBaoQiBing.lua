@@ -17,18 +17,18 @@ function StartActivity_duobaoqibingBefore5()
 	System.broadcastTipmsg(string.format("%s活动5分钟后即将开启，请大家踊跃参加。%s %s", RwData[1], NpcName, NpctFly), ttChatWindow)	
 end
 
-function StartActivity_duobaoqibing()
+function StartActivity_duobaoqibing(sysarg, startTime, endTime)
 	if System.isCrossServer() ==true then
 		return 
 	end
 	print("夺宝奇兵活动 开始")	
 	local dVar = System.getDyanmicVar()
-	dVar.duobaoqibingTime = System.getCurrMiniTime()
+	dVar.duobaoqibingTime = startTime or System.getCurrMiniTime()
     local cfg = StdActivityCfg.DiXiaDuoBao
 
      local hScene = Fuben.getSceneHandleById(cfg.sceneId, 0)  --获得场景句柄 普通场景0
 	
-	local pPtr = Fuben.createMonster(hScene, cfg.monster.id, cfg.monster.x, cfg.monster.y, 20 * 60)
+	local pPtr = Fuben.createMonster(hScene, cfg.monster.id, cfg.monster.x, cfg.monster.y, endTime and (endTime - System.getCurrMiniTime()) or 20 * 60)
 end
 
 -- 结束夺宝奇兵活动

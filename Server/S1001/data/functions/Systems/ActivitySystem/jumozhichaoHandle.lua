@@ -17,14 +17,14 @@ function StartActivity_JMZCBefore5(sysarg)
 	System.broadcastTipmsg(string.format("%s活动5分钟后即将开启，请大家踊跃参加。%s %s", RwData[1], NpcName, NpctFly), ttChatWindow)	
 end
 
-function StartActivity_JMZC(sysarg)
+function StartActivity_JMZC(sysarg, startTime, endTime)
 	if System.isCrossServer() ==true then
 		return 
 	end
 	print("巨魔之巢活动 开始")	
 	
 	local dVar = System.getDyanmicVar()
-	dVar.jmzcTime = System.getCurrMiniTime()
+	dVar.jmzcTime = startTime or System.getCurrMiniTime()
 	dVar.bgxlIfCan_broadcastTipmsg=1
 	
 	local sysvar = System.getStaticVar(sysarg)

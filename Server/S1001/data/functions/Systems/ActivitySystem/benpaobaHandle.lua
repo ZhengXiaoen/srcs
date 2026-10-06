@@ -55,7 +55,7 @@ function StartActivity_bpbxdBefore5()
 	System.broadcastTipmsg(string.format("%s活动5分钟后即将开启,请大家踊跃参加.%s %s", RwData[1], NpcName, NpctFly), ttChatWindow)	
 end
 
-function StartActivity_bpbxd()
+function StartActivity_bpbxd(sysarg, startTime, endTime)
 
 	if System.isCrossServer() ==true then
 		return 
@@ -69,7 +69,7 @@ function StartActivity_bpbxd()
 	Ranking.clear_ranking(1, true)
 
 	local dVar = System.getDyanmicVar()
-	dVar.bpbxdTime = System.getCurrMiniTime()
+	dVar.bpbxdTime = startTime or System.getCurrMiniTime()
 	--一二三层的名次
 	--dVar.bpxdAwardNumber1=0
 	dVar.bpxdAwardNumber2=0
@@ -80,12 +80,14 @@ function StartActivity_bpbxd()
 	--创造怪物
 	for i=1,#monsterData do 
 		local nHandle = Fuben.getSceneHandleById(216,0)
-		Fuben.createMonster(nHandle, 561, monsterData[i][1],monsterData[i][2], 60)--重新刷boss
+		local left = dVar.bpbxdTime + 60 - System.getCurrMiniTime()
+		if left > 0 then Fuben.createMonster(nHandle, 561, monsterData[i][1],monsterData[i][2], left) end -- 恢复时不重新生成已消失的起跑阻挡怪
 	end
-	System.addTimer("bpbxd_left30", 30000, 1)
-	System.addTimer("bpbxd_left10", 50000, 1)
-	System.addTimer("bpbxd_left5", 55000, 1)
-	System.addTimer("bpbxd_left0", 65000, 1)
+	-- 恢复场次时仅保留尚未到达的倒计时，避免重启后重新等待开跑。
+	for _, timer in ipairs({{"bpbxd_left30", 30}, {"bpbxd_left10", 50}, {"bpbxd_left5", 55}, {"bpbxd_left0", 65}}) do
+		local delay = dVar.bpbxdTime + timer[2] - System.getCurrMiniTime()
+		if delay > 0 then System.addTimer(timer[1], delay * 1000, 1) end
+	end
 	
 	local sceen = Fuben.getSceneById(342, 0)
 	Fuben.clearSceneAllMonsters(sceen, 4)--把boss清除了

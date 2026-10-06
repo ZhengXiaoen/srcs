@@ -58,7 +58,7 @@ function on_activity_wlzb_before10()
 end
 
 -- 开始武林争霸活动
-function StartActivity_wlzb()
+function StartActivity_wlzb(sysarg, startTime, endTime)
 
 	if System.isCrossServer() ==true then
 		return 
@@ -69,7 +69,7 @@ function StartActivity_wlzb()
 	delete_old_wulin_master()
 	
 	local dVar = System.getDyanmicVar()
-	dVar.wlzbTime = System.getCurrMiniTime()
+	dVar.wlzbTime = startTime or System.getCurrMiniTime()
 	
 	dVar.wlzbCanPk = 0
 	-- 每 3 秒加3000点经验(不分等级)

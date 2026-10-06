@@ -23,13 +23,14 @@ WorldBossAwardCfg =
         {item_id = 85,count=2,bind=1,},
     },
 }
-function StartActivity_WorldBoss()
+function StartActivity_WorldBoss(sysarg, startTime)
 	if System.isCrossServer() ==true then
 		return 
 	end
     print("世界Boss活动开启")
     local sVar = System.getStaticVar()
     sVar.worldbossing = true 
+    System.getDyanmicVar().WorldBossStartTime = startTime or System.getCurrMiniTime()
     local hScene = Fuben.getSceneHandleById(119, 0)
     Fuben.clearMonster(hScene,666)
 	local pMonster = Fuben.createMonster(hScene, 666, 45, 54, 0)
@@ -168,6 +169,7 @@ function EndActivity_WorldBoss()
     end
      local sVar = System.getStaticVar()
     sVar.worldbossing = nil 
+    System.getDyanmicVar().WorldBossStartTime = nil
      Fuben.clearMonster(hScene,666)
     local playerList = LuaHelp.getSceneActorListById(119)
 	if playerList ~= nil then

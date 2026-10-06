@@ -1103,7 +1103,7 @@ function onBroadcast_DuoBeiYaSong_StartBefore5(sysarg)
 	System.broadcastTipmsg(string.format("%s活动5分钟之后开启，请大家踊跃参加。", RwData[1] ), ttScreenCenter)
 	System.broadcastTipmsg(string.format("%s活动5分钟之后开启，请大家踊跃参加。%s %s", RwData[1], NpcName, NpctFly), ttChatWindow)	
 end
-function onBroadcast_DuoBeiYaSong_Start(sysarg)
+function onBroadcast_DuoBeiYaSong_Start(sysarg, startTime)
 
 	if System.isCrossServer() ==true then
 		return 
@@ -1119,7 +1119,7 @@ function onBroadcast_DuoBeiYaSong_Start(sysarg)
 	System.broadcastTipmsg(string.format("%s活动已经开启，请大家踊跃参加。%s %s", RwData[1], NpcName, NpctFly), ttChatWindow)
 	
 	local dVar = System.getDyanmicVar()
-	dVar.duobeiyabiaoTime=System.getCurrMiniTime()
+	dVar.duobeiyabiaoTime=startTime or System.getCurrMiniTime()
 	
 end
 function OnBroadcast_DuoBeiYaSong_End(sysarg)

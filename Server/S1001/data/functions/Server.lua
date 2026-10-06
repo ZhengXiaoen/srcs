@@ -22,6 +22,7 @@
 --#include "data\functions\OldPlayerReturnFunc.lua" once
 --#include "data\functions\Activity\SpringFestivalActivity.lua" once
 --#include "data\functions\Activity\RecurringActivities.lua" once
+--#include "data\functions\Activity\TimedActivities.lua" once
 
 function OnStartedLogicServer()
 	
@@ -134,6 +135,7 @@ function OnStartedLogicServer()
 	end
 	
 	OnLuaEvent(LuaEventId.ServerStarted)
+	System.addTimer("RestoreRunningTimedActivities", 1000, 1) -- 等待场景及原定时回调就绪后恢复当前场次
 	EnsureRecurringActivities()
 	InitRecurringActivityTimer()
 	

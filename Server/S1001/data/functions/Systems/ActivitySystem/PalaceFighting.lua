@@ -7,7 +7,7 @@
 --end
 
 -- 皇宫大乱斗活动开始
-function PalaceFighting_Start()
+function PalaceFighting_Start(sysarg, startTime, endTime)
 	local dVar = System.getDyanmicVar()
 	dVar.PalaceFightingStart = 1
 	
@@ -23,7 +23,7 @@ function PalaceFighting_Start()
 	-- 刷新所有怪
 	local hScene = Fuben.getSceneHandleById(10, 0)	
 	for i, v in ipairs(PalaceFightingCfg.monsters) do
-		Fuben.createMonstersInRange(hScene, v[1], 0, 0, -1, -1, v[2], 15 * 60)
+		Fuben.createMonstersInRange(hScene, v[1], 0, 0, -1, -1, v[2], endTime and (endTime - System.getCurrMiniTime()) or 15 * 60)
 	end
 	
 	--注册定时回调函数

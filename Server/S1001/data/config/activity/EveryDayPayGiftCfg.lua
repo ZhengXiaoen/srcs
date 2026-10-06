@@ -75,7 +75,7 @@ EveryDayPayGiftCfg =
                 award =
                 {
 {type=0,id=7825,count=10,quality=0,strong=0,bind=1},--神戒宝盒
-{type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=527,count=30,quality=0,strong=0,bind=1},--特戒结晶(1)
 {type=0,id=574,count=5,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=4744,count=20,quality=0,strong=0,bind=1},--内功经验卷(小)
@@ -92,7 +92,7 @@ EveryDayPayGiftCfg =
                 award =
                 {
 {type=0,id=7825,count=15,quality=0,strong=0,bind=1},--神戒宝盒
-{type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
 {type=0,id=7650,count=1,quality=0,strong=0,bind=1},--龙腾首饰礼盒
@@ -110,7 +110,7 @@ EveryDayPayGiftCfg =
                 award =
                 {
 {type=0,id=7825,count=20,quality=0,strong=0,bind=1},--神戒宝盒
-{type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=570,count=50,quality=0,strong=0,bind=1},--护盾碎片(10000颗)
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
@@ -376,7 +376,7 @@ EveryDayPayGiftCfg =
                 award =
                 {
 {type=0,id=7825,count=10,quality=0,strong=0,bind=1},--神戒宝盒
-{type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=527,count=30,quality=0,strong=0,bind=1},--特戒结晶(1)
 {type=0,id=574,count=5,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=4744,count=20,quality=0,strong=0,bind=1},--内功经验卷(小)
@@ -393,7 +393,7 @@ EveryDayPayGiftCfg =
                 award =
                 {
 {type=0,id=7825,count=15,quality=0,strong=0,bind=1},--神戒宝盒
-{type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
 {type=0,id=7650,count=1,quality=0,strong=0,bind=1},--龙腾首饰礼盒
@@ -411,7 +411,7 @@ EveryDayPayGiftCfg =
                 award =
                 {
 {type=0,id=7825,count=20,quality=0,strong=0,bind=1},--神戒宝盒
-{type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=570,count=50,quality=0,strong=0,bind=1},--护盾碎片(10000颗)
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
@@ -677,7 +677,7 @@ EveryDayPayGiftCfg =
                 award =
                 {
 {type=0,id=7825,count=10,quality=0,strong=0,bind=1},--神戒宝盒
-{type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=527,count=30,quality=0,strong=0,bind=1},--特戒结晶(1)
 {type=0,id=574,count=5,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=4744,count=20,quality=0,strong=0,bind=1},--内功经验卷(小)
@@ -694,7 +694,7 @@ EveryDayPayGiftCfg =
                 award =
                 {
 {type=0,id=7825,count=15,quality=0,strong=0,bind=1},--神戒宝盒
-{type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
 {type=0,id=7650,count=1,quality=0,strong=0,bind=1},--龙腾首饰礼盒
@@ -712,7 +712,7 @@ EveryDayPayGiftCfg =
                 award =
                 {
 {type=0,id=7825,count=20,quality=0,strong=0,bind=1},--神戒宝盒
-{type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=570,count=50,quality=0,strong=0,bind=1},--护盾碎片(10000颗)
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
@@ -978,7 +978,7 @@ EveryDayPayGiftCfg =
                 award =
                 {
 {type=0,id=7825,count=10,quality=0,strong=0,bind=1},--神戒宝盒
-{type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=527,count=30,quality=0,strong=0,bind=1},--特戒结晶(1)
 {type=0,id=574,count=5,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=4744,count=20,quality=0,strong=0,bind=1},--内功经验卷(小)
@@ -995,7 +995,7 @@ EveryDayPayGiftCfg =
                 award =
                 {
 {type=0,id=7825,count=15,quality=0,strong=0,bind=1},--神戒宝盒
-{type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
 {type=0,id=7650,count=1,quality=0,strong=0,bind=1},--龙腾首饰礼盒
@@ -1013,7 +1013,7 @@ EveryDayPayGiftCfg =
                 award =
                 {
 {type=0,id=7825,count=20,quality=0,strong=0,bind=1},--神戒宝盒
-{type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=570,count=50,quality=0,strong=0,bind=1},--护盾碎片(10000颗)
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
@@ -1279,7 +1279,7 @@ EveryDayPayGiftCfg =
                 award =
                 {
 {type=0,id=7825,count=10,quality=0,strong=0,bind=1},--神戒宝盒
-{type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=527,count=30,quality=0,strong=0,bind=1},--特戒结晶(1)
 {type=0,id=574,count=5,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=4744,count=20,quality=0,strong=0,bind=1},--内功经验卷(小)
@@ -1296,7 +1296,7 @@ EveryDayPayGiftCfg =
                 award =
                 {
 {type=0,id=7825,count=15,quality=0,strong=0,bind=1},--神戒宝盒
-{type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
 {type=0,id=7650,count=1,quality=0,strong=0,bind=1},--龙腾首饰礼盒
@@ -1314,7 +1314,7 @@ EveryDayPayGiftCfg =
                 award =
                 {
 {type=0,id=7825,count=20,quality=0,strong=0,bind=1},--神戒宝盒
-{type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=570,count=50,quality=0,strong=0,bind=1},--护盾碎片(10000颗)
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
@@ -1582,7 +1582,7 @@ EveryDayPayGiftCfg =
                 award =
                 {
 {type=0,id=7825,count=10,quality=0,strong=0,bind=1},--神戒宝盒
-{type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=527,count=30,quality=0,strong=0,bind=1},--特戒结晶(1)
 {type=0,id=574,count=5,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=4744,count=20,quality=0,strong=0,bind=1},--内功经验卷(小)
@@ -1599,7 +1599,7 @@ EveryDayPayGiftCfg =
                 award =
                 {
 {type=0,id=7825,count=15,quality=0,strong=0,bind=1},--神戒宝盒
-{type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
 {type=0,id=7650,count=1,quality=0,strong=0,bind=1},--龙腾首饰礼盒
@@ -1617,7 +1617,7 @@ EveryDayPayGiftCfg =
                 award =
                 {
 {type=0,id=7825,count=20,quality=0,strong=0,bind=1},--神戒宝盒
-{type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=570,count=50,quality=0,strong=0,bind=1},--护盾碎片(10000颗)
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
@@ -1818,7 +1818,7 @@ EveryDayPayGiftCfg =
                 award =
                 {
 {type=0,id=7825,count=10,quality=0,strong=0,bind=1},--神戒宝盒
-{type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=527,count=30,quality=0,strong=0,bind=1},--特戒结晶(1)
 {type=0,id=574,count=5,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=4744,count=20,quality=0,strong=0,bind=1},--内功经验卷(小)
@@ -1835,7 +1835,7 @@ EveryDayPayGiftCfg =
                 award =
                 {
 {type=0,id=7825,count=15,quality=0,strong=0,bind=1},--神戒宝盒
-{type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
 {type=0,id=7650,count=1,quality=0,strong=0,bind=1},--龙腾首饰礼盒
@@ -1853,7 +1853,7 @@ EveryDayPayGiftCfg =
                 award =
                 {
 {type=0,id=7825,count=20,quality=0,strong=0,bind=1},--神戒宝盒
-{type=0,id=6736,count=1,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=570,count=50,quality=0,strong=0,bind=1},--护盾碎片(10000颗)
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)

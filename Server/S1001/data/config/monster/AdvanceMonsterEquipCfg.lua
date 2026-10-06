@@ -8692,7 +8692,7 @@ AdvanceMonsterEquipCfg =
 {type= 0,id = 150,count = 0,bind = 0,},--
 {type= 0,id = 159,count = 0,bind = 0,},--
 {type= 0,id = 457,count = 0,bind = 0,},--
-{type= 0,id = 491,count = 0,bind = 0,},--
+{type= 0,id = 491,count = 0,bind = 1,},--
 
 		},
 		
@@ -8702,7 +8702,7 @@ AdvanceMonsterEquipCfg =
 {type= 0,id = 150,count = 0,bind = 0,},--
 {type= 0,id = 159,count = 0,bind = 0,},--
 {type= 0,id = 457,count = 0,bind = 0,},--
-{type= 0,id = 491,count = 0,bind = 0,},--
+{type= 0,id = 491,count = 0,bind = 1,},--
 
 
 		},
@@ -8713,7 +8713,7 @@ AdvanceMonsterEquipCfg =
 {type= 0,id = 150,count = 0,bind = 0,},--
 {type= 0,id = 159,count = 0,bind = 0,},--
 {type= 0,id = 457,count = 0,bind = 0,},--
-{type= 0,id = 491,count = 0,bind = 0,},--
+{type= 0,id = 491,count = 0,bind = 1,},--
 
 
 		},

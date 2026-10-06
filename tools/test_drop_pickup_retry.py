@@ -257,6 +257,23 @@ class PickupRetryTests(unittest.TestCase):
                 state["capacity"] = False
                 self.assertIsNone(select())
 
+    def test_wing_and_mount_equipment_follow_other_items_switch_and_pickup_protection(self):
+        for item in (*range(6865, 6885), *range(6983, 7003)):
+            with self.subTest(item=item):
+                clock, switches, state, drop, _, select, send = self.environment(item, 1)
+                self.assertIs(select(), drop)
+                switches[13] = False
+                self.assertIsNone(select())
+                switches[13] = True
+                self.assertIs(select(), drop)
+                state["capacity"] = False
+                self.assertIsNone(select())
+                state["capacity"] = True
+                send()
+                self.assertIsNone(select())
+                clock["ms"] += 2000
+                self.assertIs(select(), drop)
+
     def test_baseline_reproduces_permanent_skip(self):
         if BASELINE is None:
             self.skipTest("Use --baseline to demonstrate the old permanent skip")

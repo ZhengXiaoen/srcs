@@ -16,6 +16,7 @@ from patch_retired_hunt_pages import patch_swf as retired_hunt
 from patch_spring_flash_sale import patch_swf as spring_dates
 from patch_spring_reminders import BASELINE as REMINDER_BASELINE, patch_swf as spring_reminders
 from patch_open_server_reminders import patch_swf as opening_reminders
+from patch_jingji_material_reminders import patch_swf as material_reminders
 from patch_activity_entries import strings_of
 from patch_activity_reminders import normalize
 from patch_drop_pickup_retry import abc_section
@@ -109,7 +110,7 @@ class SpringClientTests(unittest.TestCase):
         # The reminder patch has its own recent baseline; older snapshots also
         # contain unrelated follow-up changes outside Spring entry routing.
         previous = subprocess.check_output(['git', 'show', REMINDER_BASELINE + ':web/GameFrame.swf'], cwd=ROOT)
-        self.assertEqual(self.source, opening_reminders(spring_reminders(previous)))
+        self.assertEqual(self.source, material_reminders(opening_reminders(spring_reminders(previous))))
         self.assertEqual(routed, patch_swf(routed))
         old, (_, _, a, b) = abc_section(original)
         abc, _ = normalize(old[a:b]); _, _, bodies = inspect_abc(abc)

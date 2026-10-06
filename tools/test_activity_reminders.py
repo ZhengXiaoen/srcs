@@ -138,8 +138,10 @@ def execute(code, names, strings, locals_, globals_, invoke, start=0, end=None):
         elif kind == 0x87: stack.pop()
         elif kind == 0x2a: stack.append(stack[-1])
         elif kind == 0x29: stack.pop()
-        elif kind in (0x73, 0x76, 0x93):
-            value = stack.pop(); stack.append(int(value or 0) if kind == 0x73 else truth(value) if kind == 0x76 else value - 1)
+        elif kind in (0x73, 0x74, 0x76, 0x93):
+            value = stack.pop(); stack.append(int(value or 0) if kind == 0x73 else
+                         int(value or 0) % (1 << 32) if kind == 0x74 else
+                         truth(value) if kind == 0x76 else value - 1)
         elif kind == 0xc0: stack.append(int(stack.pop()) + 1)
         elif kind == 0xc2: locals_[args[0]] += 1
         elif kind == 0x32:

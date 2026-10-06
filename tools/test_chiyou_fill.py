@@ -138,7 +138,7 @@ Fuben={
         self.assertEqual(0, g.svar.allGlodStore)
         self.assertLess(dialog.index("<投入神石/"), dialog.index("<一键填满/"))
         self.assertLess(dialog.index("<一键填满/"), dialog.index("<#BN蚩尤地宫/"))
-        self.assertIn("\n\t<一键填满/@onFillShenShiFunc>", dialog)
+        self.assertIn("<一键填满/@onFillShenShiFunc>", dialog)
         g.svar.allGlodStore = 98  # Another player contributes after the dialog opens.
         self.contribute(lua)
         self.assertEqual((1, 99, 1), (g.removed, g.stones, g.bosses))

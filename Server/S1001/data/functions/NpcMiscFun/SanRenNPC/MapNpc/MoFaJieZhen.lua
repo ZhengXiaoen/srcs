@@ -66,26 +66,26 @@ NpcDialog[394].main = function(sysarg)
 		svar.allGlodStore =0
 	end
 	local echo = [[
-
-  <(c0xFF00c0ff)蚩尤结阵描述:>
-   <(c0xFFeabc78)上古时期蚩尤大将不敌黄帝被封印结阵中,千年后结阵出现裂痕,蚩尤大将即将携带宝藏席卷大陆.><(idecoLine#350)>
-
-   <(c0xFFeabc78)传闻><魔法神石><(c0xFFeabc78)可让结阵加快破裂>
-	<(c0xFFeabc78)每向结阵投入一颗便会增加一层以及获得300元宝奖励.>
-   <魔法神石><(c0xFFeabc78)将在各大Boss以及个人挑战BOSS中产出>
+  <(c0xFF00c0ff)蚩尤结阵描述：>
+  <(c0xFFeabc78)上古蚩尤不敌黄帝，被封印于结阵之中。>
+  <(c0xFFeabc78)如今结阵出现裂痕，蚩尤将携宝藏重临大陆。>
   <(idecoLine#350)>
-  <(c0xFFeabc78)当前结阵层数><(c0xFF00FF00) ]]..svar.allGlodStore..[[ 层 >
+  <(c0xFFeabc78)当前结阵层数：><(c0xFF00FF00) ]]..svar.allGlodStore..[[ 层 ><(c0xFFeabc78) / ><(c0xFF00FF00)]]..NpcDialog[394].bossLayer..[[ 层>
+  <(c0xFFeabc78)结阵达到><(c0xFF00FF00)]]..NpcDialog[394].bossLayer..[[><(c0xFFeabc78)层，蚩尤大将携宝藏现身热血王城。>
+  <(c0xFFeabc78)出现坐标：><(c0xFF00FF00)（93:86）>
 
-  <结阵层数达到><(c0xFF00FF00)]]..NpcDialog[394].bossLayer..[[><层蚩尤大将将出现在热血王城(93:86)>
+  <魔法神石><(c0xFFeabc78)：各大BOSS、个人挑战BOSS产出。>
+  <(c0xFFeabc78)每投入1颗神石，结阵增加1层，奖励300元宝。>
+  <投入神石/@onGiveShenShiFunc>        <一键填满/@onFillShenShiFunc>
+  <(idecoLine#350)>
+  <(c0xFF00c0ff)蚩尤地宫：>
+  <(c0xFFeabc78)每日投入10颗神石开启入口，跨天重置。>
+  <(c0xFFeabc78)蚩尤地宫BOSS有几率掉落翅膀装备：>
+  <(c0xFF00FF00)凡·羽骨、凡·羽灵>
+  <(c0xFF00FF00)凡·羽魂、凡·羽翼>
 
-  <(c0xFF00c0ff)蚩尤大将携带巨大宝藏,人人得而诛之,神兵利器杀它便可获得>
 
-	<投入神石/@onGiveShenShiFunc><(c0xFFeabc78)每日投入10颗神石可开启地宫入口,跨天重置>
-	<一键填满/@onFillShenShiFunc>
-
-	<(c0xFFeabc78)蚩尤地宫BOSS有几率掉落翅膀装备：凡·羽骨、凡·羽灵、凡·羽魂、凡·羽翼。>
-
-				<#BN蚩尤地宫/@onEnterMapFunc>
+                <#BN蚩尤地宫/@onEnterMapFunc>
 ]]
 
 

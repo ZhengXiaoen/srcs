@@ -27,21 +27,30 @@ local LocalDT = LocalDT or {}
 --#include "data\functions\player.lua" once -- 角色处理
 --#include "data\config\monster\ZhuanShengAccessoryDropCfg.lua" once
 
-LocalDT.DropZhuanShengAccessoryItem = function(monster, items, rate, mincount, maxcount)
+LocalDT.DropZhuanShengAccessoryItem = function(monster, killer, items, rate, mincount, maxcount)
 	if not rate or System.getRandomNumber(100) >= rate then return end
 	local itemId = items[math.random(1, #items)]
 	local count = math.random(mincount, maxcount)
 	local item = Item.createItem(itemId, count, 0, 0, 1)
 	if item then
-		Item.createDropItem(monster, item, LogIds.ZhuanShengAccessoryDrop, "ZhuanShengAccessory", nil)
+		if Item.createDropItem(monster, item, LogIds.ZhuanShengAccessoryDrop, "ZhuanShengAccessory", nil) then
+			-- 脚本生成的掉落需主动通知，数量与实际落地的一组道具一致。
+			local sceneName = Actor.getSceneName(monster)
+			local itemName = Item.getItemLinkMsg(itemId) .. " x" .. count
+			local msg = string.format("<(n%s)>在<(c0xFF00FF00)%s>击杀<(c0xFFFF0000)%s>掉落[%s]", Actor.getName(killer), sceneName, Actor.getName(monster), itemName)
+			System.broadcastTipmsg(msg, ttChatWindow)
+		else
+			Item.releaseItemPtr(item)
+			System.trace("ZhuanShengAccessory createDropItem failed: " .. itemId)
+		end
 	end
 end
 
-LocalDT.DropZhuanShengAccessory = function(monster, monId)
+LocalDT.DropZhuanShengAccessory = function(monster, killer, monId)
 	local cfg = ZhuanShengAccessoryDropCfg.tiers[Actor.getSceneId(monster)]
 	if not cfg or (monId ~= cfg.monsters[1] and monId ~= cfg.monsters[2] and monId ~= cfg.monsters[3]) then return end
-	LocalDT.DropZhuanShengAccessoryItem(monster, ZhuanShengAccessoryDropCfg.items, cfg.rate, cfg.mincount, cfg.maxcount)
-	LocalDT.DropZhuanShengAccessoryItem(monster, ZhuanShengAccessoryDropCfg.finishedItems, cfg.finishedRate, 1, 1)
+	LocalDT.DropZhuanShengAccessoryItem(monster, killer, ZhuanShengAccessoryDropCfg.items, cfg.rate, cfg.mincount, cfg.maxcount)
+	LocalDT.DropZhuanShengAccessoryItem(monster, killer, ZhuanShengAccessoryDropCfg.finishedItems, cfg.finishedRate, 1, 1)
 end
 
 function CheckAndSetIsDropItemWhenMonsterKilled(monster, killer, monId)
@@ -147,7 +156,7 @@ end
 
 --当一个怪物被杀死的时候回调
 function HandlerMonsterByKilled(monster, killer, monId, fubenId, sceneId, fuBenPtr)
-	if killer ~= nil then LocalDT.DropZhuanShengAccessory(monster, monId) end
+	if killer ~= nil then LocalDT.DropZhuanShengAccessory(monster, killer, monId) end
 	-- 真荒古之地专属掉落，宠物或战将击杀也会触发
 	if killer ~= nil and monId == 635 and Actor.getSceneId(monster) == 286 then
 		Item.createDropItem(monster, Item.createItem(552, math.random(3, 5), 0, 0, 0), LogIds.HuangGuBossDrop, "HuangGuBoss", nil)

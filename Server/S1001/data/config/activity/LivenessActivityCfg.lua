@@ -7,12 +7,12 @@ LivenessActivityCfg =
 		{
 			liveness = 30,
 			awardbefore4 = {
-				{type = 0, id = 511, count = 3, bind = 1}, --100万经验丹*3
+				{type = 0, id = 5453, count = 1, bind = 1}, --军魂瓶*1
 				{type = 0, id = 537, count = 3, bind = 1}, --宝石结晶(100)*3
 				{type = 0, id = 572, count = 3, bind = 1}, --圣珠结晶(100)*3
 			},
 			award = {
-				{type = 0, id = 511, count = 3, bind = 1}, --100万经验丹*3
+				{type = 0, id = 5453, count = 1, bind = 1}, --军魂瓶*1
 				{type = 0, id = 537, count = 3, bind = 1}, --宝石结晶(100)*3
 				{type = 0, id = 572, count = 3, bind = 1}, --圣珠结晶(100)*3
 			},
@@ -21,12 +21,12 @@ LivenessActivityCfg =
 		{
 			liveness = 80,
 			awardbefore4 = {
-				{type = 0, id = 511, count = 5, bind = 1}, --100万经验丹*5
+				{type = 0, id = 5453, count = 1, bind = 1}, --军魂瓶*1
 				{type = 0, id = 537, count = 5, bind = 1}, --宝石结晶(100)*5
 				{type = 0, id = 572, count = 5, bind = 1}, --圣珠结晶(100)*5
 			},
 			award = {
-				{type = 0, id = 511, count = 5, bind = 1}, --100万经验丹*5
+				{type = 0, id = 5453, count = 1, bind = 1}, --军魂瓶*1
 				{type = 0, id = 537, count = 5, bind = 1}, --宝石结晶(100)*5
 				{type = 0, id = 572, count = 5, bind = 1}, --圣珠结晶(100)*5
 			},
@@ -35,12 +35,12 @@ LivenessActivityCfg =
 		{
 			liveness = 150,
 			awardbefore4 = {
-				{type = 0, id = 511, count = 10, bind = 1}, --100万经验丹*10
+				{type = 0, id = 5453, count = 1, bind = 1}, --军魂瓶*1
 				{type = 0, id = 537, count = 10, bind = 1}, --宝石结晶(100)*10
 				{type = 0, id = 572, count = 10, bind = 1}, --圣珠结晶(100)*10
 			},
 			award = {
-				{type = 0, id = 511, count = 10, bind = 1}, --100万经验丹*10
+				{type = 0, id = 5453, count = 1, bind = 1}, --军魂瓶*1
 				{type = 0, id = 537, count = 10, bind = 1}, --宝石结晶(100)*10
 				{type = 0, id = 572, count = 10, bind = 1}, --圣珠结晶(100)*10
 			},

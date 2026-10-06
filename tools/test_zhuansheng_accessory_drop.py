@@ -77,6 +77,9 @@ def runtime():
     ''')
     lua.execute((DATA / "functions/LogIds.lua").read_bytes().removeprefix(b"\xef\xbb\xbf"))
     lua.execute((DATA / "config/monster/ZhuanShengAccessoryDropCfg.lua").read_bytes())
+    lua.execute(b"LocalDT={}")
+    lua.execute((DATA / "config/monster/BossMaterialDropCfg.lua").read_bytes())
+    lua.execute(b"LocalDT.BossMaterialDropMonsters={}")
     lua.execute((DATA / "functions/MonsterFunction.lua").read_bytes())
     lua.execute(b'''
         originalHandler = HandlerMonsterByKilled

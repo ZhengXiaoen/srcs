@@ -61,6 +61,11 @@ def guaranteed_material_values(data):
 class MonsterGoldDropTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        lua = LuaRuntime(unpack_returned_tuples=True)
+        lua.execute("LocalDT={}")
+        lua.execute((ROOT / BASE / "BossMaterialDropCfg.lua").read_bytes())
+        cls.materials = {int(k): [dict(row.items()) for _, row in table.items()]
+                         for k, table in lua.globals().LocalDT.BossMaterialDrops.items()}
         cls.original_monsters = old(MONSTERS)
         cls.monsters = blocks((ROOT / MONSTERS).read_bytes())
         cls.originals = blocks(cls.original_monsters)
@@ -86,9 +91,21 @@ class MonsterGoldDropTests(unittest.TestCase):
         for path, original in self.original_drops.items():
             wanted = b"".join(line for line in original.splitlines(keepends=True)
                               if not GOLD.match(line))
+            reference = subprocess.check_output(
+                ["git", "show", "4b74c90:" + path.as_posix()], cwd=ROOT)
+            remaining = reference
+            for cfg in self.materials.get(int(path.stem[5:]), []):
+                matching = next(line for line in remaining.splitlines(keepends=True)
+                                if line.startswith(b"{type=") and all(fields(line).get(k)==v for k,v in cfg.items()))
+                remaining = remaining.replace(matching, b"", 1)
+            self.assertEqual(remaining, (ROOT / path).read_bytes(), path)
+            # Temple fragments now use their own Lua drop configuration.
+            if path.name in {*(f"drops{i}.lua" for i in range(2190,2198)),"drops2330.lua"}:
+                wanted=b"".join(line for line in wanted.splitlines(keepends=True)
+                                if fields(line).get("id") not in {5152,5153,5154,5155})
             self.assertEqual(guaranteed_material_values(wanted),
-                             guaranteed_material_values((ROOT / path).read_bytes()), path)
-            if wanted != original:
+                             guaranteed_material_values(reference), path)
+            if any(GOLD.match(line) for line in original.splitlines()):
                 changed += 1
                 removed += sum(bool(GOLD.match(line)) for line in original.splitlines())
         self.assertEqual((162, 265), (changed, removed))
@@ -161,7 +178,7 @@ class MonsterGoldDropTests(unittest.TestCase):
                     found.append(node)
         self.assertTrue(found)
         for item in found:
-            self.assertEqual("金砖(绑金)", item.child("name").value.decode("gbk"))
+            self.assertEqual("金砖(绑金)", item.child("name").value.decode("utf-8"))
             self.assertIn(b"600,000", item.child("desc").value)
             self.assertEqual(200, item.child("dup").number())
             self.assertEqual(102, item.child("type").number())

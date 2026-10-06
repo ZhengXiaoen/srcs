@@ -80,7 +80,8 @@ NpcDialog[394].main = function(sysarg)
 
   <(c0xFF00c0ff)蚩尤大将携带巨大宝藏,人人得而诛之,神兵利器杀它便可获得>
 
-]]..[[	<投入神石/@onGiveShenShiFunc><(c0xFFeabc78)每日投入10颗神石可开启地宫入口,跨天重置>]]..[[
+	<投入神石/@onGiveShenShiFunc><(c0xFFeabc78)每日投入10颗神石可开启地宫入口,跨天重置>
+	<一键填满/@onFillShenShiFunc>
 
 				<#BN蚩尤地宫/@onEnterMapFunc>
 ]]
@@ -110,21 +111,35 @@ NpcDialog[394].onEnterMapFunc = function(sysarg)
 	--System.broadcastTipmsg(string.format("<(n%s)>玩家向蚩尤结阵投入10颗神石,成功开启蚩尤地宫,高转boss,高级装备就在里面！我也要去<(威龙城:132:137:[传])>",Actor.getName(sysarg),ttChatWindow)
 end
 
-NpcDialog[394].onGiveShenShiFunc = function(sysarg)
+LocalDT.GiveMoFaJieZhenShenShi = function(sysarg, fillAll)
 	--判断物品数量
-	if Actor.getItemCount(sysarg,NpcDialog[394].needItem)<=0 then
+	local itemCount = Actor.getItemCount(sysarg,NpcDialog[394].needItem)
+	if itemCount<=0 then
 		Actor.sendTipmsg(sysarg,"魔法神石不足",ttFlyTip)
 		return NpcDialog[394].main(sysarg)
 	end
 	
 	
-	--总数+1
+	--一键投入最多补足本轮结阵，神石不足时投入全部持有数量
 	local svar = System.getStaticVar()
 	if svar.allGlodStore ==nil then 
 		svar.allGlodStore =0
 		
 	end
-	svar.allGlodStore = svar.allGlodStore +1
+	local count = 1
+	if fillAll then
+		count = math.min(itemCount, NpcDialog[394].bossLayer - svar.allGlodStore)
+	end
+	if count<=0 then
+		return NpcDialog[394].main(sysarg)
+	end
+	--按实际扣除数量结算，扣除失败时不增加层数或发放奖励
+	count = Actor.removeItem(sysarg, NpcDialog[394].needItem, count, -1, -1, -1,"投入魔法结阵", LogIds.MoFaJieZhen)
+	if count<=0 then
+		Actor.sendTipmsg(sysarg,"魔法神石不足",ttFlyTip)
+		return NpcDialog[394].main(sysarg)
+	end
+	svar.allGlodStore = svar.allGlodStore + count
 	--记录
 	System.sendCommonLog(LogIds.chiyoujiezhen,Actor.getIntProperty(sysarg,PROP_ENTITY_ID),Actor.getName(sysarg),0,0,0,svar.allGlodStore.."蚩尤结阵")
 	
@@ -145,18 +160,26 @@ NpcDialog[394].onGiveShenShiFunc = function(sysarg)
 	
 	end
 	
-	Actor.removeItem(sysarg, NpcDialog[394].needItem, 1, -1, -1, -1,"投入魔法结阵", LogIds.MoFaJieZhen)	
-	Actor.changeMoney(sysarg, mtYuanbao, NpcDialog[394].rewardYuanBao, LogIds.MoFaJieZhen, "投入魔法结阵")
+	local rewardYuanBao = NpcDialog[394].rewardYuanBao * count
+	Actor.changeMoney(sysarg, mtYuanbao, rewardYuanBao, LogIds.MoFaJieZhen, "投入魔法结阵")
 	
 	local var = Actor.getStaticVar(sysarg)
 	if var.	days.MFJZtime ==nil then 
-		var.days.MFJZtime=1
+		var.days.MFJZtime=count
 	else
-		var.days.MFJZtime = var.days.MFJZtime +1
+		var.days.MFJZtime = var.days.MFJZtime + count
 	end
-	Actor.sendTipmsg(sysarg,"今天投入神石"..var.days.MFJZtime.."个,获得"..NpcDialog[394].rewardYuanBao.."元宝",ttFlyTip)
-	System.broadcastTipmsg(string.format("<(n%s)>玩家向结阵投入神石,获得<(c0xFF00FF00)%d元宝>", Actor.getName(sysarg), NpcDialog[394].rewardYuanBao), 128);
+	Actor.sendTipmsg(sysarg,"今天投入神石"..var.days.MFJZtime.."个,获得"..rewardYuanBao.."元宝",ttFlyTip)
+	System.broadcastTipmsg(string.format("<(n%s)>玩家向结阵投入神石,获得<(c0xFF00FF00)%d元宝>", Actor.getName(sysarg), rewardYuanBao), 128);
 	return NpcDialog[394].main(sysarg)
+end
+
+NpcDialog[394].onGiveShenShiFunc = function(sysarg)
+	return LocalDT.GiveMoFaJieZhenShenShi(sysarg, false)
+end
+
+NpcDialog[394].onFillShenShiFunc = function(sysarg)
+	return LocalDT.GiveMoFaJieZhenShenShi(sysarg, true)
 end
 
 --测试用的

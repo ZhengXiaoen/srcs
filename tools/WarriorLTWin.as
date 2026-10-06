@@ -212,7 +212,7 @@ package view.game.pet
          {
             return param2;
          }
-         return param2 + "<font color='#c354c0'><BR>生命加成: +" + _loc3_ * 50000 + "<BR>物防加成: +" + _loc3_ * 100 + "-" + _loc3_ * 200 + "<BR>魔防加成: +" + _loc3_ * 100 + "-" + _loc3_ * 200 + "</font>";
+         return param2 + "<font color='#c354c0'><BR>生命加成: +" + _loc3_ * 100000 + "<BR>物防加成: +" + _loc3_ * 500 + "-" + _loc3_ * 500 + "<BR>魔防加成: +" + _loc3_ * 500 + "-" + _loc3_ * 500 + "</font>";
       }
 
       public function refreshData() : void

@@ -36,11 +36,6 @@ function AskChangeSex(sysarg, idx)
 		return
 	end
 	
-	if System.getDaysSinceCombineServer() > 0 and System.getDaysSinceCombineServer() < ChgVocationAndSex.combineDay then
-		Actor.sendTipmsg(sysarg, string.format(Lang.ScriptTips.c000153, ChgVocationAndSex.combineDay), ttFlyTip)
-		return
-	end
-	
 	local idx = tonumber(idx)
 	local config = ChgVocationAndSex.sex
 	local sAskMsg = string.format(Lang.ScriptTips.c000141, Consumes.ParseConsumesStr(config.consumes),Sex_cn[idx])

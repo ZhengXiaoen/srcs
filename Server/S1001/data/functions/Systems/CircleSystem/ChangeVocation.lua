@@ -37,11 +37,6 @@ function ChangeVocation(sysarg)
 		return
 	end
 	
-	if System.getDaysSinceCombineServer() > 0 and System.getDaysSinceCombineServer() < ChgVocationAndSex.combineDay then
-		Actor.sendTipmsg(sysarg, string.format(Lang.ScriptTips.c000154, ChgVocationAndSex.combineDay), ttFlyTip)
-		return
-	end
-	
 	local str = Lang.ScriptTips.c000132
 	
 	local vocation = Actor.getIntProperty(sysarg, PROP_ACTOR_VOCATION)

@@ -3,8 +3,7 @@
 
 ChgVocationAndSex = 
 {
-	openDay = 2,	--开放功能 开服天数
-	combineDay = 6,		--合服后天数
+	openDay = 6,	--开放功能 开服天数
 
 	scene = {id = 116, x = 77, y = 70},	--转换场景
 	

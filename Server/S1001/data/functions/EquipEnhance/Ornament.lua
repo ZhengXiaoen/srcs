@@ -8,11 +8,6 @@ function OrnamentUpgrade( sysarg, args )
 	local paraCount = args[3]	--参数数量	
 	if paraCount ~= 1 then return end
 	
-	if System.getDaysSinceCombineServer() <= 0 then -- 合服后才开启
-		Actor.sendTipmsg(sysarg,"合服后才开启饰品锤炼",ttFlyTip)
-		return
-	end
-	
 	-- 从 1 开始
 	local slotIdx = args[4]	
 	if slotIdx < 1 or slotIdx > 4 then return end

@@ -6,7 +6,7 @@ function Rose_Main( sysarg )
 	local dlgStr = string.format("\\<#BL%s/@getWeekRankAward>", Lang.ScriptTips.c000083)
 	--print("System.getDaysSinceCombineServer() = " .. System.getDaysSinceCombineServer())
 	--print("Actor.getFubenId(sysarg) = " .. Actor.getFubenId(sysarg));
-	if System.getDaysSinceCombineServer() > 0 and Actor.getFubenId(sysarg) == 0 then
+	if Actor.getFubenId(sysarg) == 0 then
 		dlgStr = string.format("%s\\<#BL%s/@BuyRedRose>",  dlgStr, Lang.ScriptTips.c000020)
 		--dlgStr = string.format("%s\\<#BL%s/@BuyBlueRose>", dlgStr, Lang.ScriptTips.c000021)
 		--dlgStr = string.format("%s\\<#BL%s/@PickRedRose>", dlgStr, Lang.ScriptTips.c000022)

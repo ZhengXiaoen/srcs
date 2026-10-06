@@ -53,14 +53,6 @@ function HeChengHandle(sysarg,sysid,packet)
 		end
 	end
 	
-	if ndiffType==4 then 
-		local CombineDays = System.getDaysSinceCombineServer()
-		if CombineDays <= 0 then 	--合服之后再显示这个饰品
-			print("合服之前不开")
-			return 
-		end
-	end
-	
 	local bindFlag = -1
     
     --if ndiffType == 7 then -- 坐骑装备要非绑定的才能合成(不限制了，配绑定时合成之后就是绑定的)

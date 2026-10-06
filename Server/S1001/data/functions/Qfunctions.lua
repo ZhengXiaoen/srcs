@@ -1706,8 +1706,13 @@ function onFuWenBox(sysarg,itemidx,itemPtr,ItemTable,delType,itemUserNum)
 		Item.SetItemRuneAttr(sysarg,pUserItem,-1,0,0)
 		Item.addItem(sysarg,pUserItem);
         if nHeroDamageRate > 0 then
-            local nRate = System.getRandomNumber(nHeroDamageRate) + 1
-             Item.setItemProperty(sysarg,pUserItem,Item.ipHeroDamageRate,nRate)
+            -- 战将装备固定最高全属性倍率，其他共用字段的道具保留原有规则。
+            local nItemType = Item.getItemProperty(sysarg,pUserItem,Item.ipItemType,0)
+            local nRate = nHeroDamageRate
+            if nItemType < 201 or nItemType > 205 then
+                nRate = System.getRandomNumber(nHeroDamageRate) + 1
+            end
+            Item.setItemProperty(sysarg,pUserItem,Item.ipHeroDamageRate,nRate)
         end
 		--Actor.addItem(sysarg,AwardTable[index][addnum],0,0,1,"FuwenBox");
 	end

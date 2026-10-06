@@ -199,6 +199,32 @@ LocalDT.NormalizeBagEquipmentTaoStrong = function(sysarg, itemId)
 	end
 end
 
+-- 战将装备全属性倍率固定为配置上限；战灵装备也使用此字段，必须按类型排除。
+LocalDT.NormalizeWarriorEquipmentRate = function(sysarg, itemPtr)
+	if itemPtr == nil then return false end
+	local itemType = Item.getItemProperty(sysarg, itemPtr, Item.ipItemType, 0)
+	if itemType == nil or itemType < 201 or itemType > 205 then return false end
+	local maxRate = Item.getItemProperty(sysarg, itemPtr, Item.ipheroDamageRateEx, 0)
+	if maxRate ~= nil and maxRate > 0 and
+		Item.getItemProperty(sysarg, itemPtr, Item.ipHeroDamageRate, 0) ~= maxRate then
+		return Item.setItemProperty(sysarg, itemPtr, Item.ipHeroDamageRate, maxRate)
+	end
+	return false
+end
+
+LocalDT.NormalizeBagWarriorEquipmentRate = function(sysarg, itemId)
+	if itemId ~= nil then
+		local itemType = Item.getItemPropertyById(itemId, Item.ipItemType)
+		if itemType == nil or itemType < 201 or itemType > 205 then return end
+	end
+	for index = 0, Item.getBagItemCount(sysarg) - 1 do
+		local itemPtr = Item.getItemPtrByIndex(sysarg, index)
+		if itemPtr and (itemId == nil or Item.getItemId(itemPtr) == itemId) then
+			LocalDT.NormalizeWarriorEquipmentRate(sysarg, itemPtr)
+		end
+	end
+end
+
 -- 定时 BOSS 的截止时间和当前怪物写入服务器持久变量，重启后可恢复。
 LocalDT.GetSRRefreshMonsterSave = function()
 	local svar = System.getStaticVar()
@@ -273,6 +299,7 @@ function OnPlayerLogin(sysarg, isCrossDay)
 	LocalDT.NormalizeNanMingLiHuoStacks(sysarg)
 	LocalDT.NormalizeActivationItemStacks(sysarg)
 	LocalDT.NormalizeBagEquipmentTaoStrong(sysarg)
+	LocalDT.NormalizeBagWarriorEquipmentRate(sysarg)
 	for slot = 0, itMaxEquipPos do
 		LocalDT.NormalizeEquipmentTaoStrong(sysarg, Item.getEquipByPos(sysarg, slot))
 	end
@@ -4401,6 +4428,7 @@ function OnAddItemEvent(sysarg,itemId,itemCount)
 	LocalDT.NormalizeNanMingLiHuoStacks(sysarg, itemId)
 	LocalDT.NormalizeActivationItemStacks(sysarg, itemId)
 	LocalDT.NormalizeBagEquipmentTaoStrong(sysarg, itemId)
+	LocalDT.NormalizeBagWarriorEquipmentRate(sysarg, itemId)
 	
 	--得到东西检测完成条件
 	local var = Actor.getStaticVar(sysarg)

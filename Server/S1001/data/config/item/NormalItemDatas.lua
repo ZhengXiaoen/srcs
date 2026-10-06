@@ -3057,9 +3057,9 @@ YbConsumeRankingUseTable = {
 -- 战将灵力丹
 JSLingLiDanUseTable = {
 	{item_id = 550, str = "战将灵力", value = 100,logid=2696}, 	-- 战将灵力石
-	{item_id = 551, str = "战将灵力", value = 100000,logid=2696}, 	-- 战将灵力丹(小)
-	{item_id = 552, str = "战将灵力", value = 1000000,logid=2696},	-- 战将灵力丹(中)
-	{item_id = 553, str = "战将灵力", value = 10000000,logid=2696},	-- 战将灵力丹(大)
+	{item_id = 551, str = "战将灵力", value = 10000,logid=2696}, 	-- 战将灵力丹(小)
+	{item_id = 552, str = "战将灵力", value = 100000,logid=2696},	-- 战将灵力丹(中)
+	{item_id = 553, str = "战将灵力", value = 1000000,logid=2696},	-- 战将灵力丹(大)
 };
 
 --竞技证书

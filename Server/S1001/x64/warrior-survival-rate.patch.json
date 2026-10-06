@@ -1,0 +1,98 @@
+{
+  "sourceSha256": "e488082232483a670aeae0e5944432131ac080f00dd3da50cd80b19ae3b7e08f",
+  "targetSha256": "955d9f074891cdb132f48e5fc6a4498b3d18295b3b3de9d15850bd5f2759348a",
+  "sourceLength": 5096960,
+  "targetLength": 5097472,
+  "edits": [
+    {
+      "offset": 270,
+      "before": "CQ==",
+      "after": "Cg=="
+    },
+    {
+      "offset": 293,
+      "before": "Zg==",
+      "after": "aA=="
+    },
+    {
+      "offset": 345,
+      "before": "EA==",
+      "after": "IA=="
+    },
+    {
+      "offset": 428,
+      "before": "tA==",
+      "after": "wA=="
+    },
+    {
+      "offset": 888,
+      "before": "AAAAAAAAAA==",
+      "after": "Lndqc3Vydg=="
+    },
+    {
+      "offset": 896,
+      "before": "AA==",
+      "after": "UA=="
+    },
+    {
+      "offset": 901,
+      "before": "AAA=",
+      "after": "EFI="
+    },
+    {
+      "offset": 905,
+      "before": "AA==",
+      "after": "Ag=="
+    },
+    {
+      "offset": 909,
+      "before": "AAA=",
+      "after": "xk0="
+    },
+    {
+      "offset": 924,
+      "before": "AA==",
+      "after": "IA=="
+    },
+    {
+      "offset": 927,
+      "before": "AA==",
+      "after": "YA=="
+    },
+    {
+      "offset": 1910278,
+      "before": "tsLk/w==",
+      "after": "9t00AA=="
+    },
+    {
+      "offset": 1911192,
+      "before": "Aw==",
+      "after": "AA=="
+    },
+    {
+      "offset": 1911202,
+      "before": "BXQMg7wkuAwAAAdybQ==",
+      "after": "CHJ3kJCQkJCQkJCQkA=="
+    },
+    {
+      "offset": 5065397,
+      "before": "AAA=",
+      "after": "EFI="
+    },
+    {
+      "offset": 5065400,
+      "before": "AAAA",
+      "after": "SBBS"
+    },
+    {
+      "offset": 5065404,
+      "before": "AAAA",
+      "after": "SBBS"
+    },
+    {
+      "offset": 5096960,
+      "before": "",
+      "after": "SIPsKEiJTCQg6LLkr/9Mi1QkIDHJg/kFdByD+RV0F4P5F3QSg/kZdA2D+Rt0CEHHBIoAAAAA/8GB+b8AAABy1UyJ0EiDxCjDAQQBAARCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+    }
+  ]
+}

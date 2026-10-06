@@ -688,7 +688,7 @@ function Install-MountStackPatch {
     param($Paths)
     $directory = [IO.Path]::Combine($Paths.Root, 'Server', 'S1001', 'x64')
     $acceptedTargets = @()
-    foreach ($packageName in @('jingji-mount-consumption.patch.json', 'jingji-mount-yuanbao.patch.json', 'warrior-defense-rate.patch.json')) {
+    foreach ($packageName in @('jingji-mount-consumption.patch.json', 'jingji-mount-yuanbao.patch.json', 'warrior-defense-rate.patch.json', 'warrior-survival-rate.patch.json')) {
         $packagePath = [IO.Path]::Combine($directory, $packageName)
         if ([IO.File]::Exists($packagePath)) {
             $package = [IO.File]::ReadAllText($packagePath, [Text.Encoding]::UTF8) | ConvertFrom-Json
@@ -709,9 +709,18 @@ function Install-MountStackPatch {
         $warriorTargets += $warriorPackage.targetSha256
         $yuanbaoTargets += $warriorPackage.targetSha256
     }
+    $survivalTargets = @()
+    $survivalPackagePath = [IO.Path]::Combine($directory, 'warrior-survival-rate.patch.json')
+    if ([IO.File]::Exists($survivalPackagePath)) {
+        $survivalPackage = [IO.File]::ReadAllText($survivalPackagePath, [Text.Encoding]::UTF8) | ConvertFrom-Json
+        $survivalTargets += $survivalPackage.targetSha256
+        $warriorTargets += $survivalPackage.targetSha256
+        $yuanbaoTargets += $survivalPackage.targetSha256
+    }
     Install-LogicServerPatch $Paths 'jingji-mount-consumption.patch.json' '竞技大赛坐骑丹消耗记录' $yuanbaoTargets
     Install-LogicServerPatch $Paths 'jingji-mount-yuanbao.patch.json' '竞技大赛元宝代购坐骑丹记录' $warriorTargets
-    Install-LogicServerPatch $Paths 'warrior-defense-rate.patch.json' '战将攻击上限及双防倍率'
+    Install-LogicServerPatch $Paths 'warrior-defense-rate.patch.json' '战将双防倍率修复' $survivalTargets
+    Install-LogicServerPatch $Paths 'warrior-survival-rate.patch.json' '战将生命及双防倍率'
 }
 
 function Invoke-GameStart {

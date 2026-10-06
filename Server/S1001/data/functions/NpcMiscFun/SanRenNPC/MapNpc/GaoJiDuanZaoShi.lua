@@ -352,21 +352,25 @@ t.main = function(sysarg)
     --<打开仓库/@ShowStorageWin>
 	local e = [[
 <(idecoLine#330)>
- <女娲神石：
-        传闻是曾经补天剩下的神石,具有无限神力,集齐99颗便可兑换女娲宝藏,那可是好东西呦！>
-                        <兑换宝藏/@duihuannvwashi>
-                <(c0xFF00c0ff)女娲神石在各活动期间内产出>
+  <(c0xFFeabc78)【女娲宝藏】>
+  <(c0xFFb6946c)集齐99颗女娲神石，兑换1个女娲宝藏。>
+  <(c0xFF00c0ff)女娲神石由活动产出>    <兑换宝藏/@duihuannvwashi|消耗99颗女娲神石，兑换1个女娲宝藏>
 <(idecoLine#330)>
-    <(c0xFFb6946c)矿石兑奖:> <#c0xFFFFFF00#黑铁矿/@onRebirthExp,1|在矿区挖矿获得#点击随机获得转生修为或绑定金币> <#c0xFFFFFF00#青金石矿/@onRebirthExp,2|在矿区挖矿获得#点击随机获得转生修为或绑定金币> <#c0xFFFFFF00#绿宝石矿/@onRebirthExp,3|在矿区挖矿获得#点击随机获得转生修为或绑定金币> <#c0xFFFFFF00#钻石矿/@onRebirthExp,4|在矿区挖矿获得#点击随机获得转生修为或绑定金币>
-      <(c0xFF846f57)挖矿获得的矿石可以兑换获得转生修为或绑定金币> 
-<(idecoLine#330)>   <碎片兑换：>   <(c0xFF00c0ff)各碎片在各活动期间内产出>
-    <西游时装碎片兑换/@onduihuanshizhuang|15个西游时装碎片可随机兑换一个西游成品,可在角色-时装处激活> <三国时装兑换/@suihuanAllFunc,1|15个三国时装碎片可随机兑换一个三国时装成品,可佩戴在角色-时装中>  <至尊屠龙碎片兑换/@suihuanAllFunc,2|38个至尊屠龙碎片可兑换一个至尊屠龙首饰盒,碎片来源于活动>\   <至尊屠龙令兑换/@suihuanAllFunc,14|88个至尊屠龙碎片可兑换一个至尊屠龙令,可用于兑换至尊屠龙刀、甲或衣>\   <幻羽兑换/@suihuanAllFunc,12|15个幻羽碎片可随机兑换一个幻羽礼箱,可在翅膀-幻羽处激活>   <坐骑兑换/@suihuanAllFunc,13|15个坐骑碎片可随机兑换一个坐骑礼盒,可在坐骑-幻化处激活>
-<(idecoLine#330)>   <至尊屠龙部件兑换：>     <(c0xFF00c0ff)至尊屠龙令可由88个碎片兑换，至尊屠龙牌在其他活动中产出>
-                    <至尊屠龙部件兑换/@duihuanye>
-<(idecoLine#330)>  <(c0xFF00c0ff)至尊屠龙衣服互换： 所需消耗88800元宝>
-	    <至尊屠龙甲> <(c0xFFeabc78)→> <至尊屠龙衣> <互换/@onchangeGoods,1|每次兑换所需消耗88800元宝>
-            <至尊屠龙衣> <(c0xFFeabc78)→> <至尊屠龙甲> <互换/@onchangeGoods,2|每次兑换所需消耗88800元宝>
-	
+  <(c0xFFeabc78)【矿石兑换】>
+  <(c0xFFb6946c)矿区产出；随机获得转生修为或绑定金币。>
+  <#c0xFFFFFF00#黑铁矿/@onRebirthExp,1|兑换背包内全部黑铁矿#每块随机获得转生修为或绑定金币>   <#c0xFFFFFF00#青金石矿/@onRebirthExp,2|兑换背包内全部青金石矿#每块随机获得转生修为或绑定金币>   <#c0xFFFFFF00#绿宝石矿/@onRebirthExp,3|兑换背包内全部绿宝石矿#每块随机获得转生修为或绑定金币>   <#c0xFFFFFF00#钻石矿/@onRebirthExp,4|兑换背包内全部钻石矿#每块随机获得转生修为或绑定金币>
+<(idecoLine#330)>
+  <(c0xFFeabc78)【碎片兑换】>    <(c0xFF00c0ff)碎片由活动产出>
+  <西游时装（15片）/@onduihuanshizhuang|15个西游时装碎片兑换1个时装礼盒#使用礼盒后随机获得西游时装，可在角色-时装处激活>      <三国时装（15片）/@suihuanAllFunc,1|15个三国时装碎片兑换1个三国时装礼盒#使用礼盒后随机获得三国时装，可在角色-时装处激活>
+  <幻羽礼盒（15片）/@suihuanAllFunc,12|15个幻羽碎片兑换1个幻羽礼盒#使用礼盒后随机获得幻羽，可在翅膀-幻羽处激活>      <坐骑礼盒（15片）/@suihuanAllFunc,13|15个坐骑碎片兑换1个坐骑礼盒#使用礼盒后随机获得坐骑，可在坐骑-幻化处激活>
+  <屠龙首饰盒（38片）/@suihuanAllFunc,2|38个至尊屠龙碎片兑换1个至尊屠龙首饰盒#使用礼盒后随机获得1件至尊屠龙首饰>    <屠龙令（88片）/@suihuanAllFunc,14|88个至尊屠龙碎片兑换1枚至尊屠龙令#可兑换至尊屠龙刀、甲或衣任意1件>
+<(idecoLine#330)>
+  <(c0xFFeabc78)【至尊屠龙部件】>    <兑换部件/@duihuanye|1枚至尊屠龙令兑换1件武器或衣服#1枚至尊屠龙牌兑换1件首饰，屠龙牌由活动产出>
+  <(c0xFFb6946c)屠龙令换武器或衣服，屠龙牌换首饰。>
+<(idecoLine#330)>
+  <(c0xFFeabc78)【衣服互换】>    <(c0xFF00c0ff)每次消耗88800元宝>
+  <(c0xFFb6946c)至尊屠龙甲 → 至尊屠龙衣>    <互换/@onchangeGoods,1|消耗1件至尊屠龙甲及88800元宝，兑换1件至尊屠龙衣>
+  <(c0xFFb6946c)至尊屠龙衣 → 至尊屠龙甲>    <互换/@onchangeGoods,2|消耗1件至尊屠龙衣及88800元宝，兑换1件至尊屠龙甲>
 ]];
 
 
@@ -431,15 +435,15 @@ end
 end
 
 
-t.duihuanye= function(sysarg)
-	local e ="\\             "
-	for i=3,11 do 
-		e =e..Item.getItemLinkMsg(t.duihuanAll[i][1]) .."   <(c0xFFb6946c)*>    <(c0xFFb6946c)"..t.duihuanAll[i][3] ..">   <(c0xFFb6946c)=>    " ..Item.getItemLinkMsg(t.duihuanAll[i][2]) .." <兑换/@suihuanAllFunc,"..i..">\\\\             "
-	end
-
-	e=e.."                  <返回上一页/@main>\\"
-	return e
-	
+t.duihuanye = function(sysarg)
+    local e = "<(idecoLine#330)>\\  <(c0xFFeabc78)【武器与衣服】>\\  <(c0xFFb6946c)每件消耗1枚至尊屠龙令（88个碎片兑换）。>\\"
+    for i = 3, 11 do
+        if i == 6 then
+            e = e .. "<(idecoLine#330)>\\  <(c0xFFeabc78)【首饰兑换】>\\  <(c0xFFb6946c)每件消耗1枚至尊屠龙牌，屠龙牌由活动产出。>\\"
+        end
+        e = e .. "  " .. Item.getItemLinkMsg(t.duihuanAll[i][1]) .. "<(c0xFFb6946c) ×" .. t.duihuanAll[i][3] .. " → >" .. Item.getItemLinkMsg(t.duihuanAll[i][2]) .. "  <兑换/@suihuanAllFunc," .. i .. ">\\"
+    end
+    return e .. "<(idecoLine#330)>\\  <返回上一页/@main>\\"
 end
 
 t.suihuanAllFunc =function(sysarg,index)

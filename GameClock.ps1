@@ -688,7 +688,7 @@ function Install-MountStackPatch {
     param($Paths)
     $directory = [IO.Path]::Combine($Paths.Root, 'Server', 'S1001', 'x64')
     $acceptedTargets = @()
-    foreach ($packageName in @('jingji-mount-consumption.patch.json', 'jingji-mount-yuanbao.patch.json', 'warrior-defense-rate.patch.json', 'warrior-survival-rate.patch.json')) {
+    foreach ($packageName in @('jingji-mount-consumption.patch.json', 'jingji-mount-yuanbao.patch.json', 'warrior-defense-rate.patch.json', 'warrior-survival-rate.patch.json', 'warrior-attack-rate.patch.json')) {
         $packagePath = [IO.Path]::Combine($directory, $packageName)
         if ([IO.File]::Exists($packagePath)) {
             $package = [IO.File]::ReadAllText($packagePath, [Text.Encoding]::UTF8) | ConvertFrom-Json
@@ -717,10 +717,20 @@ function Install-MountStackPatch {
         $warriorTargets += $survivalPackage.targetSha256
         $yuanbaoTargets += $survivalPackage.targetSha256
     }
+    $attackTargets = @()
+    $attackPackagePath = [IO.Path]::Combine($directory, 'warrior-attack-rate.patch.json')
+    if ([IO.File]::Exists($attackPackagePath)) {
+        $attackPackage = [IO.File]::ReadAllText($attackPackagePath, [Text.Encoding]::UTF8) | ConvertFrom-Json
+        $attackTargets += $attackPackage.targetSha256
+        $survivalTargets += $attackPackage.targetSha256
+        $warriorTargets += $attackPackage.targetSha256
+        $yuanbaoTargets += $attackPackage.targetSha256
+    }
     Install-LogicServerPatch $Paths 'jingji-mount-consumption.patch.json' '竞技大赛坐骑丹消耗记录' $yuanbaoTargets
     Install-LogicServerPatch $Paths 'jingji-mount-yuanbao.patch.json' '竞技大赛元宝代购坐骑丹记录' $warriorTargets
     Install-LogicServerPatch $Paths 'warrior-defense-rate.patch.json' '战将双防倍率修复' $survivalTargets
-    Install-LogicServerPatch $Paths 'warrior-survival-rate.patch.json' '战将生命及双防倍率'
+    Install-LogicServerPatch $Paths 'warrior-survival-rate.patch.json' '战将生命及双防倍率' $attackTargets
+    Install-LogicServerPatch $Paths 'warrior-attack-rate.patch.json' '战将攻击上下限单次倍率'
 }
 
 function Invoke-GameStart {

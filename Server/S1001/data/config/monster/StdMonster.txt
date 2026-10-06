@@ -99257,6 +99257,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsChiyouWing.lua"
 --#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
@@ -99342,6 +99343,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2293.lua"
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
+--#include "drops\dropsChiyouWing.lua"
 --#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
@@ -99428,6 +99430,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsChiyouWing.lua"
 --#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
@@ -99512,6 +99515,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2328.lua"
 --#include "drops\drops2355.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsChiyouWing.lua"
 --#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
@@ -99597,6 +99601,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsChiyouWing.lua"
 --#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
@@ -99682,6 +99687,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsChiyouWing.lua"
 --#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
@@ -99767,6 +99773,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsChiyouWing.lua"
 --#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
@@ -99852,6 +99859,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsChiyouWing.lua"
 --#include "drops\dropsBossGoldBrick.lua"
         },
         flags={
@@ -99937,6 +99945,7 @@ StdMonster = { --生成时间2019-05-23 17:00:21
 --#include "drops\drops2355.lua"
 --#include "drops\drops2358.lua"
 --#include "drops\drops2999.lua"
+--#include "drops\dropsChiyouWing.lua"
 --#include "drops\dropsBossGoldBrick.lua"
         },
         flags={

@@ -83,6 +83,8 @@ NpcDialog[394].main = function(sysarg)
 	<投入神石/@onGiveShenShiFunc><(c0xFFeabc78)每日投入10颗神石可开启地宫入口,跨天重置>
 	<一键填满/@onFillShenShiFunc>
 
+	<(c0xFFeabc78)蚩尤地宫BOSS有几率掉落翅膀装备：凡·羽骨、凡·羽灵、凡·羽魂、凡·羽翼。>
+
 				<#BN蚩尤地宫/@onEnterMapFunc>
 ]]
 

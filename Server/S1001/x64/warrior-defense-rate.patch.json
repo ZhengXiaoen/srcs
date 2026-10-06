@@ -1,0 +1,13 @@
+{
+  "sourceSha256": "107bf958c53e0c9d498377a0adfcca50902d7f940f6d40f525c5fd7645c40f58",
+  "targetSha256": "e488082232483a670aeae0e5944432131ac080f00dd3da50cd80b19ae3b7e08f",
+  "sourceLength": 5096960,
+  "targetLength": 5096960,
+  "edits": [
+    {
+      "offset": 1911185,
+      "before": "g7wkuAwAAAt0FoO8JLgMAAAPdAyDvCS4DAAAE3QC62s=",
+      "after": "g7wkuAwAAAN0FoO8JLgMAAAFdAyDvCS4DAAAB3JtkJA="
+    }
+  ]
+}

@@ -38,33 +38,38 @@ class BossTemperStoneTests(unittest.TestCase):
     def test_every_boss_every_possible_quantity_single_bound_stack(self):
         lua = self.runtime()
         for mid, tier in self.tiers.items():
-            low, high = max(1, tier-2), min(15, tier+2)
+            low, high = (1 if tier >= 7 else 0), 3
             for value in range(high-low+1):
                 lua.execute(f"randomValue={value};drops={{}};messages={{}};draws=0;drop({{}},{{}},{mid})")
                 rows = list(lua.globals().drops.values())
-                self.assertEqual(1, len(rows), mid)
-                item = rows[0]
-                expected = max(1, (low+value)//2)
-                self.assertEqual((5648,1,expected), (item.id,item.bind,item.count), mid)
+                expected = low+value
+                self.assertEqual(int(expected > 0), len(rows), mid)
                 self.assertEqual(1, lua.globals().draws)
-                self.assertEqual(1, len(lua.globals().messages))
+                self.assertEqual(int(expected > 0), len(lua.globals().messages))
+                if expected == 0:
+                    self.assertEqual(0, lua.globals().errors)
+                    continue
+                item = rows[0]
+                self.assertEqual((5648,1,expected), (item.id,item.bind,item.count), mid)
                 self.assertIn(f" x{expected}", lua.globals().messages[1].msg)
 
-    def test_cap_works_for_future_equipment_tiers(self):
+    def test_guarantee_starts_at_seven_and_cap_applies_to_future_tiers(self):
         lua = self.runtime()
-        for tier, expected in ((14,(12,15)),(15,(13,15)),(16,(14,15)),(30,(15,15))):
+        for tier, expected in ((1,(0,3)),(6,(0,3)),(7,(1,3)),(13,(1,3)),(30,(1,3))):
             lua.execute(f"LocalDT.BossTemperStoneDrop.monsters[999999]={tier}")
             for value, count in ((0,expected[0]),(expected[1]-expected[0],expected[1])):
                 lua.execute(f"drops={{}};randomValue={value};drop({{}},{{}},999999)")
-                self.assertEqual(max(1,count//2), lua.globals().drops[1].count)
+                self.assertEqual(int(count > 0),len(lua.globals().drops))
+                if count > 0:
+                    self.assertEqual(count, lua.globals().drops[1].count)
 
     def test_player_pet_hero_and_one_time_guard(self):
         for kind in (0,2,3):
             lua = self.runtime()
-            lua.execute(f"randomValue=4;HandlerMonsterByKilled({{}},{{kind={kind}}},1343,0,0,nil)")
-            self.assertEqual(7,lua.globals().drops[1].count)
+            lua.execute(f"randomValue=2;HandlerMonsterByKilled({{}},{{kind={kind}}},1343,0,0,nil)")
+            self.assertEqual(3,lua.globals().drops[1].count)
         lua = self.runtime()
-        lua.execute("OneTimesDropMonsters[755]=true;actor={};monster={}")
+        lua.execute("randomValue=1;OneTimesDropMonsters[755]=true;actor={};monster={}")
         self.assertTrue(lua.execute("return HandlerMonsterByKilled(monster,actor,755,0,0,nil)"))
         self.assertFalse(lua.execute("return HandlerMonsterByKilled(monster,actor,755,0,0,nil)"))
         self.assertEqual(1,len(lua.globals().drops))
@@ -92,7 +97,7 @@ class BossTemperStoneTests(unittest.TestCase):
                 lua.execute(f"drop({{}},{{}},{mid})")
             original = material.BossMaterialDropTests().actual(base)
             current = material.BossMaterialDropTests().actual(changed)
-            current.pop((5648,1))
+            current.pop((5648,1),None)
             self.assertEqual(original,current,mid)
             self.assertEqual(base.globals().sequence+1, changed.globals().sequence,mid)
 

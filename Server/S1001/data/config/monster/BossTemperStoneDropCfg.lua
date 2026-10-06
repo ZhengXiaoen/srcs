@@ -1,7 +1,7 @@
--- 锤炼石按最高装备转生等级上下浮动 2 个，封顶 15 后减半向下取整，至少 1 个整组必掉。
+-- 锤炼石随机掉落 0–3 个，最高装备为 7 转及以上的 BOSS 保底 1 个（随机 1–3 个）。
 -- 由 tools/patch_boss_temper_stone.py 生成；装备或掉落模板变更后重新生成。
 LocalDT.BossTemperStoneDrop = {
-	itemId = 5648, bind = 1, fluctuation = 2, maxCount = 15,
+	itemId = 5648, bind = 1, guaranteedTier = 7, maxCount = 3,
 	monsters = {
 		[38] = 2,
 		[44] = 2,

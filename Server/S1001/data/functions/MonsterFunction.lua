@@ -116,14 +116,14 @@ LocalDT.DropBossMaterials = function(monster, killer, monId)
 	end
 	-- 最后抽取新增材料数量，保持原有材料的抽取顺序；锤炼石只生成一组。
 	if stoneTier ~= nil then
-		local minCount = math.max(1, stoneTier - stoneCfg.fluctuation)
-		local maxCount = math.min(stoneCfg.maxCount, stoneTier + stoneCfg.fluctuation)
-		minCount = math.min(minCount, maxCount)
+		local minCount = stoneTier >= stoneCfg.guaranteedTier and 1 or 0
+		local maxCount = stoneCfg.maxCount
 		local count = minCount + System.getRandomNumber(maxCount - minCount + 1)
-		count = math.max(1, math.floor(count / 2))
-		local key = stoneCfg.itemId .. ":" .. stoneCfg.bind
-		totals[key] = {id=stoneCfg.itemId, bind=stoneCfg.bind, count=count}
-		table.insert(order, key)
+		if count > 0 then
+			local key = stoneCfg.itemId .. ":" .. stoneCfg.bind
+			totals[key] = {id=stoneCfg.itemId, bind=stoneCfg.bind, count=count}
+			table.insert(order, key)
+		end
 	end
 	for _, key in ipairs(order) do
 		local cfg = totals[key]

@@ -21,15 +21,17 @@ $projectRoot = Split-Path $PSScriptRoot -Parent
 $sourceDirectory = Join-Path $projectRoot 'Server/S1001/x64'
 $exePath = Join-Path $directory 'LogicServerCQ64_R.exe'
 try {
-    foreach ($name in @('mount-stack.patch.json', 'jingji-mount-consumption.patch.json')) {
+    foreach ($name in @('mount-stack.patch.json', 'jingji-mount-consumption.patch.json', 'jingji-mount-yuanbao.patch.json')) {
         Copy-Item -LiteralPath (Join-Path $sourceDirectory $name) -Destination (Join-Path $directory $name)
     }
     $stackPackage = [IO.File]::ReadAllText((Join-Path $directory 'mount-stack.patch.json')) | ConvertFrom-Json
     $mountPackagePath = Join-Path $directory 'jingji-mount-consumption.patch.json'
     $mountPackage = [IO.File]::ReadAllText($mountPackagePath) | ConvertFrom-Json
+    $yuanbaoPackagePath = Join-Path $directory 'jingji-mount-yuanbao.patch.json'
+    $yuanbaoPackage = [IO.File]::ReadAllText($yuanbaoPackagePath) | ConvertFrom-Json
     $installed = [IO.File]::ReadAllBytes((Join-Path $sourceDirectory 'LogicServerCQ64_R.exe'))
     # Recover the original bytes using reviewed package before-ranges.
-    foreach ($package in @($mountPackage, $stackPackage)) {
+    foreach ($package in @($yuanbaoPackage, $mountPackage, $stackPackage)) {
         $sha = [Security.Cryptography.SHA256]::Create()
         try { $hash = ([BitConverter]::ToString($sha.ComputeHash($installed))).Replace('-', '').ToLowerInvariant() } finally { $sha.Dispose() }
         if ($hash -ne $package.targetSha256) { continue }
@@ -48,14 +50,18 @@ try {
     Assert-JingjiPatch ((Get-JingjiPatchHash $exePath) -eq $stackPackage.sourceSha256) '运行中修改了程序'
     $script:JingjiPatchFakeRunning = @()
     Install-MountStackPatch $paths
-    Assert-JingjiPatch ((Get-JingjiPatchHash $exePath) -eq $mountPackage.targetSha256) '两个补丁安装结果不匹配'
+    Assert-JingjiPatch ((Get-JingjiPatchHash $exePath) -eq $yuanbaoPackage.targetSha256) '两个补丁安装结果不匹配'
     Assert-JingjiPatch ((Get-JingjiPatchHash ($exePath + '.before-mount-stack.bak')) -eq $stackPackage.sourceSha256) '原始程序备份失败'
     Assert-JingjiPatch ((Get-JingjiPatchHash ($exePath + '.before-jingji-mount-consumption.bak')) -eq $mountPackage.sourceSha256) '坐骑堆叠程序备份失败'
+    Assert-JingjiPatch ((Get-JingjiPatchHash ($exePath + '.before-jingji-mount-yuanbao.bak')) -eq $yuanbaoPackage.sourceSha256) '坐骑丹消耗程序备份失败'
     Install-MountStackPatch $paths
-    Assert-JingjiPatch ((Get-JingjiPatchHash $exePath) -eq $mountPackage.targetSha256) '重复安装改变程序'
+    Assert-JingjiPatch ((Get-JingjiPatchHash $exePath) -eq $yuanbaoPackage.targetSha256) '重复安装改变程序'
     Copy-Item -LiteralPath ($exePath + '.before-jingji-mount-consumption.bak') -Destination $exePath -Force
     Install-MountStackPatch $paths
-    Assert-JingjiPatch ((Get-JingjiPatchHash $exePath) -eq $mountPackage.targetSha256) '已有堆叠补丁时无法升级'
+    Assert-JingjiPatch ((Get-JingjiPatchHash $exePath) -eq $yuanbaoPackage.targetSha256) '已有堆叠补丁时无法升级'
+    Copy-Item -LiteralPath ($exePath + '.before-jingji-mount-yuanbao.bak') -Destination $exePath -Force
+    Install-MountStackPatch $paths
+    Assert-JingjiPatch ((Get-JingjiPatchHash $exePath) -eq $yuanbaoPackage.targetSha256) '已有材料计数补丁时无法升级'
     $finalHash = Get-JingjiPatchHash $exePath
     $before = [IO.File]::ReadAllBytes($exePath)
     [IO.File]::WriteAllBytes($exePath, [byte[]](1, 2, 3))
@@ -65,14 +71,14 @@ try {
     $script:JingjiPatchFakeRunning = @('LogicServerCQ64_R')
     Assert-JingjiPatchThrows { Install-MountStackPatch $paths }
     $script:JingjiPatchFakeRunning = @()
-    $mountPackage.targetSha256 = '0' * 64
-    [IO.File]::WriteAllText($mountPackagePath, ($mountPackage | ConvertTo-Json -Depth 10), [Text.Encoding]::UTF8)
+    $yuanbaoPackage.targetSha256 = '0' * 64
+    [IO.File]::WriteAllText($yuanbaoPackagePath, ($yuanbaoPackage | ConvertTo-Json -Depth 10), [Text.Encoding]::UTF8)
     Assert-JingjiPatchThrows { Install-MountStackPatch $paths }
     Assert-JingjiPatch ((Get-JingjiPatchHash $exePath) -eq $finalHash) '无效补丁改变程序'
-    Copy-Item -LiteralPath ($exePath + '.before-jingji-mount-consumption.bak') -Destination $exePath -Force
+    Copy-Item -LiteralPath ($exePath + '.before-jingji-mount-yuanbao.bak') -Destination $exePath -Force
     Assert-JingjiPatchThrows { Install-MountStackPatch $paths }
-    Assert-JingjiPatch ((Get-JingjiPatchHash $exePath) -eq $mountPackage.sourceSha256) '结果哈希错误时修改了程序'
-    Write-Host '坐骑丹记录补丁：顺序安装、现有版本升级、备份、重复安装、运行保护及版本校验通过。'
+    Assert-JingjiPatch ((Get-JingjiPatchHash $exePath) -eq $yuanbaoPackage.sourceSha256) '结果哈希错误时修改了程序'
+    Write-Host '坐骑丹及元宝代购记录补丁：顺序安装、现有版本升级、备份、重复安装、运行保护及版本校验通过。'
 } finally {
     $temporaryRoot = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\') + '\'
     if (-not $testRoot.StartsWith($temporaryRoot, [StringComparison]::OrdinalIgnoreCase) -or

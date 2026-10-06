@@ -1,0 +1,88 @@
+{
+  "sourceSha256": "4e17c5083c62f36cf739ecd72aa4ba168558b53e73b10b80e99ad3dfe0b08d40",
+  "targetSha256": "107bf958c53e0c9d498377a0adfcca50902d7f940f6d40f525c5fd7645c40f58",
+  "sourceLength": 5096448,
+  "targetLength": 5096960,
+  "edits": [
+    {
+      "offset": 270,
+      "before": "CA==",
+      "after": "CQ=="
+    },
+    {
+      "offset": 293,
+      "before": "ZA==",
+      "after": "Zg=="
+    },
+    {
+      "offset": 345,
+      "before": "AA==",
+      "after": "EA=="
+    },
+    {
+      "offset": 428,
+      "before": "qA==",
+      "after": "tA=="
+    },
+    {
+      "offset": 848,
+      "before": "AAAAAAAA",
+      "after": "LmpqYnV5"
+    },
+    {
+      "offset": 856,
+      "before": "AAA=",
+      "after": "mAE="
+    },
+    {
+      "offset": 862,
+      "before": "AA==",
+      "after": "Ug=="
+    },
+    {
+      "offset": 865,
+      "before": "AA==",
+      "after": "Ag=="
+    },
+    {
+      "offset": 869,
+      "before": "AAA=",
+      "after": "xE0="
+    },
+    {
+      "offset": 884,
+      "before": "AA==",
+      "after": "IA=="
+    },
+    {
+      "offset": 887,
+      "before": "AA==",
+      "after": "YA=="
+    },
+    {
+      "offset": 1941607,
+      "before": "NUEF",
+      "after": "lVM0"
+    },
+    {
+      "offset": 5065386,
+      "before": "AA==",
+      "after": "Ug=="
+    },
+    {
+      "offset": 5065388,
+      "before": "AAAA",
+      "after": "dwFS"
+    },
+    {
+      "offset": 5065392,
+      "before": "AAAA",
+      "after": "kAFS"
+    },
+    {
+      "offset": 5096448,
+      "before": "",
+      "after": "SIHsGAIAAEiJjCTQAQAASImUJNgBAABMiYQk4AEAAEyJjCToAQAASIuEJEACAABIiUQkIEiLhCRIAgAASIlEJChIi4QkUAIAAEiJRCQwSIuEJFgCAABIiUQkOEiLhCRgAgAASIlEJEDoM+3Q/0iJhCT4AQAAhMAPhOoAAABIg7wk2AEAAAMPhdsAAABIg7wk4AEAAAAPjcwAAADoEOeu/0iJwejoSa//SInB6FDjy/9IY4gYAQAASIXJD46nAAAASIuEJOABAABI99gx0kj38UiF0g+FjgAAAEiFwA+EhQAAAEiJhCTwAQAASI1MJEDorOOw/0iLlCTQAQAASI1MJEDoCgDV/7oIAAAASI1MJEDoW9Kw/4uUJPABAABIjUwkQOhK0rD/6JXdrv9IicHoXeyw/0iJwegF5rD/SMdEJCD/////TI1MJEBMjUQkQEiNFSIAAABIicHo47Lh/0iNTCRA6MnjsP9Ii4Qk+AEAAEiBxBgCAADDSGFuZGxlQWRkTmV3UmFua0NvdW50AAAAAAEHAgAHAUMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+    }
+  ]
+}

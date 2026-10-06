@@ -635,7 +635,7 @@ function Undo-PreparedStart {
 }
 
 function Install-LogicServerPatch {
-    param($Paths, [string]$PackageName, [string]$PatchName, [string]$AcceptedTargetHash = '')
+    param($Paths, [string]$PackageName, [string]$PatchName, [string[]]$AcceptedTargetHashes = @())
     $directory = [IO.Path]::Combine($Paths.Root, 'Server', 'S1001', 'x64')
     $packagePath = [IO.Path]::Combine($directory, $PackageName)
     if (-not [IO.File]::Exists($packagePath)) { return }
@@ -649,7 +649,7 @@ function Install-LogicServerPatch {
     try {
         $sourceHash = ([BitConverter]::ToString($sha.ComputeHash($source))).Replace('-', '').ToLowerInvariant()
         if ($sourceHash -eq $package.targetSha256 -or
-            ($AcceptedTargetHash -ne '' -and $sourceHash -eq $AcceptedTargetHash)) { return }
+            ($AcceptedTargetHashes -contains $sourceHash)) { return }
         if ($sourceHash -ne $package.sourceSha256 -or $source.Length -ne $package.sourceLength) {
             throw "逻辑服版本与 $PatchName 补丁不匹配，未修改程序。"
         }
@@ -686,14 +686,24 @@ function Install-LogicServerPatch {
 
 function Install-MountStackPatch {
     param($Paths)
-    $mountPackagePath = [IO.Path]::Combine($Paths.Root, 'Server', 'S1001', 'x64', 'jingji-mount-consumption.patch.json')
-    $finalHash = ''
-    if ([IO.File]::Exists($mountPackagePath)) {
-        $mountPackage = [IO.File]::ReadAllText($mountPackagePath, [Text.Encoding]::UTF8) | ConvertFrom-Json
-        $finalHash = $mountPackage.targetSha256
+    $directory = [IO.Path]::Combine($Paths.Root, 'Server', 'S1001', 'x64')
+    $acceptedTargets = @()
+    foreach ($packageName in @('jingji-mount-consumption.patch.json', 'jingji-mount-yuanbao.patch.json')) {
+        $packagePath = [IO.Path]::Combine($directory, $packageName)
+        if ([IO.File]::Exists($packagePath)) {
+            $package = [IO.File]::ReadAllText($packagePath, [Text.Encoding]::UTF8) | ConvertFrom-Json
+            $acceptedTargets += $package.targetSha256
+        }
     }
-    Install-LogicServerPatch $Paths 'mount-stack.patch.json' '坐骑堆叠' $finalHash
-    Install-LogicServerPatch $Paths 'jingji-mount-consumption.patch.json' '竞技大赛坐骑丹消耗记录'
+    Install-LogicServerPatch $Paths 'mount-stack.patch.json' '坐骑堆叠' $acceptedTargets
+    $yuanbaoPackagePath = [IO.Path]::Combine($directory, 'jingji-mount-yuanbao.patch.json')
+    $yuanbaoTargets = @()
+    if ([IO.File]::Exists($yuanbaoPackagePath)) {
+        $yuanbaoPackage = [IO.File]::ReadAllText($yuanbaoPackagePath, [Text.Encoding]::UTF8) | ConvertFrom-Json
+        $yuanbaoTargets += $yuanbaoPackage.targetSha256
+    }
+    Install-LogicServerPatch $Paths 'jingji-mount-consumption.patch.json' '竞技大赛坐骑丹消耗记录' $yuanbaoTargets
+    Install-LogicServerPatch $Paths 'jingji-mount-yuanbao.patch.json' '竞技大赛元宝代购坐骑丹记录'
 }
 
 function Invoke-GameStart {

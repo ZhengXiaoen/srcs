@@ -27,6 +27,7 @@ IDS = {5152, 5153, 5154, 5155}
 FINISHED_IDS = {5140, 5141, 5142, 5143}
 FINISHED_RATES = {293: 5, 294: 7, 295: 11, 296: 15}
 FINISHED_BASELINE = "c8dbcbb"
+TEXT_BASELINE = "c77e197"
 BASELINE = "451cefe"
 
 
@@ -190,14 +191,28 @@ class TempleFragmentTests(unittest.TestCase):
 
     def test_server_client_pack_descriptions_and_other_resources_unchanged(self):
         from patch_guild_quest_config import read_cbp, read_pack
+        from patch_yuangu_store import PRODUCTS
         client = ROOT / "web/v2/lang/zh-cn"
         previous = read_pack(subprocess.check_output(
-            ["git", "show", FINISHED_BASELINE + ":web/v2/lang/zh-cn/zh-cn.dat"], cwd=ROOT))
+            ["git", "show", TEXT_BASELINE + ":web/v2/lang/zh-cn/zh-cn.dat"], cwd=ROOT))
         current = read_pack((client / "zh-cn.dat").read_bytes())
         self.assertEqual([n for n, _ in previous], [n for n, _ in current])
         changed = {a[0] for a, b in zip(previous, current) if a != b}
-        self.assertEqual({"stditems.cbp", "stditems3.cbp"}, changed)
+        item_ids = {
+            "stditems.cbp": IDS | FINISHED_IDS | {491},
+            "stditems1.cbp": {491},
+            "stditems3.cbp": IDS | FINISHED_IDS,
+            "stditems4.cbp": {item for item, _ in PRODUCTS},
+        }
+        task_text = {
+            "LivenessActivityCfg.cbp": (("livenessTask", "1", "tips"),
+                                        "每次完成[每日首充]任务都可获得<25点>活跃奖励!"),
+            "brotherQingMiDuTask.cbp": (("2", "0", "txt"), "每日首冲"),
+        }
+        self.assertEqual(set(item_ids) | set(task_text), changed)
         language = (DATA / "language/Zh-CN/Item.lua").read_text("utf-8")
+        original_language = subprocess.check_output(
+            ["git", "show", "1ebaf28^:Server/S1001/data/language/Zh-CN/Item.lua"], cwd=ROOT).decode("utf-8-sig")
         for name, data in current:
             if name not in changed:
                 self.assertEqual(dict(previous)[name], data)
@@ -206,14 +221,34 @@ class TempleFragmentTests(unittest.TestCase):
             _, before = read_cbp(dict(previous)[name])
             _, after = read_cbp(data)
             expected = copy.deepcopy(before)
-            for item in FINISHED_IDS:
+            if name in task_text:
+                path, text = task_text[name]
+                node = expected
+                for key in path:
+                    node = node.child(key)
+                node.value = text.encode("utf-8")
+                self.assertEqual(expected, after)
+                continue
+            modified = {int(node.child("id").number()) for node in after.children
+                        if node != before.child(node.name)}
+            self.assertEqual(item_ids[name], modified)
+            for item in item_ids[name]:
                 node = next(n for n in after.children if n.child("id").number() == item)
                 desc = re.search(rf'i{item}="([^"\r\n]+)"', language)[1].replace("\\\\", "\\")
                 self.assertEqual(desc, node.child("desc").value.decode("utf-8"))
                 expected.child(node.name).child("desc").value = node.child("desc").value
-                self.assertIn("7转及以上转生神殿天、地、暗BOSS直接掉落", desc)
-                self.assertIn("7-8转5%、9-10转7%、11-12转11%、13-15转15%", desc)
-                self.assertNotIn("只在合服后", desc)
+                self.assertNotIn("掉率", desc)
+                self.assertNotIn("远古积分商城", desc)
+                if item in IDS:
+                    original_desc = re.search(rf'i{item}="([^"\r\n]+)"', original_language)[1].replace("\\\\", "\\")
+                    self.assertEqual(original_desc, desc)
+                if item in FINISHED_IDS:
+                    self.assertIn("[主宰饰品]", desc)
+                    self.assertIn("锻造-合成", desc)
+                    self.assertIn("最高可获得10级锤炼属性", desc)
+                    self.assertNotIn("只在合服后", desc)
+                if item == 491:
+                    self.assertNotIn("灵力丹", desc)
             self.assertEqual(expected, after)
 
     def test_finished_drops_every_boss_exact_percent_four_items_and_one_bound_item(self):
@@ -308,7 +343,7 @@ class TempleFragmentTests(unittest.TestCase):
             sources.append(source)
         self.assertTrue(lua.eval(b"function(s) return assert(loadstring(s)) ~= nil end")(b"\n".join(sources)))
 
-    def test_temple_entry_shows_same_config_values(self):
+    def test_temple_entry_keeps_entry_cost_and_refresh_time_without_drop_text(self):
         lua = runtime()
         lua.execute(b'''
             PROP_ACTOR_CIRCLE = 1
@@ -318,13 +353,12 @@ class TempleFragmentTests(unittest.TestCase):
         ''')
         lua.execute((DATA / "functions/NpcMiscFun/SanRenNPC/MapNpc/ZhuanShengDiGong.lua").read_bytes().removeprefix(b"\xef\xbb\xbf"))
         text = lua.globals()[b"GetNpcZhuanShengDiGong"]()[b"main"](1).decode("utf-8")
-        self.assertNotIn("合服", text)
-        for _, _, rate, low, high in TIERS:
-            count = str(low) if low == high else f"{low}-{high}"
-            self.assertIn(f"碎片掉率 {rate}%，每次 {count} 个", text)
-        for rate in FINISHED_RATES.values():
-            self.assertIn(f"成品独立掉率 {rate}%，每次 1 件", text)
-        self.assertEqual(4, text.count("成品独立掉率"))
+        self.assertNotIn("主宰", text)
+        self.assertNotIn("掉率", text)
+        self.assertEqual(10, text.count("/@EnterScene,"))
+        self.assertEqual(10, text.count("刷新时间"))
+        self.assertIn("进入需要 1 张 proof#刷新时间 120 分钟", text)
+        self.assertIn("进入需要 40 张 proof#刷新时间 480 分钟", text)
 
 
 if __name__ == "__main__":

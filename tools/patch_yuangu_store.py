@@ -1,4 +1,4 @@
-"""Remove rank requirements and sync ancient-points collectibles and both outfit genders."""
+"""Remove rank requirements and sync ancient-points products and prices."""
 
 from __future__ import annotations
 
@@ -40,8 +40,6 @@ PRODUCTS = (
     (7719, "主教圣剑"),
     (7822, "黄金裁决"),
 )
-OLD_SOURCE = "【活动产出】"
-NEW_SOURCE = "【活动产出、远古积分商城】"
 
 
 def patch_store(source: bytes) -> bytes:
@@ -90,33 +88,6 @@ def patch_store(source: bytes) -> bytes:
     return write_cbp(header, root)
 
 
-def update_description(text: str) -> str:
-    if "远古积分商城" not in text:
-        if OLD_SOURCE in text:
-            if text.count(OLD_SOURCE) != 1:
-                raise ValueError("Duplicate item source")
-            text = text.replace(OLD_SOURCE, NEW_SOURCE)
-        else:
-            text += "\\<(c0xFF00c0ff)【远古积分商城】>"
-    return text.replace("名人堂专属幻武", "名人堂幻武")
-
-
-def patch_items(source: bytes) -> bytes:
-    header, root = read_cbp(source)
-    original = copy.deepcopy(root)
-    for item_id, item_name in PRODUCTS:
-        matches = [item for item in root.children if item.child("id").number() == item_id]
-        if len(matches) != 1 or matches[0].child("name").value.decode("utf-8") != item_name:
-            raise ValueError(f"Product not found in the client item catalog: {item_name}")
-        item = matches[0]
-        description = item.child("desc")
-        description.value = update_description(description.value.decode("utf-8")).encode("utf-8")
-        original.child(item.name).child("desc").value = description.value
-    if original != root:
-        raise ValueError("Unrelated item changes")
-    return write_cbp(header, root)
-
-
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true", help="Verify resources without writing")
@@ -128,7 +99,7 @@ def main() -> None:
         raise ValueError("Language pack did not round-trip")
     original_entries = list(entries)
     updated = {}
-    for name, patch in (("store.cbp", patch_store), ("stditems4.cbp", patch_items)):
+    for name, patch in (("store.cbp", patch_store),):
         positions = [index for index, entry in enumerate(entries) if entry[0] == name]
         if len(positions) != 1:
             raise ValueError(f"Missing or duplicate packed config: {name}")

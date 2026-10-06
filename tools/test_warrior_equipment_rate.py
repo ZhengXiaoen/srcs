@@ -90,16 +90,20 @@ randomCalls=0
         lua.execute("onFuWenBox(1,0,{}, {item_id=5366,index=13},0,1); assert(created.rate==10 and randomCalls==0)")
 
     def test_client_keeps_original_descriptions_and_matching_caps(self):
-        for path in (CLIENT, PACK, LANGUAGE):
-            self.assertEqual(baseline(path), path.read_bytes())
         items = server_items((ROOT / "Server/S1001/data/config/item/StdItems.txt").read_bytes())
         ids = {item for item, block in items.items()
                if 201 <= int(re.search(rb"(?m)^  type=(\d+),", block)[1]) <= 205}
         self.assertEqual(50, len(ids))
         rows = read_cbp(CLIENT.read_bytes())[1].children
+        original_rows = read_cbp(baseline(CLIENT))[1]
+        original_language = baseline(LANGUAGE)
         for row in rows:
             item = int(row.child('id').number())
             if item in ids:
+                self.assertEqual(original_rows.child(row.name), row)
+                pattern = rf'\bi{item}="([^"\r\n]*)"'.encode()
+                self.assertEqual(re.search(pattern, original_language)[1],
+                                 re.search(pattern, LANGUAGE.read_bytes())[1])
                 self.assertEqual(10, row.child('heroDamageRate').number())
                 self.assertIn(b'heroDamageRate=10,', items[item])
         packed = dict(read_pack(PACK.read_bytes()))

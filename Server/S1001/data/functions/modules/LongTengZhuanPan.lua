@@ -19,6 +19,14 @@ function LongTengZhuanPan_GetCanTurnTimes(sysarg)
 	return times
 end
 
+-- 到达终点后不再有可用次数，兼容已完成的旧数据及后续充值刷新
+LocalDT.GetLongTengZhuanPanLeftTimes = function(sysarg, zhuanPanData)
+	if System.getInt64Byte(zhuanPanData, 2) >= 50 then
+		return 0
+	end
+	return math.max(0, LongTengZhuanPan_GetCanTurnTimes(sysarg) - System.getInt64Byte(zhuanPanData, 1))
+end
+
 function LongTengZhuanPan_GenerateRefreshItems(posListIdx, from, to)
 	local posMarks = LongTengZhuanPanCfg.posList[posListIdx]
 	local count = 0
@@ -107,8 +115,7 @@ function LongTengZhuanPan_SendData(sysarg)
 		zhuanPanFlags = data.zhuanPanFlags
 	end
 	
-	local canTurnTimes = LongTengZhuanPan_GetCanTurnTimes(sysarg)
-	local leftTimes = canTurnTimes - System.getInt64Byte(zhuanPanData, 1)
+	local leftTimes = LocalDT.GetLongTengZhuanPanLeftTimes(sysarg, zhuanPanData)
 	local curStep = System.getInt64Byte(zhuanPanData, 2)
 	-- 从1开始
 	if curStep == 0 then curStep = 1 end
@@ -148,8 +155,7 @@ function LongTengZhuanPan_SendLeftTimes(sysarg)
 	-- 0：随机到的位置索引，1：抽了几次，2：当前步数，3：前25格抽中的物品数，4：后25格抽中的物品数
 	local zhuanPanData = data.zhuanPanData	
 	
-	local canTurnTimes = LongTengZhuanPan_GetCanTurnTimes(sysarg)
-	local leftTimes = canTurnTimes - System.getInt64Byte(zhuanPanData, 1)
+	local leftTimes = LocalDT.GetLongTengZhuanPanLeftTimes(sysarg, zhuanPanData)
 	
 	DataPack.writeByte(netPack, leftTimes)	-- 剩余次数	
 	
@@ -273,8 +279,7 @@ function LongTengZhuanPan_ZhuanPan(sysarg)
 	local hitItemCount1 = System.getInt64Byte(zhuanPanData, 3) -- 前25格抽中的物品数
 	local hitItemCount2 = System.getInt64Byte(zhuanPanData, 4) -- 后25格抽中的物品数
 	
-	local canTurnTimes = LongTengZhuanPan_GetCanTurnTimes(sysarg)
-	local leftTimes = canTurnTimes - doTimes
+	local leftTimes = LocalDT.GetLongTengZhuanPanLeftTimes(sysarg, zhuanPanData)
 	if leftTimes <= 0 then
 		Actor.sendTipmsg(sysarg, "当前次数已经用完，请先充值", ttFlyTip)
 		return
@@ -385,7 +390,7 @@ function LongTengZhuanPan_ZhuanPan(sysarg)
 	local netPack = DataPack.allocPacket(sysarg, 151, LogicCmd.miscSysEx.sub.sLongTengZhuanPan)
 	DataPack.writeByte(netPack, 2)	-- 转盘结果
 	
-	DataPack.writeByte(netPack, canTurnTimes - (doTimes + 1))	-- 剩余次数
+	DataPack.writeByte(netPack, LocalDT.GetLongTengZhuanPanLeftTimes(sysarg, zhuanPanData))	-- 剩余次数
 	DataPack.writeByte(netPack, newStep) -- 当前步
 	DataPack.writeByte(netPack, isHitItem and 1 or 0) -- 是否抽中物品
 	DataPack.flush(netPack)	

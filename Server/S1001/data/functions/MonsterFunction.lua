@@ -104,6 +104,8 @@ LocalDT.DropBossMaterials = function(monster, killer, monId)
 	if monster == nil or killer == nil or (dropIds == nil and stoneTier == nil) then return end
 	local totals = {}
 	local order = {}
+	-- 四圣、四魔、四神、四仙的材料按绑定状态合并，避免影响共用模板的其他怪物。
+	local bindBossDrops = (monId >= 1061 and monId <= 1068) or (monId >= 1357 and monId <= 1360) or (monId >= 1391 and monId <= 1394)
 	for _, dropId in ipairs(dropIds or {}) do
 		for _, cfg in ipairs(LocalDT.BossMaterialDrops[dropId]) do
 			-- propability 表示几分之一：1 为必掉，0 为禁用，各条记录独立判定。
@@ -114,9 +116,10 @@ LocalDT.DropBossMaterials = function(monster, killer, monId)
 					count = cfg.mincount + System.getRandomNumber(cfg.maxcount - cfg.mincount + 1)
 				end
 				if count > 0 then
-					local key = cfg.id .. ":" .. cfg.bind
+					local bind = bindBossDrops and 1 or cfg.bind
+					local key = cfg.id .. ":" .. bind
 					if totals[key] == nil then
-						totals[key] = {id=cfg.id, bind=cfg.bind, count=0}
+						totals[key] = {id=cfg.id, bind=bind, count=0}
 						table.insert(order, key)
 					end
 					totals[key].count = totals[key].count + count

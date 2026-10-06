@@ -11452,29 +11452,29 @@ AdvanceMonsterEquipCfg =
 		awards = 
 		{
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--堕天使之魂
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 144,count = 0,bind = 0,},--无尘战幻盔
-				{type= 0,id = 145,count = 0,bind = 0,},--无尘战幻链
+				{type= 0,id = 5657,count = 0,bind = 1,},--堕天使之魂
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 144,count = 0,bind = 1,},--无尘战幻盔
+				{type= 0,id = 145,count = 0,bind = 1,},--无尘战幻链
 			},
 
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--堕天使之魂
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 153,count = 0,bind = 0,},--无尘法幻盔
-				{type= 0,id = 154,count = 0,bind = 0,},--无尘法幻链
+				{type= 0,id = 5657,count = 0,bind = 1,},--堕天使之魂
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 153,count = 0,bind = 1,},--无尘法幻盔
+				{type= 0,id = 154,count = 0,bind = 1,},--无尘法幻链
 			},
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--堕天使之魂
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 162,count = 0,bind = 0,},--无尘道幻盔
-				{type= 0,id = 163,count = 0,bind = 0,},--无尘道幻链
+				{type= 0,id = 5657,count = 0,bind = 1,},--堕天使之魂
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 162,count = 0,bind = 1,},--无尘道幻盔
+				{type= 0,id = 163,count = 0,bind = 1,},--无尘道幻链
 			},
 		},
 	},
@@ -11487,29 +11487,29 @@ AdvanceMonsterEquipCfg =
 		awards = 
 		{
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--荣耀战盔
-				{type= 0,id = 5658,count = 0,bind = 0,},--荣耀战链
-				{type= 0,id = 5385,count = 0,bind = 0,},--荣耀战镯
-				{type= 0,id = 5947,count = 0,bind = 0,},--荣耀战戒
-				{type= 0,id = 144,count = 0,bind = 0,},--荣耀战带
-				{type= 0,id = 145,count = 0,bind = 0,},--荣耀战靴
+				{type= 0,id = 5657,count = 0,bind = 1,},--荣耀战盔
+				{type= 0,id = 5658,count = 0,bind = 1,},--荣耀战链
+				{type= 0,id = 5385,count = 0,bind = 1,},--荣耀战镯
+				{type= 0,id = 5947,count = 0,bind = 1,},--荣耀战戒
+				{type= 0,id = 144,count = 0,bind = 1,},--荣耀战带
+				{type= 0,id = 145,count = 0,bind = 1,},--荣耀战靴
 			},
 
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--荣耀战盔
-				{type= 0,id = 5658,count = 0,bind = 0,},--荣耀战链
-				{type= 0,id = 5385,count = 0,bind = 0,},--荣耀战镯
-				{type= 0,id = 5947,count = 0,bind = 0,},--荣耀战戒
-				{type= 0,id = 153,count = 0,bind = 0,},--荣耀战带
-				{type= 0,id = 154,count = 0,bind = 0,},--荣耀战靴
+				{type= 0,id = 5657,count = 0,bind = 1,},--荣耀战盔
+				{type= 0,id = 5658,count = 0,bind = 1,},--荣耀战链
+				{type= 0,id = 5385,count = 0,bind = 1,},--荣耀战镯
+				{type= 0,id = 5947,count = 0,bind = 1,},--荣耀战戒
+				{type= 0,id = 153,count = 0,bind = 1,},--荣耀战带
+				{type= 0,id = 154,count = 0,bind = 1,},--荣耀战靴
 			},
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--荣耀战盔
-				{type= 0,id = 5658,count = 0,bind = 0,},--荣耀战链
-				{type= 0,id = 5385,count = 0,bind = 0,},--荣耀战镯
-				{type= 0,id = 5947,count = 0,bind = 0,},--荣耀战戒
-				{type= 0,id = 162,count = 0,bind = 0,},--荣耀战带
-				{type= 0,id = 163,count = 0,bind = 0,},--荣耀战靴
+				{type= 0,id = 5657,count = 0,bind = 1,},--荣耀战盔
+				{type= 0,id = 5658,count = 0,bind = 1,},--荣耀战链
+				{type= 0,id = 5385,count = 0,bind = 1,},--荣耀战镯
+				{type= 0,id = 5947,count = 0,bind = 1,},--荣耀战戒
+				{type= 0,id = 162,count = 0,bind = 1,},--荣耀战带
+				{type= 0,id = 163,count = 0,bind = 1,},--荣耀战靴
 			},
 		},
 	},
@@ -11522,29 +11522,29 @@ AdvanceMonsterEquipCfg =
 		awards = 
 		{
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--荣耀战盔
-				{type= 0,id = 5658,count = 0,bind = 0,},--荣耀战链
-				{type= 0,id = 5385,count = 0,bind = 0,},--荣耀战镯
-				{type= 0,id = 5947,count = 0,bind = 0,},--荣耀战戒
-				{type= 0,id = 144,count = 0,bind = 0,},--荣耀战带
-				{type= 0,id = 145,count = 0,bind = 0,},--荣耀战靴
+				{type= 0,id = 5657,count = 0,bind = 1,},--荣耀战盔
+				{type= 0,id = 5658,count = 0,bind = 1,},--荣耀战链
+				{type= 0,id = 5385,count = 0,bind = 1,},--荣耀战镯
+				{type= 0,id = 5947,count = 0,bind = 1,},--荣耀战戒
+				{type= 0,id = 144,count = 0,bind = 1,},--荣耀战带
+				{type= 0,id = 145,count = 0,bind = 1,},--荣耀战靴
 			},
 
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--荣耀战盔
-				{type= 0,id = 5658,count = 0,bind = 0,},--荣耀战链
-				{type= 0,id = 5385,count = 0,bind = 0,},--荣耀战镯
-				{type= 0,id = 5947,count = 0,bind = 0,},--荣耀战戒
-				{type= 0,id = 153,count = 0,bind = 0,},--荣耀战带
-				{type= 0,id = 154,count = 0,bind = 0,},--荣耀战靴
+				{type= 0,id = 5657,count = 0,bind = 1,},--荣耀战盔
+				{type= 0,id = 5658,count = 0,bind = 1,},--荣耀战链
+				{type= 0,id = 5385,count = 0,bind = 1,},--荣耀战镯
+				{type= 0,id = 5947,count = 0,bind = 1,},--荣耀战戒
+				{type= 0,id = 153,count = 0,bind = 1,},--荣耀战带
+				{type= 0,id = 154,count = 0,bind = 1,},--荣耀战靴
 			},
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--荣耀战盔
-				{type= 0,id = 5658,count = 0,bind = 0,},--荣耀战链
-				{type= 0,id = 5385,count = 0,bind = 0,},--荣耀战镯
-				{type= 0,id = 5947,count = 0,bind = 0,},--荣耀战戒
-				{type= 0,id = 162,count = 0,bind = 0,},--荣耀战带
-				{type= 0,id = 163,count = 0,bind = 0,},--荣耀战靴
+				{type= 0,id = 5657,count = 0,bind = 1,},--荣耀战盔
+				{type= 0,id = 5658,count = 0,bind = 1,},--荣耀战链
+				{type= 0,id = 5385,count = 0,bind = 1,},--荣耀战镯
+				{type= 0,id = 5947,count = 0,bind = 1,},--荣耀战戒
+				{type= 0,id = 162,count = 0,bind = 1,},--荣耀战带
+				{type= 0,id = 163,count = 0,bind = 1,},--荣耀战靴
 			},
 		},
 	},
@@ -11557,29 +11557,29 @@ AdvanceMonsterEquipCfg =
 		awards = 
 		{
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--荣耀战盔
-				{type= 0,id = 5658,count = 0,bind = 0,},--荣耀战链
-				{type= 0,id = 5385,count = 0,bind = 0,},--荣耀战镯
-				{type= 0,id = 5947,count = 0,bind = 0,},--荣耀战戒
-				{type= 0,id = 144,count = 0,bind = 0,},--荣耀战带
-				{type= 0,id = 145,count = 0,bind = 0,},--荣耀战靴
+				{type= 0,id = 5657,count = 0,bind = 1,},--荣耀战盔
+				{type= 0,id = 5658,count = 0,bind = 1,},--荣耀战链
+				{type= 0,id = 5385,count = 0,bind = 1,},--荣耀战镯
+				{type= 0,id = 5947,count = 0,bind = 1,},--荣耀战戒
+				{type= 0,id = 144,count = 0,bind = 1,},--荣耀战带
+				{type= 0,id = 145,count = 0,bind = 1,},--荣耀战靴
 			},
 
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--荣耀战盔
-				{type= 0,id = 5658,count = 0,bind = 0,},--荣耀战链
-				{type= 0,id = 5385,count = 0,bind = 0,},--荣耀战镯
-				{type= 0,id = 5947,count = 0,bind = 0,},--荣耀战戒
-				{type= 0,id = 153,count = 0,bind = 0,},--荣耀战带
-				{type= 0,id = 154,count = 0,bind = 0,},--荣耀战靴
+				{type= 0,id = 5657,count = 0,bind = 1,},--荣耀战盔
+				{type= 0,id = 5658,count = 0,bind = 1,},--荣耀战链
+				{type= 0,id = 5385,count = 0,bind = 1,},--荣耀战镯
+				{type= 0,id = 5947,count = 0,bind = 1,},--荣耀战戒
+				{type= 0,id = 153,count = 0,bind = 1,},--荣耀战带
+				{type= 0,id = 154,count = 0,bind = 1,},--荣耀战靴
 			},
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--荣耀战盔
-				{type= 0,id = 5658,count = 0,bind = 0,},--荣耀战链
-				{type= 0,id = 5385,count = 0,bind = 0,},--荣耀战镯
-				{type= 0,id = 5947,count = 0,bind = 0,},--荣耀战戒
-				{type= 0,id = 162,count = 0,bind = 0,},--荣耀战带
-				{type= 0,id = 163,count = 0,bind = 0,},--荣耀战靴
+				{type= 0,id = 5657,count = 0,bind = 1,},--荣耀战盔
+				{type= 0,id = 5658,count = 0,bind = 1,},--荣耀战链
+				{type= 0,id = 5385,count = 0,bind = 1,},--荣耀战镯
+				{type= 0,id = 5947,count = 0,bind = 1,},--荣耀战戒
+				{type= 0,id = 162,count = 0,bind = 1,},--荣耀战带
+				{type= 0,id = 163,count = 0,bind = 1,},--荣耀战靴
 			},
 		},
 	},
@@ -11591,29 +11591,29 @@ AdvanceMonsterEquipCfg =
 		awards = 
 		{
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--荣耀战盔
-				{type= 0,id = 5658,count = 0,bind = 0,},--荣耀战链
-				{type= 0,id = 5385,count = 0,bind = 0,},--荣耀战镯
-				{type= 0,id = 5947,count = 0,bind = 0,},--荣耀战戒
-				{type= 0,id = 144,count = 0,bind = 0,},--荣耀战带
-				{type= 0,id = 145,count = 0,bind = 0,},--荣耀战靴
+				{type= 0,id = 5657,count = 0,bind = 1,},--荣耀战盔
+				{type= 0,id = 5658,count = 0,bind = 1,},--荣耀战链
+				{type= 0,id = 5385,count = 0,bind = 1,},--荣耀战镯
+				{type= 0,id = 5947,count = 0,bind = 1,},--荣耀战戒
+				{type= 0,id = 144,count = 0,bind = 1,},--荣耀战带
+				{type= 0,id = 145,count = 0,bind = 1,},--荣耀战靴
 			},
 
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--荣耀战盔
-				{type= 0,id = 5658,count = 0,bind = 0,},--荣耀战链
-				{type= 0,id = 5385,count = 0,bind = 0,},--荣耀战镯
-				{type= 0,id = 5947,count = 0,bind = 0,},--荣耀战戒
-				{type= 0,id = 153,count = 0,bind = 0,},--荣耀战带
-				{type= 0,id = 154,count = 0,bind = 0,},--荣耀战靴
+				{type= 0,id = 5657,count = 0,bind = 1,},--荣耀战盔
+				{type= 0,id = 5658,count = 0,bind = 1,},--荣耀战链
+				{type= 0,id = 5385,count = 0,bind = 1,},--荣耀战镯
+				{type= 0,id = 5947,count = 0,bind = 1,},--荣耀战戒
+				{type= 0,id = 153,count = 0,bind = 1,},--荣耀战带
+				{type= 0,id = 154,count = 0,bind = 1,},--荣耀战靴
 			},
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--荣耀战盔
-				{type= 0,id = 5658,count = 0,bind = 0,},--荣耀战链
-				{type= 0,id = 5385,count = 0,bind = 0,},--荣耀战镯
-				{type= 0,id = 5947,count = 0,bind = 0,},--荣耀战戒
-				{type= 0,id = 162,count = 0,bind = 0,},--荣耀战带
-				{type= 0,id = 163,count = 0,bind = 0,},--荣耀战靴
+				{type= 0,id = 5657,count = 0,bind = 1,},--荣耀战盔
+				{type= 0,id = 5658,count = 0,bind = 1,},--荣耀战链
+				{type= 0,id = 5385,count = 0,bind = 1,},--荣耀战镯
+				{type= 0,id = 5947,count = 0,bind = 1,},--荣耀战戒
+				{type= 0,id = 162,count = 0,bind = 1,},--荣耀战带
+				{type= 0,id = 163,count = 0,bind = 1,},--荣耀战靴
 			},
 		},
 	},
@@ -11625,29 +11625,29 @@ AdvanceMonsterEquipCfg =
 		awards = 
 		{
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--荣耀战盔
-				{type= 0,id = 5658,count = 0,bind = 0,},--荣耀战链
-				{type= 0,id = 5385,count = 0,bind = 0,},--荣耀战镯
-				{type= 0,id = 5947,count = 0,bind = 0,},--荣耀战戒
-				{type= 0,id = 144,count = 0,bind = 0,},--荣耀战带
-				{type= 0,id = 145,count = 0,bind = 0,},--荣耀战靴
+				{type= 0,id = 5657,count = 0,bind = 1,},--荣耀战盔
+				{type= 0,id = 5658,count = 0,bind = 1,},--荣耀战链
+				{type= 0,id = 5385,count = 0,bind = 1,},--荣耀战镯
+				{type= 0,id = 5947,count = 0,bind = 1,},--荣耀战戒
+				{type= 0,id = 144,count = 0,bind = 1,},--荣耀战带
+				{type= 0,id = 145,count = 0,bind = 1,},--荣耀战靴
 			},
 
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--荣耀战盔
-				{type= 0,id = 5658,count = 0,bind = 0,},--荣耀战链
-				{type= 0,id = 5385,count = 0,bind = 0,},--荣耀战镯
-				{type= 0,id = 5947,count = 0,bind = 0,},--荣耀战戒
-				{type= 0,id = 153,count = 0,bind = 0,},--荣耀战带
-				{type= 0,id = 154,count = 0,bind = 0,},--荣耀战靴
+				{type= 0,id = 5657,count = 0,bind = 1,},--荣耀战盔
+				{type= 0,id = 5658,count = 0,bind = 1,},--荣耀战链
+				{type= 0,id = 5385,count = 0,bind = 1,},--荣耀战镯
+				{type= 0,id = 5947,count = 0,bind = 1,},--荣耀战戒
+				{type= 0,id = 153,count = 0,bind = 1,},--荣耀战带
+				{type= 0,id = 154,count = 0,bind = 1,},--荣耀战靴
 			},
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--荣耀战盔
-				{type= 0,id = 5658,count = 0,bind = 0,},--荣耀战链
-				{type= 0,id = 5385,count = 0,bind = 0,},--荣耀战镯
-				{type= 0,id = 5947,count = 0,bind = 0,},--荣耀战戒
-				{type= 0,id = 162,count = 0,bind = 0,},--荣耀战带
-				{type= 0,id = 163,count = 0,bind = 0,},--荣耀战靴
+				{type= 0,id = 5657,count = 0,bind = 1,},--荣耀战盔
+				{type= 0,id = 5658,count = 0,bind = 1,},--荣耀战链
+				{type= 0,id = 5385,count = 0,bind = 1,},--荣耀战镯
+				{type= 0,id = 5947,count = 0,bind = 1,},--荣耀战戒
+				{type= 0,id = 162,count = 0,bind = 1,},--荣耀战带
+				{type= 0,id = 163,count = 0,bind = 1,},--荣耀战靴
 			},
 		},
 	},
@@ -11659,29 +11659,29 @@ AdvanceMonsterEquipCfg =
 		awards = 
 		{
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--荣耀战盔
-				{type= 0,id = 5658,count = 0,bind = 0,},--荣耀战链
-				{type= 0,id = 5385,count = 0,bind = 0,},--荣耀战镯
-				{type= 0,id = 5947,count = 0,bind = 0,},--荣耀战戒
-				{type= 0,id = 144,count = 0,bind = 0,},--荣耀战带
-				{type= 0,id = 145,count = 0,bind = 0,},--荣耀战靴
+				{type= 0,id = 5657,count = 0,bind = 1,},--荣耀战盔
+				{type= 0,id = 5658,count = 0,bind = 1,},--荣耀战链
+				{type= 0,id = 5385,count = 0,bind = 1,},--荣耀战镯
+				{type= 0,id = 5947,count = 0,bind = 1,},--荣耀战戒
+				{type= 0,id = 144,count = 0,bind = 1,},--荣耀战带
+				{type= 0,id = 145,count = 0,bind = 1,},--荣耀战靴
 			},
 
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--荣耀战盔
-				{type= 0,id = 5658,count = 0,bind = 0,},--荣耀战链
-				{type= 0,id = 5385,count = 0,bind = 0,},--荣耀战镯
-				{type= 0,id = 5947,count = 0,bind = 0,},--荣耀战戒
-				{type= 0,id = 153,count = 0,bind = 0,},--荣耀战带
-				{type= 0,id = 154,count = 0,bind = 0,},--荣耀战靴
+				{type= 0,id = 5657,count = 0,bind = 1,},--荣耀战盔
+				{type= 0,id = 5658,count = 0,bind = 1,},--荣耀战链
+				{type= 0,id = 5385,count = 0,bind = 1,},--荣耀战镯
+				{type= 0,id = 5947,count = 0,bind = 1,},--荣耀战戒
+				{type= 0,id = 153,count = 0,bind = 1,},--荣耀战带
+				{type= 0,id = 154,count = 0,bind = 1,},--荣耀战靴
 			},
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--荣耀战盔
-				{type= 0,id = 5658,count = 0,bind = 0,},--荣耀战链
-				{type= 0,id = 5385,count = 0,bind = 0,},--荣耀战镯
-				{type= 0,id = 5947,count = 0,bind = 0,},--荣耀战戒
-				{type= 0,id = 162,count = 0,bind = 0,},--荣耀战带
-				{type= 0,id = 163,count = 0,bind = 0,},--荣耀战靴
+				{type= 0,id = 5657,count = 0,bind = 1,},--荣耀战盔
+				{type= 0,id = 5658,count = 0,bind = 1,},--荣耀战链
+				{type= 0,id = 5385,count = 0,bind = 1,},--荣耀战镯
+				{type= 0,id = 5947,count = 0,bind = 1,},--荣耀战戒
+				{type= 0,id = 162,count = 0,bind = 1,},--荣耀战带
+				{type= 0,id = 163,count = 0,bind = 1,},--荣耀战靴
 			},
 		},
 	},
@@ -11693,29 +11693,29 @@ AdvanceMonsterEquipCfg =
 		awards = 
 		{
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--荣耀战盔
-				{type= 0,id = 5658,count = 0,bind = 0,},--荣耀战链
-				{type= 0,id = 5385,count = 0,bind = 0,},--荣耀战镯
-				{type= 0,id = 5947,count = 0,bind = 0,},--荣耀战戒
-				{type= 0,id = 144,count = 0,bind = 0,},--荣耀战带
-				{type= 0,id = 145,count = 0,bind = 0,},--荣耀战靴
+				{type= 0,id = 5657,count = 0,bind = 1,},--荣耀战盔
+				{type= 0,id = 5658,count = 0,bind = 1,},--荣耀战链
+				{type= 0,id = 5385,count = 0,bind = 1,},--荣耀战镯
+				{type= 0,id = 5947,count = 0,bind = 1,},--荣耀战戒
+				{type= 0,id = 144,count = 0,bind = 1,},--荣耀战带
+				{type= 0,id = 145,count = 0,bind = 1,},--荣耀战靴
 			},
 
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--荣耀战盔
-				{type= 0,id = 5658,count = 0,bind = 0,},--荣耀战链
-				{type= 0,id = 5385,count = 0,bind = 0,},--荣耀战镯
-				{type= 0,id = 5947,count = 0,bind = 0,},--荣耀战戒
-				{type= 0,id = 153,count = 0,bind = 0,},--荣耀战带
-				{type= 0,id = 154,count = 0,bind = 0,},--荣耀战靴
+				{type= 0,id = 5657,count = 0,bind = 1,},--荣耀战盔
+				{type= 0,id = 5658,count = 0,bind = 1,},--荣耀战链
+				{type= 0,id = 5385,count = 0,bind = 1,},--荣耀战镯
+				{type= 0,id = 5947,count = 0,bind = 1,},--荣耀战戒
+				{type= 0,id = 153,count = 0,bind = 1,},--荣耀战带
+				{type= 0,id = 154,count = 0,bind = 1,},--荣耀战靴
 			},
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--荣耀战盔
-				{type= 0,id = 5658,count = 0,bind = 0,},--荣耀战链
-				{type= 0,id = 5385,count = 0,bind = 0,},--荣耀战镯
-				{type= 0,id = 5947,count = 0,bind = 0,},--荣耀战戒
-				{type= 0,id = 162,count = 0,bind = 0,},--荣耀战带
-				{type= 0,id = 163,count = 0,bind = 0,},--荣耀战靴
+				{type= 0,id = 5657,count = 0,bind = 1,},--荣耀战盔
+				{type= 0,id = 5658,count = 0,bind = 1,},--荣耀战链
+				{type= 0,id = 5385,count = 0,bind = 1,},--荣耀战镯
+				{type= 0,id = 5947,count = 0,bind = 1,},--荣耀战戒
+				{type= 0,id = 162,count = 0,bind = 1,},--荣耀战带
+				{type= 0,id = 163,count = 0,bind = 1,},--荣耀战靴
 			},
 		},
 	},
@@ -11728,29 +11728,29 @@ AdvanceMonsterEquipCfg =
 		awards = 
 		{
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--堕天使之魂
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 171,count = 0,bind = 0,},--无尘战幻盔
-				{type= 0,id = 172,count = 0,bind = 0,},--无尘战幻链
+				{type= 0,id = 5657,count = 0,bind = 1,},--堕天使之魂
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 171,count = 0,bind = 1,},--无尘战幻盔
+				{type= 0,id = 172,count = 0,bind = 1,},--无尘战幻链
 			},
 
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--堕天使之魂
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 180,count = 0,bind = 0,},--无尘法幻盔
-				{type= 0,id = 181,count = 0,bind = 0,},--无尘法幻链
+				{type= 0,id = 5657,count = 0,bind = 1,},--堕天使之魂
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 180,count = 0,bind = 1,},--无尘法幻盔
+				{type= 0,id = 181,count = 0,bind = 1,},--无尘法幻链
 			},
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--堕天使之魂
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 189,count = 0,bind = 0,},--无尘道幻盔
-				{type= 0,id = 190,count = 0,bind = 0,},--无尘道幻链
+				{type= 0,id = 5657,count = 0,bind = 1,},--堕天使之魂
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 189,count = 0,bind = 1,},--无尘道幻盔
+				{type= 0,id = 190,count = 0,bind = 1,},--无尘道幻链
 			},
 		},
 	},
@@ -11763,29 +11763,29 @@ AdvanceMonsterEquipCfg =
 		awards = 
 		{
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--堕天使之魂
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 171,count = 0,bind = 0,},--无尘战幻盔
-				{type= 0,id = 172,count = 0,bind = 0,},--无尘战幻链
+				{type= 0,id = 5657,count = 0,bind = 1,},--堕天使之魂
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 171,count = 0,bind = 1,},--无尘战幻盔
+				{type= 0,id = 172,count = 0,bind = 1,},--无尘战幻链
 			},
 
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--堕天使之魂
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 180,count = 0,bind = 0,},--无尘法幻盔
-				{type= 0,id = 181,count = 0,bind = 0,},--无尘法幻链
+				{type= 0,id = 5657,count = 0,bind = 1,},--堕天使之魂
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 180,count = 0,bind = 1,},--无尘法幻盔
+				{type= 0,id = 181,count = 0,bind = 1,},--无尘法幻链
 			},
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--堕天使之魂
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 189,count = 0,bind = 0,},--无尘道幻盔
-				{type= 0,id = 190,count = 0,bind = 0,},--无尘道幻链
+				{type= 0,id = 5657,count = 0,bind = 1,},--堕天使之魂
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 189,count = 0,bind = 1,},--无尘道幻盔
+				{type= 0,id = 190,count = 0,bind = 1,},--无尘道幻链
 			},
 		},
 	},
@@ -11797,29 +11797,29 @@ AdvanceMonsterEquipCfg =
 		awards = 
 		{
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--堕天使之魂
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 171,count = 0,bind = 0,},--无尘战幻盔
-				{type= 0,id = 172,count = 0,bind = 0,},--无尘战幻链
+				{type= 0,id = 5657,count = 0,bind = 1,},--堕天使之魂
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 171,count = 0,bind = 1,},--无尘战幻盔
+				{type= 0,id = 172,count = 0,bind = 1,},--无尘战幻链
 			},
 
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--堕天使之魂
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 180,count = 0,bind = 0,},--无尘法幻盔
-				{type= 0,id = 181,count = 0,bind = 0,},--无尘法幻链
+				{type= 0,id = 5657,count = 0,bind = 1,},--堕天使之魂
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 180,count = 0,bind = 1,},--无尘法幻盔
+				{type= 0,id = 181,count = 0,bind = 1,},--无尘法幻链
 			},
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--堕天使之魂
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 189,count = 0,bind = 0,},--无尘道幻盔
-				{type= 0,id = 190,count = 0,bind = 0,},--无尘道幻链
+				{type= 0,id = 5657,count = 0,bind = 1,},--堕天使之魂
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 189,count = 0,bind = 1,},--无尘道幻盔
+				{type= 0,id = 190,count = 0,bind = 1,},--无尘道幻链
 			},
 		},
 	},
@@ -11832,29 +11832,29 @@ AdvanceMonsterEquipCfg =
 		awards = 
 		{
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--堕天使之魂
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 171,count = 0,bind = 0,},--无尘战幻盔
-				{type= 0,id = 172,count = 0,bind = 0,},--无尘战幻链
+				{type= 0,id = 5657,count = 0,bind = 1,},--堕天使之魂
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 171,count = 0,bind = 1,},--无尘战幻盔
+				{type= 0,id = 172,count = 0,bind = 1,},--无尘战幻链
 			},
 
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--堕天使之魂
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 180,count = 0,bind = 0,},--无尘法幻盔
-				{type= 0,id = 181,count = 0,bind = 0,},--无尘法幻链
+				{type= 0,id = 5657,count = 0,bind = 1,},--堕天使之魂
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 180,count = 0,bind = 1,},--无尘法幻盔
+				{type= 0,id = 181,count = 0,bind = 1,},--无尘法幻链
 			},
 			{
-				{type= 0,id = 5657,count = 0,bind = 0,},--堕天使之魂
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 189,count = 0,bind = 0,},--无尘道幻盔
-				{type= 0,id = 190,count = 0,bind = 0,},--无尘道幻链
+				{type= 0,id = 5657,count = 0,bind = 1,},--堕天使之魂
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 189,count = 0,bind = 1,},--无尘道幻盔
+				{type= 0,id = 190,count = 0,bind = 1,},--无尘道幻链
 			},
 		},
 	},
@@ -11867,29 +11867,29 @@ AdvanceMonsterEquipCfg =
 		awards = 
 		{
 			{
-				{type= 0,id = 7733,count = 0,bind = 0,},--三才仙冠
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 171,count = 0,bind = 0,},--无尘战幻盔
-				{type= 0,id = 172,count = 0,bind = 0,},--无尘战幻链
+				{type= 0,id = 7733,count = 0,bind = 1,},--三才仙冠
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 171,count = 0,bind = 1,},--无尘战幻盔
+				{type= 0,id = 172,count = 0,bind = 1,},--无尘战幻链
 			},
 
 			{
-				{type= 0,id = 7733,count = 0,bind = 0,},--三才仙冠
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 180,count = 0,bind = 0,},--无尘法幻盔
-				{type= 0,id = 181,count = 0,bind = 0,},--无尘法幻链
+				{type= 0,id = 7733,count = 0,bind = 1,},--三才仙冠
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 180,count = 0,bind = 1,},--无尘法幻盔
+				{type= 0,id = 181,count = 0,bind = 1,},--无尘法幻链
 			},
 			{
-				{type= 0,id = 7733,count = 0,bind = 0,},--三才仙冠
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 189,count = 0,bind = 0,},--无尘道幻盔
-				{type= 0,id = 190,count = 0,bind = 0,},--无尘道幻链
+				{type= 0,id = 7733,count = 0,bind = 1,},--三才仙冠
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 189,count = 0,bind = 1,},--无尘道幻盔
+				{type= 0,id = 190,count = 0,bind = 1,},--无尘道幻链
 			},
 		},
 	},
@@ -11901,29 +11901,29 @@ AdvanceMonsterEquipCfg =
 		awards = 
 		{
 			{
-				{type= 0,id = 7733,count = 0,bind = 0,},--三才仙冠
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 171,count = 0,bind = 0,},--无尘战幻盔
-				{type= 0,id = 172,count = 0,bind = 0,},--无尘战幻链
+				{type= 0,id = 7733,count = 0,bind = 1,},--三才仙冠
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 171,count = 0,bind = 1,},--无尘战幻盔
+				{type= 0,id = 172,count = 0,bind = 1,},--无尘战幻链
 			},
 
 			{
-				{type= 0,id = 7733,count = 0,bind = 0,},--三才仙冠
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 180,count = 0,bind = 0,},--无尘法幻盔
-				{type= 0,id = 181,count = 0,bind = 0,},--无尘法幻链
+				{type= 0,id = 7733,count = 0,bind = 1,},--三才仙冠
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 180,count = 0,bind = 1,},--无尘法幻盔
+				{type= 0,id = 181,count = 0,bind = 1,},--无尘法幻链
 			},
 			{
-				{type= 0,id = 7733,count = 0,bind = 0,},--三才仙冠
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 189,count = 0,bind = 0,},--无尘道幻盔
-				{type= 0,id = 190,count = 0,bind = 0,},--无尘道幻链
+				{type= 0,id = 7733,count = 0,bind = 1,},--三才仙冠
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 189,count = 0,bind = 1,},--无尘道幻盔
+				{type= 0,id = 190,count = 0,bind = 1,},--无尘道幻链
 			},
 		},
 	},
@@ -11935,29 +11935,29 @@ AdvanceMonsterEquipCfg =
 		awards = 
 		{
 			{
-				{type= 0,id = 7733,count = 0,bind = 0,},--三才仙冠
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 171,count = 0,bind = 0,},--无尘战幻盔
-				{type= 0,id = 172,count = 0,bind = 0,},--无尘战幻链
+				{type= 0,id = 7733,count = 0,bind = 1,},--三才仙冠
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 171,count = 0,bind = 1,},--无尘战幻盔
+				{type= 0,id = 172,count = 0,bind = 1,},--无尘战幻链
 			},
 
 			{
-				{type= 0,id = 7733,count = 0,bind = 0,},--三才仙冠
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 180,count = 0,bind = 0,},--无尘法幻盔
-				{type= 0,id = 181,count = 0,bind = 0,},--无尘法幻链
+				{type= 0,id = 7733,count = 0,bind = 1,},--三才仙冠
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 180,count = 0,bind = 1,},--无尘法幻盔
+				{type= 0,id = 181,count = 0,bind = 1,},--无尘法幻链
 			},
 			{
-				{type= 0,id = 7733,count = 0,bind = 0,},--三才仙冠
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 189,count = 0,bind = 0,},--无尘道幻盔
-				{type= 0,id = 190,count = 0,bind = 0,},--无尘道幻链
+				{type= 0,id = 7733,count = 0,bind = 1,},--三才仙冠
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 189,count = 0,bind = 1,},--无尘道幻盔
+				{type= 0,id = 190,count = 0,bind = 1,},--无尘道幻链
 			},
 		},
 	},
@@ -11969,29 +11969,29 @@ AdvanceMonsterEquipCfg =
 		awards = 
 		{
 			{
-				{type= 0,id = 7733,count = 0,bind = 0,},--三才仙冠
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 171,count = 0,bind = 0,},--无尘战幻盔
-				{type= 0,id = 172,count = 0,bind = 0,},--无尘战幻链
+				{type= 0,id = 7733,count = 0,bind = 1,},--三才仙冠
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 171,count = 0,bind = 1,},--无尘战幻盔
+				{type= 0,id = 172,count = 0,bind = 1,},--无尘战幻链
 			},
 
 			{
-				{type= 0,id = 7733,count = 0,bind = 0,},--三才仙冠
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 180,count = 0,bind = 0,},--无尘法幻盔
-				{type= 0,id = 181,count = 0,bind = 0,},--无尘法幻链
+				{type= 0,id = 7733,count = 0,bind = 1,},--三才仙冠
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 180,count = 0,bind = 1,},--无尘法幻盔
+				{type= 0,id = 181,count = 0,bind = 1,},--无尘法幻链
 			},
 			{
-				{type= 0,id = 7733,count = 0,bind = 0,},--三才仙冠
-				{type= 0,id = 5658,count = 0,bind = 0,},--战天使之魂
-				{type= 0,id = 5385,count = 0,bind = 0,},--五阶宝石袋
-				{type= 0,id = 5947,count = 0,bind = 0,},--孙悟空之魂
-				{type= 0,id = 189,count = 0,bind = 0,},--无尘道幻盔
-				{type= 0,id = 190,count = 0,bind = 0,},--无尘道幻链
+				{type= 0,id = 7733,count = 0,bind = 1,},--三才仙冠
+				{type= 0,id = 5658,count = 0,bind = 1,},--战天使之魂
+				{type= 0,id = 5385,count = 0,bind = 1,},--五阶宝石袋
+				{type= 0,id = 5947,count = 0,bind = 1,},--孙悟空之魂
+				{type= 0,id = 189,count = 0,bind = 1,},--无尘道幻盔
+				{type= 0,id = 190,count = 0,bind = 1,},--无尘道幻链
 			},
 		},
 	},

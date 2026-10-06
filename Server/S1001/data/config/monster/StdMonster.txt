@@ -108917,3 +108917,14 @@ StdMonster = { --����ʱ��2019-05-23 17:00:21
         },
 },
 }
+
+-- 四圣、四魔、四神、四仙的全部道具掉落设为绑定；共用模板按怪物分别生效。
+for _, monster in ipairs(StdMonster) do
+    if (monster.entityid >= 1061 and monster.entityid <= 1068)
+        or (monster.entityid >= 1357 and monster.entityid <= 1360)
+        or (monster.entityid >= 1391 and monster.entityid <= 1394) then
+        for _, drop in ipairs(monster.drops) do
+            if drop.type == 0 then drop.bind = 1 end
+        end
+    end
+end

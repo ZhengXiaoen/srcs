@@ -1,7 +1,7 @@
-"""Hide the forge's Combin tab mark while retaining all in-page reminders.
+"""Hide the forge's entry and Combin tab marks, retaining in-page reminders.
 
 Keep checkCanUpgrade's page-mark refresh and the synthesis success effect.
-Only two existing method bodies change; other code and resources are preserved.
+Only three existing method bodies change; other code and resources are preserved.
 """
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ from patch_bag_client import ABCReader, encode_u30
 from patch_drop_pickup_retry import abc_section, instructions
 from patch_god_equip_state import inspect_abc
 
-METHODS = {6167, 6172}
+METHODS = {6167, 6172, 24442}
 ORIGINAL_HASHES = {
     6167: 'b4194f943fec4c3c6b3254f9655c2c11a39a3758ab542fc39464c66a26c339fa',
     6172: '714911a09d9dec34717f04b645dc258cbb4b6c6ebf464c4ab50ce480e11d7fed',
@@ -28,6 +28,9 @@ def patch_swf(source):
     names, traits, bodies = inspect_abc(abc, 'EquipBoostWinII')
     if traits['onAddedToStage'] != (6167, 7875) or traits['checkCombin'] != (6172, 7880):
         raise ValueError('Unexpected forge window methods')
+    _, entry_traits, _ = inspect_abc(abc, 'NavBottomCenterArea')
+    if entry_traits['checkCombin'] != (24442, 25843):
+        raise ValueError('Unexpected forge entry reminder method')
     for index, name in ((7870, 'm_mark'), (1832, 'visible'), (4084, 'checkCanUpgrade')):
         if names[index] != name:
             raise ValueError('Unexpected forge reminder symbols')
@@ -44,7 +47,7 @@ def patch_swf(source):
             if hashlib.sha256(code).hexdigest() != ORIGINAL_HASHES[mid]:
                 raise ValueError('Unexpected forge opening reminder')
             updated, moved = relocate(code, [(87, 87, b'\x29\x27')])
-        else:
+        elif mid == 6172:
             # Material updates and successful synthesis share this assignment.
             if size == 82 and code[67:68] == b'\x27':
                 original = code[:67] + b'\xd1' + code[68:]
@@ -53,6 +56,19 @@ def patch_swf(source):
             if hashlib.sha256(code).hexdigest() != ORIGINAL_HASHES[mid]:
                 raise ValueError('Unexpected forge update reminder')
             updated, moved = relocate(code, [(67, 68, b'\x27')])
+        else:
+            # Every bag/material refresh reaches this method. Clear an existing
+            # mark too, while keeping isCanCombin available to in-page callers.
+            old = (b'\x60' + encode_u30(1507) + b'\x66' + encode_u30(31170)
+                   + b'\x46' + encode_u30(4680) + b'\x00')
+            new = b'\x27' + b'\x02' * (len(old) - 1)
+            if size != 24 or limits != (2, 1, 11, 12):
+                raise ValueError('Unexpected forge entry reminder body')
+            if code[7:18] == new:
+                continue
+            if code[7:18] != old:
+                raise ValueError('Unexpected forge entry synthesis check')
+            updated, moved = relocate(code, [(7, 18, new)])
         instructions(updated)
         reader = ABCReader(abc)
         reader.pos = start + size
@@ -107,7 +123,7 @@ if __name__ == '__main__':
         raise ValueError('Non-idempotent forge reminder patch')
     if args.check:
         if updated != source:
-            raise ValueError('Forge Combin tab reminder is still enabled')
+            raise ValueError('Forge entry or Combin tab reminder is still enabled')
     elif updated != source:
         CLIENT.write_bytes(updated)
-    print('Forge Combin tab reminder disabled; page reminders and other resources preserved.')
+    print('Forge entry and Combin tab reminders disabled; page reminders and other resources preserved.')

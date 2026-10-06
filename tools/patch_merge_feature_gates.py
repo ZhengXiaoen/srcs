@@ -119,7 +119,8 @@ def patch_main(source, java=None, ffdec=None):
     names, _, bodies = inspect_abc(abc)
     for index, name in {1507:'GlobalData', 1561:'GlobalFunc', 5298:'combineDay',
                         31840:'sectionOpenDays', 43315:'push', 7870:'m_mark',
-                        7868:'m_pageCaptions', 7869:'m_pageClass', 43280:'indexOf'}.items():
+                        7868:'m_pageCaptions', 7869:'m_pageClass', 43280:'indexOf',
+                        43682:'unshift'}.items():
         if names[index] != name:
             raise ValueError(f'Unexpected symbol {index}: {names[index]}')
     for mid in sorted(METHODS):
@@ -127,15 +128,22 @@ def patch_main(source, java=None, ffdec=None):
         code = abc[start:start+size]
         edits = []
         if mid == 6166:
-            entry = (b'\xd0' + q(0x66, 7868) + q(0x2c, strings[TITLE]) + q(0x4f, 43315, 1)
+            # CustomNavigateBar creates buttons from the last page to the first.
+            # Captions are kept in reverse class order so a button's caption
+            # matches the page selected by its (forward) navigation index.
+            entry = (b'\xd0' + q(0x66, 7868) + q(0x2c, strings[TITLE]) + q(0x4f, 43682, 1)
                      + b'\xd0' + q(0x66, 7869) + q(0x60, ornament) + q(0x4f, 43315, 1)
                      + b'\xc2\x01')
+            legacy = entry.replace(q(0x4f, 43682, 1), q(0x4f, 43315, 1), 1)
             if entry not in code:
-                if size != 549 or code[405:408] != b'\x24\x00\xd7':
+                if code.count(legacy) == 1:
+                    pos = code.index(legacy)
+                    edits.append((pos, pos + len(legacy), entry))
+                elif size != 549 or code[405:408] != b'\x24\x00\xd7':
                     raise ValueError('Unexpected forge page catalog')
-                # Insert after the common loop-index initialization. The branch
-                # that skips FuHun lands at 405, so every character passes here.
-                edits.append((408,408,entry))
+                else:
+                    # The branch that skips FuHun also passes this insertion.
+                    edits.append((408,408,entry))
         elif mid == 6173:
             if any(o.opcode == 0x66 and o.operands == (5298,) for o in instructions(code)):
                 if size != 112 or code[10:19] != bytes.fromhex('60990c66b22924010f'):

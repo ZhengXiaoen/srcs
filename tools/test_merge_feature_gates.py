@@ -33,6 +33,19 @@ def numbers(abc):
 
 
 
+class Vector(list):
+    """Model AVM2 Vector length and indexed writes with the shared executor."""
+    def get(self, name, default=None):
+        return default
+
+    def __setitem__(self, key, value):
+        if key == 'length':
+            del self[value:]
+            self.extend([None] * max(0, value - len(self)))
+        else:
+            super().__setitem__(key, value)
+
+
 class ClientTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -47,6 +60,12 @@ class ClientTests(unittest.TestCase):
         code,moved=relocate(code,[(o.start,o.end,b'') for o in instructions(code) if o.opcode==2])
         def invoke(target,name,values):
             if name in ('reverse','push','unshift','indexOf'):
+                if isinstance(target, Vector):
+                    if name=='indexOf':return target.index(values[0]) if values[0] in target else -1
+                    if name=='reverse':target.reverse()
+                    elif name=='push':target.extend(values)
+                    else:target[:0]=values
+                    return len(target)
                 items=[target[i] for i in range(target['length'])]
                 if name=='indexOf':return items.index(values[0]) if values[0] in items else -1
                 if name=='reverse':items.reverse()
@@ -60,8 +79,8 @@ class ClientTests(unittest.TestCase):
                        end=moved(stop) if stop is not None else None)
 
     def catalog(self,day,circle,level):
-        obj={'m_pageControl':{'pageCount':0},'m_pageCaptions':{'length':0},
-             'm_pageClass':{'length':0}}
+        obj={'m_pageControl':{'pageCount':0},'m_pageCaptions':Vector(),
+             'm_pageClass':Vector()}
         globals_={'GlobalFunc':{'sectionOpenDays':day,'combineDay':0},
                   'GlobalData':{'role':{'actorCircle':circle,'level':level}},
                   'GameConst':{'ZHULING_OPEN_LEVEL':80}}
@@ -78,11 +97,20 @@ class ClientTests(unittest.TestCase):
                     with self.subTest(day=day,circle=circle,level=level):
                         obj,globals_=self.catalog(day,circle,level)
                         classes=obj['m_pageClass'];captions=obj['m_pageCaptions']
-                        entries=[classes[i]['class'] for i in range(classes['length'])]
+                        entries=[entry['class'] for entry in classes]
                         self.assertEqual(entries.count('EquipBoostOrnamentPage'),1)
-                        self.assertEqual(captions[entries.index('EquipBoostOrnamentPage')],
+                        self.assertEqual(entries[-1],'EquipBoostOrnamentPage')
+                        self.assertEqual(captions[0],
                                          "<textformat leading='7'>饰<BR>品</textformat>")
-                        obj['m_navBar']={'buttonCount':classes['length']}
+                        expected=['EquipBoostStrengthenPage2','EquipBoostCombinPage']
+                        if day>=7:expected.append('EquipSlotNestPage')
+                        if day>=8:expected.append('NoteSoulPage')
+                        if level>=80:expected.append('EquipBoostZhuLingPage')
+                        if circle>=3:expected.append('EquipBoostWuXingPage')
+                        if circle>=5:expected.append('EquipBoostFuHunPage')
+                        expected.append('EquipBoostOrnamentPage')
+                        self.assertEqual(entries,expected)
+                        obj['m_navBar']={'buttonCount':len(classes)}
                         self.run_method(6173,obj,globals_,(10000,))
                         self.assertEqual(obj['selectedIndex'],entries.index('EquipBoostOrnamentPage'))
 
@@ -92,7 +120,7 @@ class ClientTests(unittest.TestCase):
             self.run_method(6173,obj,globals_,(index,))
             self.assertEqual(obj['selectedIndex'],index)
 
-    def test_only_six_original_methods_change_and_graphics_are_preserved(self):
+    def test_only_feature_and_reminder_methods_change_and_graphics_are_preserved(self):
         source=subprocess.check_output(['git','show',BASELINE+':web/GameFrame.swf'],cwd=ROOT)
         data,(tag,_,a,b)=abc_section(source);old=data[a:b];names,classes,bodies=inspect_abc(old)
         new,(newtag,_,na,nb)=abc_section(CLIENT.read_bytes())
@@ -102,7 +130,7 @@ class ClientTests(unittest.TestCase):
         for mid,(s,n,limits) in bodies.items():
             ns,nn,nl=self.bodies[mid]
             if limits!=nl or old[s:s+n]!=self.abc[ns:ns+nn]:changed.add(mid)
-        self.assertEqual(changed,METHODS)
+        self.assertEqual(changed,METHODS | {24442})
         self.assertEqual(patch_main(CLIENT.read_bytes()),CLIENT.read_bytes())
         self.assertEqual(patch_module(MODULE.read_bytes()),MODULE.read_bytes())
 

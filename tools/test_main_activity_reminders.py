@@ -13,15 +13,7 @@ from patch_spring_flash_sale import METHODS as SPRING_DATE_METHODS, patch_swf as
 
 def current_release(source, module=False):
     updated = unique_rankings(source, module)
-    from patch_festival_action_reminders import patch_swf as action_reminders
-    from patch_competition_hongli_reminders import patch_swf as competition_reminders
-    from patch_appearance_upgrade import patch_swf as appearance_upgrade
-    if module: return competition_reminders(updated, True)
-    for patch in (ranking_description, spring_icon, retired_pages, spring_display,
-                  wanfu_opening, retired_hunt, spring_dates, appearance_upgrade,
-                  competition_reminders, action_reminders):
-        updated = patch(updated)
-    return updated
+    return updated if module else spring_dates(retired_hunt(wanfu_opening(spring_display(retired_pages(spring_icon(ranking_description(updated)))))))
 
 
 from itertools import product
@@ -251,8 +243,7 @@ class MainActivityRemindersTests(unittest.TestCase):
         for method, (a, size, limits) in old.items():
             b, length, new_limits = self.symbols[False][2][method]
             if before[a:a + size] != self.abc[False][b:b + length] or limits != new_limits: changed.add(method)
-        from patch_festival_action_reminders import METHODS as ACTION_METHODS
-        self.assertEqual(changed, {5580, 6353, 27339} | ACTION_METHODS | METHODS | SHOP_METHODS | MAIN_METHODS | SPRING_METHODS | RETIRED_METHODS | WANFU_METHODS | HUNT_METHODS | SPRING_DATE_METHODS)
+        self.assertEqual(changed, METHODS | SHOP_METHODS | MAIN_METHODS | SPRING_METHODS | RETIRED_METHODS | WANFU_METHODS | HUNT_METHODS | SPRING_DATE_METHODS)
 
 
 if __name__ == '__main__': unittest.main(verbosity=2)

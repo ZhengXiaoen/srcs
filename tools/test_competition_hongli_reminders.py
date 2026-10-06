@@ -139,13 +139,10 @@ class CompetitionHongLiRemindersTests(unittest.TestCase):
 
     def test_both_shipped_clients_are_reproducible_idempotent_and_preserve_other_bytes(self):
         for path, module in ((CLIENT, False), (MODULE, True)):
-            from patch_festival_action_reminders import patch_swf as action_reminders
-            from patch_spring_flash_sale import patch_swf as spring_dates
-            upgraded = patch_swf(self.baseline[module], module)
-            self.assertEqual(abc_section(path.read_bytes())[0], abc_section(action_reminders(spring_dates(upgraded)) if not module else upgraded)[0])
+            self.assertEqual(path.read_bytes(), patch_swf(self.baseline[module], module))
             self.assertEqual(path.read_bytes(), patch_swf(path.read_bytes(), module))
             old, old_names, old_bodies = unpack(self.baseline[module])
-            new, new_names, new_bodies = unpack(upgraded)
+            new, new_names, new_bodies = self.current[module]
             if module:
                 self.assertEqual(old_names, new_names[:-3])
                 self.assertEqual(ADDED_NAMES, tuple(new_names[-3:]))
@@ -171,7 +168,7 @@ class CompetitionHongLiRemindersTests(unittest.TestCase):
                     restored[position] = 4
             self.assertEqual(old, restored)
             old_raw, (old_tag, old_payload, old_start, old_end) = abc_section(self.baseline[module])
-            new_raw, (new_tag, new_payload, new_start, new_end) = abc_section(upgraded)
+            new_raw, (new_tag, new_payload, new_start, new_end) = abc_section(path.read_bytes())
             self.assertEqual(old_raw[8:old_tag + 2], new_raw[8:new_tag + 2])
             self.assertEqual(old_raw[old_payload:old_start], new_raw[new_payload:new_start])
             self.assertEqual(old_raw[old_end:], new_raw[new_end:])
@@ -187,7 +184,7 @@ class CompetitionHongLiRemindersTests(unittest.TestCase):
                          "web/v2/lang/zh-cn/activityjingji.cbp",
                          "web/v2/lang/zh-cn/zh-cn.dat"):
             self.assertEqual((ROOT / relative).read_bytes(), subprocess.check_output(
-                ["git", "show", "f772556:" + relative], cwd=ROOT))
+                ["git", "show", BASELINE + ":" + relative], cwd=ROOT))
 
 
 def unpack_abc(abc):

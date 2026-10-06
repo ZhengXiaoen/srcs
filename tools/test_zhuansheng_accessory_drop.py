@@ -43,8 +43,13 @@ def runtime():
         finishedRoll = 99; randomCalls = 0
         drops = {}; created = {}; ordinaryCalls = 0; commonCalls = 0
         failCreate = false; killerType = 0
+        messages = {}; ttChatWindow = 128
         System = {
             getDaysSinceCombineServer = function() error('temple drops must not depend on merging') end,
+            broadcastTipmsg = function(msg, flags)
+                assert(flags == ttChatWindow)
+                table.insert(messages, msg)
+            end,
             getRandomNumber = function(n)
                 assert(n == 100); randomCalls = randomCalls + 1
                 return randomCalls == 1 and roll or finishedRoll
@@ -56,9 +61,15 @@ def runtime():
         end
         Actor = {
             getSceneId = function() return scene end,
-            getEntityType = function() return killerType end
+            getEntityType = function() return killerType end,
+            getName = function(a) return a == 99 and 'boss' or 'player' end,
+            getSceneName = function() return 'temple' end
         }
         Item = {
+            getItemLinkMsg = function(id, item)
+                assert(item.id == id)
+                return 'item' .. id
+            end,
             createItem = function(id, count, strong, quality, bind)
                 assert(strong == 0 and quality == 0 and bind == 1)
                 if failCreate then return nil end
@@ -69,6 +80,7 @@ def runtime():
                 assert(monster == 99 and log == 2824)
                 assert(reason == 'ZhuanShengAccessory' and owner == nil)
                 table.insert(drops, item)
+                return true
             end
         }
         OneTimesDropMonsters = {}; MonsterForQuest = {}; ShareHitMonsterForQuest = {}
@@ -347,6 +359,23 @@ class TempleFragmentTests(unittest.TestCase):
             self.assertEqual(re.findall(rb"(?m)^local .*$", baseline), re.findall(rb"(?m)^local .*$", source))
             sources.append(source)
         self.assertTrue(lua.eval(b"function(s) return assert(loadstring(s)) ~= nil end")(b"\n".join(sources)))
+
+    def test_finished_notices_use_equipment_links_without_counts_and_fragments_keep_counts(self):
+        lua = runtime()
+        lua.execute(b'''
+            scene = 296; roll = 0; finishedRoll = 0
+        ''')
+        g = lua.globals()
+        for kind in range(1, 5):
+            for upper, count in ((False, 2), (True, 3)):
+                g[b"kind"], g[b"upper"] = kind, upper
+                g[b"messages"] = lua.table()
+                g[b"HandlerMonsterByKilled"](99, 1, 1343, 0, 296, None)
+                messages = list(g[b"messages"].values())
+                self.assertEqual(2, len(messages))
+                self.assertTrue(messages[0].endswith(f'[item{5151 + kind} x{count}]'.encode()))
+                self.assertTrue(messages[1].endswith(f'[item{5139 + kind}]'.encode()))
+                self.assertNotIn(b' x', messages[1])
 
     def test_temple_entry_keeps_entry_cost_and_refresh_time_without_drop_text(self):
         lua = runtime()

@@ -244,6 +244,19 @@ class PickupRetryTests(unittest.TestCase):
         drop["isAlreadyPickup"] = True  # non-pickable under-map image remains excluded
         self.assertIsNone(select())
 
+    def test_finished_accessories_follow_accessory_switch_and_backpack_protection(self):
+        for item in range(5140, 5144):
+            with self.subTest(item=item):
+                _, switches, state, drop, _, select, _ = self.environment(item, 1)
+                switches[14] = True
+                self.assertIs(select(), drop)
+                switches[14] = False
+                self.assertIsNone(select())
+                switches[14] = True
+                self.assertIs(select(), drop)
+                state["capacity"] = False
+                self.assertIsNone(select())
+
     def test_baseline_reproduces_permanent_skip(self):
         if BASELINE is None:
             self.skipTest("Use --baseline to demonstrate the old permanent skip")

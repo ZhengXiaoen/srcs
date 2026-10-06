@@ -27,16 +27,17 @@ local LocalDT = LocalDT or {}
 --#include "data\functions\player.lua" once -- 角色处理
 --#include "data\config\monster\ZhuanShengAccessoryDropCfg.lua" once
 
-LocalDT.DropZhuanShengAccessoryItem = function(monster, killer, items, rate, mincount, maxcount)
+LocalDT.DropZhuanShengAccessoryItem = function(monster, killer, items, rate, mincount, maxcount, isEquipment)
 	if not rate or System.getRandomNumber(100) >= rate then return end
 	local itemId = items[math.random(1, #items)]
 	local count = math.random(mincount, maxcount)
 	local item = Item.createItem(itemId, count, 0, 0, 1)
 	if item then
 		if Item.createDropItem(monster, item, LogIds.ZhuanShengAccessoryDrop, "ZhuanShengAccessory", nil) then
-			-- 脚本生成的掉落需主动通知，数量与实际落地的一组道具一致。
+			-- 成品按装备播报，碎片保留实际掉落数量。
 			local sceneName = Actor.getSceneName(monster)
-			local itemName = Item.getItemLinkMsg(itemId) .. " x" .. count
+			local itemName = Item.getItemLinkMsg(itemId, item)
+			if not isEquipment then itemName = itemName .. " x" .. count end
 			local msg = string.format("<(n%s)>在<(c0xFF00FF00)%s>击杀<(c0xFFFF0000)%s>掉落[%s]", Actor.getName(killer), sceneName, Actor.getName(monster), itemName)
 			System.broadcastTipmsg(msg, ttChatWindow)
 		else
@@ -50,7 +51,7 @@ LocalDT.DropZhuanShengAccessory = function(monster, killer, monId)
 	local cfg = ZhuanShengAccessoryDropCfg.tiers[Actor.getSceneId(monster)]
 	if not cfg or (monId ~= cfg.monsters[1] and monId ~= cfg.monsters[2] and monId ~= cfg.monsters[3]) then return end
 	LocalDT.DropZhuanShengAccessoryItem(monster, killer, ZhuanShengAccessoryDropCfg.items, cfg.rate, cfg.mincount, cfg.maxcount)
-	LocalDT.DropZhuanShengAccessoryItem(monster, killer, ZhuanShengAccessoryDropCfg.finishedItems, cfg.finishedRate, 1, 1)
+	LocalDT.DropZhuanShengAccessoryItem(monster, killer, ZhuanShengAccessoryDropCfg.finishedItems, cfg.finishedRate, 1, 1, true)
 end
 
 function CheckAndSetIsDropItemWhenMonsterKilled(monster, killer, monId)

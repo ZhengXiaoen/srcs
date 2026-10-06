@@ -1282,9 +1282,9 @@ LocalDT.BossMaterialDrops = {
 	[2371] = {
 		{id=491, count=1, propability=1, bind=1, mincount=0, maxcount=0},
 	},
-	-- 嗜魔峡谷 Boss 专属材料：凡·南明离火，20% 概率掉落 1 个。
+	-- 嗜魔峡谷 Boss 专属材料：凡·南明离火，14% 概率掉落 1 个。
 	[3000] = {
-		{id=7052, count=1, propability=5, bind=0, mincount=0, maxcount=0},
+		{id=7052, count=1, rate=14, bind=0, mincount=0, maxcount=0},
 	},
 	[2999] = {
 		{id=537, count=1, propability=1, bind=1, mincount=2, maxcount=10},
@@ -2078,6 +2078,7 @@ LocalDT.BossMaterialMaxStack = {
 
 -- dropBroadcast=-1 始终播报，正数仅开服前指定天数播报；broadcast 标志单独保留。
 LocalDT.BossMaterialBroadcast = {
+	[7052] = {dropBroadcast=-1, broadcast=false},
 	[5648] = {dropBroadcast=-1, broadcast=false},
 	[304] = {dropBroadcast=-1, broadcast=false},
 	[469] = {dropBroadcast=5, broadcast=false},

@@ -108,8 +108,8 @@ LocalDT.DropBossMaterials = function(monster, killer, monId)
 	local bindBossDrops = (monId >= 1061 and monId <= 1068) or (monId >= 1357 and monId <= 1360) or (monId >= 1391 and monId <= 1394)
 	for _, dropId in ipairs(dropIds or {}) do
 		for _, cfg in ipairs(LocalDT.BossMaterialDrops[dropId]) do
-			-- propability 表示几分之一：1 为必掉，0 为禁用，各条记录独立判定。
-			if cfg.propability > 0 and (cfg.propability == 1 or System.getRandomNumber(cfg.propability) == 0) then
+			-- rate 使用百分比；未配置时 propability 表示几分之一，各条记录独立判定。
+			if (cfg.rate ~= nil and System.getRandomNumber(100) < cfg.rate) or (cfg.rate == nil and cfg.propability > 0 and (cfg.propability == 1 or System.getRandomNumber(cfg.propability) == 0)) then
 				-- 引擎优先使用正数 count；仅 count <= 0 时使用 mincount/maxcount。
 				local count = cfg.count
 				if count <= 0 and cfg.mincount ~= nil and cfg.maxcount ~= nil and cfg.mincount >= 0 and cfg.maxcount > 0 and cfg.maxcount >= cfg.mincount then

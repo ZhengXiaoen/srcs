@@ -120,6 +120,7 @@ LocalDT.DropBossMaterials = function(monster, killer, monId)
 		local maxCount = math.min(stoneCfg.maxCount, stoneTier + stoneCfg.fluctuation)
 		minCount = math.min(minCount, maxCount)
 		local count = minCount + System.getRandomNumber(maxCount - minCount + 1)
+		count = math.max(1, math.floor(count / 2))
 		local key = stoneCfg.itemId .. ":" .. stoneCfg.bind
 		totals[key] = {id=stoneCfg.itemId, bind=stoneCfg.bind, count=count}
 		table.insert(order, key)

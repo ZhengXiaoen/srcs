@@ -1,4 +1,4 @@
--- 锤炼石按 BOSS 实际掉落装备的最高转生等级上下浮动 2 个，整组必掉。
+-- 锤炼石按最高装备转生等级上下浮动 2 个，封顶 15 后减半向下取整，至少 1 个整组必掉。
 -- 由 tools/patch_boss_temper_stone.py 生成；装备或掉落模板变更后重新生成。
 LocalDT.BossTemperStoneDrop = {
 	itemId = 5648, bind = 1, fluctuation = 2, maxCount = 15,

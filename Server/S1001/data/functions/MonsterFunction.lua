@@ -156,7 +156,6 @@ end
 
 --当一个怪物被杀死的时候回调
 function HandlerMonsterByKilled(monster, killer, monId, fubenId, sceneId, fuBenPtr)
-	if killer ~= nil then LocalDT.DropZhuanShengAccessory(monster, killer, monId) end
 	-- 真荒古之地专属掉落，宠物或战将击杀也会触发
 	if killer ~= nil and monId == 635 and Actor.getSceneId(monster) == 286 then
 		Item.createDropItem(monster, Item.createItem(552, math.random(3, 5), 0, 0, 0), LogIds.HuangGuBossDrop, "HuangGuBoss", nil)
@@ -166,6 +165,8 @@ function HandlerMonsterByKilled(monster, killer, monId, fubenId, sceneId, fuBenP
 	end
   -- 处理怪物被杀
 	OnMonsterByKilled(monster, killer, monId, fubenId, sceneId, fuBenPtr)
+	-- 饰品通告跟在 BOSS 充值消息之后，与其他掉落通知连续显示。
+	if killer ~= nil then LocalDT.DropZhuanShengAccessory(monster, killer, monId) end
 
 	-- 副本通关判断
 	MonDieDispatcher.CommonDieFunc(monster, killer, monId)

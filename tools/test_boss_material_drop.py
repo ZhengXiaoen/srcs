@@ -127,6 +127,8 @@ OnMonsterByKilled=function() end
 MonDieDispatcher={CommonDieFunc=function()end}
 """)
         lua.execute(source(CONFIG).decode("utf-8"))
+        # The stone rule has its own full-coverage tests; isolate preexisting rewards here.
+        lua.execute("LocalDT.BossTemperStoneDrop={monsters={}}")
         lua.execute(source(FUNCTION).decode("utf-8"))
         lua.execute("drop=LocalDT.DropBossMaterials")
         return lua

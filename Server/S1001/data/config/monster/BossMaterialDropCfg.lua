@@ -1951,6 +1951,7 @@ LocalDT.BossMaterialDropMonsters = {
 }
 
 LocalDT.BossMaterialMaxStack = {
+	[5648] = 200,
 	[85] = 200,
 	[304] = 200,
 	[457] = 200,
@@ -2072,6 +2073,7 @@ LocalDT.BossMaterialMaxStack = {
 
 -- dropBroadcast=-1 始终播报，正数仅开服前指定天数播报；broadcast 标志单独保留。
 LocalDT.BossMaterialBroadcast = {
+	[5648] = {dropBroadcast=-1, broadcast=false},
 	[304] = {dropBroadcast=-1, broadcast=false},
 	[469] = {dropBroadcast=5, broadcast=false},
 	[491] = {dropBroadcast=3, broadcast=false},

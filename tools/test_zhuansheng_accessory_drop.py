@@ -80,6 +80,7 @@ def runtime():
     lua.execute(b"LocalDT={}")
     lua.execute((DATA / "config/monster/BossMaterialDropCfg.lua").read_bytes())
     lua.execute(b"LocalDT.BossMaterialDropMonsters={}")
+    lua.execute(b"LocalDT.BossTemperStoneDrop={monsters={}}")
     lua.execute((DATA / "functions/MonsterFunction.lua").read_bytes())
     lua.execute(b'''
         originalHandler = HandlerMonsterByKilled
@@ -175,7 +176,8 @@ class TempleFragmentTests(unittest.TestCase):
                 return bool(match and int(match[1]) in IDS)
             self.assertEqual(4, sum(map(fragment, lines)))
             removed += sum(map(fragment, lines))
-            self.assertEqual(b"".join(line for line in lines if not fragment(line)),
+            self.assertEqual(b"".join(line for line in lines if not fragment(line)
+                                     and not re.search(rb"\bid=5648,", line)),
                              (drops / name).read_bytes())
         self.assertEqual(36, removed)
         source = DATA / "config/monster/StdMonster.txt"

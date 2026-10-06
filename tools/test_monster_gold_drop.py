@@ -98,6 +98,10 @@ class MonsterGoldDropTests(unittest.TestCase):
                 matching = next(line for line in remaining.splitlines(keepends=True)
                                 if line.startswith(b"{type=") and all(fields(line).get(k)==v for k,v in cfg.items()))
                 remaining = remaining.replace(matching, b"", 1)
+            # These native stone rows are now replaced by BOSS equipment-tier groups.
+            if path.name in {*(f"drops{i}.lua" for i in range(2190,2198)), "drops2330.lua"}:
+                remaining = b"".join(line for line in remaining.splitlines(keepends=True)
+                                     if fields(line).get("id") != 5648)
             self.assertEqual(remaining, (ROOT / path).read_bytes(), path)
             # Temple fragments now use their own Lua drop configuration.
             if path.name in {*(f"drops{i}.lua" for i in range(2190,2198)),"drops2330.lua"}:

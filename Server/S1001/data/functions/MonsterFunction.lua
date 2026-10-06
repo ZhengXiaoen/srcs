@@ -67,6 +67,7 @@ function CheckAndSetIsDropItemWhenMonsterKilled(monster, killer, monId)
 end
 
 --#include "data\config\monster\BossMaterialDropCfg.lua" once
+--#include "data\config\monster\BossTemperStoneDropCfg.lua" once
 
 LocalDT.BroadcastBossMaterial = function(monster, killer, itemId, count)
 	local cfg = LocalDT.BossMaterialBroadcast[itemId]
@@ -88,10 +89,12 @@ end
 -- 使用与真荒古灵力丹相同的 createItem + createDropItem 接口，按数量创建一组材料。
 LocalDT.DropBossMaterials = function(monster, killer, monId)
 	local dropIds = LocalDT.BossMaterialDropMonsters[monId]
-	if monster == nil or killer == nil or dropIds == nil then return end
+	local stoneCfg = LocalDT.BossTemperStoneDrop
+	local stoneTier = stoneCfg.monsters[monId]
+	if monster == nil or killer == nil or (dropIds == nil and stoneTier == nil) then return end
 	local totals = {}
 	local order = {}
-	for _, dropId in ipairs(dropIds) do
+	for _, dropId in ipairs(dropIds or {}) do
 		for _, cfg in ipairs(LocalDT.BossMaterialDrops[dropId]) do
 			-- propability 表示几分之一：1 为必掉，0 为禁用，各条记录独立判定。
 			if cfg.propability > 0 and (cfg.propability == 1 or System.getRandomNumber(cfg.propability) == 0) then
@@ -110,6 +113,16 @@ LocalDT.DropBossMaterials = function(monster, killer, monId)
 				end
 			end
 		end
+	end
+	-- 最后抽取新增材料数量，保持原有材料的抽取顺序；锤炼石只生成一组。
+	if stoneTier ~= nil then
+		local minCount = math.max(1, stoneTier - stoneCfg.fluctuation)
+		local maxCount = math.min(stoneCfg.maxCount, stoneTier + stoneCfg.fluctuation)
+		minCount = math.min(minCount, maxCount)
+		local count = minCount + System.getRandomNumber(maxCount - minCount + 1)
+		local key = stoneCfg.itemId .. ":" .. stoneCfg.bind
+		totals[key] = {id=stoneCfg.itemId, bind=stoneCfg.bind, count=count}
+		table.insert(order, key)
 	end
 	for _, key in ipairs(order) do
 		local cfg = totals[key]

@@ -531,67 +531,11 @@ function HandleTestBoos(sysarg,arragr,sceneNameEEE,bossid)
     end
 
     if bossid then
-        local bossid = tonumber(bossid);
-        e = e .. string.format("\\<(idecoLine#435)>\\\\<%s>%s <(c0xFFd5d5d5)的主要极品掉落产出:>\\\\        ", System.getMonsterNameById(bossid), npccss);
-        for j = 1,#BossEquipCfg do
-            if bossid == BossEquipCfg[j][1] then
-                local job = Actor.getIntProperty(sysarg,PROP_ACTOR_VOCATION);
-                local ame = BossEquipCfg[j];
-                if ame then
-
-                    local fa,fb = 2,#ame
-                    if table.getn(ame) == 19 then
-                        if job == 1 then fa,fb = 2,7; end
-                        if job == 2 then fa,fb = 8,13; end
-                        if job == 3 then fa,fb = 14,19; end
-                    end
-
-                    for u = fa,fb do
-                        e = e .. ipk(ame[u]) .. " ";
-                        if u == 7 or  u == 13 or u == 19 then
-                            e = e .. "\\        ";
-                        end
-                    end
-                end
-                break;
-            end
-        end
+        e = e .. string.format("\\<(idecoLine#435)>\\\\<%s>%s <(c0xFFd5d5d5)的主要极品掉落产出:>\\\\        ", System.getMonsterNameById(tonumber(bossid)), npccss)
     else
-        if arragr.itemlist then
-            local job = Actor.getIntProperty(sysarg,PROP_ACTOR_VOCATION);
-            local il = arragr.itemlist;
-            local fa,fb = 1,#il
-            if table.getn(il) == 18 then
-                if job == 1 then fa,fb = 1,6; end
-                if job == 2 then fa,fb = 7,12; end
-                if job == 3 then fa,fb = 13,18; end
-            end
-
-            e = e .. string.format("\\<(idecoLine#435)>\\\\<(c0xFFd5d5d5)在> <(c0xFF00CCFF)%s>%s <(c0xFFd5d5d5)中BOSS极品掉落产出:>\\\\        ", arragr[3], npccss);
-            
-            for j = fa,fb do
-                e = e .. ipk(il[j]) .. " ";
-                if j == 6 or  j == 12 or j == 18 then
-                    e = e .. "\\        ";
-                end
-            end
-        end
+        e = e .. string.format("\\<(idecoLine#435)>\\\\<(c0xFFd5d5d5)在> <(c0xFF00CCFF)%s>%s <(c0xFFd5d5d5)中BOSS极品掉落产出:>\\\\        ", arragr[3], npccss)
     end
-
-
-
-
-
-    if bossid then
-        e = LocalDT.AppendBossEquipmentPreview(e, tonumber(bossid))
-    else
-        for _, row in ipairs(RefreshMonsterData) do
-            if (row.bj >= a and row.bj <= b) then e = LocalDT.AppendBossEquipmentPreview(e, row.monid) end
-        end
-        for _, index in ipairs(arragr.add or {}) do
-            e = LocalDT.AppendBossEquipmentPreview(e, RefreshMonsterData[index].monid)
-        end
-    end
+    e = e .. LocalDT.BuildWildBossDropPreview(sysarg, arragr, bossid)
     ShowRightBossListInfo(sysarg,1, e);
 
 end

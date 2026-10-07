@@ -63,14 +63,15 @@ class ChiyouWingTests(unittest.TestCase):
     def test_real_map_and_individual_boss_previews_all_vocations(self):
         lua = LuaRuntime(unpack_returned_tuples=True)
         lua.execute('''
-state={};vocation=1;PROP_ACTOR_VOCATION=1
+LocalDT={};state={};vocation=1;PROP_ACTOR_VOCATION=1;PROP_ACTOR_SEX=2
 System={getDyanmicVar=function() return state end,
  getMonsterNameById=function(id) return 'BOSS'..id end}
-Actor={getIntProperty=function() return vocation end}
+Actor={getIntProperty=function(_,prop) if prop==PROP_ACTOR_SEX then return 0 end;return vocation end}
 Fuben={getSceneNameById=function(id) return '地图'..id end}
 ShowRightBossListInfo=function(_,kind,text) assert(kind==1);preview=text end
 ''')
         for path in ("config/BossListInfo/BossListInfo.lua", "config/monster/SRRefreshMonster.lua",
+                     "config/monster/WildBossDropPreviewCfg.lua", "functions/BossListInfo/BossEquipmentPreview.lua",
                      "functions/BossListInfo/BossListInfoEx.lua"):
             lua.execute((DATA / path).read_text("utf-8-sig"))
         lua.execute("ShowRightBossListInfo=function(_,kind,text) assert(kind==1);preview=text end")
@@ -84,7 +85,7 @@ ShowRightBossListInfo=function(_,kind,text) assert(kind==1);preview=text end
                 g.HandleTestBoos(1, info.args, "蚩尤地宫", monster)
                 icons = [int(item) for item in re.findall(r"<\(iitem#(\d+)#1\)>", g.preview)]
                 self.assertEqual(list(ITEMS), [item for item in icons if item in ITEMS])
-                self.assertEqual(13, len(icons))
+                self.assertEqual(12, len(icons))
 
     def test_npc_explains_four_sources_and_keeps_entry_functionality(self):
         import test_chiyou_fill

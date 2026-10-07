@@ -235,12 +235,12 @@ MonsterForQuest={};ShareHitMonsterForQuest={}
         from lupa.lua51 import LuaRuntime
         lua=LuaRuntime(unpack_returned_tuples=True)
         lua.execute('''
-LocalDT={};state={};vocation=1;PROP_ACTOR_VOCATION=1
+LocalDT={};state={};vocation=1;PROP_ACTOR_VOCATION=1;PROP_ACTOR_SEX=2
 System={getDyanmicVar=function() return state end,getMonsterNameById=function(id) return 'BOSS'..id end}
-Actor={getIntProperty=function() return vocation end}
+Actor={getIntProperty=function(_,prop) if prop==PROP_ACTOR_SEX then return 0 end;return vocation end}
 Fuben={getSceneNameById=function(id) return 'map'..id end}
 ''')
-        for path in ['config/BossListInfo/BossListInfo.lua','config/monster/SRRefreshMonster.lua','config/monster/BossEquipmentPreviewCfg.lua','functions/BossListInfo/BossEquipmentPreview.lua','functions/BossListInfo/BossListInfoEx.lua']:
+        for path in ['config/BossListInfo/BossListInfo.lua','config/monster/SRRefreshMonster.lua','config/monster/BossEquipmentPreviewCfg.lua','config/monster/WildBossDropPreviewCfg.lua','functions/BossListInfo/BossEquipmentPreview.lua','functions/BossListInfo/BossListInfoEx.lua']:
             lua.execute((DATA/path).read_text('utf-8-sig'))
         lua.execute('ShowRightBossListInfo=function(_,kind,text) assert(kind==1);preview=text end')
         g=lua.globals();info=g.GetBoosListInfoForSceneName('\u86a9\u5c24\u5730\u5bab')
@@ -251,8 +251,10 @@ Fuben={getSceneNameById=function(id) return 'map'..id end}
                 ids=[int(i) for i in re.findall(r'<\(iitem#(\d+)#1\)>',g.preview)]
                 from patch_chiyou_wing_descriptions import ITEMS
                 self.assertEqual(list(ITEMS),[i for i in ids if i in ITEMS])
-                if mid:
-                    for _,iid in g.LocalDT.BossEquipmentPreview[mid].items():self.assertEqual(1,ids.count(iid))
+                cfg = g.LocalDT.WildBossDropPreview.monsters[mid] if mid else g.LocalDT.WildBossDropPreview.maps['812:820']
+                expected = list(cfg.equipment[1].values()) + list(cfg.special.values())
+                self.assertEqual(expected, ids)
+                self.assertLessEqual(len(ids), 12)
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--lua-path');args,remaining=parser.parse_known_args()

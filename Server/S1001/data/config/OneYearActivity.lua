@@ -800,6 +800,7 @@ OneYearActivityCfg =
 	--10鸿运当头(这个开6天)
 	HongYunDangTou = 
 	{
+		isOpen = false, -- 鸿运当头只保留新春活动版本。
 		--第一天
 		{
 			

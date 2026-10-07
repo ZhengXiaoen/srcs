@@ -1120,6 +1120,7 @@ QingDianXunBaoF = --周年庆寻宝
 	--鸿运当头
 	HongYunDangTou = 
 	{
+		isOpen = false, -- 鸿运当头只保留新春活动版本。
 		--第一天
 		{
 			

@@ -32,6 +32,7 @@ handleOneYearAct = function (sysarg, sysid, packet)
 	elseif msgid ==9 then --限时抢购
 		GetOneYearXianShiQiangGou(sysarg,DataPack.readByte(packet))
 	elseif msgid ==10 then --鸿运当头
+		if OneYearActivityCfg.HongYunDangTou.isOpen == false then return end
 		local optType = DataPack.readByte(packet) --操作类型
 		if optType==1 then --购买特惠
 			BuyOneYearHongYunDangTouTeHui(sysarg)
@@ -446,6 +447,7 @@ end
 --10鸿运当头-----------------------
 --购买鸿运当头特惠
 BuyOneYearHongYunDangTouTeHui= function(sysarg)
+	if OneYearActivityCfg.HongYunDangTou.isOpen == false then return end
 	--是否在开关时间内
 	local svar = System.getStaticVar()
 	if svar.isDringOneYearAct ==nil then 
@@ -547,6 +549,7 @@ end
 
 --发送鸿运当头的常变的个人数据
 SendOneYearHongYunDangTouUserData=function(sysarg)
+	if OneYearActivityCfg.HongYunDangTou.isOpen == false then return end
 	--是否在开关时间内
 	local svar = System.getStaticVar()
 	if svar.isDringOneYearAct ==nil then 
@@ -592,6 +595,7 @@ end
 
 --鸿运当头开奖
 OneYearHongYunDangTou_Run =function()
+	if OneYearActivityCfg.HongYunDangTou.isOpen == false then return end
 	--是否在开关时间内
 	local svar = System.getStaticVar()
 	if svar.QingDian_openDay==nil then 
@@ -651,6 +655,7 @@ end
 
 --把鸿运当头的系统数据给清除了
 ClearOneYearHongYunDangTouSystemData =function()
+	if OneYearActivityCfg.HongYunDangTou.isOpen == false then return end
 	local svar = System.getStaticVar()
 	svar.OneYear_HYDT_data = {}
 	
@@ -913,6 +918,7 @@ GetOneYearActInfo = function(sysarg,index)
 		end
 		DataPack.flush(netPack)
 	elseif index ==10 then 
+		if OneYearActivityCfg.HongYunDangTou.isOpen == false then return end
 		--只个配置只有3天
 		if svar.isDringOneYearAct>6 then 
 			return 

@@ -52,6 +52,7 @@ QingDianActivitys = function (sysarg, sysid, packet)
 	elseif msgid==8 then  -- 已下架的集字有礼
 		return
 	elseif msgid ==9 then  --鸿运当头
+		if QingDianActivityCfg.HongYunDangTou.isOpen == false then return end
 		local optType = DataPack.readByte(packet) --操作类型
 		if optType==1 then --购买特惠
 			BuyHongYunDangTouTeHui(sysarg)
@@ -716,6 +717,7 @@ end
 
 --购买鸿运当头特惠
 BuyHongYunDangTouTeHui= function(sysarg)
+	if QingDianActivityCfg.HongYunDangTou.isOpen == false then return end
 	--是否在开关时间内
 	local svar = System.getStaticVar()
 	if svar.QingDian_openDay==nil then 
@@ -825,6 +827,7 @@ end
 
 --发送鸿运当头的常变的个人数据
 SendHongYunDangTouUserData=function(sysarg)
+	if QingDianActivityCfg.HongYunDangTou.isOpen == false then return end
 	--是否在开关时间内
 	local svar = System.getStaticVar()
 	if svar.QingDian_openDay==nil then 
@@ -873,6 +876,7 @@ end
 
 --鸿运当头开奖
 HongYunDangTou_Run =function()
+	if QingDianActivityCfg.HongYunDangTou.isOpen == false then return end
 	--是否在开关时间内
 	local svar = System.getStaticVar()
 	if svar.QingDian_openDay==nil then 
@@ -938,6 +942,7 @@ end
 
 --把鸿运当头的系统数据给清除了
 ClearHongYunDangTouSystemData =function()
+	if QingDianActivityCfg.HongYunDangTou.isOpen == false then return end
 	local svar = System.getStaticVar()
 	svar.HYDT_data = {}
 	
@@ -1732,6 +1737,7 @@ GetQingDianActivityInfo = function(sysarg,index)
 		--end
 		DataPack.flush(netPack)
 	elseif index==9 then 
+		if QingDianActivityCfg.HongYunDangTou.isOpen == false then return end
 		--只个配置只有3天
 		if svar.isDringQingDianActivity>7 then 
 			return 

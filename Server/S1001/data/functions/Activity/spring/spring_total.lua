@@ -336,7 +336,8 @@ EnsureSpringHongYunDangTouSystemData = function()
 end
 
 --购买鸿运当头特惠
-BuySpringHongYunDangTouTeHui= function(sysarg)
+BuySpringHongYunDangTouTeHui= function(sysarg, isBatch)
+	if is_spring_festival_time() ~= true then return end
 	
 	local springOpenDay = get_spring_festival_day_count()
 	local maxDay = SpringHongYunDangTouMaxDay()
@@ -433,10 +434,38 @@ BuySpringHongYunDangTouTeHui= function(sysarg)
 		data.NumberData[thisNumber].userID = Actor.getIntProperty(sysarg,PROP_ENTITY_ID)
 		data.NumberData[thisNumber].sex = Actor.getIntProperty(sysarg,PROP_ACTOR_SEX)
 		
-		System.broadcastTipmsg(string.format("<(n%s)>玩家购买了鸿运当头今日特惠,获得一个幸运数字,祝福他拿大奖吧,<我也要购买/@@showWin,243,4>",Actor.getName(sysarg)),ttChatWindow)
+		if not isBatch then
+			System.broadcastTipmsg(string.format("<(n%s)>玩家购买了鸿运当头今日特惠,获得一个幸运数字,祝福他拿大奖吧,<我也要购买/@@showWin,243,4>",Actor.getName(sysarg)),ttChatWindow)
+		end
 	end
 	----------------------------------------------------------------------------------------------
 	--给前端发协议
+	if not isBatch then SendSpringHongYunDangTouUserData(sysarg) end
+	return true
+end
+
+-- 沿用单次购买校验，任一份购买失败立即停止；批量只刷新和播报一次。
+LocalDT.BuyAllSpringHongYunDangTouTeHui = function(sysarg)
+	if is_spring_festival_time() ~= true then return end
+	local day = get_spring_festival_day_count()
+	if day < 1 or day > SpringHongYunDangTouMaxDay() then return end
+	local data = EnsureSpringHongYunDangTouSystemData()
+	if data == nil then return end
+	local remaining = math.max(0, 100 - (data.TeHuiTotal[day] or 0))
+	local bought = 0
+	for i=1,remaining do
+		if BuySpringHongYunDangTouTeHui(sysarg, true) ~= true then break end
+		bought = bought + 1
+	end
+	if bought > 0 then
+		Actor.sendTipmsg(sysarg,string.format("一键购买成功，共购买%d份今日特惠",bought),ttFlyTip)
+		local hour = System.getTime()
+		if hour < 21 then
+			System.broadcastTipmsg(string.format("<(n%s)>玩家一键购买了鸿运当头今日特惠,获得%d个幸运数字,祝福他拿大奖吧,<我也要购买/@@showWin,243,4>",Actor.getName(sysarg),bought),ttChatWindow)
+		end
+	elseif remaining == 0 then
+		Actor.sendTipmsg(sysarg,"今日特惠的剩余数量为0",ttFlyTip)
+	end
 	SendSpringHongYunDangTouUserData(sysarg)
 end
 
@@ -641,6 +670,8 @@ function spring_Hongyun_main(sysarg, packet)
 		SendSpringHongYunDangTouUserData(sysarg)
 	elseif optType==3 then --请求总数据
 		SendHongYunDangTouAllData(sysarg)
+	elseif optType==4 then --一键购买剩余特惠
+		LocalDT.BuyAllSpringHongYunDangTouTeHui(sysarg)
 	end
 end
 ------------------------------------------------------------------------------------------------------------------------------

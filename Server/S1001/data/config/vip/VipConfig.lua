@@ -207,7 +207,7 @@ VipConfig = {
 {type=0,id=536,count=100,strong=0,quality=0,bind=1,sex=-1},--护符碎片(10000颗)
 {type=0,id=570,count=100,strong=0,quality=0,bind=1,sex=-1},--护盾碎片(10000颗)
 {type=0,id=553,count=50,strong=0,quality=0,bind=1,sex=-1},--战将灵力丹(大)
-{type=0,id=7185,count=20,strong=0,quality=0,bind=1,sex=-1},--灵器礼盒
+{type=0,id=6658,count=20,strong=0,quality=0,bind=1,sex=-1},--灵器礼盒
 {type=0,id=6271,count=200,strong=0,quality=0,bind=1,sex=-1},--五彩石
 
 			},
@@ -241,7 +241,7 @@ VipConfig = {
 {type=0,id=536,count=200,strong=0,quality=0,bind=1,sex=-1},--护符碎片(10000颗)
 {type=0,id=570,count=200,strong=0,quality=0,bind=1,sex=-1},--护盾碎片(10000颗)
 {type=0,id=553,count=100,strong=0,quality=0,bind=1,sex=-1},--战将灵力丹(大)
-{type=0,id=7185,count=30,strong=0,quality=0,bind=1,sex=-1},--灵器礼盒
+{type=0,id=6658,count=30,strong=0,quality=0,bind=1,sex=-1},--灵器礼盒
 {type=0,id=6271,count=300,strong=0,quality=0,bind=1,sex=-1},--五彩石
 
 
@@ -274,7 +274,7 @@ VipConfig = {
 {type=0,id=570,count=300,strong=0,quality=0,bind=1,sex=-1},--护盾碎片(10000颗)
 {type=0,id=553,count=150,strong=0,quality=0,bind=1,sex=-1},--战将灵力丹(大)
 {type=0,id=509,count=300,strong=0,quality=0,bind=1,sex=-1},--大金砖(绑金)
-{type=0,id=7185,count=40,strong=0,quality=0,bind=1,sex=-1},--灵器礼盒
+{type=0,id=6658,count=40,strong=0,quality=0,bind=1,sex=-1},--灵器礼盒
 {type=0,id=6271,count=500,strong=0,quality=0,bind=1,sex=-1},--五彩石
 
 
@@ -309,7 +309,7 @@ VipConfig = {
 {type=0,id=553,count=200,strong=0,quality=0,bind=1,sex=-1},--战将灵力丹(大)
 {type=0,id=5365,count=50,strong=0,quality=0,bind=1,sex=-1},--三阶宝石袋
 {type=0,id=509,count=400,strong=0,quality=0,bind=1,sex=-1},--大金砖(绑金)
-{type=0,id=7185,count=50,strong=0,quality=0,bind=1,sex=-1},--灵器礼盒
+{type=0,id=6658,count=50,strong=0,quality=0,bind=1,sex=-1},--灵器礼盒
 {type=0,id=6271,count=700,strong=0,quality=0,bind=1,sex=-1},--五彩石
 
 			},
@@ -342,7 +342,7 @@ VipConfig = {
 {type=0,id=553,count=300,strong=0,quality=0,bind=1,sex=-1},--战将灵力丹(大)
 {type=0,id=5384,count=50,strong=0,quality=0,bind=1,sex=-1},--四阶宝石袋
 {type=0,id=509,count=500,strong=0,quality=0,bind=1,sex=-1},--大金砖(绑金)
-{type=0,id=7185,count=60,strong=0,quality=0,bind=1,sex=-1},--灵器礼盒
+{type=0,id=6658,count=60,strong=0,quality=0,bind=1,sex=-1},--灵器礼盒
 {type=0,id=6271,count=1000,strong=0,quality=0,bind=1,sex=-1},--五彩石
 
 			},
@@ -376,7 +376,7 @@ VipConfig = {
 {type=0,id=553,count=600,strong=0,quality=0,bind=1,sex=-1},--战将灵力丹(大)
 {type=0,id=6936,count=1,strong=0,quality=0,bind=1,sex=-1},--至尊屠龙首饰盒
 {type=0,id=509,count=600,strong=0,quality=0,bind=1,sex=-1},--大金砖(绑金)
-{type=0,id=7185,count=100,strong=0,quality=0,bind=1,sex=-1},--灵器礼盒
+{type=0,id=6658,count=100,strong=0,quality=0,bind=1,sex=-1},--灵器礼盒
 {type=0,id=6271,count=1500,strong=0,quality=0,bind=1,sex=-1},--五彩石
 
 			},
@@ -410,7 +410,7 @@ VipConfig = {
 {type=0,id=553,count=1000,strong=0,quality=0,bind=1,sex=-1},--战将灵力丹(大)
 {type=0,id=6362,count=1,strong=0,quality=0,bind=1,sex=-1},--至尊屠龙刀
 {type=0,id=509,count=1000,strong=0,quality=0,bind=1,sex=-1},--大金砖(绑金)
-{type=0,id=7185,count=150,strong=0,quality=0,bind=1,sex=-1},--灵器礼盒
+{type=0,id=6658,count=150,strong=0,quality=0,bind=1,sex=-1},--灵器礼盒
 {type=0,id=6271,count=2000,strong=0,quality=0,bind=1,sex=-1},--五彩石
 
 			},

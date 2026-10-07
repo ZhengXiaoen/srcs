@@ -24,7 +24,7 @@ function spring_monster_on_timer()
 	
 	spring_monster_refresh_monsters()	
 	
-	local noticeStr = "年兽已在新年地图中出现，击杀年兽得新春爆竹！<立即前往/@@showWin,243,1>"
+	local noticeStr = "年兽已在新春活动地图中出现，击杀年兽得新春爆竹！<立即前往/@@showWin,243,1>"
 	System.broadcastTipmsg(noticeStr, ttChatWindow)
 end
 

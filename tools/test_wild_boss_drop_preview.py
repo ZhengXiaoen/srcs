@@ -109,6 +109,52 @@ Fuben={getSceneNameById=function(id) return 'map'..id end}
             self.assertEqual(int(self.items[iid][b'icon']), row.child('icon').number())
             self.assertGreater(row.child('icon').number(), 0)
 
+    def test_killable_boss_packets_after_real_shared_include_order(self):
+        from compile_boss_drop_lua import expand
+        from lupa.lua51 import LuaRuntime
+        lua = LuaRuntime(unpack_returned_tuples=True)
+        lua.execute('''
+state={};packets={}
+System={getDyanmicVar=function() return state end,
+ getMonsterNameById=function(id) return 'BOSS'..id end}
+Fuben={getSceneNameById=function(id) return 'map'..id end}
+DataPack={
+ allocPacket=function(_,system,command) assert(system==139 and command==228);return {} end,
+ writeByte=function(pack,value) table.insert(pack,value) end,
+ writeInt=function(pack,value) table.insert(pack,value) end,
+ writeWord=function(pack,value) table.insert(pack,value) end,
+ writeString=function(pack,value) table.insert(pack,value) end,
+ flush=function(pack) table.insert(packets,pack) end}
+''')
+        seen = set()
+        # Match the server: both panels share one chunk and include-once registry.
+        code = 'local LocalDT={};local MiscsImplement={registerMsgHandler=function() end}\n'
+        code += 'LogicCmd={miscSys={sub={cKillBossInfo=225}}}\n'
+        code += expand(DATA / 'functions/BossListInfo/BossListInfoEx.lua', seen).decode('utf-8-sig')
+        code += expand(DATA / 'functions/BossListInfo/KillBossListInfo.lua', seen).decode('utf-8-sig')
+        code += '\nsharedPreview=LocalDT\n'
+        lua.execute(code)
+        g = lua.globals()
+        legacy = g.sharedPreview.BossEquipmentPreview
+        self.assertIsNotNone(legacy)
+        self.assertIsNotNone(g.sharedPreview.WildBossDropPreview)
+        # A temporary LocalDT inside AdvanceMonsterEquipCfg must not consume the
+        # configuration needed by the outer LocalDT used in request callbacks.
+        monster_ids = sorted({int(row.monid) for row in g.RefreshMonsterData.values()})
+        for mid in monster_ids:
+            g.HandleGetRightKillBoosListInfo(1, f'BOSS{mid},{mid}')
+            packet = list(g.packets[len(g.packets)].values())
+            expected = next(([int(iid) for index, iid in sorted(row.items()) if index > 1]
+                             for row in g.BossEquipCfg.values() if row[1] == mid), [])
+            for iid in (legacy[mid] or {}).values():
+                if iid not in expected:
+                    expected.append(int(iid))
+            self.assertEqual([1, mid, len(expected)], packet[:3])
+            self.assertEqual(expected, packet[3:-1])
+            self.assertIsInstance(packet[-1], str)
+        self.assertEqual(len(monster_ids), len(g.packets))
+        print('Verified', len(monster_ids), 'killable BOSS preview packets with shared includes')
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

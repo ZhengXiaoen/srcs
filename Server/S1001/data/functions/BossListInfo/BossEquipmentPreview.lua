@@ -1,4 +1,5 @@
---#include "data\config\monster\BossEquipmentPreviewCfg.lua" once
+-- 此配置也会在 AdvanceMonsterEquipCfg 的临时 LocalDT 中加载，必须重新加载到当前 LocalDT。
+--#include "data\config\monster\BossEquipmentPreviewCfg.lua"
 --#include "data\config\monster\WildBossDropPreviewCfg.lua" once
 
 LocalDT.BuildWildBossDropPreview = function(sysarg, args, monId)

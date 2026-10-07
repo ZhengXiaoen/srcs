@@ -1,12 +1,8 @@
-"""Lay out every equipment tooltip when its shared panel is shown.
+"""Lay out shared equipment details and position links like backpack tooltips.
 
-GameRichFiled and other direct callers show GameItemTipsPanel without calling
-layoutDlg. Its child panels then retain their initial (or previous) positions.
-Run the existing rightward layout after all sections have been populated.
-Backpack tooltips can still call layoutDlg afterwards to choose either side.
-Only the shared show method and two link-positioning methods change.
-Link tooltips measure all displayed sections when checking the right edge.
-Formatting, data and artwork are preserved.
+The main column stays next to the mouse. Each hover/move chooses rightward or
+leftward layout using the main column width, matching GameItemTips.updateLayout.
+Only shared show and the two link handlers change; other client data is intact.
 """
 from __future__ import annotations
 
@@ -15,95 +11,126 @@ from pathlib import Path
 import struct
 import zlib
 
+from patch_activity_entries import q
+from patch_activity_reminders import Code, call, get, number, prop, put, relocate
 from patch_bag_client import ABCReader, encode_u30
-from patch_activity_reminders import relocate
 from patch_drop_pickup_retry import abc_section, instructions
 from patch_god_equip_state import inspect_abc
-
 
 ROOT = Path(__file__).resolve().parents[1]
 CLIENT = ROOT / 'web/GameFrame.swf'
 BASELINE = 'eb602de'
+LINK_LIMITS = (4, 9, 13, 14)
+
+
+def mouse_layout():
+    """Use the backpack cursor offsets, direction check and vertical limits."""
+    tip = q(0x60, 39379)
+    container = prop(tip, 3134)
+    stage = prop(container, 14882)
+    manager = q(0x60, 3111)
+    c = Code()
+    c.add(number(0) + put(5) + number(0) + put(6))
+    c.add(prop(manager, 14074) + q(0x80, 20) + put(2))
+    c.add(get(2)); c.branch(0x12, 'point')
+    c.add(prop(manager, 14076) + q(0x80, 23) + put(8))
+    c.add(prop(get(2), 1617) + number(2) + b'\xa0'
+          + prop(get(8), 1656) + b'\xa1\x73' + put(5))
+    c.add(prop(get(2), 1618) + number(2) + b'\xa0'
+          + prop(get(8), 1657) + b'\xa1\x73' + put(6))
+    c.label('point')
+    point = (q(0x5d, 23) + prop(stage, 43456) + prop(stage, 43457)
+             + q(0x4a, 23, 2))
+    c.add(call(container, 43462, point) + q(0x80, 23) + put(3))
+    c.add(prop(tip, 1618) + b'\x73' + put(7))
+    c.add(b'\x26' + put(4))
+    c.add(prop(get(3), 1656) + prop(tip, 1617) + b'\xa0'
+          + get(5) + b'\xa0' + prop(manager, 1617))
+    c.branch(0x0e, 'horizontal')
+    c.add(b'\x27' + put(4))
+    c.label('horizontal')
+    c.add(get(3) + prop(get(3), 1656) + get(5) + b'\xa0' + q(0x61, 1656))
+    c.add(prop(get(3), 1657) + get(7) + b'\xa0'
+          + get(6) + b'\xa0' + prop(manager, 1618))
+    c.branch(0x0e, 'below')
+    c.add(get(3) + prop(get(3), 1657) + get(7) + b'\xa1' + q(0x61, 1657))
+    c.branch(0x10, 'clamp')
+    c.label('below')
+    c.add(get(3) + prop(get(3), 1657) + get(6) + b'\xa0' + q(0x61, 1657))
+    c.label('clamp')
+    c.add(prop(get(3), 1656) + number(0)); c.branch(0x0c, 'vertical')
+    c.add(get(3) + number(0) + q(0x61, 1656))
+    c.label('vertical')
+    c.add(prop(get(3), 1657) + number(38)); c.branch(0x0c, 'place')
+    c.add(get(3) + number(38) + q(0x61, 1657))
+    c.label('place')
+    c.add(tip + prop(get(3), 1656) + q(0x61, 1656))
+    c.add(tip + prop(get(3), 1657) + q(0x61, 1657))
+    c.add(call(tip, 14168, get(4), void=True))
+    return c.finish()
 
 
 def patch_abc(source: bytes) -> bytes:
     names, methods, bodies = inspect_abc(source, 'GameItemTipsPanel')
-    if methods is None or names[14168] != 'layoutDlg':
-        raise ValueError('Missing shared item tooltip layout')
+    expected = {14168: 'layoutDlg', 42514: 'addToParent', 39379: '_tipSp',
+                3134: 'container', 14882: 'stage', 43456: 'mouseX', 43457: 'mouseY',
+                43462: 'globalToLocal', 3111: 'UIManager', 14074: 'cursorShape',
+                14076: 'cursorHotPoint', 1617: 'width', 1618: 'height'}
+    if methods is None or any(names[i] != n for i, n in expected.items()):
+        raise ValueError('Unexpected shared equipment tooltip properties')
+    replacements = {}
     method = methods['show'][0]
     start, length, limits = bodies[method]
     code = source[start:start + length]
     layout = b'\xd0\x26\x4f' + encode_u30(14168) + b'\x01'
     tail = b'\x4f' + encode_u30(42514) + b'\x02'
-    if names[42514] != 'addToParent' or limits != (3, 5, 9, 10):
-        raise ValueError('Unexpected shared tooltip show method')
-    if not code.endswith(tail + layout + b'\x47') and (
-            length != 139 or not code.endswith(tail + b'\x47')):
+    if code.endswith(tail + layout + b'\x47'):
+        pass
+    elif length == 139 and limits == (3, 5, 9, 10) and code.endswith(tail + b'\x47'):
+        if any(target >= length - 1 for op in instructions(code)
+               for _, target, _ in op.branches):
+            raise ValueError('A branch targets the show insertion point')
+        replacements[method] = (code[:-1] + layout + code[-1:], limits)
+    else:
         raise ValueError('Unexpected shared tooltip show body')
-    # The only existing jumps target earlier instructions (13 and 124).
-    # Inserting before the final return therefore keeps every jump unchanged.
-    if any(target >= length - 1 for op in instructions(code)
-           for _, target, _ in op.branches):
-        raise ValueError('A branch targets the insertion point')
-    changed = code if code.endswith(tail + layout + b'\x47') else code[:-1] + layout + code[-1:]
-    instructions(changed)
-    reader = ABCReader(source)
-    reader.pos = start + length
-    if reader.u30() or reader.u30():
-        raise ValueError('Unexpected show exceptions or body traits')
-    length_start = start - len(encode_u30(length))
-    if source[length_start:start] != encode_u30(length):
-        raise ValueError('Unexpected method code length')
-    edits = [(length_start, start + length, encode_u30(len(changed)) + changed)]
-    # GameItemTipsPanel.width intentionally reports only the main column.
-    # Link callers need the rendered right edge, including fate and comparison
-    # columns, both on first hover and while the pointer moves.
-    names, link_methods, _ = inspect_abc(source, 'GameRichFiled')
-    expected = {39379: '_tipSp', 1617: 'width', 44284: 'getBounds', 6052: 'right',
-                43301: 'Math', 45746: 'max'}
-    if link_methods is None or any(names[i] != n for i, n in expected.items()):
-        raise ValueError('Unexpected equipment-link tooltip properties')
-    old = b'\x60' + encode_u30(39379) + b'\x66' + encode_u30(1617)
-    new = (b'\x60' + encode_u30(39379) + b'\x60' + encode_u30(39379)
-           + b'\x46' + encode_u30(44284) + b'\x01\x66' + encode_u30(6052))
-    for name in ('onOver', 'onMove'):
-        link_start, link_length, link_limits = bodies[link_methods[name][0]]
-        link_code = source[link_start:link_start + link_length]
-        ops = instructions(link_code)
-        positions = [op.start for op in ops if link_code[op.start:op.start + len(old)] == old]
-        patched = [op.start for op in ops if link_code[op.start:op.start + len(new)] == new]
-        # Clamp the selected x before assigning it to the whole tooltip. The
-        # existing left shift can cross the left edge with three wide columns.
-        x_value = b'\xd3\x66' + encode_u30(1656)
-        assign = b'\x61' + encode_u30(1656)
-        clamp = (b'\x60' + encode_u30(43301) + b'\x24\x00' + x_value
-                 + b'\x46' + encode_u30(45746) + b'\x02')
-        clamped = clamp + assign
-        placements = [op.start for op in ops
-                      if link_code[op.start:op.start + len(x_value + assign)] == x_value + assign]
-        if not positions and len(patched) == 2 and link_code.count(clamped) == 1:
+
+    _, link_methods, _ = inspect_abc(source, 'GameRichFiled')
+    if link_methods is None:
+        raise ValueError('Missing equipment link handlers')
+    for name, offset in (('onOver', 102), ('onMove', 80)):
+        method = link_methods[name][0]
+        start, length, limits = bodies[method]
+        code = source[start:start + length]
+        if code[offset:-1] == mouse_layout() and limits == LINK_LIMITS:
             continue
-        if (len(positions) not in (0, 2) or len(patched) not in (0, 2)
-                or len(positions) + len(patched) != 2 or len(placements) != 1
-                or link_limits != (4, 5, 13, 14)):
-            raise ValueError('Unexpected link tooltip boundary checks')
-        p = placements[0]
-        updated, _ = relocate(link_code, [(p, p + len(old), new) for p in positions]
-                              + [(p, p + len(x_value), clamp)])
-        reader.pos = link_start + link_length
+        # Preserve construction, visibility, stage attachment and item content.
+        # Replace only the mouse positioning suffix; retain the original return
+        # so onMove's existing visibility guard still exits there.
+        if code[offset:offset + 2] != q(0x5d, 23) or code[-1:] != b'\x47':
+            raise ValueError('Unexpected equipment link positioning suffix')
+        if limits != (4, 5, 13, 14):
+            raise ValueError('Unexpected equipment link method limits')
+        updated, _ = relocate(code, [(offset, length - 1, mouse_layout())])
+        replacements[method] = (updated, LINK_LIMITS)
+
+    edits = []
+    for method, (updated, new_limits) in replacements.items():
+        start, length, limits = bodies[method]
+        instructions(updated)
+        reader = ABCReader(source); reader.pos = start + length
         if reader.u30() or reader.u30():
-            raise ValueError('Unexpected link tooltip exceptions or traits')
-        edits.append((link_start - len(encode_u30(link_length)), link_start + link_length,
-                      encode_u30(len(updated)) + updated))
+            raise ValueError('Unexpected tooltip exceptions or body traits')
+        header = b''.join(encode_u30(v) for v in (method, *limits, length))
+        header_start = start - len(header)
+        if source[header_start:start] != header:
+            raise ValueError('Unexpected tooltip method header')
+        value = b''.join(encode_u30(v) for v in (method, *new_limits, len(updated))) + updated
+        edits.append((header_start, start + length, value))
     result = bytearray(source)
     for a, b, value in sorted(edits, reverse=True):
         result[a:b] = value
-    _, updated_methods, updated_bodies = inspect_abc(result, 'GameItemTipsPanel')
-    if updated_methods != methods or updated_bodies[method][2] != limits:
-        raise ValueError('Tooltip method identity or limits changed')
-    restored = bytearray(result)
-    undo = []
-    shift = 0
+    inspect_abc(result, 'GameItemTipsPanel')
+    restored = bytearray(result); undo = []; shift = 0
     for a, b, value in sorted(edits):
         undo.append((a + shift, a + shift + len(value), source[a:b]))
         shift += len(value) - (b - a)
@@ -131,16 +158,15 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true')
     args = parser.parse_args()
-    source = CLIENT.read_bytes()
-    result = patch_swf(source)
+    source = CLIENT.read_bytes(); result = patch_swf(source)
     if patch_swf(result) != result:
         raise ValueError('Tooltip layout patch is not idempotent')
     if args.check:
         if source != result:
-            raise ValueError('Shared tooltip layout patch is missing')
+            raise ValueError('Mouse-following tooltip layout is missing')
     elif source != result:
         CLIENT.write_bytes(result)
-    print('Verified automatic shared tooltip layout; unrelated client bytes preserved')
+    print('Verified backpack-style mouse positioning; unrelated client bytes preserved')
 
 
 if __name__ == '__main__':

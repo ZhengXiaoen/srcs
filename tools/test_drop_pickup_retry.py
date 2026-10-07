@@ -115,20 +115,25 @@ class PickupVM:
                 stack.append(stack.pop() - 1)
             elif kind == 0x96:
                 stack.append(not stack.pop())
-            elif kind in (0xA0, 0xA1, 0xA3, 0xAB):
+            elif kind == 0xC2:
+                locals_[args[0]] += 1
+            elif kind in (0xA0, 0xA1, 0xA3, 0xAB, 0xAE, 0xB0):
                 b, a = stack.pop(), stack.pop()
                 stack.append({0xA0: lambda: a + b, 0xA1: lambda: a - b,
-                              0xA3: lambda: a / b, 0xAB: lambda: a == b}[kind]())
+                              0xA3: lambda: a / b, 0xAB: lambda: a == b,
+                              0xAE: lambda: a <= b, 0xB0: lambda: a >= b}[kind]())
             elif kind == 0x10:
                 pc = op.branches[0][1]
             elif kind in (0x11, 0x12):
                 take = bool(stack.pop())
                 if take == (kind == 0x11):
                     pc = op.branches[0][1]
-            elif kind in (0x0C, 0x0F, 0x14, 0x17):
+            elif kind in (0x0C, 0x0D, 0x0E, 0x0F, 0x13, 0x14, 0x15, 0x17):
                 b, a = stack.pop(), stack.pop()
-                take = {0x0C: lambda: not a < b, 0x0F: lambda: not a >= b,
-                        0x14: lambda: a != b, 0x17: lambda: a > b}[kind]()
+                take = {0x0C: lambda: not a < b, 0x0D: lambda: not a <= b,
+                        0x0E: lambda: not a > b, 0x0F: lambda: not a >= b,
+                        0x13: lambda: a == b, 0x14: lambda: a != b,
+                        0x15: lambda: a < b, 0x17: lambda: a > b}[kind]()
                 if take:
                     pc = op.branches[0][1]
             elif kind == 0x48:
@@ -146,6 +151,21 @@ class PickupRetryTests(unittest.TestCase):
         cls.ints = integer_pool(cls.client)
         cls.assignment = retry_assignment()
         _, cfg = read_cbp((ROOT / "web/v2/lang/zh-cn/SystemConfig.cbp").read_bytes())
+        cls.lookup_names, cls.lookup_code, cls.lookup_limits = code_for(
+            cls.client, "SystemConfigDataMgr", "getPickUpStatusByItemId")
+
+        def value(node):
+            if node.kind == 2:
+                return node.number()
+            if node.kind == 3:
+                return node.value.decode("utf-8")
+            if node.kind != 4:
+                raise AssertionError(f"Unexpected pickup config kind {node.kind}")
+            if [c.name for c in node.children] == [str(i) for i in range(len(node.children))]:
+                return [value(c) for c in node.children]
+            return {c.name: value(c) for c in node.children}
+
+        cls.config = value(cfg)
         cls.ranges = {int(row.child("type").number()):
                       [(r.child("0").number(), r.child("1").number())
                        for r in row.child("idRange").child("0").children if len(r.children) == 2]
@@ -162,9 +182,13 @@ class PickupRetryTests(unittest.TestCase):
         state = {"capacity": True}
 
         def pickup(item, action):
-            match = next((cat for cat, ranges in self.ranges.items()
-                          if any(lo <= item <= hi for lo, hi in ranges)), None)
-            return switches.get(match, False)
+            # Run the real item-range lookup too; category order is authoritative.
+            owner = {"getPickUpSelectIndexByType": lambda kind: 0,
+                     "getPickUpSelectByType": lambda kind, action: switches.get(kind, False)}
+            vm = PickupVM(self.lookup_names, self.ints, {
+                "GameData": {"systemConfigProvider": {"getCfg": lambda: self.config}}})
+            return vm.run(self.lookup_code,
+                          [owner, item, action] + [None] * (self.lookup_limits[1] - 3))
 
         drop = {"isAlreadyPickup": False, "isCheck": False, "mapId": 1,
                 "canPickTime": 0, "itemType": -1, "itemId": item_id,
@@ -256,6 +280,34 @@ class PickupRetryTests(unittest.TestCase):
                 self.assertIs(select(), drop)
                 state["capacity"] = False
                 self.assertIsNone(select())
+
+    def test_illusion_wing_souls_follow_other_items_instead_of_yuanbao_switch(self):
+        for item in range(7157, 7161):
+            with self.subTest(item=item):
+                clock, switches, state, drop, _, select, send = self.environment(item, 1)
+                switches[12] = False
+                self.assertIs(select(), drop)
+                switches[13] = False
+                switches[12] = True
+                self.assertIsNone(select())
+                switches[13] = True
+                self.assertIs(select(), drop)
+                state["capacity"] = False
+                self.assertIsNone(select())
+                state["capacity"] = True
+                drop["canPickTime"] = 20
+                self.assertIsNone(select())
+                clock["ms"] = 21000
+                self.assertIs(select(), drop)
+                send()
+                self.assertIsNone(select())
+                clock["ms"] += 2000
+                self.assertIs(select(), drop)
+
+        _, switches, _, drop, _, select, _ = self.environment(85, 1)
+        self.assertIsNone(select())  # Yuanbao items still follow their own switch.
+        switches[12] = True
+        self.assertIs(select(), drop)
 
     def test_wing_and_mount_equipment_follow_other_items_switch_and_pickup_protection(self):
         for item in (*range(6865, 6885), *range(6983, 7003)):

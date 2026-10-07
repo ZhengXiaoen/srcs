@@ -12,7 +12,9 @@ FUNCTIONS = ROOT / "Server/S1001/data/functions"
 CONFIG = ROOT / "Server/S1001/data/config/item/NormalItemDatas.lua"
 TARGET_IDS = (542, 543, 544, 527, 528, 529, 530, 6297, 6374, 6298,
               5165, 5166, 5167, 5168, 5171, 6912, 6913, 6914, 6915, 6916, 6917,
-              7151, 7152, 7153, 7154, 7155, 7780, 7781, 7782, 7783, 7784, 7785, 508)
+              4744, 4745, 4746, 7061, 7062, 7063, 7064, 7065, 7066,
+              7151, 7152, 7153, 7154, 7155, 7618, 7619, 7620,
+              7780, 7781, 7782, 7783, 7784, 7785, 508)
 
 
 def named_table(code, name):
@@ -33,11 +35,14 @@ class VipMaterialAutoUseTests(unittest.TestCase):
         lua = LuaRuntime(unpack_returned_tuples=True)
         lua.execute(r"""
 LocalDT={}; bag={}; state={autoUseMaterials=1,d={},days={}}; properties={}
-vip=true; logs={}; ranks={}; packets=0; bloodPackets=0; effects=0; removed={};tips={};money={};actorData={}
+vip=true; logs={}; ranks={}; packets=0; bloodPackets=0; ringPackets=0; spiritPackets=0; effects=0; removed={};tips={};money={};actorData={}
+PROP_ACTOR_INNER_EXP=80;state.fighterLevel=1
 PROP_ACTOR_CIRCLE_SOUL=79; PROP_ENTITY_ID=5; ttFlyTip=16
 PROP_ACTOR_BIND_COIN=6;GameLog={clNpcGiveMoney=7}
 LogIds={shiyongzhuanshengxiuweidan=2708,shenhunzhibianhua=2783,hufusuipian=2697,
- xuelianValue=8,ThorEquipValueChange=9,xianzuan=2812}
+ xuelianValue=8,ThorEquipValueChange=9,UseRingGodAddValueItem=2801,xianzuan=2812,
+ shiyongneigongjingyanquan=2707,UseSFighterEnergyItem=2784}
+LogicCmd={miscSysEx={sub={sRingGodSystem=92}}}
 Lang={ScriptTips={Qf00008='%s:%s:%s',b005='%s:%s:%s'}}
 IsSpeciaTitleVip=function(_,type) assert(type==3);return vip end
 Actor={
@@ -53,6 +58,17 @@ Actor={
  getXueLianData=function(_,index)assert(index==0);return 2 end,
  getThorEquipValue=function()return state.thorValue or 0 end,
  setThorEquipValue=function(_,value)state.thorValue=value end,
+ getRingGodValue=function()return state.ringValue or 0 end,
+ setRingGodValue=function(_,value)state.ringValue=value end,
+ getRingGodLevel=function()return state.ringLevel or 0 end,
+ getSpiritFighterLevel=function()return state.fighterLevel end,
+ getSpiritFighterEnergyExp=function()return state.spiritExp or 0 end,
+ setSpiritFighterEnergyExp=function(_,value)state.spiritExp=value end,
+ addInnerExp=function(_,value)
+  local old=properties[PROP_ACTOR_INNER_EXP] or 0
+  local added=math.min(value,math.max(0,(state.innerLimit or math.huge)-old))
+  properties[PROP_ACTOR_INNER_EXP]=old+added;return added
+ end,
  playEnergyEffect=function(_,effect,value)assert(effect==4 and value==0);effects=effects+1 end,
  changeMoney=function(_,type,value,log)
   assert(type==0 and log==7);money[type]=(money[type] or 0)+value
@@ -83,10 +99,16 @@ Item={ipItemCount=100,
 System={getDaysSinceOpenServer=function()return 10 end,
  sendCommonLog=function(id,...)table.insert(logs,{id=id,args={...}})end}
 DataPack={allocPacket=function(_,main,sub)return {main=main,sub=sub,bytes={}}end,
- writeInt=function(packet,value)packet.value=value end,
+ writeInt=function(packet,value)packet.value=value;packet.ints=packet.ints or {};table.insert(packet.ints,value)end,
+ writeUInt=function(packet,value)packet.value=value end,
  writeByte=function(packet,value)table.insert(packet.bytes,value)end,
  flush=function(packet)
-  if packet.main==73 then
+  if packet.main==151 then
+   assert(packet.sub==92 and packet.bytes[1]==1 and packet.ints[1]==state.ringValue and packet.ints[2]==(state.ringLevel or 0))
+   ringPackets=ringPackets+1
+  elseif packet.main==74 then
+   assert(packet.sub==8 and packet.value==state.spiritExp);spiritPackets=spiritPackets+1
+  elseif packet.main==73 then
    assert(packet.sub==2 and packet.value==state.bloodValue and packet.bytes[1]==1 and packet.bytes[2]==2)
    bloodPackets=bloodPackets+1
   else assert(packet.value==state.godSoulValue);packets=packets+1 end
@@ -96,11 +118,13 @@ HandleAddNewRankCount=function(_,index,value)ranks[index]=(ranks[index] or 0)+va
 JSLingLiDanUseTable={};onAchievementFunc=function()error('unexpected achievement use')end
 """)
         config = CONFIG.read_text(encoding="utf-8-sig")
-        for name in ("zJuanZhouAdd", "FuSoulAdd", "zAchievement", "CircleExp", "zGnItem100"):
+        for name in ("zJuanZhouAdd", "FuSoulAdd", "zAchievement", "CircleExp", "zGnItem100", "SpiritFighterEnergyItemTable"):
             lua.execute(named_table(config, name))
         code = (FUNCTIONS / "Qfunctions.lua").read_text(encoding="utf-8-sig")
-        for name in ("onJuanZhouAdd", "onFuSoulAdd", "onCircleExp", "onZhaoCaiFu"):
+        for name in ("onJuanZhouAdd", "onFuSoulAdd", "onCircleExp", "onZhaoCaiFu", "onUseSpiritFighterEnergyItem"):
             lua.execute(function(code, name))
+        ring_code = (FUNCTIONS / "EquipEnhance/RingGodSystem.lua").read_text(encoding="utf-8-sig")
+        lua.execute(function(ring_code, "SendRingGodInfo"))
         lua.execute((FUNCTIONS / "VipRecovery.lua").read_text(encoding="utf-8-sig"))
         return lua
 
@@ -120,6 +144,11 @@ JSLingLiDanUseTable={};onAchievementFunc=function()error('unexpected achievement
         self.assertEqual(203 * (10 + 100 + 1000 + 10000 + 1), state.godSoulValue)
         self.assertEqual(203 * (2 + 5 + 10 + 100 + 1000 + 10000), state.bloodValue)
         self.assertEqual(203 * (1 + 10 + 100 + 1000 + 10000), state.thorValue)
+        self.assertEqual(203 * (100 + 1000 + 10000), state.ringValue)
+        self.assertEqual(6, lua.globals().ringPackets)
+        self.assertEqual(203 * (10000 + 20000 + 50000), properties[80])
+        self.assertEqual(203 * (2 + 5 + 10 + 100 + 1000 + 10000), state.spiritExp)
+        self.assertEqual(12, lua.globals().spiritPackets)
         self.assertEqual(203 * (2 + 5 + 10 + 100 + 1000 + 10000), state.xianzuan)
         self.assertEqual(12, len(lua.globals().actorData))
         self.assertEqual(203 * 600000, lua.globals().money[0])
@@ -151,6 +180,83 @@ JSLingLiDanUseTable={};onAchievementFunc=function()error('unexpected achievement
         self.assertEqual(12, len(lua.globals().logs))
         self.assertEqual(12, len(lua.globals().actorData))
         self.assertEqual(expected, lua.globals().state.xianzuan)
+
+    def test_ring_dust_adds_to_existing_balance_and_syncs_each_stack(self):
+        lua = self.runtime()
+        lua.execute("state.ringValue=17;state.ringLevel=50")
+        expected = 17
+        for id, value in zip((7618, 7619, 7620), (100, 1000, 10000)):
+            lua.execute(f"bag={{{{id={id},count=3,bind=0}},{{id={id},count=200,bind=1}}}};VipAutoUseMaterials({{}})")
+            for count in (200, 3):
+                old = expected
+                expected += value * count
+                log = lua.globals().logs[len(lua.globals().logs) - (1 if count == 200 else 0)]
+                self.assertEqual(2801, log.id)
+                self.assertEqual((old, expected, "使用戒灵粉尘"), (log.args[4], log.args[5], log.args[8]))
+            self.assertEqual(expected, lua.globals().state.ringValue)
+            self.assertEqual(50, lua.globals().state.ringLevel)
+            self.assertEqual(0, len(lua.globals().bag))
+        lua.execute("VipAutoUseMaterials({})")
+        self.assertEqual(6, lua.globals().ringPackets)
+        self.assertEqual(6, len(lua.globals().logs))
+        self.assertEqual(expected, lua.globals().state.ringValue)
+
+    def test_ring_dust_consumption_failure_preserves_items_and_balance(self):
+        lua = self.runtime()
+        lua.execute("state.ringValue=17;failRemove=true")
+        for id in (7618, 7619, 7620):
+            lua.execute(f"table.insert(bag,{{id={id},count=3,bind=0}});table.insert(bag,{{id={id},count=200,bind=1}})")
+        lua.execute("VipAutoUseMaterials({})")
+        self.assertEqual(6, len(lua.globals().bag))
+        self.assertEqual(17, lua.globals().state.ringValue)
+        for id in (7618, 7619, 7620):
+            self.assertEqual(203, lua.globals().Actor.getItemCount(None, id))
+        for name in ("removed", "logs", "tips"):
+            self.assertEqual(0, len(lua.globals()[name]))
+        self.assertEqual(0, lua.globals().ringPackets)
+
+    def test_spirit_potential_waits_for_activation_without_repeated_tips(self):
+        lua = self.runtime()
+        lua.execute("state.fighterLevel=0;state.spiritExp=17")
+        for id in range(7061, 7067):
+            lua.execute(f"table.insert(bag,{{id={id},count=3,bind=0}});table.insert(bag,{{id={id},count=200,bind=1}})")
+        lua.execute("table.insert(bag,{id=7618,count=2});VipAutoUseMaterials({});VipAutoUseMaterials({})")
+        self.assertEqual(12, len(lua.globals().bag))
+        self.assertEqual(17, lua.globals().state.spiritExp)
+        self.assertEqual(200, lua.globals().state.ringValue)
+        self.assertEqual(1, len(lua.globals().tips))
+        self.assertEqual(0, lua.globals().spiritPackets)
+        lua.execute("state.fighterLevel=1;VipAutoUseMaterials({})")
+        self.assertEqual(17 + 203 * (2 + 5 + 10 + 100 + 1000 + 10000), lua.globals().state.spiritExp)
+        self.assertEqual(0, len(lua.globals().bag))
+        self.assertEqual(12, lua.globals().spiritPackets)
+
+    def test_inner_scrolls_and_potential_consumption_failure_grant_nothing(self):
+        lua = self.runtime()
+        lua.execute("properties[PROP_ACTOR_INNER_EXP]=17;state.spiritExp=23;failRemove=true")
+        for id in (*range(4744, 4747), *range(7061, 7067)):
+            lua.execute(f"table.insert(bag,{{id={id},count=3,bind=0}});table.insert(bag,{{id={id},count=200,bind=1}})")
+        lua.execute("VipAutoUseMaterials({})")
+        self.assertEqual(18, len(lua.globals().bag))
+        self.assertEqual(17, lua.globals().properties[80])
+        self.assertEqual(23, lua.globals().state.spiritExp)
+        for name in ("removed", "logs", "tips"):
+            self.assertEqual(0, len(lua.globals()[name]))
+        self.assertEqual(0, lua.globals().spiritPackets)
+        lua.execute("onJuanZhouAdd({},4744,bag[1],{item_id=4744,value=10000,str='内功经验',type=8},0,1)")
+        self.assertEqual(17, lua.globals().properties[80])
+        self.assertEqual(0, len(lua.globals().logs))
+
+    def test_inner_scrolls_keep_engine_reward_and_log_actual_experience(self):
+        lua = self.runtime()
+        lua.execute("properties[PROP_ACTOR_INNER_EXP]=17;state.innerLimit=25000;bag={{id=4744,count=3}};VipAutoUseMaterials({})")
+        self.assertEqual(25000, lua.globals().properties[80])
+        self.assertEqual(0, len(lua.globals().bag))
+        log = lua.globals().logs[1]
+        self.assertEqual(2707, log.id)
+        self.assertEqual((17, 25000, "使用内功经验券"), (log.args[4], log.args[5], log.args[6]))
+        lua.execute("VipAutoUseMaterials({})")
+        self.assertEqual(1, len(lua.globals().logs))
 
     def test_disabled_switch_or_missing_privilege_preserves_items(self):
         for setting in ("state.autoUseMaterials=0", "vip=false"):
@@ -232,7 +338,7 @@ JSLingLiDanUseTable={};onAchievementFunc=function()error('unexpected achievement
         lua = self.runtime()
         lua.execute("RecycledItems={};for i=2,20 do RecycledItems[i]={notAuto=true}end;get_d_val=function()return 0 end;state.dealAutoSell={}")
         dialog = lua.execute("return onVipAutomaticHs({})")
-        for label in ("转生丹", "元神丹", "特戒结晶", "神魂", "血炼精华", "仙力", "仙钻", "金砖(绑金)"):
+        for label in ("转生丹", "元神丹", "特戒结晶", "神魂", "血炼精华", "战灵潜能", "内功经验卷", "仙力", "戒灵粉尘", "仙钻", "金砖(绑金)"):
             self.assertIn(label, dialog)
         self.assertIn("已开启", dialog)
         self.assertIn("@onVipAutomaticHsEx,21", dialog)
@@ -253,7 +359,8 @@ JSLingLiDanUseTable={};onAchievementFunc=function()error('unexpected achievement
         self.assertEqual(set(TARGET_IDS), set(active))
         lua = self.runtime()
         for table_name, family in (("CircleExp", "转生修为丹"),
-                                   ("zJuanZhouAdd", None), ("zGnItem100", "金砖(绑金)")):
+                                   ("zJuanZhouAdd", None), ("zGnItem100", "金砖(绑金)"),
+                                   ("SpiritFighterEnergyItemTable", "潜能")):
             for config in lua.globals()[table_name].values():
                 if config.item_id not in TARGET_IDS:
                     continue
@@ -263,10 +370,12 @@ JSLingLiDanUseTable={};onAchievementFunc=function()error('unexpected achievement
                 name = fields["name"].value.decode("utf-8")
                 description = fields["desc"].value.decode("utf-8").replace(",", "")
                 self.assertIn(family or ("血炼精华" if config.type == 10 else
-                              "仙力" if config.type == 11 else "仙钻" if config.type == 14 else
+                              "仙力" if config.type == 11 else "戒灵粉尘" if config.type == 13 else
+                              "内功经验卷" if config.type == 8 else
+                              "仙钻" if config.type == 14 else
                               "神魂" if config.type == 5 else
                               "元神丹" if config.pr == 166 else "特戒结晶"), name)
-                self.assertIn(str(int(config.value)), description)
+                self.assertIn(str(int(config.addExp if table_name == "SpiritFighterEnergyItemTable" else config.value)), description)
         exported = (FUNCTIONS / "GlobalNpcFunctions.lua").read_bytes()
         self.assertIn(b"onVipAutomaticHs", exported)
 

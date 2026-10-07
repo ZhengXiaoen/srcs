@@ -305,16 +305,6 @@ function onJuanZhouAdd(sysarg,itemidx,itemPtr,ItemTable,delType,itemUserNum)
 	local nOpenDays = System.getDaysSinceOpenServer()
 	local nstr = "";
 
-	if ItemTable.type ~= nil and ItemTable.type == 8 then						
-			local addExp = Actor.addInnerExp(sysarg, ItemTable.value*itemUserNum)
-			myProperty = Actor.getUIntProperty(sysarg, PROP_ACTOR_INNER_EXP);
-			nstr = string.format(Lang.ScriptTips.Qf00008, ItemTable.str, addExp, myProperty);
-			
-			local nActorId = Actor.getIntProperty(sysarg,PROP_ENTITY_ID)
-			System.sendCommonLog(LogIds.shiyongneigongjingyanquan,nActorId,Actor.getName(sysarg),0,myProperty-addExp,myProperty,"使用内功经验券")
-	end
-
-
 	--开区前四天经验丹每天只能用100次
 	-- if ItemTable.type == 3 and ItemTable.staticId > 0 and nOpenDays <= 3 then
 	-- 	if d[ItemTable.staticId] <= 0 then
@@ -382,6 +372,12 @@ function onJuanZhouAdd(sysarg,itemidx,itemPtr,ItemTable,delType,itemUserNum)
                 local netPack = DataPack.allocPacket(sysarg, 139, 240)
                 DataPack.writeInt(netPack,var.godSoulValue) 
                 DataPack.flush(netPack)
+			elseif ItemTable.type == 8 then --内功经验
+				local addExp = Actor.addInnerExp(sysarg, ItemTable.value*itemUserNum)
+				myProperty = Actor.getUIntProperty(sysarg, PROP_ACTOR_INNER_EXP);
+				nstr = string.format(Lang.ScriptTips.Qf00008, ItemTable.str, addExp, myProperty);
+				local nActorId = Actor.getIntProperty(sysarg,PROP_ENTITY_ID)
+				System.sendCommonLog(LogIds.shiyongneigongjingyanquan,nActorId,Actor.getName(sysarg),0,myProperty-addExp,myProperty,"使用内功经验券")
 			elseif ItemTable.type == 9 then --斗笠值
 				local var = Actor.getStaticVar(sysarg)
 				if var.MianJinZhi ==nil then  var.MianJinZhi =0 end

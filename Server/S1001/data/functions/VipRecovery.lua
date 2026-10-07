@@ -12,13 +12,16 @@ LocalDT.VipRecoveryAutoUseMaterialIds = {
 	[542] = true, [543] = true, [544] = true, -- 转生修为丹
 	[565] = true, [566] = true, [567] = true, [568] = true, [569] = true, [570] = true, -- 护盾碎片
 	[572] = true, [573] = true, [574] = true, -- 圣珠结晶
+	[4744] = true, [4745] = true, [4746] = true, -- 内功经验卷
 	[6297] = true, [6374] = true, [6298] = true, -- 元神丹
 	[5165] = true, [5166] = true, [5167] = true, [5168] = true, [5171] = true, -- 神魂
 	[5645] = true, [5646] = true, [5647] = true, -- 斗笠精华
 	[7194] = true, [7195] = true, [7196] = true, -- 火龙结晶
 	[551] = true, [552] = true, [553] = true, -- 战将灵力丹
 	[6912] = true, [6913] = true, [6914] = true, [6915] = true, [6916] = true, [6917] = true,
+	[7061] = true, [7062] = true, [7063] = true, [7064] = true, [7065] = true, [7066] = true, -- 战灵潜能
 	[7151] = true, [7152] = true, [7153] = true, [7154] = true, [7155] = true,
+	[7618] = true, [7619] = true, [7620] = true, -- 戒灵粉尘
 	[7780] = true, [7781] = true, [7782] = true, [7783] = true, [7784] = true, [7785] = true, -- 仙钻
 	[508] = true,
 }
@@ -237,7 +240,7 @@ function onVipAutomaticHs(sysarg)
 	if LocalDT.IsVipMaterialAutoUseEnabled(sysarg) then
 		status = "<(c0xFF00FF00)已开启>"
 	end
-	e = e .. string.format("  <#c0xFFFFFF00#材料自动使用/@onVipAutomaticHsEx,21|自动使用宝石、圣珠、护盾、护符、转生丹、元神丹、特戒结晶、神魂、斗笠精华、火龙结晶、战将灵力丹、成就令牌、血炼精华、仙力、仙钻、金砖(绑金)>%s ", status)
+	e = e .. string.format("  <#c0xFFFFFF00#材料自动使用/@onVipAutomaticHsEx,21|自动使用宝石、圣珠、护盾、护符、转生丹、元神丹、特戒结晶、神魂、斗笠精华、火龙结晶、战将灵力丹、成就令牌、血炼精华、战灵潜能、内功经验卷、仙力、戒灵粉尘、仙钻、金砖(绑金)>%s ", status)
 	return e;
 end
 
@@ -301,6 +304,13 @@ function VipAutoUseMaterials(sysarg)
 	for _, config in ipairs(CircleExp) do
 		if LocalDT.VipRecoveryAutoUseMaterialIds[config.item_id] then
 			itemConfigs[config.item_id] = {func = onCircleExp, params = config}
+		end
+	end
+	if Actor.getSpiritFighterLevel(sysarg) > 0 then
+		for _, config in ipairs(SpiritFighterEnergyItemTable) do
+			if LocalDT.VipRecoveryAutoUseMaterialIds[config.item_id] then
+				itemConfigs[config.item_id] = {func = onUseSpiritFighterEnergyItem, params = config}
+			end
 		end
 	end
 	for _, config in ipairs(zGnItem100) do

@@ -24,7 +24,7 @@ PROP_CREATURE_LEVEL = 1
 PROP_ACTOR_CIRCLE = 2
 ttFlyTip = 256
 state = {
-    days = {}, d = {[2] = 9, [7] = 10}, RiChangRenWuFlag = 1,
+    days = {}, d = {[2] = 1, [7] = 10}, RiChangRenWuFlag = 1,
     RiChangRenWuFinish = 1, RiChangRenWuType = 0, RiChangRenWuIndex = 1
 }
 dynamic = {}
@@ -93,7 +93,7 @@ class DailyTaskSubmitTests(unittest.TestCase):
     def evaluate(self, expression):
         return self.lua.eval(expression)
 
-    def assert_rewards(self, exp=2000000, inner=10000):
+    def assert_rewards(self, exp=10000000, inner=50000):
         self.assertEqual(exp, self.evaluate("exp"))
         self.assertEqual(inner, self.evaluate("inner"))
         self.assertEqual(1, self.evaluate("completions"))
@@ -104,7 +104,7 @@ class DailyTaskSubmitTests(unittest.TestCase):
         self.assertEqual(0, self.evaluate("state.RiChangRenWuFlag"))
         self.assertEqual(0, self.evaluate("state.RiChangRenWuFinish"))
         self.assertEqual(1, self.evaluate("state.d[7]"))
-        self.assertEqual(9, self.evaluate("state.d[2]"))
+        self.assertEqual(1, self.evaluate("state.d[2]"))
         self.assertIsNone(self.evaluate("state.RiChangRenWuIndex"))
 
     def test_invalid_index_preserves_claim_state(self):
@@ -119,7 +119,7 @@ class DailyTaskSubmitTests(unittest.TestCase):
                 self.assertEqual(1, self.evaluate("state.RiChangRenWuFlag"))
                 self.assertEqual(1, self.evaluate("state.RiChangRenWuFinish"))
                 self.assertEqual(10, self.evaluate("state.d[7]"))
-                self.assertEqual(9, self.evaluate("state.d[2]"))
+                self.assertEqual(1, self.evaluate("state.d[2]"))
                 self.assertEqual(1, self.evaluate("#tips"))
 
     def test_exp_callback_clears_or_changes_index(self):
@@ -190,7 +190,7 @@ class DailyTaskSubmitTests(unittest.TestCase):
     def test_privilege_and_returning_player_bonuses(self):
         self.lua.execute("privilege = true; oldPlayer = true; globalState.oldplayer = {}")
         self.submit()
-        self.assert_rewards(4800000, 24000)
+        self.assert_rewards(24000000, 120000)
 
     def test_mining_completion(self):
         self.lua.execute("state.RiChangRenWuType = 1; state.kuangshi_RCCM = 1")
@@ -201,7 +201,7 @@ class DailyTaskSubmitTests(unittest.TestCase):
     def test_reopens_panel_for_high_level_player(self):
         self.lua.execute("level = 80; state.RiChangRenWuIndex = 7")
         result = self.submit()
-        self.assert_rewards(5000000, 10000)
+        self.assert_rewards(25000000, 50000)
         self.assertIsInstance(result, str)
 
     def test_all_reward_indexes(self):
@@ -211,7 +211,97 @@ class DailyTaskSubmitTests(unittest.TestCase):
                 self.lua.execute(f"state.RiChangRenWuIndex = {index}")
                 expected = self.evaluate(f"GetNpcRiChangChuMo()[{index}].Exp * 10")
                 self.submit()
-                self.assert_rewards(expected, 10000)
+                self.assert_rewards(expected, 50000)
+
+    def load_count_functions(self):
+        source = (ROOT / "Server/S1001/data/functions/SpecialQuest.lua").read_text(encoding="utf-8-sig")
+        for name in ("RefreshActorZero", "Buy_RiChangChuMo"):
+            start = source.index("function " + name + "(")
+            end = source.index("\nend", start) + len("\nend")
+            self.lua.execute(source[start:end])
+        self.lua.execute('''
+            System.getDate = function() return 2026, 10, 7 end
+            System.getToday = function() return 1000000 end
+            System.getCurrMiniTime = function() return 1000000 end
+            System.getDaysSinceOpenServer = function() return 10 end
+            ShuaXinFengHao = function() end
+            Fuben.getSceneHandleById = function() return 0 end
+            Fuben.getSceneWidth = function() return 200 end
+            Fuben.getSceneHeight = function() return 200 end
+            Fuben.getScenHeight = Fuben.getSceneHeight
+            Fuben.getSceenWidth = Fuben.getSceneWidth
+            Fuben.onCanMove = function() return true end
+            System.telportScene = function() end
+            add_d_val = function(_, index, value) state.d[index] = get_d_val(nil, index) + value end
+            del_d_val = function(_, index, value) state.d[index] = get_d_val(nil, index) - value end
+            spent = 0
+            Actor.changeMoney = function(_, _, value) spent = spent - value end
+        ''')
+
+    def test_fresh_daily_counts_and_single_purchase_across_both_entries(self):
+        for first, second in (("Buy_RiChangChuMo({})", "GetNpcRiChangChuMo().buycs({})"),
+                              ("GetNpcRiChangChuMo().buycs({})", "Buy_RiChangChuMo({})")):
+            with self.subTest(first=first):
+                self.setUp()
+                self.load_count_functions()
+                self.lua.execute("state.d = {}; state.RiChangRenWuFlag = 0; RefreshActorZero({})")
+                self.assertEqual(2, self.evaluate("state.d[2]"))
+                self.assertEqual(0, self.evaluate("state.d[10]"))
+                self.lua.execute(first)
+                self.assertEqual(3, self.evaluate("state.d[2]"))
+                self.assertEqual(1, self.evaluate("state.d[10]"))
+                self.lua.execute(second)
+                self.assertEqual(3, self.evaluate("state.d[2]"))
+                self.assertEqual(200000, self.evaluate("spent"))
+
+    def test_third_attempt_submits_and_fourth_attempt_is_blocked(self):
+        self.load_count_functions()
+        self.lua.execute("state.d[2] = 3; state.d[10] = 1; state.RiChangRenWuFlag = 0")
+        for _ in range(3):
+            self.lua.execute('''
+                state.RiChangRenWuIndex = 1; state.RiChangRenWuType = 0
+                GetNpcRiChangChuMo().rcJieShouRenWu({})
+                state.RiChangRenWuFinish = 1; state.d[7] = 10
+            ''')
+            self.assertIn("完成任务", self.lua.eval("GetNpcRiChangChuMo().main2({})"))
+            self.submit()
+        self.assertEqual(0, self.evaluate("state.d[2]"))
+        self.assertEqual(3, self.evaluate("completions"))
+        self.assertEqual(30000000, self.evaluate("exp"))
+        self.assertEqual(150000, self.evaluate("inner"))
+        self.lua.execute("GetNpcRiChangChuMo().rcJieShouRenWu({})")
+        self.assertEqual(0, self.evaluate("state.RiChangRenWuFlag"))
+        self.assertIn("已经都完成", self.lua.eval("GetNpcRiChangChuMo().main2({})"))
+
+    def test_daily_reset_discards_unused_purchased_attempts(self):
+        self.load_count_functions()
+        self.lua.execute('''state.RiChangRenWuTimesVersion = 1
+            state.d[1] = 2026106; state.d[2] = 3; state.d[10] = 1
+            RefreshActorZero({})''')
+        self.assertEqual(2, self.evaluate("state.d[2]"))
+        self.assertEqual(0, self.evaluate("state.d[10]"))
+        self.assertEqual(3, self.evaluate("state.ziYuanXunHui[1]"))
+        self.lua.execute("RefreshActorZero({})")
+        self.assertEqual(2, self.evaluate("state.d[2]"))
+
+    def test_legacy_counts_convert_once_and_preserve_active_task(self):
+        for remaining, bought, active, expected in ((10, 0, 0, 2), (9, 0, 1, 1),
+                (5, 0, 0, 1), (0, 0, 0, 0), (15, 5, 0, 3), (0, 5, 1, 0)):
+            with self.subTest(remaining=remaining, bought=bought, active=active):
+                self.setUp()
+                self.load_count_functions()
+                self.lua.execute(f'''state.d[1] = 2026107; state.d[2] = {remaining}
+                    state.d[10] = {bought}; state.RiChangRenWuFlag = {active}
+                    state.ziYuanXunHui = {{[1] = 10, [2] = 77}}
+                    RefreshActorZero({{}})''')
+                self.assertEqual(expected, self.evaluate("state.d[2]"))
+                self.assertEqual(int(bought > 0), self.evaluate("state.d[10]"))
+                self.assertEqual(active, self.evaluate("state.RiChangRenWuFlag"))
+                self.assertEqual(2, self.evaluate("state.ziYuanXunHui[1]"))
+                self.assertEqual(77, self.evaluate("state.ziYuanXunHui[2]"))
+                self.lua.execute("RefreshActorZero({})")
+                self.assertEqual(expected, self.evaluate("state.d[2]"))
+                self.assertEqual(2, self.evaluate("state.ziYuanXunHui[1]"))
 
     def test_no_new_top_level_locals(self):
         self.assertEqual(1, len(re.findall(r"^local\s+", NPC_SOURCE, re.M)))

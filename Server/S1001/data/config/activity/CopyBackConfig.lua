@@ -10,13 +10,13 @@ CopyBackConfig =
 	   openDay = 0,
 	   copyAwards = 
 	   {
-			{type = 2, id = 0, count = 5000000, quality = 0, strong = 0, bind = 1,icon="iaward#2#1" },--经验
-			{type = 57, id = 0, count = 2000, quality = 0, strong = 0, bind = 1,icon="iaward#0#1" },--内功
+			{type = 2, id = 0, count = 25000000, quality = 0, strong = 0, bind = 1,icon="iaward#2#1" },--经验
+			{type = 57, id = 0, count = 10000, quality = 0, strong = 0, bind = 1,icon="iaward#0#1" },--内功
 	   },
 	   copyAwards_half = 
 	   {
-			{type = 2, id = 0, count = 2500000, quality = 0, strong = 0, bind = 1,icon="iaward#2#1" },--经验
-			{type = 57, id = 0, count = 1000, quality = 0, strong = 0, bind = 1,icon="iaward#0#1" },--内功
+			{type = 2, id = 0, count = 12500000, quality = 0, strong = 0, bind = 1,icon="iaward#2#1" },--经验
+			{type = 57, id = 0, count = 5000, quality = 0, strong = 0, bind = 1,icon="iaward#0#1" },--内功
 	   },
    },
 

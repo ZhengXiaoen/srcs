@@ -77,16 +77,16 @@ class MainQuestSubmitTests(unittest.TestCase):
 
     def test_first_daily_completion_preserves_following_main_task(self):
         self.run_lua('OnNpcEvent({},251,"rcWanChengRenWu")')
-        self.assert_progress(65, 2000000)
-        self.assertEqual(10000, self.value("inner"))
+        self.assert_progress(65, 10000000)
+        self.assertEqual(50000, self.value("inner"))
         self.assertEqual(1, self.value("completions"))
         self.assertEqual(37, self.value("task_all[65].npcid"))
         for _ in range(4):
             self.run_lua('OnNpcEvent({},251,"onAcceptTask")')
-        self.assert_progress(65, 2000000)
+        self.assert_progress(65, 10000000)
         self.assertIsNone(self.value("items[1780]"))
         self.run_lua('OnNpcEvent({},37,"onAcceptTask")')
-        self.assert_progress(66, 2430000, 5000)
+        self.assert_progress(66, 10430000, 5000)
         self.assertEqual(3, self.value("items[1780]"))
 
     def test_level_up_during_daily_reward_cannot_submit_other_npc_task(self):
@@ -97,7 +97,7 @@ class MainQuestSubmitTests(unittest.TestCase):
                 OnNpcEvent({},251,"onAcceptTask")
             end
             OnNpcEvent({},251,"rcWanChengRenWu")''')
-        self.assert_progress(65, 2000000)
+        self.assert_progress(65, 10000000)
 
     def test_stale_callbacks_cannot_skip_later_npc_feature_tasks(self):
         for task in (65, 66, 68, 69, 82, 84, 92, 94, 97, 100, 102, 104, 106, 108, 110):
@@ -153,7 +153,7 @@ class MainQuestSubmitTests(unittest.TestCase):
         self.run_lua('''OnNpcEvent({},251,"rcWanChengRenWu")
             OnNpcEvent({},251,"rcWanChengRenWu")
             OnNpcEvent({},251,"onAcceptTask")''')
-        self.assert_progress(65, 2000000)
+        self.assert_progress(65, 10000000)
         self.assertEqual(1, self.value("completions"))
 
 

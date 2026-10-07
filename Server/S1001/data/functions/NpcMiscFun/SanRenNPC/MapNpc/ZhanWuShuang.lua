@@ -3,24 +3,24 @@
 local t = {
 	--mapid = 86, --无双殿堂,任务专用地图
 	--mapname = "无双殿堂";
-	[1]={lvSatrt=50,lvEnd=55,circle= 0, Exp=200000,innerExp=1000,mapId=12,monsterId=0,monsterNum=1,x=0,y=0},
-	[2]={lvSatrt=56,lvEnd=60,circle= 0, Exp=250000,innerExp=1000,mapId=13,monsterId=0,monsterNum=1,x=0,y=0},
-	[3]={lvSatrt=61,lvEnd=65,circle= 0, Exp=300000,innerExp=1000,mapId=14,monsterId=0,monsterNum=1,x=0,y=0},
-	[4]={lvSatrt=66,lvEnd=70,circle= 0, Exp=350000,innerExp=1000,mapId=15,monsterId=0,monsterNum=1,x=0,y=0},
-	[5]={lvSatrt=71,lvEnd=75,circle= 0, Exp=500000,innerExp=1000,mapId=98,monsterId=0,monsterNum=1,x=0,y=0},
-	[6]={lvSatrt=76,lvEnd=79,circle= 0, Exp=500000,innerExp=1000,mapId=98,monsterId=0,monsterNum=1,x=0,y=0},
-	[7]={lvSatrt=80,lvEnd=90,circle= 0, Exp=500000,innerExp=1000,mapId=99,monsterId=0,monsterNum=1,x=0,y=0},
-	
-	[8]={lvSatrt=0,lvEnd=0,circle= 1, Exp=500000,innerExp=1000,mapId=31,monsterId=0,monsterNum=1,x=45,y=21},
-	[9]={lvSatrt=0,lvEnd=0,circle= 2, Exp=500000,innerExp=1000,mapId=34,monsterId=0,monsterNum=1,x=159,y=151},
-	[10]={lvSatrt=0,lvEnd=0,circle= 3, Exp=500000,innerExp=1000,mapId=38,monsterId=0,monsterNum=1,x=176,y=47},
-	[11]={lvSatrt=0,lvEnd=0,circle= 4, Exp=500000,innerExp=1000,mapId=41,monsterId=0,monsterNum=1,x=160,y=32},
-	[12]={lvSatrt=0,lvEnd=0,circle= 5, Exp=500000,innerExp=1000,mapId=45,monsterId=0,monsterNum=1,x=111,y=27},
-	[13]={lvSatrt=0,lvEnd=0,circle= 6, Exp=500000,innerExp=1000,mapId=49,monsterId=0,monsterNum=1,x=205,y=117},
-	[14]={lvSatrt=0,lvEnd=0,circle= 7, Exp=500000,innerExp=1000,mapId=53,monsterId=0,monsterNum=1,x=45,y=26},
-	[15]={lvSatrt=0,lvEnd=0,circle= 8, Exp=500000,innerExp=1000,mapId=56,monsterId=0,monsterNum=1,x=187,y=208},
-	[16]={lvSatrt=0,lvEnd=0,circle= 9, Exp=500000,innerExp=1000,mapId=58,monsterId=0,monsterNum=1,x=29,y=32},
-	[17]={lvSatrt=0,lvEnd=0,circle= 10, Exp=500000,innerExp=1000,mapId=66,monsterId=0,monsterNum=1,x=155,y=122},
+	[1]={lvSatrt=50,lvEnd=55,circle= 0, Exp=1000000,innerExp=5000,mapId=12,monsterId=0,monsterNum=1,x=0,y=0},
+	[2]={lvSatrt=56,lvEnd=60,circle= 0, Exp=1250000,innerExp=5000,mapId=13,monsterId=0,monsterNum=1,x=0,y=0},
+	[3]={lvSatrt=61,lvEnd=65,circle= 0, Exp=1500000,innerExp=5000,mapId=14,monsterId=0,monsterNum=1,x=0,y=0},
+	[4]={lvSatrt=66,lvEnd=70,circle= 0, Exp=1750000,innerExp=5000,mapId=15,monsterId=0,monsterNum=1,x=0,y=0},
+	[5]={lvSatrt=71,lvEnd=75,circle= 0, Exp=2500000,innerExp=5000,mapId=98,monsterId=0,monsterNum=1,x=0,y=0},
+	[6]={lvSatrt=76,lvEnd=79,circle= 0, Exp=2500000,innerExp=5000,mapId=98,monsterId=0,monsterNum=1,x=0,y=0},
+	[7]={lvSatrt=80,lvEnd=90,circle= 0, Exp=2500000,innerExp=5000,mapId=99,monsterId=0,monsterNum=1,x=0,y=0},
+
+	[8]={lvSatrt=0,lvEnd=0,circle= 1, Exp=2500000,innerExp=5000,mapId=31,monsterId=0,monsterNum=1,x=45,y=21},
+	[9]={lvSatrt=0,lvEnd=0,circle= 2, Exp=2500000,innerExp=5000,mapId=34,monsterId=0,monsterNum=1,x=159,y=151},
+	[10]={lvSatrt=0,lvEnd=0,circle= 3, Exp=2500000,innerExp=5000,mapId=38,monsterId=0,monsterNum=1,x=176,y=47},
+	[11]={lvSatrt=0,lvEnd=0,circle= 4, Exp=2500000,innerExp=5000,mapId=41,monsterId=0,monsterNum=1,x=160,y=32},
+	[12]={lvSatrt=0,lvEnd=0,circle= 5, Exp=2500000,innerExp=5000,mapId=45,monsterId=0,monsterNum=1,x=111,y=27},
+	[13]={lvSatrt=0,lvEnd=0,circle= 6, Exp=2500000,innerExp=5000,mapId=49,monsterId=0,monsterNum=1,x=205,y=117},
+	[14]={lvSatrt=0,lvEnd=0,circle= 7, Exp=2500000,innerExp=5000,mapId=53,monsterId=0,monsterNum=1,x=45,y=26},
+	[15]={lvSatrt=0,lvEnd=0,circle= 8, Exp=2500000,innerExp=5000,mapId=56,monsterId=0,monsterNum=1,x=187,y=208},
+	[16]={lvSatrt=0,lvEnd=0,circle= 9, Exp=2500000,innerExp=5000,mapId=58,monsterId=0,monsterNum=1,x=29,y=32},
+	[17]={lvSatrt=0,lvEnd=0,circle= 10, Exp=2500000,innerExp=5000,mapId=66,monsterId=0,monsterNum=1,x=155,y=122},
 	
 	kuangshi =
 	{
@@ -80,7 +80,7 @@ t.main2 = function(sysarg)
 	
 	--加上是否在任务状态，不然最后一个任务接了之后就不能完成了
 	local Var = Actor.getStaticVar(sysarg)
-	if get_d_val(sysarg,10) >= 5 and get_d_val(sysarg,2) == 0 and ( Var.RiChangRenWuFlag ==nil or Var.RiChangRenWuFlag ==0 )then
+	if get_d_val(sysarg,10) >= 1 and get_d_val(sysarg,2) == 0 and ( Var.RiChangRenWuFlag ==nil or Var.RiChangRenWuFlag ==0 )then
 		return "\\  <(c0xFFeabc78)您今天的战无双任务已经都完成了,明天再来找我吧.>\\\\  <(c0xFFeabc78)看看今天的炼狱您做过了吗?>";
 	end
 
@@ -128,7 +128,7 @@ t.main2 = function(sysarg)
 	local sYuanBao = "&FF0000&当前: "..Actor.getMoneyCount(sysarg,3).." 元宝#&888888&(进行元宝充值1元人民币等于100元宝)";
 
 	--set_d_val(sysarg,6,MaxExpS);	--记录任务经验
-	if get_d_val(sysarg,2) == 0 and get_d_val(sysarg,10) < 5 and (Var.RiChangRenWuFlag ==nil or Var.RiChangRenWuFlag ==0) then
+	if get_d_val(sysarg,2) == 0 and get_d_val(sysarg,10) < 1 and (Var.RiChangRenWuFlag ==nil or Var.RiChangRenWuFlag ==0) then
 		Actor.openarrowsguide(sysarg, 1005, 308, 487, 1);
 	end
 
@@ -284,7 +284,7 @@ t.main2 = function(sysarg)
 	
 	Actor.addTimer(sysarg,47,5*1000)
 	
-	ehco = ehco .. string.format("	        <(c0xFFbf975f)今日剩余任务次数> <(c0xFFeabc78)%s> <(c0xFFbf975f)次> <购买次数/@buycs|需要20万金币#每天可购买5次##如果哪天在外面看到身穿降妖除魔衣服的人,那个人就是我>",get_d_val(sysarg,2));
+	ehco = ehco .. string.format("	        <(c0xFFbf975f)今日剩余任务次数> <(c0xFFeabc78)%s> <(c0xFFbf975f)次> <购买次数/@buycs|需要20万金币#每天可购买1次##如果哪天在外面看到身穿降妖除魔衣服的人,那个人就是我>",get_d_val(sysarg,2));
 	return ehco;
 
 end
@@ -344,8 +344,8 @@ t.buycs = function(sysarg)
 		Actor.sendTipmsg(sysarg,string.format("您的绑金或金币不足%s,购买失败..",needn),256);
 		return t.main2(sysarg);
 	end
-	if get_d_val(sysarg,10) >= 5 then
-		Actor.sendTipmsg(sysarg,"您今天已经购买过5次参与任务机会了,无法再继续购买!\\请明天再来吧.(每天0点刷新任务次数)",256);
+	if get_d_val(sysarg,10) >= 1 then
+		Actor.sendTipmsg(sysarg,"您今天已经购买过1次参与任务机会了,无法再继续购买!\\请明天再来吧.(每天0点刷新任务次数)",256);
 		return;
 	end
 	Actor.changeMoney(sysarg,MC,-needn,2122,"购买降妖除魔次数");
@@ -431,9 +431,9 @@ t.rcWanChengRenWu = function(sysarg)
 		--广播日常除魔
 		if Var.days.KoRccmTime ==nil then 
 			Var.days.KoRccmTime = 1 
-		elseif Var.days.KoRccmTime<=9 then 
+		elseif Var.days.KoRccmTime<2 then
 			Var.days.KoRccmTime = 1 + Var.days.KoRccmTime 
-			if Var.days.KoRccmTime==10 then 
+			if Var.days.KoRccmTime==2 then
 				local tishi = string.format("<(n%s)>玩家完成了每日的战无双任务,得到大量提升,再这样坚持下去必定超神.",Actor.getName(sysarg))
 				System.broadcastTipmsg(tishi,128)
 			end

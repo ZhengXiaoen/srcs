@@ -126,7 +126,7 @@ end
 --刷新每日变量(登录和0点调用)
 function RefreshActorZero(sysarg)
 	local dMeiRiShuaXin = {
-		{2,10},	--日常任务,降妖除魔,每天赠送次数
+		{2,2},	--日常任务,降妖除魔,每天赠送2次
 		--3 记录地图
 		--4 记录杀怪数
 		--5 记录杀怪需求数
@@ -134,7 +134,7 @@ function RefreshActorZero(sysarg)
 		--7 记录星数
 		--8 成长武器的杀怪值记录(散人传说已用,慎重)
 		{9,0}, --每日清零能量点
-		{10,0}, --日常任务降妖除魔每天可购买5次
+		{10,0}, --日常任务降妖除魔每天可购买1次
 		{11,0},	--每天散人殿堂进入次数刷新,每天1次免费
 		--12 荒古定时器记录用
 
@@ -243,6 +243,21 @@ function RefreshActorZero(sysarg)
 		
 
     end
+	-- 旧次数按每5次合并为1次，保留已接任务和购买记录，避免重新发放次数。
+	if var.RiChangRenWuTimesVersion ~= 1 then
+		if d[1] ~= nil and d[1] ~= 0 then
+			local bought = math.max(0, math.min(5, d[10]))
+			local active = var.RiChangRenWuFlag == 1 and 1 or 0
+			local finished = math.max(0, 10 + bought - d[2] - active)
+			d[10] = bought > 0 and 1 or 0
+			d[2] = math.max(0, 2 + d[10] - math.ceil(finished / 5) - active)
+		end
+		if var.ziYuanXunHui ~= nil and var.ziYuanXunHui[1] ~= nil then
+			var.ziYuanXunHui[1] = math.floor(math.max(0, var.ziYuanXunHui[1]) / 5)
+		end
+		var.RiChangRenWuTimesVersion = 1
+	end
+
 	--//刷新每日变量信息
 	if d[1] ~= Today then
 		
@@ -254,6 +269,8 @@ function RefreshActorZero(sysarg)
 				d[dMeiRiShuaXin[i][1]] = dMeiRiShuaXin[i][2];
 			end
 		end
+		-- 每日任务独立刷新，旧的剩余次数不能带到次日。
+		d[2] = 2
 		ShuaXinFengHao(sysarg);
 
 		
@@ -600,8 +617,8 @@ function Buy_RiChangChuMo(sysarg)
 		Actor.sendTipmsg(sysarg,string.format("您的绑金或金币不足%s,购买失败..",needn),256);
 		return ;
 	end
-	if get_d_val(sysarg,10) >= 5 then
-		Actor.sendTipmsg(sysarg,"您今天已经购买过5次参与任务机会了,无法再继续购买!\\请明天再来吧.(每天0点刷新任务次数)",256);
+	if get_d_val(sysarg,10) >= 1 then
+		Actor.sendTipmsg(sysarg,"您今天已经购买过1次参与任务机会了,无法再继续购买!\\请明天再来吧.(每天0点刷新任务次数)",256);
 		return;
 	end
 	Actor.changeMoney(sysarg,MC,-needn,2122,"购买降妖除魔次数");
@@ -1468,12 +1485,12 @@ taskstr=taskstr.."\\<(idecoLine9#195)>"
 		
 		if get_taskflags_val(sysarg) ~= 64 then 
 			local dvar = Actor.getDyanmicVar(sysarg)
-			if get_d_val(sysarg,2) >= 1 or get_d_val(sysarg,10) <5 or (var.RiChangRenWuFlag ~=nil and var.RiChangRenWuFlag ==1 ) or (var.RiChangRenWuFinish ~=nil and var.RiChangRenWuFinish ==1)then
+			if get_d_val(sysarg,2) >= 1 or get_d_val(sysarg,10) <1 or (var.RiChangRenWuFlag ~=nil and var.RiChangRenWuFlag ==1 ) or (var.RiChangRenWuFinish ~=nil and var.RiChangRenWuFinish ==1)then
 				
 				--没有接受任务
 				if pLv>=50 and (var.RiChangRenWuFinish==nil or var.RiChangRenWuFinish==0) and (var.RiChangRenWuFlag ==nil or var.RiChangRenWuFlag ==0) then 
-					if get_d_val(sysarg,2) < 1 and get_d_val(sysarg,10) < 5 then
-						taskstr = taskstr .. string.format("<(c0xFF4ba0de)[经验、内功]> <(c0xFFe19f21)日常任务><(c0xFFf55c95a)(可接受)>\\<(c0xFFdce0cb)- 回复> <战无双/M威龙城:138:130:战无双|每天获得大量经验和内功的首选之路> <(x威龙城:138:130:战无双)>\\<(c0xFFdce0cb)- 次数> <点击购买日常任务次数/@@GetbranchAward,buyRCCM|20万绑金或金币购买#每天最多买5次>\\")
+					if get_d_val(sysarg,2) < 1 and get_d_val(sysarg,10) < 1 then
+						taskstr = taskstr .. string.format("<(c0xFF4ba0de)[经验、内功]> <(c0xFFe19f21)日常任务><(c0xFFf55c95a)(可接受)>\\<(c0xFFdce0cb)- 回复> <战无双/M威龙城:138:130:战无双|每天获得大量经验和内功的首选之路> <(x威龙城:138:130:战无双)>\\<(c0xFFdce0cb)- 次数> <点击购买日常任务次数/@@GetbranchAward,buyRCCM|20万绑金或金币购买#每天最多买1次>\\")
 					else 
 						taskstr = taskstr .. string.format("<(c0xFF4ba0de)[经验、内功]> <(c0xFFe19f21)日常任务><(c0xFFf55c95a)(可接受)>\\<(c0xFFdce0cb)- 回复> <战无双/M威龙城:138:130:战无双|每天获得大量经验和内功的首选之路> <(x威龙城:138:130:战无双)>\\")
 					end

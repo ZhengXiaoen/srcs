@@ -152,7 +152,7 @@ giftAwards=0
 SendLivenessIconStatus=function()end
 GuildXiangYaoChuMoRemaining=function() return 0 end
 GuildCaiLiaoRemaining=function() return 0 end
-state.days={};state.d={};state.d[2]=9;state.d[7]=10;state.taskflags_val=65
+state.days={};state.d={};state.d[2]=1;state.d[7]=10;state.taskflags_val=65
 state.RiChangRenWuFlag=1;state.RiChangRenWuFinish=1;state.RiChangRenWuType=0;state.RiChangRenWuIndex=1
 state.levelGiftBag={};state.levelGiftBag[1]=1
 """)
@@ -180,12 +180,12 @@ run("""
 NpcDialog[251]=GetNpcRiChangChuMo()
 level=59
 MakeTheConfigSame()
-state.taskflags_val=64;state.RiChangRenWuFlag=0;state.RiChangRenWuFinish=0;state.RiChangRenWuIndex=2;state.d[2]=10
+state.taskflags_val=64;state.RiChangRenWuFlag=0;state.RiChangRenWuFinish=0;state.RiChangRenWuIndex=2;state.d[2]=2
 dynamic.nowNumberOfStep=1
 OnNpcEvent({},251,'rcJieShouRenWu')
 assert(state.taskflags_val==65,'accept must advance one step')
 assert(state.RiChangRenWuFlag==1,'daily not accepted')
-assert(state.d[2]==9,'wrong remaining count')
+assert(state.d[2]==1,'wrong remaining count')
 state.RiChangRenWuFinish=1;scene=9
 Actor.addExp=function(actor,amount)
  exp=exp+amount
@@ -216,10 +216,10 @@ assert(state.taskflags_val==65,'main task lost')
 assert(state.levelGiftBag[1]==1,'claimed gift lost')
 assert(string.find(lastTitle,'提升等级',1,true),'wrong main title')
 assert(not string.find(lastTitle,'打boss,送特戒',1,true),'main finished early')
-assert(exp==2500000,'wrong exp')
-assert(inner==10000,'wrong inner')
+assert(exp==12500000,'wrong exp')
+assert(inner==50000,'wrong inner')
 assert(state.days.KoRccmTime==1,'wrong daily count')
-assert(state.d[2]==9,'daily attempts reset')
+assert(state.d[2]==1,'daily attempts reset')
 assert(state.days.LivenessData.xiangyaochumo==1,'liveness lost')
 GetLivenessActivityInfo({})
 MiscsImplement.handleGetGiftNumOp({},0,{})
@@ -228,7 +228,7 @@ assert(lastPacket.values[1]==1 and lastPacket.values[3]==1,'client must receive 
 MiscsImplement.handleGetGiftBagOp({},0,{})
 assert(giftAwards==0,'gift claimed twice')
 OnNpcEvent({},251,'rcWanChengRenWu')
-assert(exp==2500000 and inner==10000,'daily claimed twice')
+assert(exp==12500000 and inner==50000,'daily claimed twice')
 OnNpcEvent({},37,'onAcceptTask')
 assert(state.taskflags_val==66,'following main task blocked')
 """)
@@ -244,7 +244,7 @@ for index=1,7 do
  OnNpcEvent({},251,'rcWanChengRenWu')
  assert(state.taskflags_val==65 and state.levelGiftBag[1]==1,'permanent progress lost')
  assert(state.days.keep==123 and state.newdays.keep==456 and state.extflags==789,'unrelated data changed')
- assert(inner==10000,'inner reward changed')
+ assert(inner==50000,'inner reward changed')
  assert(mailCount==0,'upgrade resent already-issued gift mail')
 end
 -- A missing daily table is initialized without replacing permanent state.

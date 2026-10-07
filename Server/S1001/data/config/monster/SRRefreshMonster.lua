@@ -804,7 +804,7 @@ RefreshMonsterData = {
 {mapid = 567, x = 40, y = 40, monid = 636, rsftime = 60, bj = 792, ts = 99999, kill = 1, move = {npcname = "尸王殿", mapname = "沙漠土城", mapx = 153, mapy = 122,},}, --技能神王-尸王殿
 {mapid = 568, x = 84, y = 48, monid = 1139, rsftime = 90, bj = 793, ts = 99999, kill = 1, move = {npcname = "混乱地界", mapname = "沙漠土城", mapx = 173, mapy = 130,},}, --混乱魔王-混乱地界
 {mapid = 568, x = 42, y = 90, monid = 1140, rsftime = 90, bj = 794, ts = 99999, kill = 1, move = {npcname = "混乱地界", mapname = "沙漠土城", mapx = 173, mapy = 130,},}, --混乱龙王-混乱地界
-{mapid = 66, x = 43, y = 30, monid = 95, rsftime = 90, bj = 795, ts = 99999, kill = 1, move = {npcname = "传送员", mapname = "威龙城", mapx = 133, mapy = 137,},}, --镇狱龙王-十转地图
+{mapid = 66, x = 43, y = 30, monid = 95, rsftime = 420, bj = 795, ts = 99999, kill = 1, move = {npcname = "传送员", mapname = "威龙城", mapx = 133, mapy = 137,},}, --镇狱龙王-十转地图
 {mapid = 569, x = 116, y = 57, monid = 1153, rsftime = 60, bj = 796, ts = 99999, kill = 1, move = {npcname = "元神使者", mapname = "沙漠土城", mapx = 161, mapy = 139,},}, --出世恶鬼-元神地图1
 {mapid = 570, x = 42, y = 66, monid = 1154, rsftime = 90, bj = 797, ts = 99999, kill = 1, move = {npcname = "元神使者", mapname = "沙漠土城", mapx = 161, mapy = 139,},}, --练气蝎王-元神地图2
 {mapid = 571, x = 82, y = 89, monid = 1155, rsftime = 120, bj = 798, ts = 99999, kill = 1, move = {npcname = "元神使者", mapname = "沙漠土城", mapx = 161, mapy = 139,},}, --固本炎魔-元神地图3

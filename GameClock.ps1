@@ -634,13 +634,13 @@ function Undo-PreparedStart {
     }
 }
 
-function Install-MountStackPatch {
-    param($Paths)
+function Install-LogicServerPatch {
+    param($Paths, [string]$PackageName, [string]$PatchName, [string]$AcceptedTargetHash = '')
     $directory = [IO.Path]::Combine($Paths.Root, 'Server', 'S1001', 'x64')
-    $packagePath = [IO.Path]::Combine($directory, 'mount-stack.patch.json')
+    $packagePath = [IO.Path]::Combine($directory, $PackageName)
     if (-not [IO.File]::Exists($packagePath)) { return }
     if (@(Get-RunningServerNames $Paths).Count -gt 0) {
-        throw '坐骑堆叠补丁只能在服务器关闭后安装。'
+        throw "$PatchName 补丁只能在服务器关闭后安装。"
     }
     $package = [IO.File]::ReadAllText($packagePath, [Text.Encoding]::UTF8) | ConvertFrom-Json
     $exePath = [IO.Path]::Combine($directory, 'LogicServerCQ64_R.exe')
@@ -648,9 +648,10 @@ function Install-MountStackPatch {
     $sha = [Security.Cryptography.SHA256]::Create()
     try {
         $sourceHash = ([BitConverter]::ToString($sha.ComputeHash($source))).Replace('-', '').ToLowerInvariant()
-        if ($sourceHash -eq $package.targetSha256) { return }
+        if ($sourceHash -eq $package.targetSha256 -or
+            ($AcceptedTargetHash -ne '' -and $sourceHash -eq $AcceptedTargetHash)) { return }
         if ($sourceHash -ne $package.sourceSha256 -or $source.Length -ne $package.sourceLength) {
-            throw '逻辑服版本与坐骑堆叠补丁不匹配，未修改程序。'
+            throw "逻辑服版本与 $PatchName 补丁不匹配，未修改程序。"
         }
         $result = New-Object byte[] ([int]$package.targetLength)
         [Array]::Copy($source, $result, $source.Length)
@@ -660,27 +661,39 @@ function Install-MountStackPatch {
             $offset = [int]$edit.offset
             if ($offset -lt 0 -or $offset + $before.Length -gt $source.Length -or
                 $offset + $after.Length -gt $result.Length) {
-                throw '坐骑堆叠补丁范围错误，未修改程序。'
+                throw "$PatchName 补丁范围错误，未修改程序。"
             }
             for ($index = 0; $index -lt $before.Length; $index++) {
                 if ($source[$offset + $index] -ne $before[$index]) {
-                    throw '坐骑堆叠补丁校验失败，未修改程序。'
+                    throw "$PatchName 补丁校验失败，未修改程序。"
                 }
             }
             [Array]::Copy($after, 0, $result, $offset, $after.Length)
         }
         $resultHash = ([BitConverter]::ToString($sha.ComputeHash($result))).Replace('-', '').ToLowerInvariant()
         if ($resultHash -ne $package.targetSha256) {
-            throw '坐骑堆叠补丁结果校验失败，未修改程序。'
+            throw "$PatchName 补丁结果校验失败，未修改程序。"
         }
         # Replace on the same volume only after both complete files are verified.
-        $temporary = $exePath + '.mount-stack.new'
+        $temporary = $exePath + '.' + $PackageName + '.new'
         [IO.File]::WriteAllBytes($temporary, $result)
-        [IO.File]::Replace($temporary, $exePath, $exePath + '.before-mount-stack.bak')
-        Write-Host '已安装坐骑堆叠使用补丁。'
+        [IO.File]::Replace($temporary, $exePath, $exePath + '.before-' + $PackageName.Replace('.patch.json', '') + '.bak')
+        Write-Host "已安装 $PatchName 补丁。"
     } finally {
         $sha.Dispose()
     }
+}
+
+function Install-MountStackPatch {
+    param($Paths)
+    $mountPackagePath = [IO.Path]::Combine($Paths.Root, 'Server', 'S1001', 'x64', 'jingji-mount-consumption.patch.json')
+    $finalHash = ''
+    if ([IO.File]::Exists($mountPackagePath)) {
+        $mountPackage = [IO.File]::ReadAllText($mountPackagePath, [Text.Encoding]::UTF8) | ConvertFrom-Json
+        $finalHash = $mountPackage.targetSha256
+    }
+    Install-LogicServerPatch $Paths 'mount-stack.patch.json' '坐骑堆叠' $finalHash
+    Install-LogicServerPatch $Paths 'jingji-mount-consumption.patch.json' '竞技大赛坐骑丹消耗记录'
 }
 
 function Invoke-GameStart {

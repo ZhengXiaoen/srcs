@@ -19,6 +19,7 @@ LocalDT.VipRecoveryAutoUseMaterialIds = {
 	[551] = true, [552] = true, [553] = true, -- 战将灵力丹
 	[6912] = true, [6913] = true, [6914] = true, [6915] = true, [6916] = true, [6917] = true,
 	[7151] = true, [7152] = true, [7153] = true, [7154] = true, [7155] = true,
+	[7780] = true, [7781] = true, [7782] = true, [7783] = true, [7784] = true, [7785] = true, -- 仙钻
 	[508] = true,
 }
 LocalDT.IsVipMaterialAutoUseEnabled = function(sysarg)
@@ -236,7 +237,7 @@ function onVipAutomaticHs(sysarg)
 	if LocalDT.IsVipMaterialAutoUseEnabled(sysarg) then
 		status = "<(c0xFF00FF00)已开启>"
 	end
-	e = e .. string.format("  <#c0xFFFFFF00#材料自动使用/@onVipAutomaticHsEx,21|自动使用宝石、圣珠、护盾、护符、转生丹、元神丹、特戒结晶、神魂、斗笠精华、火龙结晶、战将灵力丹、成就令牌、血炼精华、仙力、金砖(绑金)>%s ", status)
+	e = e .. string.format("  <#c0xFFFFFF00#材料自动使用/@onVipAutomaticHsEx,21|自动使用宝石、圣珠、护盾、护符、转生丹、元神丹、特戒结晶、神魂、斗笠精华、火龙结晶、战将灵力丹、成就令牌、血炼精华、仙力、仙钻、金砖(绑金)>%s ", status)
 	return e;
 end
 

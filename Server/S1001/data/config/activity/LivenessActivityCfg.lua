@@ -88,9 +88,9 @@ LivenessActivityCfg =
 		},
 		--每日首充
 		{--2
-			limitTimes = 1, ---总25点
-			score = 25,
-			tips = "每次完成[每日首充]任务都可获得<25点>活跃奖励!（Boss元宝直充同样计入）",
+			limitTimes = 1, ---总350点
+			score = 350,
+			tips = "每次完成[每日首充]任务都可获得<350点>活跃奖励!（Boss元宝直充同样计入）",
 			target = "@@showWin,34",
 			name = "每日首充",
 			txt = "打开", 

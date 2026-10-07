@@ -5,7 +5,7 @@ OnlineTimeAward =
 {
 	--第1次
 	{
-		online = 1800,	--当天累积在线时间（秒）30分钟
+		online = 60,	--当天累积在线时间（秒）1分钟
 		awards = 
 		{				
 			{type = 0, id = 509, count = 1,quality = 0, strong = 0,bind = 1},--大金砖(绑金)
@@ -13,7 +13,7 @@ OnlineTimeAward =
 	},
 	--第2次
 	{
-		online = 3600,	--当天累积在线时间（秒）60分钟
+		online = 60,	--当天累积在线时间（秒）1分钟
 		awards = 
 		{				
 			{type = 0, id = 509, count = 2,quality = 0, strong = 0,bind = 1},--大金砖(绑金)
@@ -21,7 +21,7 @@ OnlineTimeAward =
 	},
 	--第3次
 	{
-		online = 7200,	--当天累积在线时间（秒）120分钟
+		online = 60,	--当天累积在线时间（秒）1分钟
 		awards = 
 		{				
 			{type = 0, id = 509, count = 3,quality = 0, strong = 0,bind = 1},--大金砖(绑金)
@@ -29,7 +29,7 @@ OnlineTimeAward =
 	},
 	--第4次
 	{
-		online = 10800,	--当天累积在线时间（秒）180分钟
+		online = 60,	--当天累积在线时间（秒）1分钟
 		awards = 
 		{				
 			{type = 0, id = 509, count = 5,quality = 0, strong = 0,bind = 1},--大金砖(绑金)
@@ -37,7 +37,7 @@ OnlineTimeAward =
 	},
 	--第5次
 	{
-		online = 18000,	--当天累积在线时间（秒）300分钟
+		online = 60,	--当天累积在线时间（秒）1分钟
 		awards = 
 		{				
 			{type = 0, id = 509, count = 8,quality = 0, strong = 0,bind = 1},--大金砖(绑金)

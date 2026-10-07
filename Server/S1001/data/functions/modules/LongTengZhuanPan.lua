@@ -19,6 +19,18 @@ function LongTengZhuanPan_GetCanTurnTimes(sysarg)
 	return times
 end
 
+-- 最终奖励领完才隐藏入口；跨天清空转盘数据后恢复。
+LocalDT.SendLongTengZhuanPanIconState = function(sysarg)
+	local var = Actor.getStaticVar(sysarg)
+	local data = var.days.LongTengZhuanPanData
+	local step = data and System.getInt64Byte(data.zhuanPanData or 0, 2) or 0
+	local netPack = DataPack.allocPacket(sysarg, 151, LogicCmd.miscSysEx.sub.sLongTengZhuanPan)
+	DataPack.writeByte(netPack, 4)
+	DataPack.writeByte(netPack, step)
+	DataPack.writeByte(netPack, var.LongTengZhuanPanAwardData ~= nil and 1 or 0)
+	DataPack.flush(netPack)
+end
+
 -- 到达终点后不再有可用次数，兼容已完成的旧数据及后续充值刷新
 LocalDT.GetLongTengZhuanPanLeftTimes = function(sysarg, zhuanPanData)
 	if System.getInt64Byte(zhuanPanData, 2) >= 50 then
@@ -136,6 +148,7 @@ function LongTengZhuanPan_SendData(sysarg)
 	DataPack.writeUint64(netPack, zhuanPanFlags)
 	
 	DataPack.flush(netPack)
+	LocalDT.SendLongTengZhuanPanIconState(sysarg)
 end
 
 -- 获取龙腾转盘剩余次数，用于界面打开并充值时，改变剩余次数的界面显示
@@ -146,6 +159,7 @@ function LongTengZhuanPan_SendLeftTimes(sysarg)
 	if data == nil or data.zhuanPanData == nil then
 		-- 打开界面时，跨天了
 		--Actor.sendTipmsg(sysarg, "请重新打开界面", ttFlyTip)
+		LocalDT.SendLongTengZhuanPanIconState(sysarg)
 		return
 	end
 	
@@ -160,6 +174,7 @@ function LongTengZhuanPan_SendLeftTimes(sysarg)
 	DataPack.writeByte(netPack, leftTimes)	-- 剩余次数	
 	
 	DataPack.flush(netPack)
+	LocalDT.SendLongTengZhuanPanIconState(sysarg)
 end
 
 -- 返回 0 则失败
@@ -428,10 +443,13 @@ function LongTengZhuanPan_GetAward(sysarg)
         print(string.format("LongTengZhuanPan_GetAward send mail,actorId=%d, libIdx=%d, awardIdx=%d", Actor.getIntProperty(sysarg,PROP_ENTITY_ID), libIdx, awardIdx))
     else
     	local award = { {type=0, id=awardCfg[1], count=awardCfg[2], bind=awardCfg[3]} }
-    	Awards.Give(sysarg,award,LogIds.LongTengZhuanPanAward,"龙腾转盘奖励")
+		if Awards.Give(sysarg,award,LogIds.LongTengZhuanPanAward,"龙腾转盘奖励") == false then
+			return
+		end
     end 
 	
 	var.LongTengZhuanPanAwardData = nil	
+	LocalDT.SendLongTengZhuanPanIconState(sysarg)
 	
 	local itemName = Item.getItemName(awardCfg[1])
 	local msg = string.format("玩家<(c0xFF00FF00)%s>从龙腾转盘中获取到<(c0xFF00FF00)%s x %d>,运气太好啦！", Actor.getName(sysarg), itemName, awardCfg[2])

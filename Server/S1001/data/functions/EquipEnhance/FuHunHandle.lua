@@ -13,6 +13,8 @@ function OnFuHunHandle(sysarg,sysid,packet)
 		OnEquitFuHunLvUp(sysarg,packet)
 	elseif nType==3 then --附魂转移
 		OnFunHunMove(sysarg,packet)
+	elseif nType==4 then --一键附魂
+		LocalDT.FuHunAll(sysarg,packet)
 	end
 end
 
@@ -33,6 +35,11 @@ function OnEquitFuHun(sysarg,packet)
 
 	local zhuItem = DataPack.readInt64(packet)
 	local cailiaoItem = DataPack.readInt64(packet)
+	LocalDT.FuHunConsume(sysarg,zhuItem,cailiaoItem,false)
+end
+
+-- 单次和批量附魂共用校验、扣除与经验继承逻辑。
+LocalDT.FuHunConsume = function(sysarg,zhuItem,cailiaoItem,isBatch)
 	
 	if zhuItem==cailiaoItem then 
 		return 
@@ -134,16 +141,63 @@ function OnEquitFuHun(sysarg,packet)
 	Item.setFuHunInfo(sysarg,pzhuItemPtr,2,hasExp0+addExp1+addExp2+addExp3)
 	--print("all="..(hasExp0+addExp1+addExp2+addExp3))
 	
-	Actor.sendTipmsg(sysarg,"附魂成功",ttFlyTip)
+	if not isBatch then
+		Actor.sendTipmsg(sysarg,"附魂成功",ttFlyTip)
+	end
 	
 	System.sendCommonLog(LogIds.zhuanbeifuhunExpChange,Actor.getIntProperty(sysarg, PROP_ENTITY_ID),Actor.getName(sysarg),0,hasExp0, Item.getFuHunInfo(pzhuItemPtr,2), "","","装备附魂","","",Item.getItemGuidStr(pzhuItemPtr),"",Item.getItemName(pzhuItemPtr))
 	
 	--告诉前端成功了
-	local pack = DataPack.allocPacket(sysarg,151,LogicCmd.miscSysEx.sub.sFuHunHandle)
-	DataPack.writeByte(pack,1)
-	DataPack.flush(pack)
+	if not isBatch then
+		local pack = DataPack.allocPacket(sysarg,151,LogicCmd.miscSysEx.sub.sFuHunHandle)
+		DataPack.writeByte(pack,1)
+		DataPack.flush(pack)
+	end
+	return true
 	
 
+end
+
+-- 只处理当前穿戴主装备对应的背包材料，倒序扣除避免背包索引移动漏扣。
+LocalDT.FuHunAll = function(sysarg,packet)
+	local zhuItem = DataPack.readInt64(packet)
+	local mainPtr = Item.getEquipPtrByGuid(sysarg,zhuItem)
+	if mainPtr == nil then
+		Actor.sendTipmsg(sysarg,"没有穿戴主装备",ttFlyTip)
+		return
+	end
+	if not IsSuitFuHunType(sysarg,mainPtr) or
+		Item.getItemPropertyById(Item.getItemId(mainPtr),Item.ipItemNeedCircle) < 5 then
+		Actor.sendTipmsg(sysarg,"主装备不满足附魂条件",ttFlyTip)
+		return
+	end
+	if Item.getFuHunInfo(mainPtr,1) >= 25 then
+		Actor.sendTipmsg(sysarg,"主装备已经满级",ttFlyTip)
+		return
+	end
+	local mainType = Item.getItemProperty(sysarg,mainPtr,Item.ipItemType,0)
+	local count = 0
+	for index = Item.getBagItemCount(sysarg) - 1, 0, -1 do
+		local materialPtr = Item.getItemPtrByIndex(sysarg,index)
+		if materialPtr and
+			Item.getItemProperty(sysarg,materialPtr,Item.ipItemType,0) == mainType and
+			Item.getItemPropertyById(Item.getItemId(materialPtr),Item.ipItemNeedCircle) >= 4 and
+			Item.getItemProperty(sysarg,materialPtr,Item.ipDragonEquipLevel) == 0 then
+			if LocalDT.FuHunConsume(sysarg,zhuItem,Item.getItemGuid(materialPtr),true) then
+				count = count + 1
+			else
+				break
+			end
+		end
+	end
+	if count > 0 then
+		Actor.sendTipmsg(sysarg,"一键附魂成功，消耗材料装备"..count.."件",ttFlyTip)
+	else
+		Actor.sendTipmsg(sysarg,"没有可用的附魂材料装备",ttFlyTip)
+	end
+	local pack = DataPack.allocPacket(sysarg,151,LogicCmd.miscSysEx.sub.sFuHunHandle)
+	DataPack.writeByte(pack,4)
+	DataPack.flush(pack)
 end
 
 --计算材料装备升级用了多少经验

@@ -39,6 +39,15 @@ LocalDT.IsVipMaterialAutoUseEnabled = function(sysarg)
 	var.autorecoyhufu = nil
 	return var.autoUseMaterials == 1
 end
+-- 1-3转的武器和衣服只允许手动回收。
+LocalDT.CanVipAutoRecycleItem = function(itemId)
+	local itemType = Item.getItemPropertyById(itemId, Item.ipItemType)
+	if itemType == itemTypes.itWeapon or itemType == itemTypes.itDress then
+		local needCircle = Item.getItemPropertyById(itemId, Item.ipItemNeedCircle)
+		if needCircle >= 1 and needCircle <= 3 then return false end
+	end
+	return true
+end
 function VipRecoveryInit(sysarg)
 	local e = "<title/VIP随身回收特权>\\  <(c0xFFeabc78)点击对应的套装名按钮即可回收包裹内对应的套装.>\\\\";
 	local d = RecycledItems;
@@ -530,8 +539,11 @@ function onVipItemHuiShouFuncEx(sysarg,i) --每在线10秒自动回收装备设�
 	if not addHufu[i] then addHufu[i] = 0; end
     if not addZoliacexp[i] then addZoliacexp[i] = 0 end
 	for k = 1,#list do
-		local n = Actor.getItemCount(sysarg, list[k].itemid);
-		Actor.removeItem(sysarg, list[k].itemid, n,-1,-1,-1);
+		local n = 0;
+		if LocalDT.CanVipAutoRecycleItem(list[k].itemid) then
+			n = Actor.getItemCount(sysarg, list[k].itemid);
+			Actor.removeItem(sysarg, list[k].itemid, n,-1,-1,-1);
+		end
 		ItemCount_bag[i] = ItemCount_bag[i] + n;
 		addExp[i] = addExp[i] + n * list[k].exp;
 		addBindgold[i] = addBindgold[i] + n * list[k].bindgold;

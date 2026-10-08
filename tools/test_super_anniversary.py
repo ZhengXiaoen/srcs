@@ -111,6 +111,48 @@ handleJingjiActivity(1,0,{{{msg},2,1}});handleJingjiActivity(1,0,{{{msg},2,1}})'
         self.run_lua('HandleAddNewRankCount(1,6,-1);HandleAddNewRankCount(1,5,999999)')
         self.assertIsNone(self.value('player.OneYearAct_Data.material[5]'))
 
+    def test_fifteen_material_tiers_boundaries_rewards_and_reply_flags(self):
+        for msg, cfg, maximum in ((6,'GemRank',3000000),(7,'PeartRank',3000000),
+                                  (8,'MountRank',30000),(9,'RingRank',3000)):
+            self.assertEqual(15,self.value(f'#activity_jingji.{cfg}'))
+            self.assertEqual(maximum,self.value(f'activity_jingji.{cfg}[15].count'))
+            for tier in range(1,16):
+                self.run_lua(f'''LocalDT.ClearAnniversaryMergedData(1)
+player.OneYearAct_Data.material[{msg}]={{count=activity_jingji.{cfg}[{tier}].count-1}}
+awards={{}};packets={{}}
+handleJingjiActivity(1,0,{{{msg},2,{tier}}})''')
+                self.assertEqual(0,self.value('#awards'))
+                self.run_lua(f'''HandleAddNewRankCount(1,{msg},1)
+handleJingjiActivity(1,0,{{{msg},2,{tier}}})
+handleJingjiActivity(1,0,{{{msg},2,{tier}}})''')
+                self.assertEqual(1,self.value('#awards'))
+                self.assertEqual(tier*5,self.value('awards[1][1].count'))
+                self.assertTrue(self.value(f'awards[1]==activity_jingji.{cfg}[{tier}].award'))
+                self.assertEqual(1,self.value(f'player.OneYearAct_Data.material[{msg}].isGive[{tier}]'))
+                self.assertEqual(19,self.value('#packets[#packets]'))
+                self.assertEqual(15,self.value('packets[#packets][4]'))
+                self.assertEqual(1,self.value(f'packets[#packets][{tier+4}]'))
+            self.run_lua(f'''handleJingjiActivity(1,0,{{{msg},2,0}})
+handleJingjiActivity(1,0,{{{msg},2,16}})''')
+            self.assertEqual(1,self.value('#awards'))
+
+    def test_extended_material_tiers_keep_previous_claims_and_daily_progress(self):
+        self.run_lua('''LocalDT.ClearAnniversaryMergedData(1)
+player.OneYearAct_Data.material[8]={count=30000,isGive={1,1,1,1,1}}
+state.isDringOneYearAct=2;awards={};packets={}
+handleJingjiActivity(1,0,{8,1})''')
+        self.assertEqual(30000,self.value('player.OneYearAct_Data.material[8].count'))
+        for tier in range(1,16):
+            self.assertEqual(1 if tier<=5 else 0,
+                             self.value(f'packets[1][{tier+4}]'))
+            self.run_lua(f'handleJingjiActivity(1,0,{{8,2,{tier}}})')
+        self.assertEqual(10,self.value('#awards'))
+        self.assertEqual(525,self.value('(function() local total=0;for _,a in ipairs(awards) do total=total+a[1].count end;return total end)()'))
+        for tier in range(1,16):self.run_lua(f'handleJingjiActivity(1,0,{{8,2,{tier}}})')
+        self.assertEqual(10,self.value('#awards'))
+        self.run_lua('state.StartOneYear_Minitime=now+86400;LocalDT.ClearAnniversaryMergedData(1)')
+        self.assertIsNone(self.value('player.OneYearAct_Data.material[8]'))
+
     def test_merged_progress_reset_only_on_new_anniversary(self):
         self.run_lua('''HandleAddNewRankCount(1,6,1000);player.OneYearAct_Data.loginflag={1}
 player.OneYearAct_Data.consumeGift.Consume=5000;player.days.AnniversaryPayTime={1}
@@ -326,6 +368,53 @@ class ClientTests(unittest.TestCase):
         self.assertFalse(self.h.run_method(4080,self.h.year,8))
         self.h.year['curDay']=0
         for slot in (12,13,14,16):self.assertFalse(self.h.run_method(4080,self.h.year,slot))
+
+    def test_fifteen_material_reply_flags_drive_claims_and_anniversary_marks(self):
+        server=ServerTests();server.setUp()
+        self.h.year.update(loginStatus=[1]*7,index=0)
+        self.h.buttons['year']={}
+        self.h.globals['CliffordEvent']={'JING_JI_FAN_LI_INFO':'material'}
+        counts=self.h.hong['jingjiFanliUseNum']=[0]*4
+        flags=self.h.hong['jingJiFanliGet']=[[] for _ in range(4)]
+        packet=[];events=[]
+        def invoke(obj,name,args):
+            if name in ('readByte','readInt'):return packet.pop(0)
+            if name=='getOtherPng':return args[0]
+            if name=='__construct__':return {'type':args[0],'data':args[1]}
+            if name=='dispatchEvent':
+                events.append(args[0]);self.h.run_method(6379,self.h.nav,args[0]);return
+            return self.h.invoke(obj,name,args)
+        def receive():
+            reply=server.value('packets[#packets]')
+            packet[:]=[reply[i] for i in range(1,len(reply)+1)]
+            execute(self.code(8611),self.names,self.strings,{0:{},1:{}},self.h.globals,invoke)
+            self.assertEqual([],packet)
+        for msg,cfg,project in ((6,'GemRank',0),(7,'PeartRank',1),(8,'MountRank',3),(9,'RingRank',2)):
+            rows=self.configs['activityjingji.cbp'][cfg]
+            self.assertEqual(15,len(rows))
+            for index,row in enumerate(rows):
+                server.run_lua(f'''LocalDT.ClearAnniversaryMergedData(1)
+player.OneYearAct_Data.material[{msg}]={{count={int(row['count'])},isGive={{}}}}
+for i=1,15 do player.OneYearAct_Data.material[{msg}].isGive[i]=i=={index+1} and 0 or 1 end
+handleJingjiActivity(1,0,{{{msg},1}})''')
+                receive()
+                self.assertEqual(15,len(flags[project]))
+                self.assertEqual(row['count'],counts[project])
+                self.assertEqual(msg,events[-1]['data'])
+                self.assertTrue(self.h.buttons['year']['effect'])
+                self.assertTrue(self.h.run_method(4080,self.h.year,12))
+                item={'_title':project,'_index':index,'_button2_0':{},'_image_9':{}}
+                execute(self.code(25436),self.names,self.strings,{0:item,1:row,2:row},
+                        self.h.globals,invoke,start=90,end=277)
+                self.assertTrue(item['_button2_0']['visible'])
+                server.run_lua(f'handleJingjiActivity(1,0,{{{msg},2,{index+1}}})')
+                receive()
+                self.assertEqual([1]*15,flags[project])
+                self.assertFalse(self.h.buttons['year']['effect'])
+                self.assertFalse(self.h.run_method(4080,self.h.year,12))
+                execute(self.code(25436),self.names,self.strings,{0:item,1:row,2:row},
+                        self.h.globals,invoke,start=90,end=277)
+                self.assertFalse(item['_button2_0']['visible'])
 
     def test_event_refresh_has_matching_unsubscribe_and_timer_stop(self):
         for add,remove,handler,skip in ((22159,22160,23814,()),(6333,6377,8171,(36018,))):

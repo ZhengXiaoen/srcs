@@ -15,6 +15,7 @@ from patch_super_anniversary import (CLIENT, ROOT, TAB_ARTWORK,
                                     pool_layout, bytecode_requirements)
 from patch_anniversary_reopen import (SLOTS, DISPLAY_SLOTS, DISPLAY_IDS,
                                      patch_swf as reopen_patch)
+from patch_anniversary_material_rebate import patch_swf as material_page_patch
 import test_activity_reminders as reminders
 from test_activity_reminders import execute, config_value
 from patch_guild_quest_config import read_cbp, read_pack
@@ -321,7 +322,7 @@ class ClientTests(unittest.TestCase):
         stack,_,_=bytecode_requirements(old[start:start+length],names,limits[2])
         self.assertEqual(18,limits[0]);self.assertEqual(23,stack)
         from patch_anniversary_row_and_icon_refresh import patch_swf as icon_patch
-        self.assertEqual(CLIENT.read_bytes(),reopen_patch(icon_patch(patch_swf(broken))))
+        self.assertEqual(CLIENT.read_bytes(),material_page_patch(reopen_patch(icon_patch(patch_swf(broken)))))
         repaired=repair_window_stack(broken)
         self.assertEqual(subprocess.check_output(['git','show','3b1ea1d:web/GameFrame.swf'],cwd=ROOT),repaired)
         raw,(_,_,a,b)=abc_section(repaired);fixed,_=normalize(raw[a:b]);_,_,fixed_bodies=inspect_abc(fixed)
@@ -415,6 +416,62 @@ handleJingjiActivity(1,0,{{{msg},1}})''')
                 execute(self.code(25436),self.names,self.strings,{0:item,1:row,2:row},
                         self.h.globals,invoke,start=90,end=277)
                 self.assertFalse(item['_button2_0']['visible'])
+
+    def test_material_page_generates_all_configured_rows_after_reply_and_reentry(self):
+        self.h.globals['GlobalData']['yearAcitveDataMgr'].update(totalDay=7,curDay=1)
+        fields = ('GemRank','PeartRank','RingRank','MountRank')
+        def invoke(obj,name,args):
+            if name=='int':return int(args[0])
+            if name=='__construct__':return {}
+            return self.h.invoke(obj,name,args)
+        for selected,key in enumerate(fields):
+            page={'_selectIndex':selected,'_list':{},'mark':[{'visible':False} for _ in fields]}
+            # The complete shipped event handler must create the list, including
+            # its row indexes. A stale five-row provider simulates page reentry.
+            for message in (6,7,8,9):
+                page['_list']['dataProvider']=[{'title':selected,'index':i} for i in range(5)]
+                _,maximum=execute(self.code(15829),self.names,self.strings,{0:page,1:{'data':message}},
+                                  self.h.globals,invoke)
+                rows=page['_list']['dataProvider']
+                self.assertEqual([{'title':selected,'index':i} for i in range(15)],rows)
+                self.assertEqual(15,len(self.configs['activityjingji.cbp'][key]))
+                self.assertLessEqual(maximum,self.bodies[15829][2][0])
+            if key=='MountRank':
+                self.assertEqual(30000,self.configs['activityjingji.cbp'][key][rows[-1]['index']]['count'])
+        # The same handler follows the config length if another tier is added.
+        rows=self.configs['activityjingji.cbp']['MountRank']
+        try:
+            rows.append(rows[-1])
+            execute(self.code(15829),self.names,self.strings,{0:page,1:{'data':8}},self.h.globals,invoke)
+            self.assertEqual(16,len(page['_list']['dataProvider']))
+        finally:rows.pop()
+
+    def test_material_list_keeps_scrollbar_for_reaching_the_last_tier(self):
+        page={}
+        def invoke(obj,name,args):
+            if name=='createUIByJson':return {'_label_8':{},'_customvscrollbar8_0':{'kind':'scrollbar'}}
+            if name=='__construct__':return {}
+            if name=='setSize':obj['size']=args;return
+            if name in ('move','addButton','addChild'):return
+            raise ValueError(name)
+        code=self.code(15825)
+        end=next(op.end for op in instructions(code) if op.opcode==0x61 and self.names[op.operands[0]]=='vscrollBar')
+        execute(code,self.names,self.strings,{0:page},self.h.globals,invoke,end=end)
+        self.assertEqual([550,243],page['_list']['size'])
+        self.assertEqual(55,page['_list']['itemHeight'])
+        self.assertEqual(2,page['_list']['itemSpaceHeight'])
+        self.assertIs(page['_customvscrollbar8_0'],page['_list']['vscrollBar'])
+
+    def test_material_row_patch_only_changes_the_reward_list_builder(self):
+        previous=subprocess.check_output(['git','show','be6ace8:web/GameFrame.swf'],cwd=ROOT)
+        self.assertEqual(CLIENT.read_bytes(),material_page_patch(previous))
+        self.assertEqual(CLIENT.read_bytes(),material_page_patch(CLIENT.read_bytes()))
+        raw,(_,_,a,b)=abc_section(previous);old,_=normalize(raw[a:b]);_,_,bodies=inspect_abc(old)
+        changed=set()
+        for mid,(start,size,limits) in bodies.items():
+            now,length,current=self.bodies[mid]
+            if old[start:start+size]!=self.abc[now:now+length] or limits!=current:changed.add(mid)
+        self.assertEqual({15829},changed)
 
     def test_event_refresh_has_matching_unsubscribe_and_timer_stop(self):
         for add,remove,handler,skip in ((22159,22160,23814,()),(6333,6377,8171,(36018,))):

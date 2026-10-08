@@ -4,12 +4,67 @@ from pathlib import Path
 import re
 
 from patch_daily_recharge_client import read_cbp, read_pack, write_cbp, write_pack, write_node
+from patch_activity_entries import q
+from patch_activity_reminders import GAME, call, get, prop, normalize, relocate
+from patch_bag_client import ABCReader, encode_u30
+from patch_super_anniversary import CLIENT, abc_section, assemble, inspect_abc, instructions, bytecode_requirements
 
 ROOT = Path(__file__).resolve().parents[1]
 SERVER = ROOT / 'Server/S1001/data/config/new_activity/festival/activity_jingji.lua'
 DIRECTORY = ROOT / 'web/v2/lang/zh-cn'
 KEYS = ('GemRank', 'PeartRank', 'MountRank', 'RingRank')
 ITEMS = (6691, 7810, 7811, 7046)
+METHODS = {15829}
+
+
+def patch_swf(source):
+    """Build the scrollable reward list from the selected material's tier count."""
+    raw, (_, _, a, b) = abc_section(source)
+    abc, positions = normalize(raw[a:b])
+    names, _, bodies = inspect_abc(abc)
+    mid = 15829
+    start, size, limits = bodies[mid]
+    code = abc[start:start + size]
+    ops = instructions(code)
+    # The final loop is the reward-row builder, after the separate red-dot scan.
+    condition = next(i for i in range(len(ops) - 1, -1, -1) if ops[i].opcode == 0x15)
+    bound = ops[condition - 1]
+    index = ops[condition - 2]
+    cfg = call(prop(GAME, 32246), 11394)
+    selector = next(o.operands[0] for o in ops if o.opcode == 0x66 and names[o.operands[0]] == '_selectIndex')
+    dynamic = next(o.operands[0] for o in ops if o.opcode == 0x61 and not names[o.operands[0]])
+    length = next(o.operands[0] for o in ops if o.opcode == 0x66 and names[o.operands[0]] == 'length')
+    value = (b''.join(prop(cfg, field) for field in (24596, 24599, 24597, 24598))
+             + q(0x56, 4) + prop(get(0), selector) + q(0x66, dynamic) + q(0x66, length))
+    if bound.opcode == 0x66 and bound.operands == (length,) and value in code:
+        return source
+    if index.opcode != 0x62 or index.operands != (5,):
+        raise ValueError('Unexpected material row loop')
+    if bound.opcode != 0x24 or bound.operands != (5,):
+        raise ValueError('Unexpected fixed material row limit')
+    updated = relocate(code, [(bound.start, bound.end, value)])[0]
+    stack, registers, scopes = bytecode_requirements(updated, names, limits[2])
+    new_limits = (max(limits[0], stack), max(limits[1], registers), limits[2], max(limits[3], scopes))
+    reader = ABCReader(abc)
+    reader.pos = start + size
+    if reader.u30():
+        raise ValueError('Unexpected material page exception handlers')
+    header = b''.join(encode_u30(v) for v in (mid, *limits, size))
+    if abc[start - len(header):start] != header:
+        raise ValueError('Unexpected material page method header')
+    replacement = b''.join(encode_u30(v) for v in (mid, *new_limits, len(updated))) + updated + b'\0'
+    lo, hi = start - len(header), reader.pos
+    result = bytearray(abc[:lo] + replacement + abc[hi:])
+    _, _, after = inspect_abc(result)
+    for method, (old_start, old_size, old_limits) in bodies.items():
+        new_start, new_size, actual = after[method]
+        if method != mid and (actual != old_limits or abc[old_start:old_start + old_size] != result[new_start:new_start + new_size]):
+            raise ValueError(f'Unrelated client method {method} changed')
+    if result[:lo] + abc[lo:hi] + result[lo + len(replacement):] != abc:
+        raise ValueError('Unrelated client metadata changed')
+    for pos in positions:
+        result[pos] = 0
+    return assemble(source, bytes(result))
 
 
 def server_rows():
@@ -76,9 +131,15 @@ def main():
     updated_pack = write_pack(entries)
     if read_pack(updated_pack) != entries:
         raise ValueError('Updated language pack did not round-trip')
+    client = CLIENT.read_bytes()
+    updated_client = patch_swf(client)
+    if patch_swf(updated_client) != updated_client:
+        raise ValueError('Material page patch is not idempotent')
     config_path.write_bytes(updated)
     pack_path.write_bytes(updated_pack)
-    print('Synced fifteen tiers for all four materials; other pack entries are unchanged.')
+    if updated_client != client:
+        CLIENT.write_bytes(updated_client)
+    print('Synced material tiers and scrollable client rows; unrelated resources unchanged.')
 
 
 if __name__ == '__main__':

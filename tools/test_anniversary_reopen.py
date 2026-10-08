@@ -10,6 +10,7 @@ from patch_anniversary_reopen import (CLIENT, SLOTS, DISPLAY_IDS, METHODS, patch
                                      abc_section, normalize, inspect_abc, instructions,
                                      bytecode_requirements)
 from test_activity_reminders import execute
+from patch_anniversary_material_rebate import METHODS as MATERIAL_METHODS, patch_swf as material_page_patch
 
 BASELINE = '658b049'
 
@@ -140,14 +141,14 @@ class ReopenTests(unittest.TestCase):
 
     def test_patch_preserves_all_artwork_other_methods_and_flash_limits(self):
         before = subprocess.check_output(['git', 'show', BASELINE + ':web/GameFrame.swf'], cwd=CLIENT.parent.parent)
-        self.assertEqual(CLIENT.read_bytes(), patch_swf(before))
+        self.assertEqual(CLIENT.read_bytes(), material_page_patch(patch_swf(before)))
         self.assertEqual(CLIENT.read_bytes(), patch_swf(CLIENT.read_bytes()))
         raw, (_, _, a, b) = abc_section(before); old, _ = normalize(raw[a:b]); _, _, bodies = inspect_abc(old)
         changed = set()
         for mid, (start, length, limits) in bodies.items():
             now, size, current = self.bodies[mid]
             if old[start:start + length] != self.abc[now:now + size] or current != limits: changed.add(mid)
-        self.assertEqual(METHODS, changed)
+        self.assertEqual(METHODS | MATERIAL_METHODS, changed)
         self.assertEqual(strings_of(old), self.strings)
         for mid in METHODS:
             limits = self.bodies[mid][2]

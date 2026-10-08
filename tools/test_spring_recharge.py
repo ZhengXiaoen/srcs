@@ -11,9 +11,8 @@ import unittest
 
 from patch_guild_quest_config import read_cbp, read_pack
 from patch_spring_recharge import CLIENT, PACK, ROOT, SERVER, patch_config, server_rewards
-from patch_retired_hunt_pages import SWITCHES
 
-BASELINE = "de3e7aa"
+BASELINE = "1654571"
 
 
 def baseline(path):
@@ -44,6 +43,10 @@ class SpringRechargeTests(unittest.TestCase):
         self.assertEqual([(7049, 2),(7048, 2)] * 6, self.slot(2, 4))
 
     def test_hundred_wan_rewards(self):
+        self.assertEqual([(7827,2),(7690,2),(7827,4),(7690,4),(7827,6),(7690,6),
+                          (7827,8),(7690,8),(7827,10),(7690,10),(7827,12),(7690,12)], self.slot(3, 4))
+        self.assertEqual([count for _, count in self.slot(4, 5)],
+                         [count for _, count in self.slot(3, 4)])
         self.assertEqual([(7651,1),(6659,1),(7651,2),(6659,2),(7651,3),(6659,3),
                           (7651,4),(6659,4),(7651,5),(6659,5),(7651,6),(6659,6)], self.slot(3, 3))
         self.assertEqual([(6402,10),(7151,80),(6402,15),(7151,120),(6402,20),(7151,160),
@@ -61,7 +64,7 @@ class SpringRechargeTests(unittest.TestCase):
         old = LuaRuntime(unpack_returned_tuples=True)
         old.execute(baseline(SERVER).decode("utf-8-sig"))
         original = old.globals().SpringFestivalCfg.EveryTotalPay
-        changes = [{3,5}, {1,3,4}, {3,5}, {1,3,4,5}]
+        changes = [set(), set(), {4}, set()]
         for tier in range(1, 5):
             for day in range(1, 13):
                 self.assertEqual(5, len(self.config[tier].days[day].award))
@@ -75,7 +78,7 @@ class SpringRechargeTests(unittest.TestCase):
                             self.assertEqual(original[tier].days[day].award[slot][field], actual[field])
         before, after = baseline(SERVER), SERVER.read_bytes()
         self.assertEqual(before.split(b"\tEveryTotalPay =", 1)[0], after.split(b"\tEveryTotalPay =", 1)[0])
-        self.assertEqual(before.split(b"\tXiaoFeiZhuanPanNew =", 1)[1], after.split(b"\tXiaoFeiZhuanPanNew =", 1)[1].replace("\t\tisOpen = false, -- 寻宝返利已下架\r\n".encode(), b""))
+        self.assertEqual(before.split(b"\tXiaoFeiZhuanPanNew =", 1)[1], after.split(b"\tXiaoFeiZhuanPanNew =", 1)[1])
 
     def test_client_and_pack_match_and_preserve_other_resources(self):
         source = CLIENT.read_bytes()
@@ -83,11 +86,10 @@ class SpringRechargeTests(unittest.TestCase):
         before = read_cbp(baseline(CLIENT))[1]
         after = copy.deepcopy(read_cbp(source)[1])
         after.child("EveryTotalPay").children = before.child("EveryTotalPay").children
-        after.child('hunt_times').children = [n for n in after.child('hunt_times').children if n.name != 'isOpen']
         self.assertEqual(before, after)
         old_pack, new_pack = read_pack(baseline(PACK)), read_pack(PACK.read_bytes())
         self.assertEqual([n for n, _ in old_pack], [n for n, _ in new_pack])
-        self.assertEqual(set(SWITCHES), {name for (name, a), (_, b) in
+        self.assertEqual({CLIENT.name}, {name for (name, a), (_, b) in
                          zip(old_pack, new_pack, strict=True) if a != b})
         self.assertEqual(source, dict(new_pack)[CLIENT.name])
 
@@ -106,7 +108,7 @@ class SpringRechargeTests(unittest.TestCase):
     def runtime(self):
         lua = LuaRuntime(unpack_returned_tuples=True)
         lua.execute(SERVER.read_text("utf-8-sig"))
-        lua.execute('''var={days={PeyNum=0},Spring_Data={},SpringTime=1};day=1;given={};tips={}
+        lua.execute('''LocalDT={};var={days={PeyNum=0},Spring_Data={},SpringTime=1};day=1;given={};tips={}
             get_spring_festival_day_count=function() return day end
             register_spring_festival_func=function() end
             register_spring_festival_start_end_func=function() end

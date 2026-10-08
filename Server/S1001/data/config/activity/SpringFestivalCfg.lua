@@ -2157,7 +2157,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7196,count = 1,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 1,bind = 1},--屠龙至尊碎片
 					{type = 0, id = 7651,count = 1,bind = 1},--雷神首饰礼盒
-                    {type = 0, id = 6363,count = 5,bind = 1},--壕礼宝箱
+                    {type = 0, id = 7827,count = 2,bind = 1},--神戒宝盒
                     {type = 0, id = 6402,count = 10,bind = 1},--传世宝钻
 					       }
 				},
@@ -2167,7 +2167,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7196,count = 2,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 2,bind = 1},--屠龙至尊碎片
 					{type = 0, id = 6659,count = 1,bind = 1},--传世礼盒
-                    {type = 0, id = 6363,count = 10,bind = 1},--壕礼宝箱
+                    {type = 0, id = 7690,count = 2,bind = 1},--神盾礼盒
                     {type = 0, id = 7151,count = 80,bind = 1},--仙力(1点)
 					       }
 				},
@@ -2177,7 +2177,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7196,count = 3,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 3,bind = 1},--屠龙至尊碎片
 					{type = 0, id = 7651,count = 2,bind = 1},--雷神首饰礼盒
-                    {type = 0, id = 6363,count = 15,bind = 1},--壕礼宝箱
+                    {type = 0, id = 7827,count = 4,bind = 1},--神戒宝盒
                     {type = 0, id = 6402,count = 15,bind = 1},--传世宝钻
 					       }
 				},
@@ -2187,7 +2187,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7196,count = 4,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 4,bind = 1},--屠龙至尊碎片
 					{type = 0, id = 6659,count = 2,bind = 1},--传世礼盒
-                    {type = 0, id = 6363,count = 20,bind = 1},--壕礼宝箱
+                    {type = 0, id = 7690,count = 4,bind = 1},--神盾礼盒
                     {type = 0, id = 7151,count = 120,bind = 1},--仙力(1点)
 					       }
 				},
@@ -2197,7 +2197,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7196,count = 5,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 5,bind = 1},--屠龙至尊碎片
 					{type = 0, id = 7651,count = 3,bind = 1},--雷神首饰礼盒
-                    {type = 0, id = 6363,count = 25,bind = 1},--壕礼宝箱
+                    {type = 0, id = 7827,count = 6,bind = 1},--神戒宝盒
                     {type = 0, id = 6402,count = 20,bind = 1},--传世宝钻
 					       }
 				},
@@ -2207,7 +2207,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7196,count = 6,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 6,bind = 1},--屠龙至尊碎片
 					{type = 0, id = 6659,count = 3,bind = 1},--传世礼盒
-                    {type = 0, id = 6363,count = 30,bind = 1},--壕礼宝箱
+                    {type = 0, id = 7690,count = 6,bind = 1},--神盾礼盒
                     {type = 0, id = 7151,count = 160,bind = 1},--仙力(1点)
 					       }
 				},
@@ -2217,7 +2217,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7196,count = 7,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 7,bind = 1},--屠龙至尊碎片
 					{type = 0, id = 7651,count = 4,bind = 1},--雷神首饰礼盒
-                    {type = 0, id = 6363,count = 35,bind = 1},--壕礼宝箱
+                    {type = 0, id = 7827,count = 8,bind = 1},--神戒宝盒
                     {type = 0, id = 6402,count = 25,bind = 1},--传世宝钻
 					       }
 				},
@@ -2227,7 +2227,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7196,count = 8,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 8,bind = 1},--屠龙至尊碎片
 					{type = 0, id = 6659,count = 4,bind = 1},--传世礼盒
-                    {type = 0, id = 6363,count = 40,bind = 1},--壕礼宝箱
+                    {type = 0, id = 7690,count = 8,bind = 1},--神盾礼盒
                     {type = 0, id = 7151,count = 200,bind = 1},--仙力(1点)
 					       }
 				},
@@ -2237,7 +2237,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7196,count = 9,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 9,bind = 1},--屠龙至尊碎片
 					{type = 0, id = 7651,count = 5,bind = 1},--雷神首饰礼盒
-                    {type = 0, id = 6363,count = 45,bind = 1},--壕礼宝箱
+                    {type = 0, id = 7827,count = 10,bind = 1},--神戒宝盒
                     {type = 0, id = 6402,count = 30,bind = 1},--传世宝钻
 					       }
 				},
@@ -2247,7 +2247,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7196,count = 10,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 10,bind = 1},--屠龙至尊碎片
 					{type = 0, id = 6659,count = 5,bind = 1},--传世礼盒
-                    {type = 0, id = 6363,count = 50,bind = 1},--壕礼宝箱
+                    {type = 0, id = 7690,count = 10,bind = 1},--神盾礼盒
                     {type = 0, id = 7151,count = 240,bind = 1},--仙力(1点)
 					       }
 				},
@@ -2257,7 +2257,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7196,count = 11,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 11,bind = 1},--屠龙至尊碎片
 					{type = 0, id = 7651,count = 6,bind = 1},--雷神首饰礼盒
-                    {type = 0, id = 6363,count = 55,bind = 1},--壕礼宝箱
+                    {type = 0, id = 7827,count = 12,bind = 1},--神戒宝盒
                     {type = 0, id = 6402,count = 35,bind = 1},--传世宝钻
 					       }
 				},
@@ -2267,7 +2267,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7196,count = 12,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 12,bind = 1},--屠龙至尊碎片
 					{type = 0, id = 6659,count = 6,bind = 1},--传世礼盒
-                    {type = 0, id = 6363,count = 60,bind = 1},--壕礼宝箱
+                    {type = 0, id = 7690,count = 12,bind = 1},--神盾礼盒
                     {type = 0, id = 7151,count = 280,bind = 1},--仙力(1点)
 					       }
 				},

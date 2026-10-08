@@ -24,14 +24,10 @@ QingDianActivitys = function (sysarg, sysid, packet)
 	local svar = System.getStaticVar()	
 	local msgid = DataPack.readByte(packet)
     if msgid == 12 then
-        if not LocalDT.IsAnniversaryActivityOpen() then return end
-        GetQD_EveryTotalPayGife(sysarg, DataPack.readByte(packet), DataPack.readByte(packet))
-        return
+        return -- 周年庆典累计充值已下架。
     elseif msgid == 0 then
         local index = DataPack.readByte(packet)
-        if index == 12 and LocalDT.IsAnniversaryActivityOpen() then
-            GetQingDianActivityInfo(sysarg, 12)
-        elseif index == 6 then
+        if index == 6 then
             GetQingDianActivityInfo(sysarg, 6)
         end
         return
@@ -1371,73 +1367,8 @@ end
 
 --得到庆典每天充值礼物
 function GetQD_EveryTotalPayGife(sysarg,x,y)
-	if not LocalDT.IsAnniversaryActivityOpen() then return end
-
-	local cfg = QingDianActivityCfg.EveryTotalPay
-	if x<1 or x>#cfg then 
-		return 
-	end
-	
-	if y<1 or y>#cfg[x].days then 
-		return 
-	end
-	local var = Actor.getStaticVar(sysarg)
-	
-	LocalDT.ClearAnniversaryMergedData(sysarg)
-	
-	if var.OneYearAct_Data.recharge.payTotal  == nil then
-		var.OneYearAct_Data.recharge.payTotal = {}
-	end
-	
-	if var.OneYearAct_Data.recharge.payTotalFalg  == nil then
-		var.OneYearAct_Data.recharge.payTotalFalg = {}
-	end
-	
-	if var.OneYearAct_Data.recharge.payTotalFalg[x]==nil then
-		var.OneYearAct_Data.recharge.payTotalFalg[x] ={}
-	end
-		
-	if var.OneYearAct_Data.recharge.payTotalFalg[x][y] ~=nil and var.OneYearAct_Data.recharge.payTotalFalg[x][y]==1 then
-		Actor.sendTipmsg(sysarg,"不能重复领取",ttFlyTip)
-		return 
-	end
-	
-	if var.OneYearAct_Data.recharge.payTotal[x]==nil or var.OneYearAct_Data.recharge.payTotal[x]<y then
-		Actor.sendTipmsg(sysarg,"累计达到充值金额的天数不足",ttFlyTip)
-		return 
-	end
-	
-	
-	
-	local award = cfg[x].days[y].award
-	
-	--背包不足
-	if not Awards.CheckBagGridCount(sysarg, award) then
-		return 
-	end
-	
-	var.OneYearAct_Data.recharge.payTotalFalg[x][y] = 1
-	
-	--给奖励
-	local bResult = Awards.Give(sysarg, award, LogIds.qingdianleijichongzhi,"连续累计充值")
-	if bResult == false then
-		print("qingdian leijipay Gift error, actor name = "..Actor.getName(sysarg))
-		return 
-	end
-	
-	GetQingDianActivityInfo(sysarg,12)
-		
-	Actor.sendTipmsg(sysarg,"领取奖励成功",ttFlyTip)
-	
-	System.sendCommonLog(LogIds.qingdianleijichongzhi,Actor.getIntProperty(sysarg,PROP_ENTITY_ID),Actor.getName(sysarg),0,0,0,x.."档"..y.."天")
-
-	System.broadcastTipmsg(string.format("<(n%s)>玩家领取了周年庆典累计充值礼包,超级丰盛<我也要领取/@@showWin,254,16>",Actor.getName(sysarg)), ttChatWindow)
-	
+	-- 周年庆典累计充值已下架，旧客户端也不能领奖。
 end
-
-
-
-
 function BuyJueShiZhenBaoNew(sysarg,index)
 	--是否在开关时间内
 	local svar = System.getStaticVar()
@@ -1560,6 +1491,7 @@ end
 
 --返回信息
 GetQingDianActivityInfo = function(sysarg,index)
+	if index == 12 then return end -- 不再下发周年庆典累计充值状态。
 	
 	if not Actor.IsActorInited(sysarg) then
 		return

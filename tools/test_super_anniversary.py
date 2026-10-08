@@ -9,10 +9,12 @@ import unittest
 import zlib
 
 from test_consume_ranking import SETUP
-from patch_super_anniversary import (CLIENT, ROOT, SLOTS, DISPLAY_SLOTS, TAB_ARTWORK,
+from patch_super_anniversary import (CLIENT, ROOT, TAB_ARTWORK,
                                     MERGED_EVENTS, patch_swf, repair_window_stack,
                                     abc_section, normalize, inspect_abc, instructions,
                                     pool_layout, bytecode_requirements)
+from patch_anniversary_reopen import (SLOTS, DISPLAY_SLOTS, DISPLAY_IDS,
+                                     patch_swf as reopen_patch)
 import test_activity_reminders as reminders
 from test_activity_reminders import execute, config_value
 from patch_guild_quest_config import read_cbp, read_pack
@@ -130,20 +132,28 @@ handleDaJiDaLi(1,0,{6,1});handleDaJiDaLi(1,0,{6,1})''')
         self.assertEqual(1,self.value('player.OneYearAct_Data.consumeGift.dajidaliConsume[1]'))
         self.assertIsNone(self.value('player.DJDL_Data'))
 
-    def test_recharge_seven_days_once_daily_and_claim_once(self):
+    def test_retired_recharge_cannot_progress_query_or_claim_with_saved_state(self):
+        self.run_lua('''LocalDT.ClearAnniversaryMergedData(1)
+player.OneYearAct_Data.recharge.payTotal={7,7,7,7}
+player.OneYearAct_Data.recharge.payTotalFalg={}
+player.days.AnniversaryPayTime={}
+''')
         for day in range(1,8):
             self.run_lua(f'''state.isDringOneYearAct={day};player.days={{PeyNum=100000000}}
 UpdateQingDianEveryTotalPayProgressByDailyPay(1,player,state)
 UpdateQingDianEveryTotalPayProgressByDailyPay(1,player,state)''')
             for tier in range(1,5):
-                self.assertEqual(day,self.value(f'player.OneYearAct_Data.recharge.payTotal[{tier}]'))
-        self.run_lua('QingDianActivitys(1,0,{12,1,7});QingDianActivitys(1,0,{12,1,7})')
-        self.assertEqual(1,self.value('#awards'))
-        self.assertTrue(self.value('awards[1]==QingDianActivityCfg.EveryTotalPay[1].days[7].award'))
-        self.assertIsNone(self.value('player.QDHD_Data'))
-        self.run_lua('''state.StartOneYear_Minitime=now+7*86400;state.isDringOneYearAct=1
-UpdateQingDianEveryTotalPayProgressByDailyPay(1,player,state)''')
-        self.assertEqual(1,self.value('player.OneYearAct_Data.recharge.payTotal[1]'))
+                self.assertEqual(7,self.value(f'player.OneYearAct_Data.recharge.payTotal[{tier}]'))
+            self.assertIsNone(self.value('player.days.AnniversaryPayTime'))
+        self.run_lua('''QingDianActivitys(1,0,{12,1,7});QingDianActivitys(1,0,{0,12})
+GetQD_EveryTotalPayGife(1,1,7);GetQingDianActivityInfo(1,12)
+handleOneYearAct(1,0,{9,1});handleOneYearAct(1,0,{0,9})
+GetOneYearXianShiQiangGou(1,1)''')
+        self.lua.execute(function('functions/new_activity/festival/OneYearActivity.lua','GetOneYearActInfo'))
+        self.run_lua('GetOneYearActInfo(1,9);GetOneYearActInfo(1,4)')
+        self.assertEqual(0,self.value('#awards'))
+        self.assertEqual(0,self.value('#packets'))
+        self.assertIsNone(self.value('player.OneYearAct_Data.xianshiBuy'))
 
     def test_lucky_spin_daily_allowance_balance_and_reply(self):
         self.run_lua('''player.days.PeyNum=SanRenHongLiCfg.LuckeyZhuanPan.needPay[1]
@@ -268,7 +278,8 @@ class ClientTests(unittest.TestCase):
         mid=classes['YearActiveWin']['constructor'];start,length,limits=bodies[mid]
         stack,_,_=bytecode_requirements(old[start:start+length],names,limits[2])
         self.assertEqual(18,limits[0]);self.assertEqual(23,stack)
-        self.assertEqual(CLIENT.read_bytes(),patch_swf(broken))
+        from patch_anniversary_row_and_icon_refresh import patch_swf as icon_patch
+        self.assertEqual(CLIENT.read_bytes(),reopen_patch(icon_patch(patch_swf(broken))))
         repaired=repair_window_stack(broken)
         self.assertEqual(subprocess.check_output(['git','show','3b1ea1d:web/GameFrame.swf'],cwd=ROOT),repaired)
         raw,(_,_,a,b)=abc_section(repaired);fixed,_=normalize(raw[a:b]);_,_,fixed_bodies=inspect_abc(fixed)
@@ -280,7 +291,7 @@ class ClientTests(unittest.TestCase):
     def test_display_order_keeps_page_indexes_and_selection_after_refresh(self):
         static={};execute(self.code(22157),self.names,self.strings,{0:static},
                           {'ACTIVITYS':static,'DAY_CHANGE':static},lambda *_:None)
-        expected=[1118,550,20012,20013,20014,20016,20015,1300,1102,591,600]
+        expected=list(DISPLAY_IDS)
         self.assertEqual(DISPLAY_SLOTS,tuple(static['ACTIVITYS'].index(i) for i in expected))
         for selected in (None,*expected):
             obj={'_list':{'selectedData':selected},'_pageCtrl':[]}
@@ -311,7 +322,8 @@ class ClientTests(unittest.TestCase):
         self.assertTrue(self.h.run_method(4080,self.h.year,14))
         self.h.dj['consumeStatus']=[1]*10;self.assertFalse(self.h.run_method(4080,self.h.year,14))
         qd=self.h.globals['GlobalData']['qdActivityDataMgr'];qd.update(rechargeDays=[7]*4,rechargeStatu=[[0]*7 for _ in range(4)])
-        self.assertTrue(self.h.run_method(4080,self.h.year,16))
+        self.assertFalse(self.h.run_method(4080,self.h.year,16))
+        self.assertFalse(self.h.run_method(4080,self.h.year,8))
         self.h.year['curDay']=0
         for slot in (12,13,14,16):self.assertFalse(self.h.run_method(4080,self.h.year,slot))
 
@@ -403,7 +415,7 @@ class ClientTests(unittest.TestCase):
         raw,(_,_,a,b)=abc_section(baseline);old,_=normalize(raw[a:b]);_,old_classes,old_bodies=inspect_abc(old)
         expected={4080,6333,6334,6335,6377,6379,6380,6382,6408,15826,15829,
                   17258,17923,17932,17965,17966,22157,22158,22159,22160,22162,
-                  22163,22164,28461,28484}
+                  22163,22164,28461,28484,6496,6497,6381}
         changed=set()
         for mid,(start,size,limits) in old_bodies.items():
             now,length,current=self.bodies[mid]

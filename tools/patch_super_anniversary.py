@@ -151,6 +151,12 @@ def upgrade_tab_presentation(source):
     """Upgrade integrated clients without touching page logic or resources."""
     raw,(_,_,a,b)=abc_section(source);abc,positions=normalize(raw[a:b])
     names,_,bodies=inspect_abc(abc)
+    ctor_start,ctor_size,_=bodies[22158]
+    constructor=abc[ctor_start:ctor_start+ctor_size]
+    # Later retirement keeps the original protocol slots but removes these
+    # two pages. Do not restore their old display order on a repeated run.
+    if q(0x60,18630) not in constructor and q(0x60,29738) not in constructor:
+        return source
     empty_string=next(i for i,s in enumerate(strings_of(abc)) if i>0 and s=='')
     start,length,limits=bodies[28484]
     updates={28484:(tab_renderer(abc[start:start+10],empty_string),limits)}

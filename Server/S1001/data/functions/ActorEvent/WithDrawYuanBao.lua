@@ -280,36 +280,8 @@ end
 
 
 function UpdateQingDianEveryTotalPayProgressByDailyPay(sysarg, var, svar)
-	if LocalDT.IsAnniversaryActivityOpen() then
-		LocalDT.ClearAnniversaryMergedData(sysarg)
-		local cfg = QingDianActivityCfg.EveryTotalPay
-		if var.OneYearAct_Data.recharge.payTotal == nil then
-			var.OneYearAct_Data.recharge.payTotal = {}
-		end
-
-		-- 控制一天只可以加一次
-		if var.days.AnniversaryPayTime == nil then
-			var.days.AnniversaryPayTime = {}
-		end
-		for i = 1, #cfg do
-			if cfg[i].needPay <= var.days.PeyNum then
-				if var.OneYearAct_Data.recharge.payTotal[i] == nil then
-					var.OneYearAct_Data.recharge.payTotal[i] = 1
-					var.days.AnniversaryPayTime[i] = 1
-				else
-					if svar.isDringOneYearAct ~= nil and var.OneYearAct_Data.recharge.payTotal[i] >= svar.isDringOneYearAct then
-					else
-						if var.days.AnniversaryPayTime[i] == nil then
-							var.OneYearAct_Data.recharge.payTotal[i] = 1 + var.OneYearAct_Data.recharge.payTotal[i]
-							var.days.AnniversaryPayTime[i] = 1
-						end
-					end
-				end
-			end
-		end
-	end
+	-- 周年庆典累计充值已下架，保留充值回调接口。
 end
-
 function UpdateSanRenHongLiEveryTotalPayProgressByDailyPay(sysarg, var, svar)
 	if (svar.isDringSanRenHongLi == nil or svar.isDringSanRenHongLi < 1 or svar.isDringSanRenHongLi > 3) == false then
 		ClearSanRenHongLi_Data(sysarg) -- 清除上次活动的数据

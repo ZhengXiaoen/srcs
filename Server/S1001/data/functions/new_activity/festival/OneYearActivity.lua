@@ -35,7 +35,7 @@ handleOneYearAct = function (sysarg, sysid, packet)
 	end
 	
 	local msgid = DataPack.readByte(packet)
-	if msgid == 1 or msgid == 3 or msgid == 4 then return end
+	if msgid == 1 or msgid == 3 or msgid == 4 or msgid == 9 then return end
 	if msgid == 0 then	--获取数据
 		GetOneYearActInfo(sysarg,DataPack.readByte(packet))
 	elseif msgid == 1 then --全服双倍
@@ -354,118 +354,9 @@ end
 
 
 --9限时抢购
-GetOneYearXianShiQiangGou = function(sysarg,index)
-
-	local svar = System.getStaticVar()
-	if OneYearActivityCfg.XianShiQiangGou[svar.isDringOneYearAct]==nil then 
-		--天数不对，太大了
-		print("配置是空的")
-		return 
-	end
-	
-	local cgf = OneYearActivityCfg.XianShiQiangGou[svar.isDringOneYearAct][index]
-	if cgf ==nil then 
-		print("配置是空的")
-		return 
-	end
-	
-	--判断买了多少次，是否超过次数
-	local var = Actor.getStaticVar(sysarg)
-	if var.days.OneYearXSQG==nil then 
-		var.days.OneYearXSQG={}
-	end
-	
-	if var.days.OneYearXSQG[index]==nil then 
-		var.days.OneYearXSQG[index]=0
-	end
-	
-	--超过可以购买的次数
-	if var.days.OneYearXSQG[index]>=cgf.canBuyTime then 
-		Actor.sendTipmsg(sysarg,"购买失败,今天已经超过购买次数了",ttFlyTip)
-		return 
-	end
-	
-
-	local function isBuys(i)
-		if var.days.OneYearXSQG[i]==nil then
-			return false
-		end
-		return var.days.OneYearXSQG[i]>=OneYearActivityCfg.XianShiQiangGou[svar.isDringOneYearAct][i].canBuyTime
-	end
-	
-	if index==4 then
-		if isBuys(1)==false then 
-			System.trace("oneyearxianshigoumai:"..Actor.getName(sysarg))
-			return
-		end
-	end
-	if index==5 then
-		if isBuys(2)==false then 
-			System.trace("oneyearxianshigoumai:"..Actor.getName(sysarg))
-			return
-		end
-	end
-	if index==6 then
-		if isBuys(3)==false then 
-			System.trace("oneyearxianshigoumai:"..Actor.getName(sysarg))
-			return
-		end
-	end
-	if index==7 then
-		if isBuys(1)==false or isBuys(4)==false then 
-			System.trace("oneyearxianshigoumai:"..Actor.getName(sysarg))
-			return
-		end
-	end
-	if index==8 then
-		if isBuys(2)==false or isBuys(5)==false then 
-			System.trace("oneyearxianshigoumai:"..Actor.getName(sysarg))
-			return
-		end
-	end
-	if index==9 then
-		if isBuys(3)==false or isBuys(6)==false then 
-			System.trace("oneyearxianshigoumai:"..Actor.getName(sysarg))
-			return
-		end
-	end	
-	
-	local myYb = Actor.getIntProperty( sysarg, PROP_ACTOR_YUANBAO)
-	if myYb < cgf.needMoney then
-		Actor.sendTipmsg(sysarg, "元宝不足", ttFlyTip)
-		return
-	end
-	
-	
-	--判断格子够不够
-	if not Awards.CheckBagGridCount(sysarg, cgf.award) then
-		return
-	end
-	
-
-	--判断钱够不够
-	if Actor.changeMoney(sysarg, 3, -cgf.needMoney, LogIds.oneyearactivity, cgf.award[1].txt) == false then
-		Actor.sendTipmsg(sysarg,"元宝不足", ttFlyTip);
-		return -- 元宝不足
-	end
-	
-
-	
-	Actor.sendTipmsg(sysarg,"购买"..cgf.name.."成功",ttFlyTip)
-	--给东西
-	Awards.Give(sysarg,cgf.award,LogIds.oneyearactivity,"周年庆限时抢购")
-	--改记录买了是多少次
-	var.days.OneYearXSQG[index]=var.days.OneYearXSQG[index]+1
-	--记录下来
-	System.sendCommonLog(LogIds.oneyearactivity,Actor.getIntProperty(sysarg,PROP_ENTITY_ID),Actor.getName(sysarg),0,0,0,"","",cgf.award[1].txt)
-	--给前端发协议
-	GetOneYearActInfo(sysarg,9)
-	
-	System.broadcastTipmsg(string.format("<(n%s)>玩家通过限时抢购购买了%s,此物品只有今天特惠出售.<我也要购买/@@showWin,254,8>",Actor.getName(sysarg),Item.getItemLinkMsg(cgf.award[1].id)), ttChatWindow)
+function GetOneYearXianShiQiangGou(sysarg,index)
+	-- 周年庆典限时抢购已下架，保留旧调用接口。
 end
-
-
-
 --10鸿运当头-----------------------
 --购买鸿运当头特惠
 BuyOneYearHongYunDangTouTeHui= function(sysarg)
@@ -837,7 +728,7 @@ end
 
 --得到所有的信息
 GetOneYearActInfo = function(sysarg,index)
-	if index == 1 or index == 3 or index == 4 then return end
+	if index == 1 or index == 3 or index == 4 or index == 9 then return end
 	
 	local var = Actor.getStaticVar(sysarg)
 	local svar = System.getStaticVar()

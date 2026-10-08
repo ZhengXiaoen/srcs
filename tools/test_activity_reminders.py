@@ -101,7 +101,10 @@ def execute(code, names, strings, locals_, globals_, invoke, start=0, end=None):
         elif kind == 0x85: stack.append(str(stack.pop()))
         elif kind == 0x96: stack.append(not truth(stack.pop()))
         elif kind == 0x30: stack.pop()
-        elif kind in (0x5d, 0x5e, 0x60): stack.append(globals_.get(names[args[0]], {'class': names[args[0]]}))
+        elif kind in (0x5d, 0x5e, 0x60):
+            name = names[args[0]]
+            owners = globals_.get('_owners', {}) if kind in (0x5d, 0x5e) else {}
+            stack.append(owners.get(name, globals_.get(name, {'class': name})))
         elif kind == 0x65: stack.append(globals_['_scopes'][args[0]])
         elif kind == 0x6c: stack.append(stack.pop()[args[0]])
         elif kind == 0x66:

@@ -485,8 +485,8 @@ OpenServerAward =
 				openDay =2,
 				award = 
 				{
-					{type = 0,id = 6690,count = 1,bind = 1},--
-					{type = 0,id = 511,count = 2,bind = 1},--
+					{type = 0,id = 7046,count = 10,bind = 1},--
+					{type = 0,id = 7690,count = 1,bind = 1},--
 				},	
 			},	
 			{
@@ -498,8 +498,8 @@ OpenServerAward =
 				openDay =2,
 				award = 
 				{
-					{type = 0,id = 6690,count = 1,bind = 1},--
-					{type = 0,id = 511,count = 2,bind = 1},--
+					{type = 0,id = 7046,count = 10,bind = 1},--
+					{type = 0,id = 7043,count = 1,bind = 1},--
 				},	
 			},
 			{
@@ -511,8 +511,8 @@ OpenServerAward =
 				openDay =2,
 				award = 
 				{
-					{type = 0,id = 6690,count = 1,bind = 1},--
-					{type = 0,id = 511,count = 2,bind = 1},--
+					{type = 0,id = 7046,count = 10,bind = 1},--
+					{type = 0,id = 7690,count = 1,bind = 1},--
 				},	
 			},
 
@@ -525,8 +525,8 @@ OpenServerAward =
 				quota=-1,
 				award = 
 				{
-					{type = 0,id = 6690,count = 1,bind = 1},--
-					{type = 0,id = 511,count = 2,bind = 1},--
+					{type = 0,id = 7046,count = 10,bind = 1},--
+					{type = 0,id = 7043,count = 1,bind = 1},--
 				},	
 			},
 			{
@@ -538,8 +538,8 @@ OpenServerAward =
 				openDay =2,
 				award = 
 				{
-					{type = 0,id = 6690,count = 1,bind = 1},--
-					{type = 0,id = 511,count = 2,bind = 1},--
+					{type = 0,id = 7046,count = 10,bind = 1},--
+					{type = 0,id = 7690,count = 1,bind = 1},--
 				},	
 			},
 
@@ -552,8 +552,8 @@ OpenServerAward =
 				openDay =2,
 				award = 
 				{
-					{type = 0,id = 6690,count = 1,bind = 1},--
-					{type = 0,id = 511,count = 2,bind = 1},--
+					{type = 0,id = 7046,count = 10,bind = 1},--
+					{type = 0,id = 7043,count = 1,bind = 1},--
 				},	
 			},
 
@@ -567,8 +567,8 @@ OpenServerAward =
 				openDay =3,
 				award = 
 				{
-					{type = 0,id = 6690,count = 1,bind = 1},--
-					{type = 0,id = 511,count = 4,bind = 1},--
+					{type = 0,id = 7046,count = 10,bind = 1},--
+					{type = 0,id = 7690,count = 1,bind = 1},--
 				},	
 			},
 			{
@@ -580,8 +580,8 @@ OpenServerAward =
 				quota=-1,
 				award = 
 				{
-					{type = 0,id = 6690,count = 1,bind = 1},--
-					{type = 0,id = 511,count = 4,bind = 1},--
+					{type = 0,id = 7046,count = 10,bind = 1},--
+					{type = 0,id = 7043,count = 1,bind = 1},--
 				},	
 			},
 			{
@@ -593,8 +593,8 @@ OpenServerAward =
 				quota=-1,
 				award = 
 				{
-					{type = 0,id = 6690,count = 1,bind = 1},--
-					{type = 0,id = 511,count = 4,bind = 1},--
+					{type = 0,id = 7046,count = 10,bind = 1},--
+					{type = 0,id = 7690,count = 1,bind = 1},--
 				},	
 			},
 			{
@@ -606,8 +606,8 @@ OpenServerAward =
 				quota=-1,
 				award = 
 				{
-					{type = 0,id = 6690,count = 1,bind = 1},--
-					{type = 0,id = 511,count = 4,bind = 1},--
+					{type = 0,id = 7046,count = 10,bind = 1},--
+					{type = 0,id = 7043,count = 1,bind = 1},--
 				},	
 			},
 			{
@@ -619,8 +619,8 @@ OpenServerAward =
 				openDay =4,
 				award = 
 				{
-					{type = 0,id = 6690,count = 2,bind = 1},--
-					{type = 0,id = 511,count = 6,bind = 1},--
+					{type = 0,id = 7046,count = 20,bind = 1},--
+					{type = 0,id = 7690,count = 1,bind = 1},--
 				},	
 			},
 			{
@@ -632,8 +632,8 @@ OpenServerAward =
 				openDay =4,
 				award = 
 				{
-					{type = 0,id = 6690,count = 2,bind = 1},--
-					{type = 0,id = 511,count = 6,bind = 1},--
+					{type = 0,id = 7046,count = 20,bind = 1},--
+					{type = 0,id = 7043,count = 1,bind = 1},--
 				},	
 			},
 			{
@@ -645,8 +645,8 @@ OpenServerAward =
 				openDay =4,
 				award = 
 				{
-					{type = 0,id = 6690,count = 2,bind = 1},--
-					{type = 0,id = 511,count = 6,bind = 1},--
+					{type = 0,id = 7046,count = 20,bind = 1},--
+					{type = 0,id = 7690,count = 1,bind = 1},--
 				},	
 			},
 			{
@@ -658,8 +658,8 @@ OpenServerAward =
 				openDay =5,
 				award = 
 				{
-					{type = 0,id = 6690,count = 2,bind = 1},--
-					{type = 0,id = 511,count = 8,bind = 1},--
+					{type = 0,id = 7046,count = 20,bind = 1},--
+					{type = 0,id = 7043,count = 1,bind = 1},--
 				},	
 			},
 			{
@@ -671,8 +671,8 @@ OpenServerAward =
 				openDay =5,
 				award = 
 				{
-					{type = 0,id = 6690,count = 2,bind = 1},--
-					{type = 0,id = 511,count = 8,bind = 1},--
+					{type = 0,id = 7046,count = 20,bind = 1},--
+					{type = 0,id = 7690,count = 1,bind = 1},--
 				},	
 			},
 			{
@@ -684,8 +684,8 @@ OpenServerAward =
 				openDay =5,
 				award = 
 				{
-					{type = 0,id = 6690,count = 2,bind = 1},--
-					{type = 0,id = 511,count = 8,bind = 1},--
+					{type = 0,id = 7046,count = 20,bind = 1},--
+					{type = 0,id = 7043,count = 1,bind = 1},--
 				},	
 			},
 
@@ -698,8 +698,8 @@ OpenServerAward =
 				openDay =5,
 				award = 
 				{
-					{type = 0,id = 6690,count = 2,bind = 1},--
-					{type = 0,id = 511,count = 8,bind = 1},--
+					{type = 0,id = 7046,count = 20,bind = 1},--
+					{type = 0,id = 7690,count = 1,bind = 1},--
 				},	
 			},
 
@@ -713,8 +713,8 @@ OpenServerAward =
 				openDay =6,
 				award = 
 				{
-					{type = 0,id = 6690,count = 3,bind = 1},--
-					{type = 0,id = 511,count = 10,bind = 1},--
+					{type = 0,id = 7046,count = 30,bind = 1},--
+					{type = 0,id = 7043,count = 1,bind = 1},--
 				},	
 			},
 			{
@@ -726,8 +726,8 @@ OpenServerAward =
 				openDay =6,
 				award = 
 				{
-					{type = 0,id = 6690,count = 3,bind = 1},--
-					{type = 0,id = 511,count = 10,bind = 1},--
+					{type = 0,id = 7046,count = 30,bind = 1},--
+					{type = 0,id = 7690,count = 1,bind = 1},--
 				},	
 			},
 			{
@@ -739,8 +739,8 @@ OpenServerAward =
 				openDay =6,
 				award = 
 				{
-					{type = 0,id = 6690,count = 3,bind = 1},--
-					{type = 0,id = 511,count = 10,bind = 1},--
+					{type = 0,id = 7046,count = 30,bind = 1},--
+					{type = 0,id = 7043,count = 1,bind = 1},--
 				},	
 			},
 
@@ -753,8 +753,8 @@ OpenServerAward =
 				openDay =6,
 				award = 
 				{
-					{type = 0,id = 6690,count = 3,bind = 1},--
-					{type = 0,id = 511,count = 10,bind = 1},--
+					{type = 0,id = 7046,count = 30,bind = 1},--
+					{type = 0,id = 7690,count = 1,bind = 1},--
 				},	
 			},
 
@@ -767,8 +767,8 @@ OpenServerAward =
 				openDay =6,
 				award = 
 				{
-					{type = 0,id = 6690,count = 3,bind = 1},--
-					{type = 0,id = 511,count = 10,bind = 1},--
+					{type = 0,id = 7046,count = 30,bind = 1},--
+					{type = 0,id = 7043,count = 1,bind = 1},--
 				},	
 			},
 
@@ -783,7 +783,7 @@ OpenServerAward =
 				award = 
 				{
 					{type = 0,id = 6684,count = 1,bind = 1},--
-					{type = 0,id = 511,count = 12,bind = 1},--
+					{type = 0,id = 7690,count = 1,bind = 1},--
 				},	
 			},
 
@@ -797,7 +797,7 @@ OpenServerAward =
 				award = 
 				{
 					{type = 0,id = 6684,count = 1,bind = 1},--
-					{type = 0,id = 511,count = 12,bind = 1},--
+					{type = 0,id = 7043,count = 1,bind = 1},--
 				},	
 			},
 
@@ -811,7 +811,7 @@ OpenServerAward =
 				award = 
 				{
 					{type = 0,id = 6684,count = 1,bind = 1},--
-					{type = 0,id = 511,count = 12,bind = 1},--
+					{type = 0,id = 7690,count = 1,bind = 1},--
 				},	
 			},
 
@@ -825,7 +825,7 @@ OpenServerAward =
 				award = 
 				{
 					{type = 0,id = 6685,count = 1,bind = 1},--
-					{type = 0,id = 511,count = 15,bind = 1},--
+					{type = 0,id = 7043,count = 1,bind = 1},--
 				},	
 			},
 
@@ -840,7 +840,7 @@ OpenServerAward =
 				award = 
 				{
 					{type = 0,id = 6685,count = 1,bind = 1},--
-					{type = 0,id = 511,count = 15,bind = 1},--
+					{type = 0,id = 7690,count = 1,bind = 1},--
 				},	
 			},
 
@@ -854,7 +854,7 @@ OpenServerAward =
 				award = 
 				{
 					{type = 0,id = 6685,count = 1,bind = 1},--
-					{type = 0,id = 511,count = 15,bind = 1},--
+					{type = 0,id = 7043,count = 1,bind = 1},--
 				},	
 			},
 			{
@@ -867,7 +867,7 @@ OpenServerAward =
 				award = 
 				{
 					{type = 0,id = 4610,count = 1,bind = 1},--
-					{type = 0,id = 511,count = 3,bind = 1},--
+					{type = 0,id = 7690,count = 1,bind = 1},--
 				},	
 			},
 			{
@@ -880,7 +880,7 @@ OpenServerAward =
 				award = 
 				{
 					{type = 0,id = 4611,count = 1,bind = 1},--
-					{type = 0,id = 511,count = 6,bind = 1},--
+					{type = 0,id = 7043,count = 1,bind = 1},--
 				},	
 			},
 			{
@@ -893,7 +893,7 @@ OpenServerAward =
 				award = 
 				{
 					{type = 0,id = 4612,count = 1,bind = 1},--
-					{type = 0,id = 511,count = 9,bind = 1},--
+					{type = 0,id = 7690,count = 1,bind = 1},--
 				},	
 			},
 

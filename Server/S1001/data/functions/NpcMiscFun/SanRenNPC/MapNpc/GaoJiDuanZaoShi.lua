@@ -1,5 +1,7 @@
 ﻿--#include "data\functions\VipRecovery.lua" once
 
+--#include "data\config\monster\HuangGuRewardCfg.lua" once
+
 local t = {
     --材料锻造数据
     clhcdata = {
@@ -371,6 +373,11 @@ t.main = function(sysarg)
   <(c0xFFeabc78)【衣服互换】>    <(c0xFF00c0ff)每次消耗88800元宝>
   <(c0xFFb6946c)至尊屠龙甲 → 至尊屠龙衣>    <互换/@onchangeGoods,1|消耗1件至尊屠龙甲及88800元宝，兑换1件至尊屠龙衣>
   <(c0xFFb6946c)至尊屠龙衣 → 至尊屠龙甲>    <互换/@onchangeGoods,2|消耗1件至尊屠龙衣及88800元宝，兑换1件至尊屠龙甲>
+<(idecoLine#330)>
+  <(c0xFFeabc78)【荒古卷轴兑换】>
+  <(c0xFFb6946c)每次消耗10张荒古传送卷。>
+  <(c0xFFb6946c)按荒古战将之神掉率获得灵力丹、战将装备。>
+  <1次/@onHuangGuExchange,1|消耗10张荒古传送卷兑换1次奖励>          <10次/@onHuangGuExchange,10|消耗100张荒古传送卷兑换10次奖励>
 ]];
 
 
@@ -434,6 +441,91 @@ end
     return e;
 end
 
+
+-- 同组按原规则随机选取，最多尝试组内记录数次，成功后停止该组。
+t.rollHuangGuRewards = function(times)
+    local cfg = LocalDT.HuangGuReward
+    local groups, groupOrder = {}, {}
+    for _, row in ipairs(cfg.equipmentDrops) do
+        if row.group > 0 then
+            if not groups[row.group] then
+                groups[row.group] = {}
+                table.insert(groupOrder, row.group)
+            end
+            table.insert(groups[row.group], row)
+        end
+    end
+    local rewards, totals = {}, {}
+    local addReward = function(id, count, bind)
+        local key = id .. ":" .. bind
+        if not totals[key] then
+            totals[key] = {type = 0, id = id, count = 0, bind = bind}
+            table.insert(rewards, totals[key])
+        end
+        totals[key].count = totals[key].count + count
+    end
+    for i = 1, times do
+        for _, row in ipairs(cfg.spiritDrops) do
+            if row.rate == 100 or System.getRandomNumber(100) < row.rate then
+                addReward(row.id, math.random(row.mincount, row.maxcount), row.bind)
+            end
+        end
+        for _, groupId in ipairs(groupOrder) do
+            local group = groups[groupId]
+            for attempt = 1, #group do
+                local row = group[System.getRandomNumber(#group) + 1]
+                if row.propability > 0 and (row.propability == 1 or System.getRandomNumber(row.propability) == 0) then
+                    local itemType = Item.getItemPropertyById(row.id, Item.ipItemType)
+                    if itemType >= 201 and itemType <= 205 then
+                        addReward(row.id, row.count, row.bind)
+                    end
+                    break
+                end
+            end
+        end
+    end
+    return rewards
+end
+
+t.onHuangGuExchange = function(sysarg, times)
+    times = tonumber(times)
+    if times ~= 1 and times ~= 10 then return end
+    local cfg = LocalDT.HuangGuReward
+    local needCount = cfg.scrollCount * times
+    local bound = Actor.getItemCount(sysarg, cfg.scrollId, -1, -1, 1)
+    local unbound = Actor.getItemCount(sysarg, cfg.scrollId, -1, -1, 0)
+    if bound + unbound < needCount then
+        Actor.sendTipmsg(sysarg, "荒古传送卷不足，需要" .. needCount .. "张。", ttFlyTip)
+        return
+    end
+    local rewards = t.rollHuangGuRewards(times)
+    if Awards.CheckBagGridCount(sysarg, rewards) ~= true then return end
+    bound = math.min(bound, needCount)
+    unbound = needCount - bound
+    local logStr = "荒古卷轴兑换"
+    local logId = LogIds.HuangGuBossDrop
+    local removedBound, removedUnbound = 0, 0
+    if bound > 0 then
+        removedBound = Actor.removeItem(sysarg, cfg.scrollId, bound, -1, -1, 1, logStr, logId)
+    end
+    if removedBound == bound and unbound > 0 then
+        removedUnbound = Actor.removeItem(sysarg, cfg.scrollId, unbound, -1, -1, 0, logStr, logId)
+    end
+    if removedBound == bound and removedUnbound == unbound then
+        if Awards.GiveNoCheck(sysarg, rewards, logId, logStr) then
+            Actor.sendTipmsg(sysarg, "兑换成功，已消耗" .. needCount .. "张荒古传送卷，获得" .. times .. "次奖励。", ttFlyTip)
+            return t.main(sysarg)
+        end
+    end
+    -- 扣除失败或首项奖励发放失败时按原绑定状态返还卷轴。
+    if removedBound > 0 then
+        Actor.addItem(sysarg, cfg.scrollId, 0, 0, removedBound, 1, 0, logStr .. "返还", logId)
+    end
+    if removedUnbound > 0 then
+        Actor.addItem(sysarg, cfg.scrollId, 0, 0, removedUnbound, 0, 0, logStr .. "返还", logId)
+    end
+    Actor.sendTipmsg(sysarg, "兑换失败，已返还扣除的卷轴。", ttFlyTip)
+end
 
 t.duihuanye = function(sysarg)
     local e = "<(idecoLine#330)>\\  <(c0xFFeabc78)【武器与衣服】>\\  <(c0xFFb6946c)每件消耗1枚至尊屠龙令（88个碎片兑换）。>\\"

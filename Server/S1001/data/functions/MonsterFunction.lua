@@ -79,6 +79,7 @@ end
 --#include "data\config\monster\BossMaterialDropCfg.lua" once
 --#include "data\config\monster\BossTemperStoneDropCfg.lua" once
 --#include "data\functions\BossEquipmentDrop.lua" once
+--#include "data\config\monster\HuangGuRewardCfg.lua" once
 
 LocalDT.BroadcastBossMaterial = function(monster, killer, itemId, count)
 	local cfg = LocalDT.BossMaterialBroadcast[itemId]
@@ -162,10 +163,11 @@ end
 --当一个怪物被杀死的时候回调
 function HandlerMonsterByKilled(monster, killer, monId, fubenId, sceneId, fuBenPtr)
 	-- 真荒古之地专属掉落，宠物或战将击杀也会触发
-	if killer ~= nil and monId == 635 and Actor.getSceneId(monster) == 286 then
-		Item.createDropItem(monster, Item.createItem(552, math.random(3, 5), 0, 0, 0), LogIds.HuangGuBossDrop, "HuangGuBoss", nil)
-		if System.getRandomNumber(100) < 30 then
-			Item.createDropItem(monster, Item.createItem(553, math.random(1, 2), 0, 0, 0), LogIds.HuangGuBossDrop, "HuangGuBoss", nil)
+	if killer ~= nil and monId == LocalDT.HuangGuReward.bossId and Actor.getSceneId(monster) == LocalDT.HuangGuReward.sceneId then
+		for _, cfg in ipairs(LocalDT.HuangGuReward.spiritDrops) do
+			if cfg.rate == 100 or System.getRandomNumber(100) < cfg.rate then
+				Item.createDropItem(monster, Item.createItem(cfg.id, math.random(cfg.mincount, cfg.maxcount), 0, 0, cfg.bind), LogIds.HuangGuBossDrop, "HuangGuBoss", nil)
+			end
 		end
 	end
   -- 处理怪物被杀

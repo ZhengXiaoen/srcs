@@ -9,7 +9,8 @@ import unittest
 import zlib
 
 from test_consume_ranking import SETUP
-from patch_super_anniversary import (CLIENT, ROOT, SLOTS, MERGED_EVENTS, patch_swf,
+from patch_super_anniversary import (CLIENT, ROOT, SLOTS, DISPLAY_SLOTS, TAB_ARTWORK,
+                                    MERGED_EVENTS, patch_swf, repair_window_stack,
                                     abc_section, normalize, inspect_abc, instructions,
                                     pool_layout, bytecode_requirements)
 import test_activity_reminders as reminders
@@ -268,10 +269,31 @@ class ClientTests(unittest.TestCase):
         stack,_,_=bytecode_requirements(old[start:start+length],names,limits[2])
         self.assertEqual(18,limits[0]);self.assertEqual(23,stack)
         self.assertEqual(CLIENT.read_bytes(),patch_swf(broken))
+        repaired=repair_window_stack(broken)
+        self.assertEqual(subprocess.check_output(['git','show','3b1ea1d:web/GameFrame.swf'],cwd=ROOT),repaired)
+        raw,(_,_,a,b)=abc_section(repaired);fixed,_=normalize(raw[a:b]);_,_,fixed_bodies=inspect_abc(fixed)
         for method,(previous,size,before) in bodies.items():
-            now,length,after=self.bodies[method]
-            self.assertEqual(old[previous:previous+size],self.abc[now:now+length],method)
+            now,length,after=fixed_bodies[method]
+            self.assertEqual(old[previous:previous+size],fixed[now:now+length],method)
             self.assertEqual((23,*before[1:]) if method==mid else before,after,method)
+
+    def test_display_order_keeps_page_indexes_and_selection_after_refresh(self):
+        static={};execute(self.code(22157),self.names,self.strings,{0:static},
+                          {'ACTIVITYS':static,'DAY_CHANGE':static},lambda *_:None)
+        expected=[1118,550,20012,20013,20014,20016,20015,1300,1102,591,600]
+        self.assertEqual(DISPLAY_SLOTS,tuple(static['ACTIVITYS'].index(i) for i in expected))
+        for selected in (None,*expected):
+            obj={'_list':{'selectedData':selected},'_pageCtrl':[]}
+            calls=[]
+            def invoke(target,name,args):
+                calls.append(name)
+                if name=='indexOf':return target.index(args[0]) if args[0] in target else -1
+                return None
+            _,stack=execute(self.code(22163),self.names,self.strings,{0:obj},{},invoke)
+            self.assertEqual(expected,obj['_list']['dataProvider'])
+            self.assertEqual(expected.index(selected) if selected in expected else 0,obj['_list']['selectedIndex'])
+            self.assertIn('onChange',calls)
+            self.assertLessEqual(stack,self.bodies[22163][2][0])
 
     def test_merged_and_retired_red_dots(self):
         for slot in (0,2,3,5,6,9,12,13,14,15,16):
@@ -323,17 +345,35 @@ class ClientTests(unittest.TestCase):
         self.h.run_method(6379,self.h.nav,None)
         self.assertFalse(self.h.buttons['year']['effect'])
 
-    def test_text_tab_labels_and_dates_execute_with_valid_stack(self):
-        for slot,label in zip(range(12,17),('材料返利','幸运转盘','消费豪礼','消费排行','累计充值')):
-            obj={'_label_0':{},'_image_0':{}}
-            code=self.code(28484);props=[self.names[x.operands[0]] for x in instructions(code) if x.opcode==0x66]
-            label_name=self.names[29712];image_name=self.names[29713]
-            obj={label_name:{'txtLabel':{}},image_name:{}}
+    def test_original_tab_artwork_and_dates_execute_with_valid_stack(self):
+        # Reuse one row for migrated, original and empty tabs, as CustomList does.
+        obj={'_btn':{'caption':'stale text'},'_mark':{}}
+        static={};execute(self.code(22157),self.names,self.strings,{0:static},
+                          {'ACTIVITYS':static,'DAY_CHANGE':static},lambda *_:None)
+        samples=[(20012+i,12+i,*art) for i,art in enumerate(TAB_ARTWORK)]
+        samples.extend((static['ACTIVITYS'][s],s,static['ACTIVITYS'][s],32,11) for s in SLOTS if s<12)
+        samples.append((0,None,None,None,None))
+        for value,slot,asset,x,y in samples:
+            calls=[]
             def invoke(target,name,args):
-                if name=='canGetAward':return False
+                calls.append((name,args))
+                if name=='canGetAward':return slot%2==0
+                if name=='getTextLabel':return {'asset':args[0]}
+                if name=='setBtnTxtBmp':target['bitmap']=args
+                if name=='removeBtnTxtBmp':target['bitmap']=None
+                if name=='indexOf':return target.index(args[0])
                 return None
-            _,stack=execute(code[10:],self.names,self.strings,{0:obj,1:20000+slot},{'GlobalData':{'yearAcitveDataMgr':self.h.year}},invoke)
-            self.assertEqual(label,obj[label_name]['caption'])
+            globals_={'GlobalData':{'yearAcitveDataMgr':self.h.year},'YearActiveWin':static,
+                      'GameResource':{'defaultResource':{}}}
+            _,stack=execute(self.code(28484)[10:],self.names,self.strings,{0:obj,1:value},globals_,invoke)
+            self.assertEqual('',obj['_btn']['caption'])
+            if slot is None:
+                self.assertIsNone(obj['_btn']['bitmap'])
+            else:
+                self.assertEqual([{'asset':asset},x,y],obj['_btn']['bitmap'])
+                self.assertIn(('getTextLabel',[asset]),calls)
+                self.assertIn(('canGetAward',[slot]),calls)
+                self.assertEqual(slot%2==0,obj['_mark']['visible'])
             self.assertLessEqual(stack,self.bodies[28484][2][0])
         for mid in (17932,17966,29902):
             label=next(self.names[x.operands[0]] for x in instructions(self.code(mid)) if x.opcode==0x66)

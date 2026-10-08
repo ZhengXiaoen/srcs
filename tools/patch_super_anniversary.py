@@ -25,7 +25,11 @@ ROOT = Path(__file__).resolve().parents[1]
 CLIENT = ROOT / 'web/GameFrame.swf'
 MODULE = ROOT / 'web/v2/modules/hongli/HongLi.swf'
 SLOTS = (1, 4, 7, 8, 10, 11, 12, 13, 14, 15, 16)
-LABELS = ('材料返利', '幸运转盘', '消费豪礼', '消费排行', '累计充值')
+# Display order is independent of the original protocol/page indexes.
+DISPLAY_SLOTS = (1, 8, 12, 13, 14, 16, 15, 4, 10, 7, 11)
+# Original title bitmap IDs and positions from Jingji, HongLi, DaJiDaLi and QD.
+TAB_ARTWORK = ((1143, 32, 11), (1301, 35, 11), (996, 30, 11),
+               (840, 30, 11), (1145, 30, 11))
 MERGED_EVENTS = ((331, 36051), (331, 36035), (359, 42525),
                  (331, 36018), (141, 31502), (141, 31479), (206, 40568))
 
@@ -115,6 +119,74 @@ def assemble(source, abc):
     if result[8:tag] != data[8:tag] or result[start + len(abc):] != data[end:]:
         raise ValueError('Unrelated SWF resources changed')
     return result[:8] + zlib.compress(result[8:], 9)
+
+
+def display_ids():
+    original = (438,1118,994,434,1300,439,1101,591,550,1119,1102,600)
+    return tuple(original[s] if s < 12 else 20000+s for s in DISPLAY_SLOTS)
+
+
+def tab_renderer(prologue, empty_string):
+    """Use shipped title bitmaps while keeping each activity's original index."""
+    c=Code();button=prop(get(0),29712)
+    c.add(prologue+button+q(0x2c,empty_string)+q(0x61,11014)+get(1)+b'\x73'+put(2))
+    for i,(asset,x,y) in enumerate(TAB_ARTWORK):
+        c.add(get(2)+number(20012+i));c.branch(0x14,f'next{i}')
+        bitmap=call(prop(q(0x60,1042),30729),1428,number(asset))
+        c.add(call(button,15981,bitmap,number(x),number(y),void=True))
+        c.add(prop(get(0),29713)+call(YEAR,3373,number(12+i))+q(0x61,1832)+b'\x47')
+        c.label(f'next{i}')
+    c.add(get(2)+number(0));c.branch(0x16,'empty')
+    c.add(call(prop(q(0x60,23804),42709),43280,get(2))+b'\x73'+put(3))
+    bitmap=call(prop(q(0x60,1042),30729),1428,get(2))
+    c.add(call(button,15981,bitmap,number(32),number(11),void=True))
+    c.add(prop(get(0),29713)+call(YEAR,3373,get(3))+q(0x61,1832)+b'\x47')
+    c.label('empty');c.add(call(button,15989,void=True)+b'\x47')
+    # Code.finish's older parser does not support the original setsuper prologue.
+    for pos,label in c.branches:c.code[pos:pos+3]=encode_s24(c.labels[label]-pos-3)
+    return bytes(c.code)
+
+
+def upgrade_tab_presentation(source):
+    """Upgrade integrated clients without touching page logic or resources."""
+    raw,(_,_,a,b)=abc_section(source);abc,positions=normalize(raw[a:b])
+    names,_,bodies=inspect_abc(abc)
+    empty_string=next(i for i,s in enumerate(strings_of(abc)) if i>0 and s=='')
+    start,length,limits=bodies[28484]
+    updates={28484:(tab_renderer(abc[start:start+10],empty_string),limits)}
+    start,length,limits=bodies[22163];code=abc[start:start+length];ops=instructions(code)
+    setter=next(i for i,o in enumerate(ops) if o.opcode==0x61 and o.operands==(6138,))
+    array=ops[setter-1];count=len(DISPLAY_SLOTS);items=ops[setter-1-count:setter-1]
+    if array.opcode!=0x56 or array.operands!=(count,) or any(o.opcode!=0x25 for o in items):
+        raise ValueError('Unexpected anniversary tab list')
+    if {o.operands[0] for o in items}!=set(display_ids()):
+        raise ValueError('Anniversary tabs do not match the visible pages')
+    ordered=b''.join(number(i) for i in display_ids())
+    updated,_=relocate(code,[(items[0].start,array.start,ordered)])
+    updates[22163]=(updated,limits)
+    replacements=[]
+    for mid,(updated,limits) in updates.items():
+        start,length,old_limits=bodies[mid]
+        if updated==abc[start:start+length]:continue
+        stack,registers,scopes=bytecode_requirements(updated,names,limits[2])
+        if stack>limits[0] or registers>limits[1] or scopes>limits[3]:
+            raise ValueError(f'Method {mid} exceeds Flash execution capacities')
+        r=ABCReader(abc);r.pos=start+length
+        if r.u30():raise ValueError('Unexpected anniversary tab exception handlers')
+        header=b''.join(encode_u30(v) for v in (mid,*old_limits,length))
+        if abc[start-len(header):start]!=header:raise ValueError('Unexpected tab method header')
+        value=b''.join(encode_u30(v) for v in (mid,*limits,len(updated)))+updated+b'\0'
+        replacements.append((start-len(header),r.pos,value))
+    if not replacements:return source
+    result=bytearray(abc)
+    for start,end,value in sorted(replacements,reverse=True):result[start:end]=value
+    _,_,after=inspect_abc(result)
+    for mid,(start,length,limits) in bodies.items():
+        now,size,current=after[mid]
+        if mid not in updates and (limits!=current or abc[start:start+length]!=result[now:now+size]):
+            raise ValueError(f'Unrelated method {mid} changed')
+    for pos in positions:result[pos]=0
+    return assemble(source,bytes(result))
 
 
 def imported_library():
@@ -261,7 +333,7 @@ def window_lifecycle(abc,bodies):
     c.label('done');c.add(b'\x47');changes[22162]=(c.finish(),lambda p:p,(3,3,14,15))
     c=Code();c.add(day[:34]+prop(get(0),23809,6136)+put(4)+listen(False)+cleanup)
     c.add(get(0)+number(-1)+q(0x68,23811))
-    c.add(prop(get(0),23809)+b''.join(number((438,1118,994,434,1300,439,1101,591,550,1119,1102,600)[s]) if s<12 else number(20000+s) for s in SLOTS)+q(0x56,len(SLOTS))+q(0x61,6138))
+    c.add(prop(get(0),23809)+b''.join(number(i) for i in display_ids())+q(0x56,len(DISPLAY_SLOTS))+q(0x61,6138))
     c.add(call(prop(get(0),23809,6138),43280,get(4))+put(3))
     c.add(get(3)+number(0));c.branch(0x18,'select');c.add(number(0)+put(3))
     c.label('select');c.add(prop(get(0),23809)+get(3)+q(0x61,6104)+listen(True)+call(get(0),23815,b'\x20',void=True)+b'\x47')
@@ -280,7 +352,8 @@ def patch_swf(source,java=None,ffdec=None):
     data,(_,_,a,b)=abc_section(source);abc,positions=normalize(data[a:b])
     names,classes,bodies=inspect_abc(abc)
     st,size,_=bodies[22158]
-    if q(0x60,names.index('AnniversaryHongLiTurnPage')) in abc[st:st+size]:return repair_window_stack(source)
+    if q(0x60,names.index('AnniversaryHongLiTurnPage')) in abc[st:st+size]:
+        return upgrade_tab_presentation(repair_window_stack(source))
     # Remap only the descriptions actually referenced by the migrated pages.
     strings=pool_layout(abc)[2]
     description_edits={}
@@ -294,7 +367,7 @@ def patch_swf(source,java=None,ffdec=None):
             elif mid==28461 and '活动第2-3天' in text:
                 description_edits[(mid,op.start,op.end)]=text.replace('活动第2-3天','活动期间').replace('活动期间每天只可领取一次','活动期间每档只可领取一次')
     if len(description_edits)!=2:raise ValueError('Unexpected migrated-page descriptions')
-    abc,labels=add_strings(abc,(*LABELS,*description_edits.values()))
+    abc,labels=add_strings(abc,description_edits.values())
     names,classes,bodies=inspect_abc(abc)
     code=lambda mid:abc[bodies[mid][0]:sum(bodies[mid][:2])]
     transforms=window_lifecycle(abc,bodies)
@@ -322,19 +395,9 @@ def patch_swf(source,java=None,ffdec=None):
     new=(get(0)+b''.join(q(0x60,p) if p else b'\x20' for p in pages)+q(0x56,len(pages))+q(0x68,23805))
     change(22158,relocate(constructor,[(2,47,new)])[0],(max(18,bodies[22158][2][0]),*bodies[22158][2][1:]))
     static=code(22157);change(22157,relocate(static,[(51,51,b''.join(number(20012+i) for i in range(5))),(51,53,q(0x56,17))])[0],(18,*bodies[22157][2][1:]))
-    # Use text labels for imported pages, retaining the original button artwork.
+    # Reuse the original activities' title artwork for the imported pages.
     empty_string=next(i for i,s in enumerate(strings_of(abc)) if i>0 and s=='')
-    c=Code();c.add(code(28484)[:10]+prop(get(0),29712)+q(0x2c,empty_string)+q(0x61,11014)+get(1)+b'\x73'+put(2))
-    for i,label in enumerate(LABELS):
-        c.add(get(2)+number(20012+i));c.branch(0x14,f'next{i}')
-        c.add(call(prop(get(0),29712),15989,void=True)+prop(get(0),29712)+q(0x2c,labels[label])+q(0x61,11014))
-        c.add(prop(get(0),29712,15992)+number(150)+q(0x61,names.index('width')))
-        c.add(call(prop(get(0),29712,15992),1631,number(0),number(9),void=True))
-        c.add(prop(get(0),29713)+call(YEAR,3373,number(12+i))+q(0x61,1832)+b'\x47')
-        c.label(f'next{i}')
-    c.add(code(28484)[10:])
-    for pos,label in c.branches:c.code[pos:pos+3]=encode_s24(c.labels[label]-pos-3)
-    change(28484,bytes(c.code),(5,4,12,13))
+    change(28484,tab_renderer(code(28484)[:10],empty_string),(5,4,12,13))
     prefix=new_awards();change(4080,code(4080)[:2]+prefix+code(4080)[2:],(7,15,4,5),lambda p:p+(len(prefix) if p>=2 else 0))
     # Replace the anniversary entry's old recharge marks with all retained pages.
     c=Code();c.add(b'\xd0\x30'+call(q(0x60,8094),42485,prop(q(0x60,13052),38323))+put(2)+get(2));c.branch(0x12,'end')

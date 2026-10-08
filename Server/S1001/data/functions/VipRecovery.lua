@@ -42,7 +42,7 @@ end
 -- 1-3转的武器和衣服只允许手动回收。
 LocalDT.CanVipAutoRecycleItem = function(itemId)
 	local itemType = Item.getItemPropertyById(itemId, Item.ipItemType)
-	if itemType == itemTypes.itWeapon or itemType == itemTypes.itDress then
+	if itemType == BaseTypes.itemTypes.itWeapon or itemType == BaseTypes.itemTypes.itDress then
 		local needCircle = Item.getItemPropertyById(itemId, Item.ipItemNeedCircle)
 		if needCircle >= 1 and needCircle <= 3 then return false end
 	end

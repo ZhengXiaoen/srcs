@@ -161,6 +161,85 @@ JSLingLiDanUseTable={};onAchievementFunc=function()error('unexpected achievement
         lua.execute("VipAutoUseMaterials({})")
         self.assertEqual(logs, len(lua.globals().logs))
 
+    def timer_runtime(self):
+        lua = self.runtime()
+        types = (FUNCTIONS / "BaseDef/ItemTypes.lua").read_text(encoding="gb18030")
+        recovery = (FUNCTIONS / "VipRecovery.lua").read_text(encoding="utf-8-sig")
+        # The server includes itemTypes as a field of the local BaseTypes table.
+        lua.execute("local BaseTypes={" + types + "}\n" + recovery)
+        lua.execute(r"""
+System.isCrossServer=function()return crossServer or false end
+get_d_val=function(_,key)return state.d[key] or 0 end
+set_d_val=function(_,key,value)state.d[key]=value end
+ShuaXinFengHao=function()end;OnFinish_Liveness=function()end
+PROP_CREATURE_LEVEL=300;Actor.getActorMaxLevel=function()return 1000 end
+LogicCmd.miscSys={sysId=139,sub={sHuiShouZhuangbei=200}}
+local flush=DataPack.flush
+DataPack.flush=function(packet)if packet.sub~=200 then flush(packet)end end
+Actor.playEnergyEffect=function()end
+Actor.changeMoney=function(_,kind,value)money[kind]=(money[kind] or 0)+value end
+Actor.addExp=function(_,value)state.recycleExp=(state.recycleExp or 0)+value end
+Item.ipItemType=1;Item.ipItemNeedCircle=2;itemDefinitions={}
+Item.getItemPropertyById=function(id,key)return itemDefinitions[id][key]end
+Actor.removeItem=function(actor,id,count)
+ for index=#bag,1,-1 do
+  if bag[index].id==id and count>0 then
+   local used=math.min(count,bag[index].count)
+   Actor.removeItemByPtr(actor,bag[index],used);count=count-used
+  end
+ end
+end
+RecycledItems={};for i=1,20 do RecycledItems[i]={title='test',list={},notAuto=true}end
+RecycledItems[2].notAuto=nil;state.d[119]=1
+for circle=0,4 do
+ for kind=1,3 do
+  local id=10000+circle*10+kind
+  itemDefinitions[id]={[1]=kind,[2]=circle}
+  table.insert(RecycledItems[2].list,{itemid=id,exp=10,bindgold=2,gold=0,hufu=0})
+  table.insert(bag,{id=id,count=1})
+ end
+end
+""")
+        timer = (FUNCTIONS / "TimerFunc.lua").read_text(encoding="utf-8-sig")
+        lua.execute("TimerFunc={};" + re.search(r"(?ms)^TimerFunc\[27\] = function\(sysarg\).*?^end", timer)[0])
+        lua.execute(function((FUNCTIONS / "player.lua").read_text(encoding="utf-8-sig"), "OnActorTimer"))
+        return lua
+
+    def test_timer_recycles_equipment_then_uses_materials_with_local_item_types(self):
+        lua = self.timer_runtime()
+        self.assertIsNone(lua.globals().itemTypes)
+        for id in TARGET_IDS:
+            lua.execute(f"table.insert(bag,{{id={id},count=3,bind=0}});table.insert(bag,{{id={id},count=200,bind=1}})")
+        lua.execute("OnActorTimer({},27)")
+        self.assertEqual(6, len(lua.globals().bag))
+        self.assertEqual(90, lua.globals().state.recycleExp)
+        self.assertEqual(203 * 600000 + 18, lua.globals().money[0])
+        for circle in range(5):
+            for kind in range(1,4):
+                id = 10000 + circle * 10 + kind
+                self.assertEqual(1 if kind in (1,2) and 1 <= circle <= 3 else 0,
+                                 lua.globals().Actor.getItemCount(None, id), id)
+        for id in TARGET_IDS:
+            self.assertEqual(203, lua.globals().removed[id], id)
+        lua.execute("OnActorTimer({},27)")
+        self.assertEqual(90, lua.globals().state.recycleExp)
+        self.assertEqual(6, len(lua.globals().bag))
+        lua.execute("table.insert(bag,{id=10043,count=1});table.insert(bag,{id=7618,count=2});OnActorTimer({},27)")
+        self.assertEqual(100, lua.globals().state.recycleExp)
+        self.assertEqual(203 * 11100 + 200, lua.globals().state.ringValue)
+
+    def test_timer_respects_cross_server_privilege_and_material_switch(self):
+        for setting in ("crossServer=true", "vip=false"):
+            lua = self.timer_runtime()
+            lua.execute("table.insert(bag,{id=7618,count=2});" + setting + ";OnActorTimer({},27)")
+            self.assertEqual(16, len(lua.globals().bag))
+            self.assertEqual(0, len(lua.globals().removed))
+        lua = self.timer_runtime()
+        lua.execute("table.insert(bag,{id=7618,count=2});state.autoUseMaterials=0;OnActorTimer({},27)")
+        self.assertEqual(7, len(lua.globals().bag))
+        self.assertEqual(2, lua.globals().Actor.getItemCount(None,7618))
+        self.assertEqual(90, lua.globals().state.recycleExp)
+
     def test_diamonds_add_to_existing_balance_and_sync_each_consumed_stack(self):
         lua = self.runtime()
         lua.execute("state.xianzuan=17")

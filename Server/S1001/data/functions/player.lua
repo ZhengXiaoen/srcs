@@ -2450,10 +2450,6 @@ function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nL
 			end
 		end
 
-		-- 周年庆典累计充值与正式充值共用进度更新。
-		UpdateQingDianEveryTotalPayProgressByDailyPay(sysarg, var, svar)
-		if LocalDT.IsAnniversaryActivityOpen() then GetQingDianActivityInfo(sysarg, 12) end
-
 		-- 3. 大吉大利
 		if activity_DaJiDaLi ~= nil and activity_DaJiDaLi.payGiveAwardNew ~= nil and activity_DaJiDaLi.payGiveAwardNew.needMoney ~= nil then
 			if (svar.isDringDaJiDaLi == nil or svar.isDringDaJiDaLi < 1 or svar.isDringDaJiDaLi > 3) == false then

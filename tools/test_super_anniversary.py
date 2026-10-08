@@ -11,7 +11,7 @@ import zlib
 from test_consume_ranking import SETUP
 from patch_super_anniversary import (CLIENT, ROOT, SLOTS, MERGED_EVENTS, patch_swf,
                                     abc_section, normalize, inspect_abc, instructions,
-                                    pool_layout)
+                                    pool_layout, bytecode_requirements)
 import test_activity_reminders as reminders
 from test_activity_reminders import execute, config_value
 from patch_guild_quest_config import read_cbp, read_pack
@@ -230,6 +230,48 @@ class ClientTests(unittest.TestCase):
         self.assertEqual('AnniversaryHongLiTurnPage',obj['PAGES'][13]['class'])
         static={};execute(self.code(22157),self.names,self.strings,{0:static},{'ACTIVITYS':static,'DAY_CHANGE':static},lambda *_:None)
         self.assertEqual(list(range(20012,20017)),static['ACTIVITYS'][12:])
+
+    def test_full_window_constructor_initializes_ui_within_flash_stack(self):
+        obj={};globals_={'GlobalData':{'gameWidth':1600,'gameHeight':900},
+                        'm_CloseBtn':{},'m_nDragY':obj,'addChild':obj,'move':obj,
+                        'CustomList':{'class':'CustomList'}}
+        obj.update(uiWidth=1316,uiHeight=692)
+        def invoke(target,name,args):
+            if name=='__construct__':return {}
+            if name=='createUIByJson':
+                return {item['instanceName']:{} for item in args[1]['childCom']}
+            return None
+        _,maximum=execute(self.code(22158),self.names,self.strings,
+                          {0:obj,1:None,2:None,3:None},globals_,invoke)
+        self.assertEqual(23,maximum)
+        self.assertLessEqual(maximum,self.bodies[22158][2][0])
+        self.assertEqual(40,obj['_list']['itemHeight'])
+        self.assertEqual('YearActiveItemRender',obj['_list']['itemClass']['class'])
+        self.assertIsNone(obj['_editor'])
+
+    def test_flash_verifies_every_modified_function_and_imported_page(self):
+        baseline=subprocess.check_output(['git','show',BASELINE+':web/GameFrame.swf'],cwd=ROOT)
+        raw,(_,_,a,b)=abc_section(baseline);old,_=normalize(raw[a:b]);_,_,old_bodies=inspect_abc(old)
+        for mid,(start,length,limits) in self.bodies.items():
+            if mid in old_bodies:
+                previous,size,before=old_bodies[mid]
+                if limits==before and self.abc[start:start+length]==old[previous:previous+size]:continue
+            stack,registers,scopes=bytecode_requirements(self.code(mid),self.names,limits[2])
+            self.assertLessEqual(stack,limits[0],f'Method {mid} Flash operand stack')
+            self.assertLessEqual(registers,limits[1],f'Method {mid} Flash registers')
+            self.assertLessEqual(scopes,limits[3],f'Method {mid} Flash scope')
+
+    def test_previous_black_screen_is_reproduced_and_repaired_without_code_changes(self):
+        broken=subprocess.check_output(['git','show','e84eb00:web/GameFrame.swf'],cwd=ROOT)
+        raw,(_,_,a,b)=abc_section(broken);old,_=normalize(raw[a:b]);names,classes,bodies=inspect_abc(old)
+        mid=classes['YearActiveWin']['constructor'];start,length,limits=bodies[mid]
+        stack,_,_=bytecode_requirements(old[start:start+length],names,limits[2])
+        self.assertEqual(18,limits[0]);self.assertEqual(23,stack)
+        self.assertEqual(CLIENT.read_bytes(),patch_swf(broken))
+        for method,(previous,size,before) in bodies.items():
+            now,length,after=self.bodies[method]
+            self.assertEqual(old[previous:previous+size],self.abc[now:now+length],method)
+            self.assertEqual((23,*before[1:]) if method==mid else before,after,method)
 
     def test_merged_and_retired_red_dots(self):
         for slot in (0,2,3,5,6,9,12,13,14,15,16):

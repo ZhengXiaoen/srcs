@@ -30,6 +30,83 @@ MERGED_EVENTS = ((331, 36051), (331, 36035), (359, 42525),
                  (331, 36018), (141, 31502), (141, 31479), (206, 40568))
 
 
+def bytecode_requirements(code, names, initial_scope):
+    """Check every branch as Flash does before executing a method.
+
+    Return minimum operand stack, local-register and scope capacities. Window
+    constructors include their original UI object literals after the page array;
+    their peak stack can exceed the new page count.
+    """
+    ops = {op.start: op for op in instructions(code)}
+    pending = [(0, 0, initial_scope)]; seen = {}
+    maximum, locals_needed, scopes_needed = 0, 0, initial_scope
+    while pending:
+        pos, depth, scope = pending.pop()
+        if pos in seen:
+            if seen[pos] != (depth, scope):
+                raise ValueError(f'Inconsistent bytecode branch at {pos}')
+            continue
+        seen[pos] = (depth, scope)
+        op = ops[pos]; kind, args = op.opcode, op.operands
+        consumed, added = 0, 0
+        if 0xd0 <= kind <= 0xd3 or kind in (0x60,0x62,0x20,0x24,0x25,0x26,0x27,
+                                           0x28,0x2c,0x2d,0x2e,0x2f,0x5d,0x5e,0x65,0x57):
+            added = 1
+        elif 0xd4 <= kind <= 0xd7 or kind in (0x63,0x29,0x30,0x1c,0x48,0x03): consumed = 1
+        elif kind in (0x66,0x61,0x68,0x05):
+            consumed = (1 if kind == 0x66 else 2) + int(not names[args[0]])
+            added = int(kind == 0x66)
+        elif kind in (0x46,0x4f,0x4e,0x4a):
+            consumed, added = args[1]+1, int(kind in (0x46,0x4a))
+        elif kind == 0x42: consumed, added = args[0]+1, 1
+        elif kind in (0x49,0x56): consumed, added = args[0]+int(kind==0x49), int(kind==0x56)
+        elif kind == 0x55: consumed, added = args[0]*2, 1
+        elif kind == 0x2a: consumed, added = 1, 2
+        elif kind in (0x73,0x74,0x76,0x80,0x82,0x85,0x90,0x93,0x96,0xb2,0xc0,0x58): consumed, added = 1, 1
+        elif kind in (0x87,0x1e,0x23): consumed, added = 2, 1
+        elif kind == 0x32: added = 1
+        elif kind == 0x1b or kind in (0x11,0x12): consumed = 1
+        elif 0x0c <= kind <= 0x1a and kind != 0x10: consumed = 2
+        elif 0xa0 <= kind <= 0xb1: consumed, added = 2, 1
+        elif kind not in (0x09,0x08,0xc2,0x47,0x10,0x1d):
+            raise ValueError(f'Uninspected verifier opcode {kind:#x} at {pos}')
+        if depth < consumed: raise ValueError(f'Bytecode stack underflow at {pos}')
+        depth += added-consumed; maximum = max(maximum, depth)
+        if kind in (0x30,0x1c): scope += 1
+        elif kind == 0x1d: scope -= 1
+        if scope < initial_scope: raise ValueError(f'Bytecode scope underflow at {pos}')
+        if kind == 0x65 and args[0] >= scope: raise ValueError(f'Invalid scope index at {pos}')
+        scopes_needed = max(scopes_needed, scope)
+        registers = (args[:2] if kind == 0x32 else args[:1] if kind in (0x62,0x63,0x08,0xc2)
+                     else (kind-0xd0,) if 0xd0<=kind<=0xd3
+                     else (kind-0xd4,) if 0xd4<=kind<=0xd7 else ())
+        if registers: locals_needed = max(locals_needed, max(registers)+1)
+        if kind in (0x47,0x48,0x03):
+            if depth: raise ValueError(f'Nonempty bytecode stack at return {pos}')
+            continue
+        targets = [target for _,target,_ in op.branches]
+        if kind not in (0x10,0x1b): targets.append(op.end)
+        pending.extend((target,depth,scope) for target in targets)
+    return maximum, locals_needed, scopes_needed
+
+
+def repair_window_stack(source):
+    """Repair already-integrated clients without rebuilding or changing code."""
+    raw,(_,_,a,b)=abc_section(source);abc,positions=normalize(raw[a:b])
+    names,classes,bodies=inspect_abc(abc)
+    mid=classes['YearActiveWin']['constructor'];start,length,limits=bodies[mid]
+    required,registers,scopes=bytecode_requirements(abc[start:start+length],names,limits[2])
+    if registers>limits[1] or scopes>limits[3]:raise ValueError('Unexpected window registers or scope')
+    if required<=limits[0]:return source
+    old=b''.join(encode_u30(v) for v in (mid,*limits,length))
+    new=b''.join(encode_u30(v) for v in (mid,required,*limits[1:],length))
+    if abc[start-len(old):start]!=old:raise ValueError('Unexpected window method header')
+    result=bytearray(abc)
+    for pos in positions:result[pos]=0
+    result[start-len(old):start]=new
+    return assemble(source,bytes(result))
+
+
 def assemble(source, abc):
     data, (tag, payload, start, end) = abc_section(source)
     result = (data[:tag + 2] + struct.pack('<I', start - payload + len(abc))
@@ -203,7 +280,7 @@ def patch_swf(source,java=None,ffdec=None):
     data,(_,_,a,b)=abc_section(source);abc,positions=normalize(data[a:b])
     names,classes,bodies=inspect_abc(abc)
     st,size,_=bodies[22158]
-    if q(0x60,names.index('AnniversaryHongLiTurnPage')) in abc[st:st+size]:return source
+    if q(0x60,names.index('AnniversaryHongLiTurnPage')) in abc[st:st+size]:return repair_window_stack(source)
     # Remap only the descriptions actually referenced by the migrated pages.
     strings=pool_layout(abc)[2]
     description_edits={}
@@ -243,7 +320,7 @@ def patch_swf(source,java=None,ffdec=None):
            16364,names.index('AnniversaryHongLiTurnPage'),29700,18573,18630]
     constructor=code(22158)
     new=(get(0)+b''.join(q(0x60,p) if p else b'\x20' for p in pages)+q(0x56,len(pages))+q(0x68,23805))
-    change(22158,relocate(constructor,[(2,47,new)])[0],(18,*bodies[22158][2][1:]))
+    change(22158,relocate(constructor,[(2,47,new)])[0],(max(18,bodies[22158][2][0]),*bodies[22158][2][1:]))
     static=code(22157);change(22157,relocate(static,[(51,51,b''.join(number(20012+i) for i in range(5))),(51,53,q(0x56,17))])[0],(18,*bodies[22157][2][1:]))
     # Use text labels for imported pages, retaining the original button artwork.
     empty_string=next(i for i,s in enumerate(strings_of(abc)) if i>0 and s=='')
@@ -299,6 +376,9 @@ def patch_swf(source,java=None,ffdec=None):
     replacements=[]
     for mid,(updated,moved,limits) in transforms.items():
         instructions(updated)
+        required,registers,scopes=bytecode_requirements(updated,names,limits[2])
+        if required>limits[0] or registers>limits[1] or scopes>limits[3]:
+            raise ValueError(f'Method {mid} exceeds Flash execution capacities')
         start,length,old_limits=bodies[mid];r=ABCReader(abc);r.pos=start+length;exceptions=[]
         for _ in range(r.u30()):
             row=[r.u30() for _ in range(5)];exceptions.append([moved(x) for x in row[:3]]+row[3:])

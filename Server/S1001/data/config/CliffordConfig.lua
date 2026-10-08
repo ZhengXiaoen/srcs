@@ -1,7 +1,7 @@
 --祈福配置
 CliffordConfig = 
 {
-    FreeTime = 1000 * 60 * 60, --一个小时
+    FreeTime = 1000 * 60, --一分钟
     FreeCliffordCount = 5,  --每天可免费祈福多少次
     DecTimer = 5000, --五毫秒刷新一次
     FreeClifford =  --免费祈福  w w w .  c   n 1 2 1. c o m

@@ -946,7 +946,7 @@ OneYearActivityCfg =
 			{
 				needPay = 6000000,
 				award={
-						{type = 0, id = 6887, count = 1,bind = 1,txt="龍装Ⅰ首饰箱"},
+						{type = 0, id = 6821, count = 1,bind = 1,txt="龍装Ⅲ装备箱"},
 				},
 			},
 			--第8挡
@@ -960,7 +960,7 @@ OneYearActivityCfg =
 			{
 				needPay = 12000000,
 				award={
-						{type = 0, id = 6820, count = 1,bind = 1,txt="龍装Ⅱ装备箱"},
+						{type = 0, id = 6821, count = 3,bind = 1,txt="龍装Ⅲ装备箱"},
 				},
 			},
 			--第10挡

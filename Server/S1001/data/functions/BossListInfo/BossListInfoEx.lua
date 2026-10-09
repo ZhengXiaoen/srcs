@@ -1,6 +1,7 @@
 --#include "data\config\BossListInfo\BossListInfo.lua" once
 --#include "data\config\monster\AdvanceMonsterEquipCfg.lua" once
 --#include "data\config\monster\SRRefreshMonster.lua" once
+--#include "data\functions\BossListInfo\BossEquipmentPreview.lua" once
 function GetBoosListInfoForSceneName(sceneName)
     for i =1,table.getn(BossListInfo) do
         if BossListInfo[i].sceneName == sceneName then
@@ -581,6 +582,16 @@ function HandleTestBoos(sysarg,arragr,sceneNameEEE,bossid)
 
 
 
+    if bossid then
+        e = LocalDT.AppendBossEquipmentPreview(e, tonumber(bossid))
+    else
+        for _, row in ipairs(RefreshMonsterData) do
+            if (row.bj >= a and row.bj <= b) then e = LocalDT.AppendBossEquipmentPreview(e, row.monid) end
+        end
+        for _, index in ipairs(arragr.add or {}) do
+            e = LocalDT.AppendBossEquipmentPreview(e, RefreshMonsterData[index].monid)
+        end
+    end
     ShowRightBossListInfo(sysarg,1, e);
 
 end

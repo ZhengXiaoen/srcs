@@ -22828,3 +22828,17 @@ AdvanceMonsterEquipCfg =
 
 --------------------------------------
 }
+-- Add the same existing equipment IDs as the client BOSS award preview.
+do
+    local LocalDT = {}
+--#include "BossEquipmentPreviewCfg.lua"
+    for _, monster in ipairs(AdvanceMonsterEquipCfg) do
+        for _, awards in ipairs(monster.awards or {}) do
+            for _, id in ipairs(LocalDT.BossEquipmentPreview[monster.id] or {}) do
+                local present = false
+                for _, item in ipairs(awards) do if item.id == id then present = true; break end end
+                if not present then table.insert(awards, {type=0, id=id, count=1, bind=0}) end
+            end
+        end
+    end
+end

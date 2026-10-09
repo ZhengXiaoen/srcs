@@ -394,5 +394,6 @@ LogIds =
 	HuangGuBossDrop = 2823, -- 真荒古之地荒古战将之神掉落
 	ZhuanShengAccessoryDrop = 2824, -- 转生神殿主宰饰品碎片掉落
 	BossMaterialDrop = 2825, -- BOSS 材料整组掉落
+	BossEquipmentDrop = 2826, -- BOSS 武器衣服及共组装备掉落
     
 }

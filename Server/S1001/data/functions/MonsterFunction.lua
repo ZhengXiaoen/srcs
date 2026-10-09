@@ -78,6 +78,7 @@ end
 
 --#include "data\config\monster\BossMaterialDropCfg.lua" once
 --#include "data\config\monster\BossTemperStoneDropCfg.lua" once
+--#include "data\functions\BossEquipmentDrop.lua" once
 
 LocalDT.BroadcastBossMaterial = function(monster, killer, itemId, count)
 	local cfg = LocalDT.BossMaterialBroadcast[itemId]
@@ -179,6 +180,7 @@ function HandlerMonsterByKilled(monster, killer, monId, fubenId, sceneId, fuBenP
 	local isDropItem = CheckAndSetIsDropItemWhenMonsterKilled(monster, killer, monId)
 	if isDropItem then
 		LocalDT.DropBossMaterials(monster, killer, monId)
+		if LocalDT.DropBossEquipment then LocalDT.DropBossEquipment(monster, killer, monId) end
 	end
 	return isDropItem
 end

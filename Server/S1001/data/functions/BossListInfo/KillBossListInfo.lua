@@ -1,6 +1,7 @@
 ﻿--#include "data\config\BossListInfo\BossListInfo.lua" once
 --#include "data\config\monster\SRRefreshMonster.lua" once
 --#include "data\config\monster\AdvanceMonsterEquipCfg.lua" once
+--#include "data\functions\BossListInfo\BossEquipmentPreview.lua" once
 
 function GetKillBoosListInfoForSceneName(sceneName)
     for i =1,table.getn(BossListInfo) do
@@ -130,6 +131,11 @@ function HandleGetRightKillBoosListInfo(sysarg,str)
             end
             break
         end
+    end
+    for _, id in ipairs(LocalDT.BossEquipmentPreview[nMonsterId] or {}) do
+        local present = false
+        for _, current in ipairs(table_itemid) do if current == id then present = true; break end end
+        if not present then table.insert(table_itemid, id) end
     end
     ShowRightKillBossListInfo(sysarg,nMonsterId,table_itemid,table_map)
 end

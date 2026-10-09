@@ -108928,3 +108928,17 @@ for _, monster in ipairs(StdMonster) do
         end
     end
 end
+
+-- BOSS equipment override; shared templates remain unchanged.
+do
+    local LocalDT = {}
+--#include "BossEquipmentDropCfg.lua"
+    for _, monster in ipairs(StdMonster) do
+        local rule = LocalDT.BossEquipmentDrop.monsters[monster.entityid]
+        if rule then
+            for _, index in ipairs(rule.disabled) do
+                monster.drops[index].propability = 0
+            end
+        end
+    end
+end

@@ -45,6 +45,13 @@ XiaoFeiZhuanPan= --神秘商店
 							{name ="饰品箱",type=0,id=6368,count=1,bind=1,rate=25,},
 							{name ="壕礼宝箱",type=0,id=6363,count=1,bind=1,rate=25,},
 							{name ="传世礼盒",type=0,id=6659,count=1,bind=1,rate=25,},
+							{name ="月纹强化石",type=0,id=460,count=200,bind=1,rate=5,},
+							{name ="日纹强化石",type=0,id=461,count=100,bind=1,rate=5,},
+							{name ="足迹礼盒",type=0,id=7043,count=1,bind=1,rate=25,},
+							{name ="神盾礼盒",type=0,id=7690,count=1,bind=1,rate=25,},
+							{name ="坐骑礼盒",type=0,id=7047,count=1,bind=1,rate=25,},
+							{name ="坐骑装备礼盒",type=0,id=7048,count=1,bind=1,rate=25,},
+							{name ="翅膀装备礼盒",type=0,id=7049,count=1,bind=1,rate=25,},
             
         },
 }

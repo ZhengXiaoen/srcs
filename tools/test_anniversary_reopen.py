@@ -14,6 +14,7 @@ from test_activity_reminders import config_value
 from patch_guild_quest_config import read_cbp
 from patch_anniversary_material_rebate import METHODS as MATERIAL_METHODS, patch_swf as material_page_patch
 from patch_anniversary_day_refresh import METHODS as DAY_METHODS, patch_swf as day_patch
+from patch_anniversary_spin_finish import METHODS as SPIN_METHODS, patch_swf as spin_patch
 
 BASELINE = '658b049'
 
@@ -244,12 +245,12 @@ class ReopenTests(unittest.TestCase):
 
     def test_midnight_patch_changes_only_five_window_methods_from_current_release(self):
         before = subprocess.check_output(['git', 'show', '97bed66:web/GameFrame.swf'], cwd=CLIENT.parent.parent)
-        self.assertEqual(CLIENT.read_bytes(), day_patch(before))
+        self.assertEqual(CLIENT.read_bytes(), spin_patch(day_patch(before)))
         self.assertEqual(CLIENT.read_bytes(), day_patch(CLIENT.read_bytes()))
         raw, (_, _, a, b) = abc_section(before); old, _ = normalize(raw[a:b]); _, _, bodies = inspect_abc(old)
         changed = {mid for mid, (start, size, limits) in bodies.items()
                    if old[start:start + size] != self.code(mid) or limits != self.bodies[mid][2]}
-        self.assertEqual(DAY_METHODS, changed)
+        self.assertEqual(DAY_METHODS | SPIN_METHODS, changed)
 
     def test_reported_pages_execute_real_init_callbacks_and_cleanup_across_midnight(self):
         cfg_dir = CLIENT.parent / 'v2/lang/zh-cn'
@@ -342,14 +343,14 @@ class ReopenTests(unittest.TestCase):
 
     def test_patch_preserves_all_artwork_other_methods_and_flash_limits(self):
         before = subprocess.check_output(['git', 'show', BASELINE + ':web/GameFrame.swf'], cwd=CLIENT.parent.parent)
-        self.assertEqual(CLIENT.read_bytes(), day_patch(material_page_patch(patch_swf(before))))
+        self.assertEqual(CLIENT.read_bytes(), spin_patch(day_patch(material_page_patch(patch_swf(before)))))
         self.assertEqual(CLIENT.read_bytes(), patch_swf(CLIENT.read_bytes()))
         raw, (_, _, a, b) = abc_section(before); old, _ = normalize(raw[a:b]); _, _, bodies = inspect_abc(old)
         changed = set()
         for mid, (start, length, limits) in bodies.items():
             now, size, current = self.bodies[mid]
             if old[start:start + length] != self.abc[now:now + size] or current != limits: changed.add(mid)
-        self.assertEqual(METHODS | MATERIAL_METHODS | DAY_METHODS, changed)
+        self.assertEqual(METHODS | MATERIAL_METHODS | DAY_METHODS | SPIN_METHODS, changed)
         self.assertEqual(strings_of(old), self.strings)
         for mid in METHODS | DAY_METHODS:
             limits = self.bodies[mid][2]

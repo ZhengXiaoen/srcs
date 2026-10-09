@@ -15,6 +15,7 @@ from patch_super_anniversary import bytecode_requirements
 from patch_anniversary_reopen import METHODS as REOPEN_METHODS, patch_swf as reopen_patch
 from patch_anniversary_material_rebate import METHODS as MATERIAL_METHODS, patch_swf as material_page_patch
 from patch_anniversary_day_refresh import METHODS as DAY_METHODS, patch_swf as day_patch
+from patch_anniversary_spin_finish import METHODS as SPIN_METHODS, patch_swf as spin_patch
 from test_daily_activity_icons import DailyIconsTests
 
 BASELINE = '34ff0c8'
@@ -72,14 +73,14 @@ class IconRefreshTests(DailyIconsTests):
 
     def test_patch_changes_only_reviewed_methods_and_preserves_artwork(self):
         before = subprocess.check_output(['git', 'show', BASELINE + ':web/GameFrame.swf'], cwd=ROOT)
-        self.assertEqual(CLIENT.read_bytes(), day_patch(material_page_patch(reopen_patch(patch_swf(before)))))
+        self.assertEqual(CLIENT.read_bytes(), spin_patch(day_patch(material_page_patch(reopen_patch(patch_swf(before))))))
         self.assertEqual(CLIENT.read_bytes(), patch_swf(CLIENT.read_bytes()))
         raw, (_, _, a, b) = abc_section(before); old, _ = normalize(raw[a:b]); _, _, bodies = inspect_abc(old)
         changed = set()
         for mid, (a, b, limits) in bodies.items():
             c, d, new_limits = self.bodies[mid]
             if old[a:a + b] != self.abc[c:c + d] or limits != new_limits: changed.add(mid)
-        self.assertEqual(METHODS | REOPEN_METHODS | MATERIAL_METHODS | DAY_METHODS, changed)
+        self.assertEqual(METHODS | REOPEN_METHODS | MATERIAL_METHODS | DAY_METHODS | SPIN_METHODS, changed)
         self.assertEqual(strings_of(old), self.strings)
         old_params = parameter_positions(old)
         self.assertEqual([(6496, [330], [331])], [(mid, [v for _, v in old_params[mid]], [v for _, v in values])

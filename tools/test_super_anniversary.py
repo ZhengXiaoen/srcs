@@ -16,6 +16,7 @@ from patch_super_anniversary import (CLIENT, ROOT, TAB_ARTWORK,
 from patch_anniversary_reopen import (SLOTS, DISPLAY_SLOTS, DISPLAY_IDS,
                                      patch_swf as reopen_patch)
 from patch_anniversary_material_rebate import patch_swf as material_page_patch
+from patch_anniversary_day_refresh import METHODS as DAY_METHODS, patch_swf as day_patch
 import test_activity_reminders as reminders
 from test_activity_reminders import execute, config_value
 from patch_guild_quest_config import read_cbp, read_pack
@@ -322,7 +323,7 @@ class ClientTests(unittest.TestCase):
         stack,_,_=bytecode_requirements(old[start:start+length],names,limits[2])
         self.assertEqual(18,limits[0]);self.assertEqual(23,stack)
         from patch_anniversary_row_and_icon_refresh import patch_swf as icon_patch
-        self.assertEqual(CLIENT.read_bytes(),material_page_patch(reopen_patch(icon_patch(patch_swf(broken)))))
+        self.assertEqual(CLIENT.read_bytes(),day_patch(material_page_patch(reopen_patch(icon_patch(patch_swf(broken))))))
         repaired=repair_window_stack(broken)
         self.assertEqual(subprocess.check_output(['git','show','3b1ea1d:web/GameFrame.swf'],cwd=ROOT),repaired)
         raw,(_,_,a,b)=abc_section(repaired);fixed,_=normalize(raw[a:b]);_,_,fixed_bodies=inspect_abc(fixed)
@@ -464,14 +465,14 @@ handleJingjiActivity(1,0,{{{msg},1}})''')
 
     def test_material_row_patch_only_changes_the_reward_list_builder(self):
         previous=subprocess.check_output(['git','show','be6ace8:web/GameFrame.swf'],cwd=ROOT)
-        self.assertEqual(CLIENT.read_bytes(),material_page_patch(previous))
+        self.assertEqual(CLIENT.read_bytes(),day_patch(material_page_patch(previous)))
         self.assertEqual(CLIENT.read_bytes(),material_page_patch(CLIENT.read_bytes()))
         raw,(_,_,a,b)=abc_section(previous);old,_=normalize(raw[a:b]);_,_,bodies=inspect_abc(old)
         changed=set()
         for mid,(start,size,limits) in bodies.items():
             now,length,current=self.bodies[mid]
             if old[start:start+size]!=self.abc[now:now+length] or limits!=current:changed.add(mid)
-        self.assertEqual({15829},changed)
+        self.assertEqual({15829} | DAY_METHODS,changed)
 
     def test_event_refresh_has_matching_unsubscribe_and_timer_stop(self):
         for add,remove,handler,skip in ((22159,22160,23814,()),(6333,6377,8171,(36018,))):

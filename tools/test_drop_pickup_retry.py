@@ -18,6 +18,7 @@ from patch_guild_quest_config import read_cbp
 from patch_drop_pickup_retry import CLIENT, ROOT, abc_section, instructions, retry_assignment
 
 BASELINE = None
+OVERLAP_BASELINE = None
 
 
 def code_for(swf, class_name, method):
@@ -128,12 +129,13 @@ class PickupVM:
                 take = bool(stack.pop())
                 if take == (kind == 0x11):
                     pc = op.branches[0][1]
-            elif kind in (0x0C, 0x0D, 0x0E, 0x0F, 0x13, 0x14, 0x15, 0x17):
+            elif kind in (0x0C, 0x0D, 0x0E, 0x0F, 0x13, 0x14, 0x15, 0x17, 0x18):
                 b, a = stack.pop(), stack.pop()
                 take = {0x0C: lambda: not a < b, 0x0D: lambda: not a <= b,
                         0x0E: lambda: not a > b, 0x0F: lambda: not a >= b,
                         0x13: lambda: a == b, 0x14: lambda: a != b,
-                        0x15: lambda: a < b, 0x17: lambda: a > b}[kind]()
+                        0x15: lambda: a < b, 0x17: lambda: a > b,
+                        0x18: lambda: a >= b}[kind]()
                 if take:
                     pc = op.branches[0][1]
             elif kind == 0x48:
@@ -148,6 +150,8 @@ class PickupRetryTests(unittest.TestCase):
     def setUpClass(cls):
         cls.client = CLIENT.read_bytes()
         cls.names, cls.selector, _ = code_for(cls.client, "LogicManager", "getNearestDropPacket")
+        _, cls.coordinate_selector, cls.coordinate_limits = code_for(
+            cls.client, "LogicManager", "getDropPacketByXY")
         cls.ints = integer_pool(cls.client)
         cls.assignment = retry_assignment()
         _, cfg = read_cbp((ROOT / "web/v2/lang/zh-cn/SystemConfig.cbp").read_bytes())
@@ -176,7 +180,7 @@ class PickupRetryTests(unittest.TestCase):
                 _, code, _ = code_for(cls.client, class_name, method)
                 assert cls.assignment in code
 
-    def environment(self, item_id=537, count=4):
+    def environment(self, item_id=537, count=4, selector="nearest", automatic=True):
         clock = {"ms": 12345}
         switches = {8: True, 13: True}
         state = {"capacity": True}
@@ -203,9 +207,105 @@ class PickupRetryTests(unittest.TestCase):
                      "getPickUpStatusByItemId": pickup,
                      "getPickUpSelectByType": lambda kind, action: switches.get(kind, False)}}
         vm = PickupVM(self.names, self.ints, world)
-        select = lambda: vm.run(self.selector, [manager, True] + [None] * 9)
+        if selector == "coordinate":
+            select = lambda: vm.run(self.coordinate_selector,
+                                   [manager, 10, 10, automatic]
+                                   + [None] * (self.coordinate_limits[1] - 4))
+        else:
+            select = lambda: vm.run(self.selector, [manager, automatic] + [None] * 9)
         send = lambda: vm.run(self.assignment, [], [drop])
         return clock, switches, state, drop, manager, select, send
+
+    @staticmethod
+    def overlapping_drop(drop, clock, **changes):
+        other = dict(drop, **changes)
+        other["isPickTime"] = lambda: clock["ms"] / 1000 < other["canPickTime"]
+        return other
+
+    def test_pending_overlapping_drop_does_not_hide_eligible_material(self):
+        clock, _, _, drop, manager, select, send = self.environment(selector="coordinate")
+        other = self.overlapping_drop(drop, clock, itemId=568)
+        manager["m_DropPacketList"] = [other, drop]
+        self.assertIs(select(), drop)
+        send()
+        self.assertIs(select(), other)
+        manager["m_DropPacketList"].remove(other)
+        self.assertIsNone(select())
+        clock["ms"] += 2000
+        self.assertIs(select(), drop)
+
+    def test_overlapping_exclusions_only_skip_the_excluded_drop(self):
+        for changes in ({"isAlreadyPickup": True}, {"mapId": 2},
+                        {"isCheck": True}, {"canPickTime": 30}, {"itemId": 85}):
+            with self.subTest(changes=changes):
+                clock, _, _, drop, manager, select, _ = self.environment(selector="coordinate")
+                blocked = self.overlapping_drop(drop, clock, **changes)
+                manager["m_DropPacketList"].append(blocked)
+                self.assertIs(select(), drop)
+                manager["m_DropPacketList"].remove(drop)
+                self.assertIsNone(select())
+
+    def test_backpack_rejection_does_not_hide_stackable_drop_on_same_tile(self):
+        clock, _, _, drop, manager, _, _ = self.environment(selector="coordinate")
+        # The real callback may reject equipment while accepting a material
+        # that fits into an existing stack in a full backpack.
+        # Use actual selector bytecode with a per-item backpack callback.
+        names, code, limits = code_for(self.client, "LogicManager", "getDropPacketByXY")
+        blocked = self.overlapping_drop(drop, clock, itemType=5)
+        manager["m_DropPacketList"].append(blocked)
+        vm = PickupVM(names, self.ints, {
+            "GameMap": {"defaultMap": {"mapId": 1}}, "Boolean": bool,
+            "CallBack": {"isCanPickUpByPack": lambda item: item is drop,
+                         "getPickUpStatusByItemId": lambda item, action: True}})
+        self.assertIs(vm.run(code, [manager, 10, 10, True] + [None] * (limits[1] - 4)), drop)
+
+    def test_overlap_scan_keeps_coordinate_and_manual_pickup_rules(self):
+        clock, _, _, drop, manager, select, _ = self.environment(selector="coordinate")
+        manager["m_DropPacketList"] = [self.overlapping_drop(drop, clock, currentX=11),
+                                      self.overlapping_drop(drop, clock, currentY=11)]
+        self.assertIsNone(select())
+        clock, _, _, drop, manager, select, _ = self.environment(
+            item_id=85, selector="coordinate", automatic=False)
+        drop["isCheck"] = True
+        drop["canPickTime"] = 30
+        manager["m_DropPacketList"].append(self.overlapping_drop(drop, clock, isAlreadyPickup=True))
+        self.assertIs(select(), drop)  # explicit pickup retains its category bypass
+
+    def test_continuous_pickup_with_accumulating_overlapping_drops(self):
+        clock, _, _, drop, manager, select, send = self.environment(selector="coordinate")
+        clock["ms"] = 6 * 60 * 60 * 1000
+        old_drops = []
+        for cycle in range(1000):
+            # Repeated new drops, lost request, retry and server confirmation.
+            # Old filtered items remain on the same tile until despawn.
+            old_drops.extend([self.overlapping_drop(drop, clock, itemId=85),
+                              self.overlapping_drop(drop, clock, isAlreadyPickup=True)])
+            old_drops = old_drops[-12:]  # oldest drops expire
+            manager["m_DropPacketList"] = [drop] + old_drops
+            self.assertIs(select(), drop)
+            send()
+            self.assertIsNone(select())
+            clock["ms"] += 2000
+            self.assertIs(select(), drop)
+            manager["m_DropPacketList"].remove(drop)
+            self.assertIsNone(select())
+            clock["ms"] += 30000
+
+    def test_baseline_reproduces_overlapping_drop_blockage(self):
+        if OVERLAP_BASELINE is None:
+            self.skipTest("Use --overlap-baseline to demonstrate same-tile blockage")
+        names, code, limits = code_for(Path(OVERLAP_BASELINE).read_bytes(),
+                                      "LogicManager", "getDropPacketByXY")
+        clock, _, _, drop, manager, _, _ = self.environment(selector="coordinate")
+        blocked = self.overlapping_drop(drop, clock, canPickTime=30)
+        manager["m_DropPacketList"].append(blocked)
+        vm = PickupVM(names, self.ints, {
+            "GameMap": {"defaultMap": {"mapId": 1}}, "Boolean": bool,
+            "CallBack": {"isCanPickUpByPack": lambda item: True,
+                         "getPickUpStatusByItemId": lambda item, action: True}})
+        args = [manager, 10, 10, True] + [None] * (limits[1] - 4)
+        self.assertIsNone(vm.run(code, args))  # old code hides the eligible drop
+        self.assertIs(vm.run(self.coordinate_selector, args), drop)
 
     def test_unconfirmed_stacks_retry_for_all_reported_counts(self):
         for item, count in [(537, 2), (537, 4), (568, 6), (568, 7), (572, 4), (83, 1), (538, 200)]:
@@ -343,6 +443,8 @@ class PickupRetryTests(unittest.TestCase):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--baseline", type=Path)
+    parser.add_argument("--overlap-baseline", type=Path)
     args = parser.parse_args()
     BASELINE = args.baseline
+    OVERLAP_BASELINE = args.overlap_baseline
     unittest.main(argv=[__file__], verbosity=2)

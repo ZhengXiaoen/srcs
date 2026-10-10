@@ -19,6 +19,9 @@ idRange[index], so a stale category cannot throw and abort later material checks
 Patch five request assignments, two category-cache writes and two range-selection
 instructions, preserving constant pools, other method bodies, SWF tags and
 pickup categories.
+In the coordinate selector, continue scanning when an overlapping drop is
+excluded, protected, pending retry or unable to fit in the backpack. Returning
+null at that point used to hide every eligible drop underneath it.
 Relocate existing branches, switches and exception offsets rather than
 recompiling the Flash application.
 """
@@ -269,6 +272,61 @@ def swf_data(source):
     return data
 
 
+def patch_stacked_drops(source):
+    names, traits, bodies = inspect_abc(source, "LogicManager")
+    method = traits["getDropPacketByXY"][0]
+    start, length, limits = bodies[method]
+    code = source[start:start + length]
+    ops = instructions(code)
+    # Local 7 is the reverse scan index; always advance it after skipping a drop.
+    tail = b"\x62\x07\xc1\x63\x07"
+    tails = [op.start for op in ops if code[op.start:op.start + len(tail)] == tail]
+    if len(tails) != 1 or limits != (4, 8, 4, 5):
+        raise ValueError("Unexpected overlapping-drop scan loop")
+    next_drop = tails[0]
+    # Keep the terminal null return after the loop and the eligible-drop return.
+    skips = [op.start for op in ops if op.start < next_drop
+             and code[op.start:op.start + 2] == b"\x20\x48"]
+    if not skips:
+        jumps = [op for op in ops if op.opcode == 0x10
+                 and op.branches[0][1] == next_drop]
+        if len(jumps) != 5:
+            raise ValueError("Unexpected patched overlapping-drop guards")
+        return source
+    if len(skips) != 5:
+        raise ValueError("Unexpected overlapping-drop early returns")
+    # Relocate the original control flow first; install new jumps afterward.
+    changed, moved = relocate(code, [(p, p + 2, b"\x02" * 4) for p in skips])
+    changed = bytearray(changed)
+    for p in skips:
+        changed[moved(p)] = 0x10
+        field = moved(p) + 1
+        changed[field:field + 3] = encode_s24(moved(next_drop) - field - 3)
+    instructions(changed)
+    reader = ABCReader(source)
+    reader.pos = start + length
+    count = reader.u30()
+    exceptions = []
+    for _ in range(count):
+        a, b, target, kind, var = (reader.u30() for _ in range(5))
+        exceptions.append((moved(a), moved(b), moved(target), kind, var))
+    if reader.u30() != 0:
+        raise ValueError("Unexpected overlapping-drop method traits")
+    suffix = encode_u30(count) + b"".join(encode_u30(x) for row in exceptions for x in row) + b"\x00"
+    length_start = start - len(encode_u30(length))
+    marker = encode_u30(method) + b"".join(encode_u30(x) for x in limits)
+    if source[length_start - len(marker):length_start] != marker:
+        raise ValueError("Unexpected overlapping-drop method header")
+    replacement = encode_u30(len(changed)) + changed + suffix
+    result = source[:length_start] + replacement + source[reader.pos:]
+    inspect_abc(result, "LogicManager")
+    # Reversing this single method edit must recover the entire original ABC.
+    if (result[:length_start] + source[length_start:reader.pos]
+            + result[length_start + len(replacement):]) != source:
+        raise ValueError("Unrelated overlapping-drop client bytes changed")
+    return result
+
+
 def abc_section(source):
     data = swf_data(source)
     pos = 8 + (5 + (data[8] >> 3) * 4 + 7) // 8 + 4
@@ -295,7 +353,7 @@ def abc_section(source):
 
 def patch_swf(source):
     data, (tag, payload, start, end) = abc_section(source)
-    abc = patch_abc(data[start:end])
+    abc = patch_stacked_drops(patch_abc(data[start:end]))
     if abc == data[start:end]:
         return source
     result = (data[:tag + 2] + struct.pack("<I", start - payload + len(abc))
@@ -319,7 +377,7 @@ def main():
             raise ValueError("Pickup retry patch is missing")
     elif source != result:
         CLIENT.write_bytes(result)
-    print("Verified pickup retries, uncached checks and safe range selection; unrelated client bytes preserved")
+    print("Verified pickup retries, overlapping-drop scans, uncached checks and safe ranges; unrelated client bytes preserved")
 
 
 if __name__ == "__main__":

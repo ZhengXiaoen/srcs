@@ -12,7 +12,7 @@ import unittest
 from patch_guild_quest_config import read_cbp, read_pack
 from patch_spring_recharge import CLIENT, PACK, ROOT, SERVER, patch_config, server_rewards
 
-BASELINE = "1654571"
+BASELINE = "d892026a5952d1e9ad3c564e735b70abe451c64e"
 
 
 def baseline(path):
@@ -35,12 +35,13 @@ class SpringRechargeTests(unittest.TestCase):
         self.assertEqual([100000, 500000, 1000000, 2000000],
                          [self.config[i].needPay for i in range(1, 5)])
         self.assertEqual([(i, 1) for i in [7043,7690,7047,7827,6887,7813] * 2], self.slot(1, 3))
-        self.assertEqual([(6369, n) for n in [1,1,1,1,1,2,3,4,5,6,7,8]], self.slot(1, 5))
+        self.assertEqual([(6369, n) for n in range(1, 13)], self.slot(1, 5))
 
     def test_fifty_wan_rewards(self):
         self.assertEqual([(5951, n) for n in [20,20,20,20,20,30,40,50,60,70,80,90]], self.slot(2, 1))
         self.assertEqual([(7039, 1)] * 12, self.slot(2, 3))
         self.assertEqual([(7049, 2),(7048, 2)] * 6, self.slot(2, 4))
+        self.assertEqual([(6370, n) for n in range(1, 13)], self.slot(2, 5))
 
     def test_hundred_wan_rewards(self):
         self.assertEqual([(7827,2),(7690,2),(7827,4),(7690,4),(7827,6),(7690,6),
@@ -64,7 +65,7 @@ class SpringRechargeTests(unittest.TestCase):
         old = LuaRuntime(unpack_returned_tuples=True)
         old.execute(baseline(SERVER).decode("utf-8-sig"))
         original = old.globals().SpringFestivalCfg.EveryTotalPay
-        changes = [set(), set(), {4}, set()]
+        changes = [{5}, {5}, set(), set()]
         for tier in range(1, 5):
             for day in range(1, 13):
                 self.assertEqual(5, len(self.config[tier].days[day].award))

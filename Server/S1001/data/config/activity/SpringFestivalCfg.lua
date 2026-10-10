@@ -1905,7 +1905,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7194,count = 10,bind = 1},--火龙结晶小
 					{type = 0, id = 7690,count = 1,bind = 1},--神盾礼盒
                     {type = 0, id = 6363,count = 2,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6369,count = 1,bind = 1},--绿色生肖袋
+                    {type = 0, id = 6369,count = 2,bind = 1},--绿色生肖袋
 					       }
 				},
 				--累计3天超过needPay
@@ -1915,7 +1915,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7194,count = 20,bind = 1},--火龙结晶小
 					{type = 0, id = 7047,count = 1,bind = 1},--坐骑礼盒
                     {type = 0, id = 6363,count = 3,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6369,count = 1,bind = 1},--绿色生肖袋
+                    {type = 0, id = 6369,count = 3,bind = 1},--绿色生肖袋
 					       }
 				},
 				--累计4天超过needPay
@@ -1925,7 +1925,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7194,count = 30,bind = 1},--火龙结晶小
 					{type = 0, id = 7827,count = 1,bind = 1},--神戒宝盒
                     {type = 0, id = 6363,count = 4,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6369,count = 1,bind = 1},--绿色生肖袋
+                    {type = 0, id = 6369,count = 4,bind = 1},--绿色生肖袋
 					       }
 				},
 				--累计5天超过needPay
@@ -1935,7 +1935,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7194,count = 40,bind = 1},--火龙结晶小
 					{type = 0, id = 6887,count = 1,bind = 1},--龍装Ⅰ首饰箱
                     {type = 0, id = 6363,count = 5,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6369,count = 1,bind = 1},--绿色生肖袋
+                    {type = 0, id = 6369,count = 5,bind = 1},--绿色生肖袋
 					       }
 				},
 				--累计6天超过needPay
@@ -1945,7 +1945,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7194,count = 50,bind = 1},--火龙结晶小
 					{type = 0, id = 7813,count = 1,bind = 1},--太初仙装礼盒
                     {type = 0, id = 6363,count = 6,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6369,count = 2,bind = 1},--绿色生肖袋
+                    {type = 0, id = 6369,count = 6,bind = 1},--绿色生肖袋
 					       }
 				},
 
@@ -1956,7 +1956,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7194,count = 60,bind = 1},--火龙结晶小
 					{type = 0, id = 7043,count = 1,bind = 1},--足迹礼盒
                     {type = 0, id = 6363,count = 7,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6369,count = 3,bind = 1},--绿色生肖袋
+                    {type = 0, id = 6369,count = 7,bind = 1},--绿色生肖袋
 					       }
 				},
 
@@ -1967,7 +1967,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7194,count = 70,bind = 1},--火龙结晶小
 					{type = 0, id = 7690,count = 1,bind = 1},--神盾礼盒
                     {type = 0, id = 6363,count = 8,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6369,count = 4,bind = 1},--绿色生肖袋
+                    {type = 0, id = 6369,count = 8,bind = 1},--绿色生肖袋
 					       }
 				},
 
@@ -1978,7 +1978,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7194,count = 80,bind = 1},--火龙结晶小
 					{type = 0, id = 7047,count = 1,bind = 1},--坐骑礼盒
                     {type = 0, id = 6363,count = 9,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6369,count = 5,bind = 1},--绿色生肖袋
+                    {type = 0, id = 6369,count = 9,bind = 1},--绿色生肖袋
 					       }
 				},
 
@@ -1989,7 +1989,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7194,count = 90,bind = 1},--火龙结晶小
 					{type = 0, id = 7827,count = 1,bind = 1},--神戒宝盒
                     {type = 0, id = 6363,count = 10,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6369,count = 6,bind = 1},--绿色生肖袋
+                    {type = 0, id = 6369,count = 10,bind = 1},--绿色生肖袋
 					       }
 				},
 
@@ -2000,7 +2000,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7194,count = 100,bind = 1},--火龙结晶小
 					{type = 0, id = 6887,count = 1,bind = 1},--龍装Ⅰ首饰箱
                     {type = 0, id = 6363,count = 11,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6369,count = 7,bind = 1},--绿色生肖袋
+                    {type = 0, id = 6369,count = 11,bind = 1},--绿色生肖袋
 					       }
 				},
 
@@ -2011,7 +2011,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7194,count = 110,bind = 1},--火龙结晶小
 					{type = 0, id = 7813,count = 1,bind = 1},--太初仙装礼盒
                     {type = 0, id = 6363,count = 12,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6369,count = 8,bind = 1},--绿色生肖袋
+                    {type = 0, id = 6369,count = 12,bind = 1},--绿色生肖袋
 					       }
 				},
 			},
@@ -2029,7 +2029,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7195,count = 2,bind = 1},--火龙结晶中					
 					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7049,count = 2,bind = 1},--翅膀装备礼盒
-                    {type = 0, id = 6363,count = 1,bind = 1},--壕礼宝箱
+                    {type = 0, id = 6370,count = 1,bind = 1},--蓝色生肖袋
 					       }
 				},
 				--累计2天超过needPay
@@ -2039,7 +2039,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7195,count = 4,bind = 1},--火龙结晶中
 					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7048,count = 2,bind = 1},--坐骑装备礼盒
-                    {type = 0, id = 6363,count = 2,bind = 1},--壕礼宝箱
+                    {type = 0, id = 6370,count = 2,bind = 1},--蓝色生肖袋
 					       }
 				},
 				--累计3天超过needPay
@@ -2049,7 +2049,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7195,count = 6,bind = 1},--火龙结晶中
 					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7049,count = 2,bind = 1},--翅膀装备礼盒
-                    {type = 0, id = 6363,count = 4,bind = 1},--壕礼宝箱
+                    {type = 0, id = 6370,count = 3,bind = 1},--蓝色生肖袋
 					       }
 				},
 				--累计4天超过needPay
@@ -2059,7 +2059,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7195,count = 8,bind = 1},--火龙结晶中
 					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7048,count = 2,bind = 1},--坐骑装备礼盒
-                    {type = 0, id = 6363,count = 6,bind = 1},--壕礼宝箱
+                    {type = 0, id = 6370,count = 4,bind = 1},--蓝色生肖袋
 					       }
 				},
 				--累计5天超过needPay
@@ -2069,7 +2069,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7195,count = 10,bind = 1},--火龙结晶中
 					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7049,count = 2,bind = 1},--翅膀装备礼盒
-                    {type = 0, id = 6363,count = 8,bind = 1},--壕礼宝箱
+                    {type = 0, id = 6370,count = 5,bind = 1},--蓝色生肖袋
 					       }
 				},
 				--累计6天超过needPay
@@ -2079,7 +2079,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7195,count = 12,bind = 1},--火龙结晶中
 					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7048,count = 2,bind = 1},--坐骑装备礼盒
-                    {type = 0, id = 6363,count = 10,bind = 1},--壕礼宝箱
+                    {type = 0, id = 6370,count = 6,bind = 1},--蓝色生肖袋
 					       }
 				},
 				--累计7天超过needPay
@@ -2089,7 +2089,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7195,count = 15,bind = 1},--火龙结晶中
 					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7049,count = 2,bind = 1},--翅膀装备礼盒
-                    {type = 0, id = 6363,count = 12,bind = 1},--壕礼宝箱
+                    {type = 0, id = 6370,count = 7,bind = 1},--蓝色生肖袋
 					       }
 				},
 				--累计8天超过needPay
@@ -2099,7 +2099,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7195,count = 18,bind = 1},--火龙结晶中
 					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7048,count = 2,bind = 1},--坐骑装备礼盒
-                    {type = 0, id = 6363,count = 14,bind = 1},--壕礼宝箱
+                    {type = 0, id = 6370,count = 8,bind = 1},--蓝色生肖袋
 					       }
 				},
 				--累计9天超过needPay
@@ -2109,7 +2109,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7195,count = 21,bind = 1},--火龙结晶中
 					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7049,count = 2,bind = 1},--翅膀装备礼盒
-                    {type = 0, id = 6363,count = 16,bind = 1},--壕礼宝箱
+                    {type = 0, id = 6370,count = 9,bind = 1},--蓝色生肖袋
 					       }
 				},
 				--累计10天超过needPay
@@ -2119,7 +2119,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7195,count = 25,bind = 1},--火龙结晶中
 					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7048,count = 2,bind = 1},--坐骑装备礼盒
-                    {type = 0, id = 6363,count = 18,bind = 1},--壕礼宝箱
+                    {type = 0, id = 6370,count = 10,bind = 1},--蓝色生肖袋
 					       }
 				},
 				--累计11天超过needPay
@@ -2129,7 +2129,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7195,count = 30,bind = 1},--火龙结晶中
 					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7049,count = 2,bind = 1},--翅膀装备礼盒
-                    {type = 0, id = 6363,count = 20,bind = 1},--壕礼宝箱
+                    {type = 0, id = 6370,count = 11,bind = 1},--蓝色生肖袋
 					       }
 				},
 				--累计12天超过needPay
@@ -2139,7 +2139,7 @@ SpringFestivalCfg =
 					{type = 0, id = 7195,count = 35,bind = 1},--火龙结晶中
 					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7048,count = 2,bind = 1},--坐骑装备礼盒
-                    {type = 0, id = 6363,count = 25,bind = 1},--壕礼宝箱
+                    {type = 0, id = 6370,count = 12,bind = 1},--蓝色生肖袋
 					       }
 				},
 

@@ -9,7 +9,7 @@ EveryDayPayGiftCfg =
                 worth = 9888, --赠送价值
                 award =
                 {
-{type=0,id=7825,count=1,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=1,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=542,count=1,quality=0,strong=0,bind=1},--转生修为丹(小)
 {type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
@@ -25,7 +25,7 @@ EveryDayPayGiftCfg =
                 worth = 21000, --赠送价值
                 award =
                 {
-{type=0,id=7825,count=1,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=1,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=542,count=2,quality=0,strong=0,bind=1},--转生修为丹(小)
 {type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
@@ -42,7 +42,7 @@ EveryDayPayGiftCfg =
                 worth = 33000, --价值
                 award =
                 {
-{type=0,id=7825,count=3,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=3,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=542,count=3,quality=0,strong=0,bind=1},--转生修为丹(小)
 {type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
@@ -58,7 +58,7 @@ EveryDayPayGiftCfg =
                 worth = 41000, --价值
                 award =
                 {
-{type=0,id=7825,count=5,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=5,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=527,count=20,quality=0,strong=0,bind=1},--特戒结晶(1)
 {type=0,id=539,count=5,quality=0,strong=0,bind=1},--宝石结晶(10000)
@@ -74,7 +74,7 @@ EveryDayPayGiftCfg =
                 worth = 49000, --价值
                 award =
                 {
-{type=0,id=7825,count=10,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=10,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=527,count=30,quality=0,strong=0,bind=1},--特戒结晶(1)
 {type=0,id=574,count=5,quality=0,strong=0,bind=1},--圣珠结晶(10000)
@@ -91,7 +91,7 @@ EveryDayPayGiftCfg =
                 worth = 98888, --价值
                 award =
                 {
-{type=0,id=7825,count=15,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=15,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
@@ -109,7 +109,7 @@ EveryDayPayGiftCfg =
                 worth = 98888, --价值
                 award =
                 {
-{type=0,id=7825,count=20,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=20,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=570,count=50,quality=0,strong=0,bind=1},--护盾碎片(10000颗)
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
@@ -310,7 +310,7 @@ EveryDayPayGiftCfg =
                 worth = 9888, --赠送价值
                 award =
                 {
-{type=0,id=7825,count=1,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=1,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=542,count=1,quality=0,strong=0,bind=1},--转生修为丹(小)
 {type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
@@ -326,7 +326,7 @@ EveryDayPayGiftCfg =
                 worth = 21000, --赠送价值
                 award =
                 {
-{type=0,id=7825,count=1,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=1,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=542,count=2,quality=0,strong=0,bind=1},--转生修为丹(小)
 {type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
@@ -343,7 +343,7 @@ EveryDayPayGiftCfg =
                 worth = 33000, --价值
                 award =
                 {
-{type=0,id=7825,count=3,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=3,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=542,count=3,quality=0,strong=0,bind=1},--转生修为丹(小)
 {type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
@@ -359,7 +359,7 @@ EveryDayPayGiftCfg =
                 worth = 41000, --价值
                 award =
                 {
-{type=0,id=7825,count=5,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=5,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=527,count=20,quality=0,strong=0,bind=1},--特戒结晶(1)
 {type=0,id=539,count=5,quality=0,strong=0,bind=1},--宝石结晶(10000)
@@ -375,7 +375,7 @@ EveryDayPayGiftCfg =
                 worth = 49000, --价值
                 award =
                 {
-{type=0,id=7825,count=10,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=10,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=527,count=30,quality=0,strong=0,bind=1},--特戒结晶(1)
 {type=0,id=574,count=5,quality=0,strong=0,bind=1},--圣珠结晶(10000)
@@ -392,7 +392,7 @@ EveryDayPayGiftCfg =
                 worth = 98888, --价值
                 award =
                 {
-{type=0,id=7825,count=15,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=15,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
@@ -410,7 +410,7 @@ EveryDayPayGiftCfg =
                 worth = 98888, --价值
                 award =
                 {
-{type=0,id=7825,count=20,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=20,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=570,count=50,quality=0,strong=0,bind=1},--护盾碎片(10000颗)
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
@@ -611,7 +611,7 @@ EveryDayPayGiftCfg =
                 worth = 9888, --赠送价值
                 award =
                 {
-{type=0,id=7825,count=1,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=1,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=542,count=1,quality=0,strong=0,bind=1},--转生修为丹(小)
 {type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
@@ -627,7 +627,7 @@ EveryDayPayGiftCfg =
                 worth = 21000, --赠送价值
                 award =
                 {
-{type=0,id=7825,count=1,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=1,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=542,count=2,quality=0,strong=0,bind=1},--转生修为丹(小)
 {type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
@@ -644,7 +644,7 @@ EveryDayPayGiftCfg =
                 worth = 33000, --价值
                 award =
                 {
-{type=0,id=7825,count=3,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=3,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=542,count=3,quality=0,strong=0,bind=1},--转生修为丹(小)
 {type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
@@ -660,7 +660,7 @@ EveryDayPayGiftCfg =
                 worth = 41000, --价值
                 award =
                 {
-{type=0,id=7825,count=5,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=5,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=527,count=20,quality=0,strong=0,bind=1},--特戒结晶(1)
 {type=0,id=539,count=5,quality=0,strong=0,bind=1},--宝石结晶(10000)
@@ -676,7 +676,7 @@ EveryDayPayGiftCfg =
                 worth = 49000, --价值
                 award =
                 {
-{type=0,id=7825,count=10,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=10,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=527,count=30,quality=0,strong=0,bind=1},--特戒结晶(1)
 {type=0,id=574,count=5,quality=0,strong=0,bind=1},--圣珠结晶(10000)
@@ -693,7 +693,7 @@ EveryDayPayGiftCfg =
                 worth = 98888, --价值
                 award =
                 {
-{type=0,id=7825,count=15,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=15,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
@@ -711,7 +711,7 @@ EveryDayPayGiftCfg =
                 worth = 98888, --价值
                 award =
                 {
-{type=0,id=7825,count=20,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=20,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=570,count=50,quality=0,strong=0,bind=1},--护盾碎片(10000颗)
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
@@ -912,7 +912,7 @@ EveryDayPayGiftCfg =
                 worth = 9888, --赠送价值
                 award =
                 {
-{type=0,id=7825,count=1,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=1,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=542,count=1,quality=0,strong=0,bind=1},--转生修为丹(小)
 {type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
@@ -928,7 +928,7 @@ EveryDayPayGiftCfg =
                 worth = 21000, --赠送价值
                 award =
                 {
-{type=0,id=7825,count=1,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=1,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=542,count=2,quality=0,strong=0,bind=1},--转生修为丹(小)
 {type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
@@ -945,7 +945,7 @@ EveryDayPayGiftCfg =
                 worth = 33000, --价值
                 award =
                 {
-{type=0,id=7825,count=3,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=3,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=542,count=3,quality=0,strong=0,bind=1},--转生修为丹(小)
 {type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
@@ -961,7 +961,7 @@ EveryDayPayGiftCfg =
                 worth = 41000, --价值
                 award =
                 {
-{type=0,id=7825,count=5,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=5,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=527,count=20,quality=0,strong=0,bind=1},--特戒结晶(1)
 {type=0,id=539,count=5,quality=0,strong=0,bind=1},--宝石结晶(10000)
@@ -977,7 +977,7 @@ EveryDayPayGiftCfg =
                 worth = 49000, --价值
                 award =
                 {
-{type=0,id=7825,count=10,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=10,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=527,count=30,quality=0,strong=0,bind=1},--特戒结晶(1)
 {type=0,id=574,count=5,quality=0,strong=0,bind=1},--圣珠结晶(10000)
@@ -994,7 +994,7 @@ EveryDayPayGiftCfg =
                 worth = 98888, --价值
                 award =
                 {
-{type=0,id=7825,count=15,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=15,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
@@ -1012,7 +1012,7 @@ EveryDayPayGiftCfg =
                 worth = 98888, --价值
                 award =
                 {
-{type=0,id=7825,count=20,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=20,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=570,count=50,quality=0,strong=0,bind=1},--护盾碎片(10000颗)
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
@@ -1213,7 +1213,7 @@ EveryDayPayGiftCfg =
                 worth = 9888, --赠送价值
                 award =
                 {
-{type=0,id=7825,count=1,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=1,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=542,count=1,quality=0,strong=0,bind=1},--转生修为丹(小)
 {type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
@@ -1229,7 +1229,7 @@ EveryDayPayGiftCfg =
                 worth = 21000, --赠送价值
                 award =
                 {
-{type=0,id=7825,count=1,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=1,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=542,count=2,quality=0,strong=0,bind=1},--转生修为丹(小)
 {type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
@@ -1246,7 +1246,7 @@ EveryDayPayGiftCfg =
                 worth = 33000, --价值
                 award =
                 {
-{type=0,id=7825,count=3,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=3,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=542,count=3,quality=0,strong=0,bind=1},--转生修为丹(小)
 {type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
@@ -1262,7 +1262,7 @@ EveryDayPayGiftCfg =
                 worth = 41000, --价值
                 award =
                 {
-{type=0,id=7825,count=5,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=5,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=527,count=20,quality=0,strong=0,bind=1},--特戒结晶(1)
 {type=0,id=539,count=5,quality=0,strong=0,bind=1},--宝石结晶(10000)
@@ -1278,7 +1278,7 @@ EveryDayPayGiftCfg =
                 worth = 49000, --价值
                 award =
                 {
-{type=0,id=7825,count=10,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=10,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=527,count=30,quality=0,strong=0,bind=1},--特戒结晶(1)
 {type=0,id=574,count=5,quality=0,strong=0,bind=1},--圣珠结晶(10000)
@@ -1295,7 +1295,7 @@ EveryDayPayGiftCfg =
                 worth = 98888, --价值
                 award =
                 {
-{type=0,id=7825,count=15,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=15,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
@@ -1313,7 +1313,7 @@ EveryDayPayGiftCfg =
                 worth = 98888, --价值
                 award =
                 {
-{type=0,id=7825,count=20,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=20,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=570,count=50,quality=0,strong=0,bind=1},--护盾碎片(10000颗)
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
@@ -1516,7 +1516,7 @@ EveryDayPayGiftCfg =
                 worth = 9888, --赠送价值
                 award =
                 {
-{type=0,id=7825,count=1,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=1,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=542,count=1,quality=0,strong=0,bind=1},--转生修为丹(小)
 {type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
@@ -1532,7 +1532,7 @@ EveryDayPayGiftCfg =
                 worth = 21000, --赠送价值
                 award =
                 {
-{type=0,id=7825,count=1,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=1,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=542,count=2,quality=0,strong=0,bind=1},--转生修为丹(小)
 {type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
@@ -1549,7 +1549,7 @@ EveryDayPayGiftCfg =
                 worth = 33000, --价值
                 award =
                 {
-{type=0,id=7825,count=3,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=3,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=542,count=3,quality=0,strong=0,bind=1},--转生修为丹(小)
 {type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
@@ -1565,7 +1565,7 @@ EveryDayPayGiftCfg =
                 worth = 41000, --价值
                 award =
                 {
-{type=0,id=7825,count=5,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=5,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=527,count=20,quality=0,strong=0,bind=1},--特戒结晶(1)
 {type=0,id=539,count=5,quality=0,strong=0,bind=1},--宝石结晶(10000)
@@ -1581,7 +1581,7 @@ EveryDayPayGiftCfg =
                 worth = 49000, --价值
                 award =
                 {
-{type=0,id=7825,count=10,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=10,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=527,count=30,quality=0,strong=0,bind=1},--特戒结晶(1)
 {type=0,id=574,count=5,quality=0,strong=0,bind=1},--圣珠结晶(10000)
@@ -1598,7 +1598,7 @@ EveryDayPayGiftCfg =
                 worth = 98888, --价值
                 award =
                 {
-{type=0,id=7825,count=15,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=15,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
@@ -1616,7 +1616,7 @@ EveryDayPayGiftCfg =
                 worth = 98888, --价值
                 award =
                 {
-{type=0,id=7825,count=20,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=20,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=570,count=50,quality=0,strong=0,bind=1},--护盾碎片(10000颗)
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
@@ -1752,7 +1752,7 @@ EveryDayPayGiftCfg =
                 worth = 9888, --赠送价值
                 award =
                 {
-{type=0,id=7825,count=1,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=1,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=542,count=1,quality=0,strong=0,bind=1},--转生修为丹(小)
 {type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
@@ -1768,7 +1768,7 @@ EveryDayPayGiftCfg =
                 worth = 21000, --赠送价值
                 award =
                 {
-{type=0,id=7825,count=1,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=1,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=542,count=2,quality=0,strong=0,bind=1},--转生修为丹(小)
 {type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
@@ -1785,7 +1785,7 @@ EveryDayPayGiftCfg =
                 worth = 33000, --价值
                 award =
                 {
-{type=0,id=7825,count=3,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=3,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=542,count=3,quality=0,strong=0,bind=1},--转生修为丹(小)
 {type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
@@ -1801,7 +1801,7 @@ EveryDayPayGiftCfg =
                 worth = 41000, --价值
                 award =
                 {
-{type=0,id=7825,count=5,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=5,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
 {type=0,id=527,count=20,quality=0,strong=0,bind=1},--特戒结晶(1)
 {type=0,id=539,count=5,quality=0,strong=0,bind=1},--宝石结晶(10000)
@@ -1817,7 +1817,7 @@ EveryDayPayGiftCfg =
                 worth = 49000, --价值
                 award =
                 {
-{type=0,id=7825,count=10,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=10,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=527,count=30,quality=0,strong=0,bind=1},--特戒结晶(1)
 {type=0,id=574,count=5,quality=0,strong=0,bind=1},--圣珠结晶(10000)
@@ -1834,7 +1834,7 @@ EveryDayPayGiftCfg =
                 worth = 98888, --价值
                 award =
                 {
-{type=0,id=7825,count=15,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=15,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
 {type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
@@ -1852,7 +1852,7 @@ EveryDayPayGiftCfg =
                 worth = 98888, --价值
                 award =
                 {
-{type=0,id=7825,count=20,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=7827,count=20,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
 {type=0,id=570,count=50,quality=0,strong=0,bind=1},--护盾碎片(10000颗)
 {type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)

@@ -236,8 +236,9 @@ class BagSortTests(unittest.TestCase):
     def test_real_native_remove_and_reinsert(self):
         from test_item_count_u16_native import Machine, unchanged, BASE, HEAP
         binary=ROOT/'Server/S1001/x64/LogicServerCQ64_R.exe'
-        self.assertEqual(hashlib.sha256(binary.read_bytes()).hexdigest(),
-                         'd3aafe43859f02a96b61fcf46201aa1ba5305e125ae5f7948ff850ca1aedf6b0',
+        from patch_item_add_optional_count import SOURCE_HASH, TARGET_HASH
+        self.assertIn(hashlib.sha256(binary.read_bytes()).hexdigest(),
+                         (SOURCE_HASH, TARGET_HASH),
                          'Engine changed: audit native function addresses before running')
         class ExportMachine(Machine):
             def hook(self,u,addr,size,data):

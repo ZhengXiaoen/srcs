@@ -20,10 +20,10 @@
     "kind": "explicit",
     "bytes": "83bc248000000000",
     "original": "cmp dword ptr [rsp + 0x80], 0",
-    "replacement_asm": "cmp dword ptr [rsp+0x80],65535; ja reject; cmp dword ptr [rsp+0x80],0; jmp okay; reject: jmp 5372023375; okay:",
-    "evidence_type": "current native PE and exact count full-argument/failure-path audit",
+    "replacement_asm": "cmp dword ptr [rsp+0x80],65535; jg reject; cmp dword ptr [rsp+0x80],0; jmp okay; reject: jmp 5372023375; okay:",
+    "evidence_type": "Lua binding defaults count to -1; signed nonpositive values preserve the carrier count",
     "range": [
-      0,
+      -2147483648,
       65535
     ]
   },

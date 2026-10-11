@@ -1684,9 +1684,8 @@ function onFuWenBox(sysarg,itemidx,itemPtr,ItemTable,delType,itemUserNum)
 	local item_id = ItemTable.item_id
 	local index = ItemTable.index
     local logid = 0
-    local logstr = itemName
+    local logstr = ItemTable.logstr or Item.getItemName(item_id)
     if ItemTable.logid ~= nil then logid = ItemTable.logid end
-    if ItemTable.str ~= nil then logstr = logstr..ItemTable.logstr end
 	local bagIdxs = Item.getBagEmptyGridCount( sysarg )
 	if bagIdxs<1 then 
 		Actor.sendTipmsg(sysarg,"背包不足以容纳物品",ttFlyTip)
@@ -1700,7 +1699,6 @@ function onFuWenBox(sysarg,itemidx,itemPtr,ItemTable,delType,itemUserNum)
 		local pUserItem = Item.createItem(AwardTable[index][addnum],1,0,0,1);
 		local nHeroDamageRate = Item.getItemProperty(sysarg,pUserItem,Item.ipheroDamageRateEx)
 		Item.SetItemRuneAttr(sysarg,pUserItem,-1,0,0)
-		Item.addItem(sysarg,pUserItem);
         if nHeroDamageRate > 0 then
             -- 战将装备固定最高全属性倍率，其他共用字段的道具保留原有规则。
             local nItemType = Item.getItemProperty(sysarg,pUserItem,Item.ipItemType,0)
@@ -1710,6 +1708,8 @@ function onFuWenBox(sysarg,itemidx,itemPtr,ItemTable,delType,itemUserNum)
             end
             Item.setItemProperty(sysarg,pUserItem,Item.ipHeroDamageRate,nRate)
         end
+		-- 合并入包可能销毁原指针，所有属性设置必须在入包前完成。
+		Item.addItem(sysarg,pUserItem,logstr,logid,1);
 		--Actor.addItem(sysarg,AwardTable[index][addnum],0,0,1,"FuwenBox");
 	end
 	

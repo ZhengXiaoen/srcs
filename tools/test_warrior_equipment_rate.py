@@ -78,6 +78,7 @@ assert(bag[2].rate==10 and bag[3].rate==3 and writes==2)
 System={getRandomNumber=function(n) randomCalls=randomCalls+1; return 0 end}
 Actor={getItemName=function() return 'box' end, removeItemByPtr=function() return 1 end}
 Item.getBagEmptyGridCount=function() return 1 end
+Item.getItemName=function() return 'box' end
 Item.createItem=function(id) created={id=id,type=201,max=10,rate=1}; return created end
 Item.SetItemRuneAttr=function() end
 Item.addItem=function(_,p) LocalDT.NormalizeWarriorEquipmentRate(1,p) end

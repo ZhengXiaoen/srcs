@@ -104,6 +104,7 @@ end
 
 -- 下发寻宝赠送豪礼活动数据
 function qd_send_hunt_times_activity_data(sysarg)
+	if treasure_hunt_cfg.hunt_times.isOpen == false then return end
 	if not qd_is_qingdian_open_time() then return end	
 	
 	local var = Actor.getStaticVar(sysarg)	
@@ -125,6 +126,7 @@ end
 
 --寻宝赠送豪礼
 function qd_get_hunt_times_award(sysarg, packet)
+	if treasure_hunt_cfg.hunt_times.isOpen == false then return end
 	if not qd_is_qingdian_open_time() then return end
 	
 	local var = Actor.getStaticVar(sysarg)
@@ -174,6 +176,7 @@ end
 
 -- 下发珍宝阁活动数据
 function qd_send_shop_activity_data(sysarg)
+	if treasure_hunt_cfg.shop.isOpen == false then return end
 	if not qd_is_qingdian_open_time() then return end
 	
 	local var = Actor.getStaticVar(sysarg)
@@ -192,6 +195,7 @@ end
 
 --购买珍宝阁物品
 function qd_buy_shop_item(sysarg, packet)
+	if treasure_hunt_cfg.shop.isOpen == false then return end
 	if not qd_is_qingdian_open_time() then return end
 	
 	local var = Actor.getStaticVar(sysarg)
@@ -230,6 +234,7 @@ end
 
 --珍宝积分兑换为宝藏积分
 function qd_qingdian_point_exchange(sysarg, value)
+	if treasure_hunt_cfg.shop.isOpen == false then return end
 	if value <= 0 then return end
 	
 	-- 庆典活动期间才能兑换

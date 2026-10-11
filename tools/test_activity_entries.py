@@ -111,14 +111,14 @@ def execute(code, names, strings, locals_, start=0, end=None, open_slots=(), day
             stack.append(stack[-1])
         elif kind == 0x29:
             stack.pop()
-        elif kind in (0x10, 0x12, 0x13, 0x15, 0x18):
+        elif kind in (0x10, 0x12, 0x13, 0x14, 0x15, 0x18):
             if kind == 0x10:
                 take = True
             elif kind == 0x12:
                 take = not stack.pop()
             else:
                 right, left = stack.pop(), stack.pop()
-                take = left == right if kind == 0x13 else left >= right if kind == 0x18 else left < right
+                take = left == right if kind == 0x13 else left != right if kind == 0x14 else left >= right if kind == 0x18 else left < right
             if take:
                 pos = op.branches[0][1]
         elif kind == 0x47:
@@ -168,16 +168,15 @@ class ActivityEntriesTest(unittest.TestCase):
         self.assertNotIn("_loaderbasebutton_4", defined)
         self.assertNotIn("_loaderbasebutton_5", defined)
         self.assertNotIn("_loaderbasebutton_15", defined)
-        self.assertEqual(len(defined), 8)
+        self.assertEqual(len(defined), 6)
         names, code, _ = self.body("QingDianActiveWin", "createChildren")
         ops = instructions(code)
         button_names = [names[ops[i - 1].operands[0]] for i, op in enumerate(ops)
                         if op.opcode == 0x4F and names[op.operands[0]] == "push"]
         self.assertEqual(button_names, ["_loaderbasebutton_" + str(i)
-                                      for i in [0, 1, 2, 3, 10, 11, 13, 14]])
+                                      for i in [0, 1, 2, 3, 10, 11]])
         self.assertEqual({defined[b]["addBtnTxtBmp"].split(",")[0] for b in button_names},
-                         {"464", "434", "1145", "550", "661", "840",
-                          "1250", "1042"})
+                         {"464", "434", "1145", "550", "661", "840"})
         self.assertEqual(len([op for op in ops if op.opcode == 0x66
                                     and names[op.operands[0]] in {"_loaderbasebutton_4", "_loaderbasebutton_5",
                                                                "_loaderbasebutton_7", "_loaderbasebutton_12",
@@ -186,19 +185,18 @@ class ActivityEntriesTest(unittest.TestCase):
             pages = [ref.name for ref in fields[key]]
             self.assertEqual(pages, ["QDLoginPage", "QDRechargePage", "QDAccRechargePage",
                                     "QDFlashSalePage",
-                                    "QDHongYunDangTouPage", "QDConsumePage",
-                                    "QDZhenBaoGePage", "QDHaoLiPage"])
+                                    "QDHongYunDangTouPage", "QDConsumePage"])
 
     def test_legacy_qingdian_links_preserve_page_destination(self):
         names, code, limits = self.body("QingDianActiveWin", "setNavIndex")
         for old in range(15):
             target, calls, maximum = execute(code, names, self.strings, {0: {}, 1: old})
             self.assertLessEqual(maximum, limits[0])
-            if old in (4, 5, 6, 7, 9, 11, 14):
+            if old not in (0,1,2,3,8,10):
                 self.assertFalse(calls)
                 self.assertNotIn("selectedIndex", target[0])
             else:
-                mapped = old - sum(old > index for index in (4, 5, 6, 7, 9, 11, 14))
+                mapped = (0,1,2,3,8,10).index(old)
                 self.assertEqual(target[0]["selectedIndex"], mapped)
                 self.assertEqual(calls, [("setNavIndex", [mapped])])
 
@@ -247,7 +245,11 @@ class ActivityEntriesTest(unittest.TestCase):
         self.assertEqual(requests, [2, 3, 4, 8, 9])
 
     def test_patch_is_complete_and_idempotent(self):
-        self.assertEqual(patch_swf(self.source), self.source)
+        import subprocess
+        from patch_retired_hunt_pages import BASELINE, patch_swf as retired_hunt
+        baseline = subprocess.check_output(['git', 'show', BASELINE + ':web/GameFrame.swf'], cwd=CLIENT.parents[1])
+        self.assertEqual(patch_swf(baseline), baseline)
+        self.assertEqual(retired_hunt(patch_swf(baseline)), self.source)
 
     def test_dynamic_modules_construct_the_patched_windows(self):
         for wrapper, window in (("DaJiDaLi", "DaJiDaLiWin"), ("YearActive", "YearActiveWin")):

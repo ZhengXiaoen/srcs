@@ -9,10 +9,13 @@ from patch_activity_entries import ROOT, QD_ARRAYS, strings_of
 from patch_activity_reminders import normalize
 from patch_drop_pickup_retry import abc_section, instructions
 from patch_god_equip_state import inspect_abc
+from patch_retired_hunt_pages import METHODS as HUNT_METHODS, patch_swf as retired_hunt, patch_config as hunt_config, SWITCHES as HUNT_SWITCHES
+from patch_spring_recharge import patch_config as spring_recharge, server_rewards
 from test_activity_reminders import execute
 
 PAGES = ['QDLoginPage', 'QDRechargePage', 'QDAccRechargePage', 'QDFlashSalePage',
-         'QDHongYunDangTouPage', 'QDConsumePage', 'QDZhenBaoGePage', 'QDHaoLiPage']
+         'QDHongYunDangTouPage', 'QDConsumePage']
+OLD_PAGES = PAGES + ['QDZhenBaoGePage', 'QDHaoLiPage']
 
 
 def unpack(source):
@@ -58,13 +61,17 @@ class Lifecycle:
         self.globals.update(GlobalData={'qdActivityDataMgr': {'szQingdian': 0,'rechargeDays':[],
             'rechargeStatu':[],'haoli':None}}, GameData={'qingdianActiveProvider':{'cfg':{'EveryTotalPay':[{}]}}},
             ScrollPolicy={'ON': 'on'}, QingDianActiveWin={'totalOpenDay':3,'openDay':1})
+        start, size, _ = self.bodies[6021]
+        has_shop = any(o.opcode == 0x60 and o.operands == (18658,)
+                       for o in instructions(self.abc[start:start + size]))
+        self.page_names = OLD_PAGES if has_shop else PAGES
         self.obj = Window(_oldButton=None, _oldIndex=-1, tempClass=None, _pageCtrl=None,
                           _basesprite_0={})
         self.obj.vm = self
         # Arrays are distinct AS3 objects even though their current contents match.
         for field in QD_ARRAYS.values():
-            self.obj[field] = PageClasses({'class': name} for name in PAGES)
-        for i in (0,1,2,3,10,11,13,14):
+            self.obj[field] = PageClasses({'class': name} for name in self.page_names)
+        for i in ((0,1,2,3,10,11,13,14) if len(self.page_names)==8 else (0,1,2,3,10,11)):
             self.obj['_loaderbasebutton_'+str(i)] = {'button': i}
 
     def run(self, method, obj=None, arg=None, **kwargs):
@@ -83,7 +90,7 @@ class Lifecycle:
             if cls == 'CustomPageControl':
                 return PageControl(pages=[], activePageIndex=0)
             page = {'class': cls, 'live': False}
-            if cls in PAGES: self.created.append(page)
+            if cls in self.page_names: self.created.append(page)
             return page
         if name == 'push': obj.extend(args)
         elif name == 'addPage': obj['pages'].append(args[0])
@@ -131,7 +138,7 @@ class WanfuOpeningTests(unittest.TestCase):
         for count in (16,24,32):
             vm.events.clear(); vm.open()
             self.assertEqual(count,len(vm.created))
-            self.assertEqual(PAGES,[n for n,event in vm.events if event=='initEvent'])
+            self.assertEqual(OLD_PAGES,[n for n,event in vm.events if event=='initEvent'])
             vm.close()
         self.assertEqual(6,len(vm.timers))
 
@@ -140,9 +147,9 @@ class WanfuOpeningTests(unittest.TestCase):
         self.assertEqual([],vm.created)
         for _ in range(20):
             vm.events.clear(); vm.open()
-            self.assertEqual(8,len(vm.created))
+            self.assertEqual(6,len(vm.created))
             self.assertEqual([('QDLoginPage','initEvent')],vm.events)
-            self.assertEqual([True]+[False]*7,[p['live'] for p in vm.obj['_pageCtrl']['pages']])
+            self.assertEqual([True]+[False]*5,[p['live'] for p in vm.obj['_pageCtrl']['pages']])
             vm.close()
             self.assertFalse(any(p['live'] for p in vm.created))
             self.assertIsNone(vm.obj['_oldButton'])
@@ -153,16 +160,16 @@ class WanfuOpeningTests(unittest.TestCase):
 
     def test_switches_stop_old_page_activate_new_page_and_same_click_does_no_work(self):
         vm=Lifecycle(self.after);vm.children();vm.open()
-        for index in range(1,8):
+        for index in range(1,6):
             vm.events.clear();vm.click(index)
             self.assertEqual([(PAGES[index-1],'removeEvent'),(PAGES[index],'initEvent')],vm.events)
-            self.assertEqual([i==index for i in range(8)],[p['live'] for p in vm.created])
-            self.assertEqual([i==index for i in range(8)],[b.get('selected',False) for b in vm.obj['_buttons']])
+            self.assertEqual([i==index for i in range(6)],[p['live'] for p in vm.created])
+            self.assertEqual([i==index for i in range(6)],[b.get('selected',False) for b in vm.obj['_buttons']])
             vm.events.clear();vm.click(index);self.assertEqual([],vm.events)
         vm.close();vm.open()
         self.assertEqual(0,vm.obj['_pageCtrl']['activePageIndex'])
-        self.assertEqual(8,len(vm.created))
-        for index in (-1,8,99):
+        self.assertEqual(6,len(vm.created))
+        for index in (-1,6,99):
             vm.events.clear();vm.run(6040,arg=index);self.assertEqual([],vm.events)
         vm.run(6039,arg=None);vm.run(6039,arg={'currentTarget':None})
 
@@ -172,20 +179,20 @@ class WanfuOpeningTests(unittest.TestCase):
                                                (3,'PAGE_CLASSD'),(4,'PAGE_CLASSE')),1):
             vm.open(variant)
             self.assertIs(vm.obj[field],vm.obj['tempClass'])
-            self.assertEqual(count*8,len(vm.created))
-            self.assertFalse(any(p['live'] for p in vm.created[:-8]))
+            self.assertEqual(count*6,len(vm.created))
+            self.assertFalse(any(p['live'] for p in vm.created[:-6]))
             self.assertEqual(PAGES,[p['class'] for p in vm.obj['_pageCtrl']['pages']])
-            vm.close();vm.open(variant);self.assertEqual(count*8,len(vm.created));vm.close()
+            vm.close();vm.open(variant);self.assertEqual(count*6,len(vm.created));vm.close()
 
     def test_duration_changes_rebuild_day_dependent_pages_and_same_duration_reuses_them(self):
         vm=Lifecycle(self.after);vm.children();vm.open();vm.close()
         for count,duration in enumerate((7,12,3),2):
             vm.globals['QingDianActiveWin']['totalOpenDay']=duration
-            vm.open();self.assertEqual(count*8,len(vm.created))
+            vm.open();self.assertEqual(count*6,len(vm.created))
             self.assertEqual(duration,vm.obj['tempClass'].get('totalOpenDay'))
-            vm.close();vm.open();self.assertEqual(count*8,len(vm.created));vm.close()
+            vm.close();vm.open();self.assertEqual(count*6,len(vm.created));vm.close()
         vm.globals['QingDianActiveWin']['openDay']=2;vm.open()
-        self.assertEqual(40,len(vm.created));self.assertEqual(2,vm.obj['tempClass'].get('openDay'))
+        self.assertEqual(30,len(vm.created));self.assertEqual(2,vm.obj['tempClass'].get('openDay'))
 
     def test_navigator_reopens_the_cached_window_and_legacy_links_select_current_pages(self):
         vm=Lifecycle(self.after);vm.children();vm.open();vm.close()
@@ -197,12 +204,12 @@ class WanfuOpeningTests(unittest.TestCase):
                         start=479,end=567)
         self.assertIs(vm.obj,cache[216]);self.assertLessEqual(stack,limits[0])
         vm.open()
-        retained=(0,1,2,3,8,10,12,13)
+        retained=(0,1,2,3,8,10)
         for old in range(-1,17):
             vm.run(6040,arg=0);vm.events.clear();vm.run(6042,arg=old)
             self.assertEqual(retained.index(old) if old in retained else 0,
                              vm.obj['_pageCtrl']['activePageIndex'])
-        self.assertEqual(8,len(vm.created))
+        self.assertEqual(6,len(vm.created))
 
     def test_actual_recharge_listener_removal_is_symmetric_and_stops_animation(self):
         for data,is_old in ((self.before,True),(self.after,False)):
@@ -269,24 +276,24 @@ class WanfuOpeningTests(unittest.TestCase):
             return original(obj,name,args)
         vm.invoke=invoke;vm.open()
         self.assertEqual(['onLoginResultHandler','onTehuiResultHandler'],calls)
-        self.assertFalse(any(vm.obj[k]['visible'] for k in ('tipsIcon0','tipsIcon1','tipsIcon2','tipsIcon4','tipsIcon6')))
+        self.assertFalse(any(vm.obj[k]['visible'] for k in ('tipsIcon0','tipsIcon1','tipsIcon2','tipsIcon4')))
         vm.close();calls.clear()
         vm.globals['GlobalData']['qdActivityDataMgr'].update(rechargeDays=[1],rechargeStatu=[[0,0,0]],haoli=[1]*5)
-        vm.open();self.assertEqual(['onLoginResultHandler','onTehuiResultHandler','onAccRecharge','updateHaoLiTips'],calls)
+        vm.open();self.assertEqual(['onLoginResultHandler','onTehuiResultHandler','onAccRecharge'],calls)
 
-    def test_only_nine_methods_change_and_every_other_packaged_byte_is_preserved(self):
-        self.assertEqual(self.source,patch_swf(self.before_source))
+    def test_only_audited_methods_change_and_every_other_packaged_byte_is_preserved(self):
+        self.assertEqual(self.source,retired_hunt(patch_swf(self.before_source)))
         self.assertEqual(self.source,patch_swf(self.source))
         old,_,oldstrings,oldb=self.before;new,_,newstrings,newb=self.after
         changed=set()
         for method,(a,size,limits) in oldb.items():
             b,length,newlimits=newb[method]
             if old[a:a+size]!=new[b:b+length] or limits!=newlimits:changed.add(method)
-        self.assertEqual(METHODS,changed);self.assertEqual(oldstrings,newstrings)
+        self.assertEqual(METHODS | HUNT_METHODS,changed);self.assertEqual(oldstrings,newstrings)
         # Replacing only these method records must exactly restore the whole ABC.
         from patch_bag_client import ABCReader,encode_u30
         restored=bytearray(new);edits=[]
-        for method in METHODS:
+        for method in METHODS | HUNT_METHODS:
             spans=[]
             for abc,bodies in ((old,oldb),(new,newb)):
                 a,size,limits=bodies[method]
@@ -302,13 +309,20 @@ class WanfuOpeningTests(unittest.TestCase):
         newraw,(nt,np,na,nb)=abc_section(self.source)
         self.assertEqual(oldraw[8:ot+2],newraw[8:nt+2])
         self.assertEqual(oldraw[op:oa],newraw[np:na]);self.assertEqual(oldraw[ob:],newraw[nb:])
-        for path in ('web/v2/lang/zh-cn/zh-cn.dat','web/v2/lang/zh-cn/QingDianActivityCfg.cbp',
+        for path in ('web/v2/lang/zh-cn/QingDianActivityCfg.cbp',
                      'Server/S1001/data/config/activity/QingDianActivityCfg.lua'):
             self.assertEqual(subprocess.check_output(['git','show',BASELINE+':'+path],cwd=ROOT),(ROOT/path).read_bytes())
 
+    def test_language_pack_preserves_other_resources_after_followup_changes(self):
+        from patch_guild_quest_config import read_pack
+        old=dict(read_pack(subprocess.check_output(['git','show',BASELINE+':web/v2/lang/zh-cn/zh-cn.dat'],cwd=ROOT)))
+        old['SpringFestivalCfg.cbp']=spring_recharge(old['SpringFestivalCfg.cbp'],server_rewards())
+        for name in HUNT_SWITCHES:old[name]=hunt_config(old[name],name)
+        self.assertEqual(old,dict(read_pack((ROOT/'web/v2/lang/zh-cn/zh-cn.dat').read_bytes())))
+
     def test_branch_destinations_loop_labels_and_local_slots_remain_valid(self):
         abc,_,_,bodies=self.after
-        for method in METHODS:
+        for method in METHODS | HUNT_METHODS:
             a,size,limits=bodies[method];code=abc[a:a+size];ops=instructions(code)
             boundaries={o.start for o in ops}
             for o in ops:

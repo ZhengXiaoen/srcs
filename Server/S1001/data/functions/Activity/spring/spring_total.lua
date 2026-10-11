@@ -896,6 +896,7 @@ end
 
 --寻宝返利
 function spring_xunbaofanli_main(sysarg,packet)
+	if SpringFestivalCfg.hunt_times.isOpen == false then return end
 	--是否在开关时间内
 	if is_spring_festival_time()~=true then 
 		return
@@ -910,6 +911,7 @@ function spring_xunbaofanli_main(sysarg,packet)
 end
 
 function GetSpringXunBaoFanLiData(sysarg)
+	if SpringFestivalCfg.hunt_times.isOpen == false then return end
 		
 	local var = Actor.getStaticVar(sysarg)	
 	if var.newdays == nil then var.newdays = {} end
@@ -931,6 +933,7 @@ end
 
 --寻宝赠送豪礼
 function GetSpringXunBaoFanLiGife(sysarg, index)
+	if SpringFestivalCfg.hunt_times.isOpen == false then return end
 	
 	local var = Actor.getStaticVar(sysarg)
 	if var.newdays == nil then var.newdays = {} end

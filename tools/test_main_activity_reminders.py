@@ -8,10 +8,11 @@ from patch_retired_festival_pages import METHODS as RETIRED_METHODS, patch_swf a
 
 from patch_wanfu_opening import METHODS as WANFU_METHODS, patch_swf as wanfu_opening
 from patch_spring_display import patch_swf as spring_display
+from patch_retired_hunt_pages import METHODS as HUNT_METHODS, patch_swf as retired_hunt
 
 def current_release(source, module=False):
     updated = unique_rankings(source, module)
-    return updated if module else wanfu_opening(spring_display(retired_pages(spring_icon(ranking_description(updated)))))
+    return updated if module else retired_hunt(wanfu_opening(spring_display(retired_pages(spring_icon(ranking_description(updated))))))
 
 
 from itertools import product
@@ -174,16 +175,16 @@ class MainActivityRemindersTests(unittest.TestCase):
             self.items['bag'] = {5649: count}; self.assertFalse(self.qd_dot())
 
     def test_qingdian_hunt_every_tier_and_missing_reply(self):
-        cfg = self.hunt_cfg['hunt_times']
+        cfg = [row for key, row in self.hunt_cfg['hunt_times'].items() if key.isdigit()]
         for index, row in enumerate(cfg):
             for times, flag in product((row['times'] - 1, row['times']), (0, 1)):
                 self.qd.update(haoliTimes=times, haoli=[1] * len(cfg)); self.qd['haoli'][index] = flag
-                self.assertEqual(self.qd_dot(), times >= row['times'] and flag == 0)
+                self.assertFalse(self.qd_dot())
         self.qd['haoli'] = None; self.assertFalse(self.qd_dot())
 
     def test_qingdian_initial_queries_and_event_bridge_without_year_button(self):
         self.run_method(6408, self.nav, {'data': 1})
-        self.assertEqual(self.requests, [('sendQDActiveInfo', (0, slot)) for slot in (2, 3, 11, 12, 13, 17)])
+        self.assertEqual(self.requests, [('sendQDActiveInfo', (0, slot)) for slot in (2, 3, 11, 12, 13)])
         self.assertFalse(self.buttons['qd']['effect']); self.requests.clear()
         self.qd.update(loginDay=1, loginStatu=[0])
         self.run_method(6379, self.nav, {'type': 'QINGDIAN_LOGIN_STATU'})
@@ -234,13 +235,14 @@ class MainActivityRemindersTests(unittest.TestCase):
         from patch_mystery_shop_reminder import METHODS as SHOP_METHODS, patch_swf as shop_reminder
         baseline = subprocess.check_output(['git', 'show', BASELINE + ':web/GameFrame.swf'], cwd=ROOT)
         self.assertEqual(current_release(shop_reminder(patch_swf(baseline))), CLIENT.read_bytes())
-        self.assertEqual(patch_swf(CLIENT.read_bytes()), CLIENT.read_bytes())
+        patched = patch_swf(baseline)
+        self.assertEqual(patch_swf(patched), patched)
         raw, (_, _, a, b) = abc_section(baseline); before, _ = normalize(raw[a:b])
         _, _, old = inspect_abc(before, 'NavTopRightArea'); changed = set()
         for method, (a, size, limits) in old.items():
             b, length, new_limits = self.symbols[False][2][method]
             if before[a:a + size] != self.abc[False][b:b + length] or limits != new_limits: changed.add(method)
-        self.assertEqual(changed, METHODS | SHOP_METHODS | MAIN_METHODS | SPRING_METHODS | RETIRED_METHODS | WANFU_METHODS)
+        self.assertEqual(changed, METHODS | SHOP_METHODS | MAIN_METHODS | SPRING_METHODS | RETIRED_METHODS | WANFU_METHODS | HUNT_METHODS)
 
 
 if __name__ == '__main__': unittest.main(verbosity=2)

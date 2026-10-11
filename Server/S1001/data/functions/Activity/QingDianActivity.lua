@@ -108,8 +108,10 @@ QingDianActivitys = function (sysarg, sysid, packet)
 	elseif msgid ==16 then  --中秋月饼兑换
 		qd_moon_exchange(sysarg, packet)
 	elseif msgid ==17 then  --寻宝赠送豪礼
+		if treasure_hunt_cfg.hunt_times.isOpen == false then return end
 		qd_get_hunt_times_award(sysarg, packet)
 	elseif msgid ==18 then  --购买珍宝阁物品
+		if treasure_hunt_cfg.shop.isOpen == false then return end
 		qd_buy_shop_item(sysarg, packet)
 	end
 end
@@ -1881,8 +1883,10 @@ GetQingDianActivityInfo = function(sysarg,index)
 	elseif index == 16 then -- 中秋月饼收集活动
 		qd_send_moon_activity_data(sysarg)
 	elseif index == 17 then -- 寻宝赠送豪礼活动
+		if treasure_hunt_cfg.hunt_times.isOpen == false then return end
 		qd_send_hunt_times_activity_data(sysarg)
 	elseif index == 18 then -- 珍宝阁活动
+		if treasure_hunt_cfg.shop.isOpen == false then return end
 		qd_send_shop_activity_data(sysarg)
 	end	
 end

@@ -8,10 +8,11 @@ from patch_retired_festival_pages import METHODS as RETIRED_METHODS, patch_swf a
 
 from patch_wanfu_opening import METHODS as WANFU_METHODS, patch_swf as wanfu_opening
 from patch_spring_display import patch_swf as spring_display
+from patch_retired_hunt_pages import METHODS as HUNT_METHODS, patch_swf as retired_hunt
 
 def current_release(source, module=False):
     updated = unique_rankings(source, module)
-    return updated if module else wanfu_opening(spring_display(retired_pages(spring_icon(ranking_description(updated)))))
+    return updated if module else retired_hunt(wanfu_opening(spring_display(retired_pages(spring_icon(ranking_description(updated))))))
 
 
 import argparse
@@ -237,7 +238,7 @@ class ShopReminderTests(unittest.TestCase):
         for method, (a, size, limits) in old.items():
             b, size2, limits2 = self.bodies[method]
             if before[a:a + size] != self.abc[b:b + size2] or limits != limits2: changed.add(method)
-        self.assertEqual(changed, METHODS | MAIN_METHODS | SPRING_METHODS | RETIRED_METHODS | WANFU_METHODS)
+        self.assertEqual(changed, METHODS | MAIN_METHODS | SPRING_METHODS | RETIRED_METHODS | WANFU_METHODS | HUNT_METHODS)
 
     def test_server_query_and_refresh_packets_preserve_goods_and_buy_flags(self):
         lua = server_runtime(); g = lua.globals()
@@ -358,6 +359,10 @@ class ShopReminderTests(unittest.TestCase):
         source = source.replace('\t\tif QingDianActivityCfg.XiaoFeiZhuanPanNew.isOpen == false then return end\r\n'.encode(), b'')
         source = source.replace('\tif QingDianActivityCfg.XiaoFeiZhuanPanNew.isOpen == false then return end\r\n'.encode(), b'')
         source = source.replace('万服庆典唯一消费排行'.encode(), '月度活动 元宝消耗排行榜'.encode())
+        for field in ('hunt_times', 'shop'):
+            guard = f'\t\tif treasure_hunt_cfg.{field}.isOpen == false then return end\r\n'.encode()
+            self.assertEqual(2, source.count(guard))
+            source = source.replace(guard, b'')
         # Reverse only this reminder's edits; every other byte must match.
         a = source.index('-- 每两小时为一轮'.encode()); b = source.index(b'QingDianActivitys = function')
         source = source[:a] + source[b:]

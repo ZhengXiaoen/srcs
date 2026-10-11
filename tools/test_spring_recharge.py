@@ -11,6 +11,7 @@ import unittest
 
 from patch_guild_quest_config import read_cbp, read_pack
 from patch_spring_recharge import CLIENT, PACK, ROOT, SERVER, patch_config, server_rewards
+from patch_retired_hunt_pages import SWITCHES
 
 BASELINE = "de3e7aa"
 
@@ -74,7 +75,7 @@ class SpringRechargeTests(unittest.TestCase):
                             self.assertEqual(original[tier].days[day].award[slot][field], actual[field])
         before, after = baseline(SERVER), SERVER.read_bytes()
         self.assertEqual(before.split(b"\tEveryTotalPay =", 1)[0], after.split(b"\tEveryTotalPay =", 1)[0])
-        self.assertEqual(before.split(b"\tXiaoFeiZhuanPanNew =", 1)[1], after.split(b"\tXiaoFeiZhuanPanNew =", 1)[1])
+        self.assertEqual(before.split(b"\tXiaoFeiZhuanPanNew =", 1)[1], after.split(b"\tXiaoFeiZhuanPanNew =", 1)[1].replace("\t\tisOpen = false, -- 寻宝返利已下架\r\n".encode(), b""))
 
     def test_client_and_pack_match_and_preserve_other_resources(self):
         source = CLIENT.read_bytes()
@@ -82,11 +83,12 @@ class SpringRechargeTests(unittest.TestCase):
         before = read_cbp(baseline(CLIENT))[1]
         after = copy.deepcopy(read_cbp(source)[1])
         after.child("EveryTotalPay").children = before.child("EveryTotalPay").children
+        after.child('hunt_times').children = [n for n in after.child('hunt_times').children if n.name != 'isOpen']
         self.assertEqual(before, after)
         old_pack, new_pack = read_pack(baseline(PACK)), read_pack(PACK.read_bytes())
         self.assertEqual([n for n, _ in old_pack], [n for n, _ in new_pack])
-        self.assertEqual([CLIENT.name], [name for (name, a), (_, b) in
-                         zip(old_pack, new_pack, strict=True) if a != b])
+        self.assertEqual(set(SWITCHES), {name for (name, a), (_, b) in
+                         zip(old_pack, new_pack, strict=True) if a != b})
         self.assertEqual(source, dict(new_pack)[CLIENT.name])
 
     def test_reward_item_ids_exist_in_server_and_shipped_client(self):

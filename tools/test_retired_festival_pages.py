@@ -9,13 +9,14 @@ import unittest
 
 from patch_retired_festival_pages import BASELINE, CLIENT, METHODS, ROOT, SWITCHES, patch_swf, patch_config
 from patch_wanfu_opening import METHODS as WANFU_METHODS, patch_swf as wanfu_opening
-from patch_spring_display import BASELINE as DISPLAY_BASELINE, BUTTONS as SPRING_BUTTONS, METHODS as DISPLAY_METHODS, patch_swf as spring_display
+from patch_spring_display import BASELINE as DISPLAY_BASELINE, METHODS as DISPLAY_METHODS, patch_swf as spring_display
 from patch_activity_entries import QD_ARRAYS, strings_of
 from patch_activity_reminders import normalize
 from patch_drop_pickup_retry import abc_section, instructions
 from patch_god_equip_state import inspect_abc
 from patch_guild_quest_config import read_cbp, read_pack, write_node
 from patch_spring_recharge import patch_config as spring_recharge, server_rewards
+from patch_retired_hunt_pages import METHODS as HUNT_METHODS, SPRING_BUTTONS, patch_swf as retired_hunt, patch_config as hunt_config, SWITCHES as HUNT_SWITCHES
 from test_activity_reminders import execute
 
 SERVER = ROOT / 'Server/S1001/data'
@@ -24,7 +25,7 @@ LUA_FILES = ('config/activity/SpringFestivalCfg.lua', 'config/activity/QingDianA
     'functions/ActorEvent/WithDrawYuanBao.lua', 'functions/RedPacketFunc.lua',
     'functions/Activity/QingDianActivity.lua')
 SPRING_PAGES = ['NewYearGiveGiftsPage', 'NewYearBeastPage', 'NewYearRechargePage',
-    'NewYearTeHuiPage', 'NewYearHongYunPage', 'NewYearHaoliPage']
+    'NewYearTeHuiPage', 'NewYearHongYunPage']
 
 
 class RetiredServerTests(unittest.TestCase):
@@ -137,7 +138,7 @@ class RetiredClientTests(unittest.TestCase):
                 for child in v: yield from buttons(child)
         entries = list(buttons(values[0]['_editor']))
         self.assertEqual(['_loaderbasebutton_'+str(i) for i in SPRING_BUTTONS], [v['instanceName'] for v in entries])
-        self.assertEqual([f'84,{148+45*i}' for i in range(6)], [v['move'] for v in entries])
+        self.assertEqual([f'84,{148+45*i}' for i in range(5)], [v['move'] for v in entries])
         baseline=subprocess.check_output(['git','show',DISPLAY_BASELINE+':web/GameFrame.swf'],cwd=ROOT)
         raw,(_,_,a,b)=abc_section(baseline);before,_=normalize(raw[a:b]);_,_,old_bodies=inspect_abc(before)
         a,size,_=old_bodies[5903];old_code=before[a:a+size]
@@ -155,8 +156,8 @@ class RetiredClientTests(unittest.TestCase):
             return v
         self.assertEqual(hide(old_values[0]['_editor']),values[0]['_editor'])
         pages = [self.names[o.operands[0]] for o in ops if o.opcode == 0x60 and self.names[o.operands[0]] in SPRING_PAGES]
-        # Later references attach marks; the first six are the actual page array.
-        self.assertEqual(SPRING_PAGES, pages[:6])
+        # Later references attach marks; the first five are the actual page array.
+        self.assertEqual(SPRING_PAGES, pages[:5])
         self.assertFalse(any(o.opcode in (0x66,0x68) and o.operands[0] in (7442,7446,7447,7448,7449,7451,7465,7466,7468) for o in ops))
 
     def test_spring_clicks_select_correct_page_and_retired_buttons_do_nothing(self):
@@ -178,7 +179,7 @@ class RetiredClientTests(unittest.TestCase):
         end=next(o.start for i,o in enumerate(ops) if o.opcode==0xd0 and o.start>start and
             ops[i+1].opcode==0x66 and self.names[ops[i+1].operands[0]]=='_basesprite_0')
         for day in range(1,13):
-            ctrl={'pageCount':6};obj={'_pageCtrl':ctrl};created=[];initialized=[]
+            ctrl={'pageCount':5};obj={'_pageCtrl':ctrl};created=[];initialized=[]
             def invoke(o,n,a):
                 if n=='__construct__':return {'class':o['class']}
                 if n=='addPage':created.append(a[0]);return None
@@ -207,8 +208,8 @@ class RetiredClientTests(unittest.TestCase):
             if n=='addChild':return None
             raise ValueError(n)
         self.run_code(5903,values,invoke=marks_invoke,start=start,end=end)
-        self.assertEqual([0,2,5],marks)
-        for page,key in ((0,'_tipsMark1'),(2,'_tipsMark2'),(5,'_tipsMark5')):
+        self.assertEqual([0,2],marks)
+        for page,key in ((0,'_tipsMark1'),(2,'_tipsMark2')):
             self.assertEqual(values[0][key],created[page]['mark'])
         # The first displayed button is also the default selected button.
         start=next(ops[i-3].start for i,o in enumerate(ops) if o.opcode==0x68 and o.operands==(7461,))
@@ -218,31 +219,34 @@ class RetiredClientTests(unittest.TestCase):
         self.assertIs(values[0]['_lastBtn'],values[0]['_loaderbasebutton_1'])
         self.assertEqual([(values[0]['_loaderbasebutton_1'],[True])],selections)
 
-    def test_display_patch_changes_only_three_bodies_and_preserves_configuration_and_rewards(self):
+    def test_display_and_followup_patches_preserve_configuration_and_rewards(self):
         baseline=subprocess.check_output(['git','show',DISPLAY_BASELINE+':web/GameFrame.swf'],cwd=ROOT)
-        self.assertEqual(self.source,wanfu_opening(spring_display(baseline)));self.assertEqual(self.source,spring_display(self.source))
+        displayed = spring_display(baseline)
+        self.assertEqual(displayed, spring_display(displayed))
+        self.assertEqual(self.source,retired_hunt(wanfu_opening(displayed)))
         raw,(_,_,a,b)=abc_section(baseline);before,_=normalize(raw[a:b]);_,_,old=inspect_abc(before)
         changed=set()
         for method,(a,size,limits) in old.items():
             b,length,newlimits=self.bodies[method]
             if before[a:a+size]!=self.abc[b:b+length] or limits!=newlimits:changed.add(method)
-        self.assertEqual(DISPLAY_METHODS | WANFU_METHODS,changed);self.assertEqual(strings_of(before),self.strings)
+        self.assertEqual(DISPLAY_METHODS | WANFU_METHODS | HUNT_METHODS,changed);self.assertEqual(strings_of(before),self.strings)
         # Recharge rewards were subsequently revised; other Spring sections and
         # packed resources remain identical to the retired-page release.
         path='Server/S1001/data/config/activity/SpringFestivalCfg.lua'
         old=subprocess.check_output(['git','show',DISPLAY_BASELINE+':'+path],cwd=ROOT)
         current=(ROOT/path).read_bytes()
         def without_recharge(source):
-            return source.split(b'\tEveryTotalPay =',1)[0]+source.split(b'\tXiaoFeiZhuanPanNew =',1)[1]
+            return (source.split(b'\tEveryTotalPay =',1)[0]+source.split(b'\tXiaoFeiZhuanPanNew =',1)[1]).replace('\t\tisOpen = false, -- 寻宝返利已下架\r\n'.encode(),b'')
         self.assertEqual(without_recharge(old),without_recharge(current))
         for path in ('web/v2/lang/zh-cn/zh-cn.dat','web/v2/lang/zh-cn/SpringFestivalCfg.cbp'):
             old=subprocess.check_output(['git','show',DISPLAY_BASELINE+':'+path],cwd=ROOT)
             if path.endswith('.dat'):
                 old=dict(read_pack(old));current=dict(read_pack((ROOT/path).read_bytes()))
                 old['SpringFestivalCfg.cbp']=spring_recharge(old['SpringFestivalCfg.cbp'],server_rewards())
+                for name in HUNT_SWITCHES:old[name]=hunt_config(old[name],name)
                 self.assertEqual(old,current)
             else:
-                self.assertEqual(spring_recharge(old,server_rewards()),(ROOT/path).read_bytes())
+                self.assertEqual(hunt_config(spring_recharge(old,server_rewards()),'SpringFestivalCfg.cbp'),(ROOT/path).read_bytes())
         compiler=LuaRuntime(unpack_returned_tuples=True).eval('function(s) local f,e=loadstring(s);return f~=nil,e end')
         links={
             'spring_total.lua':(('我也要购买/@@showWin,243,5','我也要购买/@@showWin,243,3'),
@@ -255,17 +259,25 @@ class RetiredClientTests(unittest.TestCase):
             baseline=subprocess.check_output(['git','show',DISPLAY_BASELINE+':'+path.relative_to(ROOT).as_posix()],cwd=ROOT)
             for old,new in replacements:
                 self.assertEqual(1,baseline.count(old.encode()));baseline=baseline.replace(old.encode(),new.encode())
+            if name == 'spring_total.lua':
+                for signature in ('function spring_xunbaofanli_main(sysarg,packet)',
+                                  'function GetSpringXunBaoFanLiData(sysarg)',
+                                  'function GetSpringXunBaoFanLiGife(sysarg, index)'):
+                    original = (signature + '\r\n').encode()
+                    guard = '\tif SpringFestivalCfg.hunt_times.isOpen == false then return end\r\n'.encode()
+                    self.assertEqual(1, baseline.count(original))
+                    baseline = baseline.replace(original, original + guard)
             self.assertEqual(baseline,path.read_bytes(),name)
             self.assertEqual((True,None),compiler(path.read_text('utf-8-sig')),name)
 
     def test_all_wanfu_page_variants_and_legacy_navigation_are_aligned(self):
         code,_=self.body(6021);ops=instructions(code)
-        expected=['QDLoginPage','QDRechargePage','QDAccRechargePage','QDFlashSalePage','QDHongYunDangTouPage','QDConsumePage','QDZhenBaoGePage','QDHaoLiPage']
+        expected=['QDLoginPage','QDRechargePage','QDAccRechargePage','QDFlashSalePage','QDHongYunDangTouPage','QDConsumePage']
         for field in QD_ARRAYS:
             i=next(i for i,o in enumerate(ops) if o.opcode==0x68 and o.operands==(field,))
-            self.assertEqual((8,),ops[i-1].operands)
-            self.assertEqual(expected,[self.names[o.operands[0]] for o in ops[i-9:i-1]])
-        retained=(0,1,2,3,8,10,12,13)
+            self.assertEqual((6,),ops[i-1].operands)
+            self.assertEqual(expected,[self.names[o.operands[0]] for o in ops[i-7:i-1]])
+        retained=(0,1,2,3,8,10)
         for old in range(-1,17):
             obj={'selectedIndex':-1};self.run_code(6042,{0:obj,1:old})
             self.assertEqual(retained.index(old) if old in retained else -1,obj['selectedIndex'])
@@ -287,13 +299,13 @@ class RetiredClientTests(unittest.TestCase):
 
     def test_full_patch_is_reproducible_idempotent_and_branch_targets_keep_loop_labels(self):
         baseline=subprocess.check_output(['git','show',BASELINE+':web/GameFrame.swf'],cwd=ROOT)
-        self.assertEqual(self.source,wanfu_opening(spring_display(patch_swf(baseline))));self.assertEqual(self.source,patch_swf(self.source))
+        self.assertEqual(self.source,retired_hunt(wanfu_opening(spring_display(patch_swf(baseline)))));self.assertEqual(self.source,patch_swf(self.source))
         raw,(_,_,a,b)=abc_section(baseline);before,_=normalize(raw[a:b]);_,_,old=inspect_abc(before)
         changed=set()
         for method,(a,size,limits) in old.items():
             b,length,newlimits=self.bodies[method]
             if before[a:a+size]!=self.abc[b:b+length] or limits!=newlimits:changed.add(method)
-        self.assertEqual(METHODS | WANFU_METHODS,changed);self.assertEqual(strings_of(before),self.strings)
+        self.assertEqual(METHODS | WANFU_METHODS | HUNT_METHODS,changed);self.assertEqual(strings_of(before),self.strings)
         for method in METHODS:
             code,limits=self.body(method);ops=instructions(code)
             for o in ops:
@@ -306,12 +318,12 @@ class RetiredClientTests(unittest.TestCase):
         before=dict(read_pack(subprocess.check_output(['git','show',BASELINE+':'+relative],cwd=ROOT)))
         after=dict(read_pack((directory/'zh-cn.dat').read_bytes()))
         self.assertEqual(before.keys(),after.keys())
-        self.assertEqual(set(SWITCHES),{k for k in before if before[k]!=after[k]})
+        self.assertEqual(set(SWITCHES)|set(HUNT_SWITCHES),{k for k in before if before[k]!=after[k]})
         lua=LuaRuntime()
         for name,fields in SWITCHES.items():
             self.assertEqual(after[name],(directory/name).read_bytes())
             expected=patch_config(before[name],name)
-            if name=='SpringFestivalCfg.cbp':expected=spring_recharge(expected,server_rewards())
+            if name=='SpringFestivalCfg.cbp':expected=hunt_config(spring_recharge(expected,server_rewards()),name)
             self.assertEqual(after[name],expected);self.assertEqual(after[name],patch_config(after[name],name))
             header,old=read_cbp(before[name]);_,new=read_cbp(after[name])
             lua.execute((SERVER/'config/activity'/name.replace('.cbp','.lua')).read_text('utf-8-sig'))
@@ -321,6 +333,7 @@ class RetiredClientTests(unittest.TestCase):
                 node.children=[v for v in node.children if v.name!='isOpen']
             if name=='SpringFestivalCfg.cbp':
                 new.child('EveryTotalPay').children=old.child('EveryTotalPay').children
+                new.child('hunt_times').children=[v for v in new.child('hunt_times').children if v.name!='isOpen']
             self.assertEqual(write_node(old),write_node(new),name)
         self.assertFalse(lua.globals().SpringFestivalCfg.shousui.isOpen)
 

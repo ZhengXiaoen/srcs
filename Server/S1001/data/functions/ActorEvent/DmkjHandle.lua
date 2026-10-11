@@ -741,19 +741,11 @@ DmkjOpFuncList[DmkjOpId.enDm] = function (sysarg,args)
 --		end
 	end
 	
-	-- 庆典期间
-	if dmkj_is_qingdian_open_time() then -- 增加珍宝积分
-		if var.dmkj_qingdian_point == nil then
-			var.dmkj_qingdian_point = TreasureTime
-		else
-			var.dmkj_qingdian_point = var.dmkj_qingdian_point + TreasureTime
-		end
-	else -- 增加宝藏积分
-		if var.TreasureHuntValue == nil then
-			var.TreasureHuntValue = TreasureTime
-		else
-			var.TreasureHuntValue = var.TreasureHuntValue + TreasureTime;
-		end
+	-- 每次成功寻宝直接增加宝藏积分，供宝库兑换使用。
+	if var.TreasureHuntValue == nil then
+		var.TreasureHuntValue = TreasureTime
+	else
+		var.TreasureHuntValue = var.TreasureHuntValue + TreasureTime
 	end
 	
 	if System.getDaysSinceCombineServer() <= 5 then
@@ -784,7 +776,7 @@ DmkjOpFuncList[DmkjOpId.enDm] = function (sysarg,args)
 	DataPack.writeByte(npack, 1);
 	DataPack.writeInt(npack, var.TreasureHuntValue);	--宝藏积分
 	DataPack.writeWord(npack, Dmkj.getStoreRestCount(sysarg));	--宝藏仓库格子数	
-	DataPack.writeUInt(npack, var.dmkj_qingdian_point) -- 珍宝积分
+	DataPack.writeUInt(npack, var.dmkj_qingdian_point or 0) -- 珍宝积分
 	DataPack.flush(npack);
 end
 
@@ -831,7 +823,7 @@ DmkjOpFuncList[DmkjOpId.enIndex] = function (sysarg,args)
 	end
 
 	DataPack.writeInt(npack,0)
-	DataPack.writeUInt(npack, var.dmkj_qingdian_point) -- 珍宝积分
+	DataPack.writeUInt(npack, var.dmkj_qingdian_point or 0) -- 珍宝积分
 	DataPack.flush(npack)
 	
 	--下发日志
@@ -1015,7 +1007,7 @@ DmkjOpFuncList[DmkjOpId.enExChangeItem] = function (sysarg,args)
 	local netPack = DataPack.allocPacket(sysarg, 36, 10)
 	if netPack ~= nil then 
 		DataPack.writeInt(netPack, var.TreasureHuntValue)
-		DataPack.writeUInt(netPack, var.dmkj_qingdian_point) -- 珍宝积分
+		DataPack.writeUInt(netPack, var.dmkj_qingdian_point or 0) -- 珍宝积分
 		DataPack.flush(netPack)
 	end
 		--添加全服公告

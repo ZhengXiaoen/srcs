@@ -15,6 +15,7 @@ from patch_spring_activity_icon import METHODS as SPRING_METHODS, patch_swf as s
 from patch_retired_festival_pages import METHODS as RETIRED_METHODS, patch_swf as retired_pages, patch_config as retired_config
 from patch_wanfu_opening import METHODS as WANFU_METHODS, patch_swf as wanfu_opening
 from patch_spring_display import patch_swf as spring_display
+from patch_retired_hunt_pages import METHODS as HUNT_METHODS, patch_swf as retired_hunt
 from patch_activity_entries import q, strings_of
 from patch_drop_pickup_retry import abc_section, instructions
 from patch_god_equip_state import inspect_abc
@@ -244,7 +245,7 @@ class UniqueClientTests(unittest.TestCase):
         for path,module,expected in ((CLIENT,False,MAIN_METHODS),(MODULE,True,MODULE_METHODS)):
             source=subprocess.check_output(['git','show',BASELINE+':'+path.relative_to(ROOT).as_posix()],cwd=ROOT)
             upgraded=patch_swf(source,module)
-            if not module:upgraded=wanfu_opening(spring_display(retired_pages(spring_icon(descriptions(upgraded)))));expected=expected|SPRING_METHODS|RETIRED_METHODS|WANFU_METHODS
+            if not module:upgraded=retired_hunt(wanfu_opening(spring_display(retired_pages(spring_icon(descriptions(upgraded))))));expected=expected|SPRING_METHODS|RETIRED_METHODS|WANFU_METHODS|HUNT_METHODS
             self.assertEqual(upgraded,path.read_bytes());self.assertEqual(patch_swf(upgraded,module),upgraded)
             d,(_,_,a,b)=abc_section(source);before,_=normalize(d[a:b]);oldnames,_,old=inspect_abc(before)
             abc,n,st,new=self.data[path];changed=set()
@@ -272,7 +273,7 @@ class UniqueClientTests(unittest.TestCase):
         before=dict(read_pack(subprocess.check_output(['git','show',BASELINE+':'+packpath.relative_to(ROOT).as_posix()],cwd=ROOT)))
         after=dict(read_pack(packpath.read_bytes()))
         self.assertEqual(before.keys(),after.keys())
-        self.assertEqual({'QingDianActivityCfg.cbp','SpringFestivalCfg.cbp'},{k for k in before if before[k]!=after[k]})
+        self.assertEqual({'QingDianActivityCfg.cbp','SpringFestivalCfg.cbp','treasurehuntcfg.cbp'},{k for k in before if before[k]!=after[k]})
         self.assertEqual(retired_config(patch_config(before['QingDianActivityCfg.cbp']),'QingDianActivityCfg.cbp'),after['QingDianActivityCfg.cbp'])
         _,old=read_cbp(before['QingDianActivityCfg.cbp']);_,new=read_cbp(after['QingDianActivityCfg.cbp'])
         spin=new.child('XiaoFeiZhuanPanNew');spin.children=[v for v in spin.children if v.name!='isOpen'];words=new.child('QingDianJiZi');words.children=[v for v in words.children if v.name!='isOpen']

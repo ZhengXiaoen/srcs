@@ -2505,6 +2505,7 @@ SpringFestivalCfg =
 	
 	--14寻宝赠送豪礼(寻宝返利)
 	hunt_times = {		
+		isOpen = false, -- 寻宝返利已下架
 		{ times = 200, award = { 
 			{type = 0, id = 6657, count = 1,bind = 1},
 			{type = 0, id = 6371, count = 1,bind = 1},

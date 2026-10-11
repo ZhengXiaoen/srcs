@@ -33,6 +33,7 @@ treasure_hunt_cfg =
 	
 	-- 寻宝赠送豪礼
 	hunt_times = {		
+		isOpen = false, -- 寻宝返利已下架
 		{ times = 1000, award = { 
 			{type = 0, id = 6657, count = 1,bind = 1},
 			{type = 0, id = 6371, count = 1,bind = 1},
@@ -74,6 +75,7 @@ treasure_hunt_cfg =
 	
 	-- 珍宝阁
 	shop = { -- price 为珍宝积分
+		isOpen = false, -- 珍宝阁已下架
 		{itemId=7620,count=1,bind=1,price=888},
 		{itemId=5647,count=1,bind=1,price=888},
 		{itemId=530,count=1,bind=1,price=888},

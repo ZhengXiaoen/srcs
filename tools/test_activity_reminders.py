@@ -8,10 +8,11 @@ from patch_retired_festival_pages import METHODS as RETIRED_METHODS, patch_swf a
 
 from patch_wanfu_opening import METHODS as WANFU_METHODS, patch_swf as wanfu_opening
 from patch_spring_display import patch_swf as spring_display
+from patch_retired_hunt_pages import METHODS as HUNT_METHODS, patch_swf as retired_hunt
 
 def current_release(source, module=False):
     updated = unique_rankings(source, module)
-    return updated if module else wanfu_opening(spring_display(retired_pages(spring_icon(ranking_description(updated)))))
+    return updated if module else retired_hunt(wanfu_opening(spring_display(retired_pages(spring_icon(ranking_description(updated))))))
 
 
 import argparse
@@ -603,7 +604,7 @@ class ActivityRemindersTests(unittest.TestCase):
     def test_only_expected_methods_and_no_other_packaged_resources_change(self):
         from patch_main_activity_reminders import METHODS, patch_swf as main_entries
         from patch_mystery_shop_reminder import METHODS as SHOP_METHODS, patch_swf as shop_reminder
-        expected = {False: {2648, 2720, 4078, 4080, 6333, 6335, 6353, 6377, 6380, 6382, 6437, 6497, 28528} | METHODS | SHOP_METHODS | MAIN_METHODS | SPRING_METHODS | RETIRED_METHODS | WANFU_METHODS,
+        expected = {False: {2648, 2720, 4078, 4080, 6333, 6335, 6353, 6377, 6380, 6382, 6437, 6497, 28528} | METHODS | SHOP_METHODS | MAIN_METHODS | SPRING_METHODS | RETIRED_METHODS | WANFU_METHODS | HUNT_METHODS,
                     True: {7, 8, 9, 10, 11, 41} | MODULE_METHODS}
         for module in (False, True):
             _, _, old = inspect_abc(self.before[module], 'HongLiActiveWin' if module else 'NavTopRightArea')

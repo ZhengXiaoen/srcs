@@ -103,6 +103,8 @@ LocalDT.GetBagSortItemAttributes = function(sysarg, itemPtr)
 	local values = {}
 	for prop = Item.ipItemStrong, Item.ipItemStaticPropStart - 1 do
 		local value, extra = Item.getItemProperty(sysarg, itemPtr, prop, 0)
+		-- 高位是物品附加标记，原生堆叠只比较绑定字段的低三位。
+		if prop == Item.ipItemBind then value = (value or 0) % 8 end
 		values[#values + 1] = value or 0
 		values[#values + 1] = extra or 0
 	end
@@ -124,10 +126,20 @@ LocalDT.AreBagSortItemAttributesEqual = function(first, second)
 	return true
 end
 
+-- 按完整 GUID 字符串扫描当前背包，避免 GUID 经 Lua 数值转换后查找失败。
+-- 只返回仍在背包中的指针，防止前一次合并释放物品后继续使用旧指针。
+LocalDT.FindBagSortItemByGuid = function(sysarg, guid)
+	for index = 0, Item.getBagItemCount(sysarg) - 1 do
+		local itemPtr = Item.getItemPtrByIndex(sysarg, index)
+		if itemPtr and Item.getItemGuidStr(itemPtr) == guid then return itemPtr end
+	end
+end
+
 -- 整理确认后先绑定整个背包，再按引擎原有规则合并同类可堆叠物品。
 -- 按 GUID 快照重新取指针，避免合并后背包重排或物品释放导致漏处理。
 function BindAndSortBag(sysarg)
 	if sysarg == nil then return end
+	if Actor.isDealing(sysarg) then return "null" end
 	local itemGuids = {}
 	local itemCounts = {}
 	local itemAttributes = {}
@@ -136,15 +148,16 @@ function BindAndSortBag(sysarg)
 		local itemPtr = Item.getItemPtrByIndex(sysarg, index)
 		if itemPtr then
 			local itemId = Item.getItemId(itemPtr)
-			itemGuids[#itemGuids + 1] = Item.getItemGuid(itemPtr)
+			itemGuids[#itemGuids + 1] = Item.getItemGuidStr(itemPtr)
 			itemCounts[itemId] = (itemCounts[itemId] or 0) + 1
-			if Item.getItemProperty(sysarg, itemPtr, Item.ipItemBind, 0) == 0 then
-				Item.setItemProperty(sysarg, itemPtr, Item.ipItemBind, 1)
+			local bindFlags = Item.getItemProperty(sysarg, itemPtr, Item.ipItemBind, 0)
+			if bindFlags % 8 == 0 then
+				Item.setItemProperty(sysarg, itemPtr, Item.ipItemBind, bindFlags + 1)
 			end
 		end
 	end
 	for i = 1, #itemGuids do
-		local itemPtr = Item.getBagItemPtrByGuid(sysarg, itemGuids[i])
+		local itemPtr = LocalDT.FindBagSortItemByGuid(sysarg, itemGuids[i])
 		if itemPtr then
 			local itemId = Item.getItemId(itemPtr)
 			if itemCounts[itemId] > 1 and Item.getItemPropertyById(itemId, Item.ipItemDupCount) > 1 then
@@ -158,7 +171,7 @@ function BindAndSortBag(sysarg)
 		end
 	end
 	for i = 1, #itemGuids do
-		local itemPtr = Item.getBagItemPtrByGuid(sysarg, itemGuids[i])
+		local itemPtr = LocalDT.FindBagSortItemByGuid(sysarg, itemGuids[i])
 		if itemPtr then
 			local itemId = Item.getItemId(itemPtr)
 			local count = Item.getItemProperty(sysarg, itemPtr, Item.ipItemCount, 0)

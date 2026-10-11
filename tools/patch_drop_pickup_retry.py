@@ -29,6 +29,13 @@ while the player stood still. Reuse the existing update tick and request gates.
 While auto-fighting, also collect eligible drops within two tiles when the
 current tile is empty. Continuous attacks otherwise skip the original drop
 scan. Use the existing pickup path that resumes auto-fight, with the same filters.
+During movement, let every eligible tile issue its own pickup request. The old
+player-wide 500 ms interval skipped a second drop when running across adjacent
+tiles; the stationary scan cannot recover a drop more than two tiles behind.
+Keep each drop's retry delay and MsgSender's same-drop throttle authoritative.
+If a nearby pickup path fails, resume auto-fight immediately. The pickup helper
+stops auto-fight before walking; ignoring a rejected path used to leave it off
+until the player manually enabled it again. Retry only on a later update tick.
 Relocate existing branches, switches and exception offsets rather than
 recompiling the Flash application.
 """
@@ -348,6 +355,90 @@ def patch_stacked_drops(source):
     return result
 
 
+def patch_movement_pickup(source):
+    """Remove only the cross-drop throttle from the existing tile pickup path."""
+    names, traits, bodies = inspect_abc(source, "LocalPlayer")
+    if names[32906] != "AUTO_PICK_TIME_INTERVAL" or names[13670] != "LogicEventDispatcher":
+        raise ValueError("Unexpected movement pickup throttle properties")
+    start, length, limits = bodies[traits["setCurrentXY"][0]]
+    code = source[start:start + length]
+    ops = instructions(code)
+    marker = b"\x60" + encode_u30(32906) + b"\xaf"
+    gates = [op for op in ops if code[op.start:op.start + len(marker)] == marker]
+    if len(gates) != 1:
+        raise ValueError("Unexpected movement pickup interval expression")
+    gate = gates[0].start + len(marker)
+    neutral = b"\x29\x02\x02\x02"  # consume the Boolean without skipping this tile
+    if code[gate:gate + 4] == neutral:
+        return source
+    branch = next((op for op in ops if op.start == gate), None)
+    if branch is None or branch.opcode != 0x12 or branch.end != gate + 4:
+        raise ValueError("Unexpected movement pickup interval branch")
+    destination = branch.branches[0][1]
+    dispatch = b"\x60" + encode_u30(13670)
+    if code[destination:destination + len(dispatch)] != dispatch:
+        raise ValueError("Movement interval does not skip only the pickup block")
+    # pop has the same stack effect as iffalse. Its three padding bytes preserve
+    # every original offset, including the other Boolean branch into this gate.
+    changed = bytearray(source)
+    changed[start + gate:start + gate + 4] = neutral
+    instructions(changed[start:start + length])
+    _, _, updated_bodies = inspect_abc(changed, "LocalPlayer")
+    if updated_bodies != bodies or changed[:start + gate] != source[:start + gate] or changed[
+            start + gate + 4:] != source[start + gate + 4:]:
+        raise ValueError("Unrelated movement pickup client bytes changed")
+    return bytes(changed)
+
+
+def patch_failed_pickup_path(source):
+    """Resume auto-fight when walking to the nearest eligible drop is rejected."""
+    names, traits, bodies = inspect_abc(source, "LocalPlayer")
+    method = traits["leaveForNearestItemForAutoFight"][0]
+    start, length, limits = bodies[method]
+    code = source[start:start + length]
+    if limits != (6, 2, 13, 14) or names[3008] != "leaveFor" or names[2995] != "startAutoFight":
+        raise ValueError("Unexpected automatic pickup path helper")
+    ops = instructions(code)
+    calls = [op for op in ops if op.opcode in (0x46, 0x4F)
+             and op.operands == (3008, 3)]
+    resumes = [op for op in ops if op.opcode == 0x4F and op.operands == (2995, 0)]
+    if len(calls) != 1 or len(resumes) != 1:
+        raise ValueError("Unexpected automatic pickup path calls")
+    call = calls[0]
+    resume = resumes[0].start - 1
+    if code[resume] != 0xD0:
+        raise ValueError("Unexpected automatic pickup resume receiver")
+    following = next(op for op in ops if op.start == call.end)
+    if call.opcode == 0x46:
+        if following.opcode != 0x12 or following.branches[0][1] != resume:
+            raise ValueError("Unexpected patched automatic pickup failure branch")
+        return source
+    if following.opcode != 0x10:
+        raise ValueError("Unexpected automatic pickup success exit")
+    # Keep the original success jump. The Boolean result goes to the existing
+    # no-drop resume block only when leaveFor returns false. No recursive retry.
+    neutral = bytearray(code)
+    neutral[call.start] = 0x46
+    changed, moved = relocate(bytes(neutral), [(call.end, call.end, b"\x02" * 4)])
+    changed = bytearray(changed)
+    branch = moved(call.end) - 4
+    changed[branch] = 0x12
+    changed[branch + 1:branch + 4] = encode_s24(moved(resume) - branch - 4)
+    instructions(changed)
+    reader = ABCReader(source)
+    reader.pos = start + length
+    if reader.u30() != 0 or reader.u30() != 0:
+        raise ValueError("Unexpected automatic pickup helper exceptions or traits")
+    length_start = start - len(encode_u30(length))
+    replacement = encode_u30(len(changed)) + changed + b"\0\0"
+    result = source[:length_start] + replacement + source[reader.pos:]
+    inspect_abc(result, "LocalPlayer")
+    if result[:length_start] + source[length_start:reader.pos] + result[
+            length_start + len(replacement):] != source:
+        raise ValueError("Unrelated automatic pickup path client bytes changed")
+    return result
+
+
 def idle_pickup_code(nearby=True):
     """Check the current tile and nearby combat drops with existing filters."""
     def q(opcode, name, *args):
@@ -519,7 +610,11 @@ def abc_section(source):
 
 def patch_swf(source):
     data, (tag, payload, start, end) = abc_section(source)
-    abc = patch_idle_pickup(patch_stacked_drops(patch_abc(data[start:end])))
+    abc = patch_abc(data[start:end])
+    abc = patch_stacked_drops(abc)
+    abc = patch_movement_pickup(abc)
+    abc = patch_failed_pickup_path(abc)
+    abc = patch_idle_pickup(abc)
     if abc == data[start:end]:
         return source
     result = (data[:tag + 2] + struct.pack("<I", start - payload + len(abc))
@@ -543,7 +638,7 @@ def main():
             raise ValueError("Pickup retry patch is missing")
     elif source != result:
         CLIENT.write_bytes(result)
-    print("Verified nearby combat pickup, stationary retries, overlapping drops and safe ranges; unrelated client bytes preserved")
+    print("Verified movement pickup, nearby combat pickup, stationary retries, overlapping drops and safe ranges; unrelated client bytes preserved")
 
 
 if __name__ == "__main__":

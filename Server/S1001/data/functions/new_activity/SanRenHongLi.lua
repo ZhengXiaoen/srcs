@@ -13,12 +13,10 @@ handleSanRenHongLi= function (sysarg, sysid, packet)
 			ClearSanRenHongLi_Data(sysarg)	
 		end
 		
-		if isActTime == false and actIdx == 6 then -- 6每日充值排行榜
-			if SRHL_isDringJingjiActivity(svar) then -- 是否是在圣诞活动或竞技活动中
-				isActTime = true 
-			end
-		end
-		
+        if actIdx == 6 then -- 协议沿用，榜单只在周年庆典中开放。
+            isActTime = daily_pay_ranking_is_open()
+        end
+
 		if isActTime then
 			GetSanRenHongLiInfo(sysarg, actIdx)
 		end
@@ -520,7 +518,7 @@ StartSanRenHongLi = function(nowOpenday) --开几天，当前是第几天
 	System.saveStaticVar()
 	
 	-- 散人红利每日充值排行榜
-	daily_pay_ranking_start(svar.isDringSanRenHongLi, 3, 0)
+	-- 充值排行统一由周年庆典开启。
 	
 	--print("开始散人红利活动,StartDJDLtime="..svar.StartDJDLtime)
 	System.trace("start SanRenHongLi, StartSRHL_MiNitime ="..svar.StartSRHL_MiNitime)

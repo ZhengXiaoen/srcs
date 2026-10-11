@@ -2541,11 +2541,12 @@ function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nL
 			-- 怪物脚本未包含排行榜模块时，仍同步充值额和活动榜。
 			if var.newdays == nil then var.newdays = {} end
 			var.newdays.daily_pay_ranking_yb = var.days.PeyNum
-			local dayData = svar.daily_pay_ranking_day_data
+			local yearDays = svar.daily_pay_ranking_year_days
 			local rankingCfg = SanRenHongLiCfg and SanRenHongLiCfg.DailyPayRanking
-			if dayData ~= nil and rankingCfg ~= nil and rankingCfg.awardList ~= nil and rankingCfg.awardList[4] ~= nil and
+			if yearDays ~= nil and yearDays > 0 and rankingCfg ~= nil and rankingCfg.awardList ~= nil and rankingCfg.awardList[4] ~= nil and
 				var.days.PeyNum >= rankingCfg.awardList[4].minPay and
-				(System.getIntByte(dayData, 0) ~= 0 or System.getIntByte(dayData, 1) ~= 0) then
+				(svar.StartOneYear_OpenDay ~= nil and svar.isDringOneYearAct ~= nil and
+				 svar.isDringOneYearAct >= 1 and svar.isDringOneYearAct <= svar.StartOneYear_OpenDay) then
 				Ranking.update_value(4, sysarg, var.days.PeyNum)
 			end
 		end
@@ -6905,8 +6906,7 @@ function srhlkq(sysarg)
     -- 保存系统静态变量
     System.saveStaticVar()
 
-    -- 启动散人红利每日充值排行榜
-    daily_pay_ranking_start(svar.isDringSanRenHongLi, 3, 0)
+    -- 充值排行统一由周年庆典开启。
 
     -- 记录活动开启的日志
     System.trace("start SanRenHongLi, StartSRHL_MiNitime =".. svar.StartSRHL_MiNitime)
@@ -6946,8 +6946,7 @@ function qdhdkq(sysarg)
 
 	OnYbConsumeRanking_ActivityStart(1, svar.isDringQingDianActivity, svar.QingDian_openDay)
 
-    -- 启动庆典活动每日充值排行榜
-    daily_pay_ranking_start(svar.isDringQingDianActivity, 3, 0)
+    -- 万服庆典仅开启消费排行。
 
     -- 记录庆典活动开启的日志
     System.trace("start CelebrationActivity, StartQDHD_MiNitime =".. svar.StartQDHD_MiNitime .. ", QingDian_openDay=" .. svar.QingDian_openDay)

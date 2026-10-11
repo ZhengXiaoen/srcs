@@ -1,4 +1,4 @@
-"""Clarify separate celebration consumption rewards in both client panels.
+"""Describe the sole Wanfu consumption ranking in client panels.
 
 Only two ABC string constants change; all method bodies and other SWF tags
 remain byte-identical. Use --check to verify the patched client and rewards.
@@ -20,6 +20,10 @@ from patch_guild_quest_config import read_cbp
 ROOT = Path(__file__).resolve().parents[1]
 CLIENT = ROOT / "web/GameFrame.swf"
 REPLACEMENTS = {
+    "每晚0点通过邮件发放排名奖励": "每晚0点邮件发放万服庆典消费排行奖励",
+    "(每天0点结算排名奖励，奖励以邮件发放)": "(每天0点通过邮件发放万服庆典消费排行奖励)",
+}
+PREVIOUS = {
     "每晚0点通过邮件发放排名奖励": "每晚0点邮件发奖，周年庆典、万服庆典分别结算",
     "(每天0点结算排名奖励，奖励以邮件发放)": "(每天0点邮件发奖，与万服庆典同时开启时分别发奖)",
 }
@@ -41,12 +45,13 @@ def patch_abc(source: bytes) -> bytes:
         text = source[reader.pos:reader.pos + size].decode("utf-8")
         reader.skip(size)
         for old, new in REPLACEMENTS.items():
-            if (old in text or new in text) and "消费" in text:
+            if any(value in text for value in (old, new, PREVIOUS[old])) and "消费" in text:
                 if old in found or "邮件" not in text:
                     raise ValueError("Unexpected consumption ranking description")
                 found.add(old)
-                if old in text:
-                    encoded = text.replace(old, new).encode("utf-8")
+                if new not in text:
+                    previous = PREVIOUS[old]
+                    encoded = text.replace(previous, new).replace(old, new).encode("utf-8")
                     patches.append((start, reader.pos, encode_u30(len(encoded)) + encoded))
     if found != REPLACEMENTS.keys():
         raise ValueError("Both consumption ranking descriptions must be present")

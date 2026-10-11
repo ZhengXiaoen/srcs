@@ -1,6 +1,14 @@
 """Run shipped shop bytecode and server packets through view/refresh cycles."""
 from __future__ import annotations
 
+from patch_unique_activity_rankings import MAIN_METHODS, MODULE_METHODS, patch_swf as unique_rankings
+from patch_consume_ranking_client import patch_swf as ranking_description
+
+def current_release(source, module=False):
+    updated = unique_rankings(source, module)
+    return updated if module else ranking_description(updated)
+
+
 import argparse
 import subprocess
 import sys
@@ -215,16 +223,16 @@ class ShopReminderTests(unittest.TestCase):
 
     def test_only_targeted_bodies_change_and_patch_is_idempotent(self):
         baseline = subprocess.check_output(['git', 'show', BASELINE + ':web/GameFrame.swf'], cwd=ROOT)
-        self.assertEqual(patch_swf(baseline), CLIENT.read_bytes())
+        self.assertEqual(current_release(patch_swf(baseline)), CLIENT.read_bytes())
         self.assertEqual(patch_swf(CLIENT.read_bytes()), CLIENT.read_bytes())
         previous = subprocess.check_output(['git', 'show', '6909720:web/GameFrame.swf'], cwd=ROOT)
-        self.assertEqual(patch_swf(previous), CLIENT.read_bytes())
+        self.assertEqual(current_release(patch_swf(previous)), CLIENT.read_bytes())
         raw, (_, _, a, b) = abc_section(baseline); before, _ = normalize(raw[a:b])
         _, _, old = inspect_abc(before, 'NavTopRightArea'); changed = set()
         for method, (a, size, limits) in old.items():
             b, size2, limits2 = self.bodies[method]
             if before[a:a + size] != self.abc[b:b + size2] or limits != limits2: changed.add(method)
-        self.assertEqual(changed, METHODS)
+        self.assertEqual(changed, METHODS | MAIN_METHODS)
 
     def test_server_query_and_refresh_packets_preserve_goods_and_buy_flags(self):
         lua = server_runtime(); g = lua.globals()
@@ -338,6 +346,9 @@ class ShopReminderTests(unittest.TestCase):
         compile_ = lua.eval('function(s) local f,e=loadstring(s); return f~=nil,e end')
         self.assertEqual(compile_(source.decode('utf-8-sig')), (True, None))
         baseline = subprocess.check_output(['git', 'show', BASELINE + ':' + SERVER.relative_to(ROOT).as_posix()], cwd=ROOT)
+        source = source.replace('\t\tif QingDianActivityCfg.XiaoFeiZhuanPanNew.isOpen == false then return end\r\n'.encode(), b'')
+        source = source.replace('\tif QingDianActivityCfg.XiaoFeiZhuanPanNew.isOpen == false then return end\r\n'.encode(), b'')
+        source = source.replace('万服庆典唯一消费排行'.encode(), '月度活动 元宝消耗排行榜'.encode())
         # Reverse only this reminder's edits; every other byte must match.
         a = source.index('-- 每两小时为一轮'.encode()); b = source.index(b'QingDianActivitys = function')
         source = source[:a] + source[b:]

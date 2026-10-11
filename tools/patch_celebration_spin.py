@@ -68,6 +68,7 @@ def patch_abc(source):
         method = methods[method_name][0]
         start, size, limits = bodies[method]
         code = source[start:start + size]
+        if kind == "qd" and code == b"\xd0\x30\x47": continue
         old = cfg_local + q(0x66, Q["needPay"])
         new = threshold_read(cfg_local, kind)
         positions = [op.start for op in instructions(code)

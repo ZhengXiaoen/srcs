@@ -111,15 +111,16 @@ def qd_constructor(code, strings):
         edits.append((ops[previous].end, ops[end].end, b""))
     editor_end = next(op.start for op in ops if op.opcode == 0x68 and op.operands == (7621,))
     button_arrays = [op for op in ops if op.opcode == 0x56 and op.start < editor_end
-                     and op.operands in ((15,), (13,), (10,))]
+                     and op.operands in ((15,), (13,), (10,), (9,))]
     if len(button_arrays) != 1:
         raise ValueError("Missing celebration navigation definition array")
     op = button_arrays[0]
+    target_count = 9 if op.operands == (9,) else 10
     if edits:
         if len(edits) != op.operands[0] - 10:
             raise ValueError("Partly removed celebration button definitions")
         edits.append((op.start, op.end, b"\x56\x0a"))
-    elif op.operands != (10,):
+    elif op.operands != (target_count,):
         raise ValueError("Retired celebration button definition remains")
 
     for array in QD_ARRAYS:
@@ -128,7 +129,7 @@ def qd_constructor(code, strings):
             raise ValueError("Missing celebration page variant")
         end = ends[0]
         build = ops[end - 1]
-        if build.opcode != 0x56 or build.operands not in ((15,), (13,), (10,)):
+        if build.opcode != 0x56 or build.operands not in ((15,), (13,), (10,), (9,)):
             raise ValueError("Unexpected celebration page count")
         count = build.operands[0]
         pages = ops[end - count - 1:end - 1]
@@ -138,7 +139,7 @@ def qd_constructor(code, strings):
         if count > 10 and len(removed) == count - 10:
             edits.extend((op.start, op.end, b"") for op in removed)
             edits.append((build.start, build.end, b"\x56\x0a"))
-        elif count != 10 or removed:
+        elif count not in (9, 10) or removed:
             raise ValueError("Partly removed celebration page variants")
     return relocate(code, edits)[0] if edits else code
 
@@ -190,7 +191,7 @@ def qd_children(code):
                 raise ValueError("Unexpected celebration red-dot position")
             start = found[0] + len(prefix)
             edits.append((start, start + 2, bytes([0x24, new])))
-        elif len(occurrences(code, new_value)) != 1:
+        elif len(occurrences(code, new_value)) != 1 and len(occurrences(code, prefix + bytes([0x24, 8, 0x24, 45]))) != 1:
             raise ValueError("Missing celebration red-dot position")
     # Collect-word mark moves from original slot 6 to slot 4.
     prefix = b"\xd0" + q(0x66, 7654)
@@ -280,6 +281,8 @@ def legacy_navigation():
 
 def patch_navigation(code):
     original = b"\xd0\x30\xd0\xd1" + q(0x4E, 1856, 1) + b"\xd0\xd1" + q(0x68, 7677) + b"\x47"
+    from patch_unique_activity_rankings import navigate
+    if code == navigate(): return code
     if code not in (original, previous_navigation(), legacy_navigation()):
         raise ValueError("Unexpected celebration legacy navigation")
     return legacy_navigation()

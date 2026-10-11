@@ -1,4 +1,4 @@
-﻿-- 月度活动 元宝消耗排行榜
+﻿-- 万服庆典唯一元宝消费排行榜
 --#include "data\functions\ActorEvent\OfflineMsg.lua" once
 --#include "data\config\activity\PublicTestCfg.lua" once
 --#include "data\functions\Activity\SpringFestivalActivity.lua" once
@@ -9,7 +9,7 @@ YbConsumeRanking_minYb = 0
 YbConsumeRanking_isModified = false
 YbConsumeRanking_inTime = false
 
-LocalDT.YbConsumeRankingActivityNames = {[0] = "周年庆典", [1] = "万服庆典", [2] = "春节活动"}
+LocalDT.YbConsumeRankingActivityNames = {[1] = "万服庆典"}
 
 LocalDT.YbConsumeRankingDate = function(time)
 	local year, month, day = System.GetSystemTimeInMiniTime(time)
@@ -18,7 +18,7 @@ end
 
 -- 引擎静态变量中的子表是 userdata，不能使用 next/pairs 检查。
 LocalDT.HasYbConsumeRankingActivity = function(activities)
-	return (activities[0] or 0) > 0 or (activities[1] or 0) > 0 or (activities[2] or 0) > 0
+	return (activities[1] or 0) > 0
 end
 
 -- 与充值排行一样保存各活动剩余结算天数，活动关闭后仍保留最后一天的奖励。
@@ -26,52 +26,24 @@ LocalDT.InitYbConsumeRankingActivities = function()
 	local svar = System.getStaticVar()
 	if svar.YbConsumeRankingActivities == nil then
 		svar.YbConsumeRankingActivities = {}
-		if svar.StartOneYear_OpenDay ~= nil and svar.isDringOneYearAct ~= nil and
-			svar.isDringOneYearAct >= 1 and svar.isDringOneYearAct <= svar.StartOneYear_OpenDay then
-			svar.YbConsumeRankingActivities[0] = svar.StartOneYear_OpenDay - svar.isDringOneYearAct + 1
-		end
 		if svar.QingDian_openDay ~= nil and svar.isDringQingDianActivity ~= nil and
 			svar.isDringQingDianActivity >= 1 and svar.isDringQingDianActivity <= svar.QingDian_openDay then
 			svar.YbConsumeRankingActivities[1] = svar.QingDian_openDay - svar.isDringQingDianActivity + 1
 		end
-		if is_spring_festival_time() then svar.YbConsumeRankingActivities[2] = 1 end
 	end
+	-- 退休活动不再结算，保留万服庆典榜单及最后一天待发奖励。
+	svar.YbConsumeRankingActivities[0] = nil
+	svar.YbConsumeRankingActivities[2] = nil
 	if svar.YbConsumeRankingLastSettleDate == nil then
 		svar.YbConsumeRankingLastSettleDate = LocalDT.YbConsumeRankingDate(System.getCurrMiniTime())
 	end
 	return svar.YbConsumeRankingActivities
 end
 
-function IsYbConsumeRankingTime()	
-	--[[
-	if PublicTestCfg.gameIndex ~= 0 and System.GetGameIndex() ~= PublicTestCfg.gameIndex then
-		return false -- 月度活动不是该平台laob
-	end
-		
-	local time = PublicTestCfg.time
-	return System.isInDateRange(time[1], time[2], time[3], 0, 0, 0, time[4], time[5], time[6], 23, 59, 59)
-	--]]
-	if is_spring_festival_time() then 
-		return true
-	end
-	
-	local svar = System.getStaticVar()
-	if (svar.StartOneYear_OpenDay==nil or svar.isDringOneYearAct ==nil or svar.isDringOneYearAct<1 or svar.isDringOneYearAct>svar.StartOneYear_OpenDay)==false then 
-		return true
-	end
-		
-	-- 跟庆典活动一起开
-	
-	if svar.QingDian_openDay==nil then 
-		return false
-	end
-	
-	local isDringQingDianActivity = svar.isDringQingDianActivity
-	if isDringQingDianActivity == nil or isDringQingDianActivity < 1 or isDringQingDianActivity > svar.QingDian_openDay then 
-		return false
-	end
-	
-	return true
+function IsYbConsumeRankingTime()
+    local svar = System.getStaticVar()
+    return svar.QingDian_openDay ~= nil and svar.isDringQingDianActivity ~= nil and
+        svar.isDringQingDianActivity >= 1 and svar.isDringQingDianActivity <= svar.QingDian_openDay
 end
 
 function YbConsumeRanking_load()		
@@ -404,7 +376,7 @@ end
 
 function YbConsumeRanking_SendMyData(sysarg)
 
-	if not YbConsumeRanking_inTime then return end
+	if not YbConsumeRanking_inTime or not IsYbConsumeRankingTime() then return end
 	
 	local netPack = DataPack.allocPacket(sysarg, 139, LogicCmd.miscSys.sub.sPublicTest)
 	DataPack.writeByte(netPack, 3) -- S2C_PublicTestMsgId.MyYbRankData
@@ -427,7 +399,7 @@ end
 
 function YbConsumeRanking_SendRankingData(sysarg, rankBegin, count)
 	--[[
-	if not YbConsumeRanking_inTime then return end
+	if not YbConsumeRanking_inTime or not IsYbConsumeRankingTime() then return end
 	
 	if rankBegin < 1 or rankBegin > 20 or count <= 0 then
 		return
@@ -452,7 +424,7 @@ function YbConsumeRanking_SendRankingData(sysarg, rankBegin, count)
 		
 	DataPack.flush(netPack)
 	--]]
-	if not YbConsumeRanking_inTime then return end
+	if not YbConsumeRanking_inTime or not IsYbConsumeRankingTime() then return end
 		
 	local netPack = DataPack.allocPacket(sysarg, 139, LogicCmd.miscSys.sub.sPublicTest)
 	DataPack.writeByte(netPack, 4) -- S2C_PublicTestMsgId.YbRankData
@@ -533,14 +505,13 @@ function OnYbConsumeRankingNewDayArrive()
 	local svar = System.getStaticVar()
 	if svar.YbConsumeRankingLastSettleDate >= today then return end
 	local settledActivities = {}
-	for actType = 0, 2 do
+	for actType = 1, 1 do
 		local leftDays = activities[actType] or 0
 		if leftDays > 0 then
 			settledActivities[actType] = leftDays
 			activities[actType] = leftDays > 1 and leftDays - 1 or nil
 		end
 	end
-	if is_spring_festival_time() then activities[2] = 1 end
 	svar.YbConsumeRankingLastSettleDate = today
 	System.saveStaticVar()
 	YbConsumeRanking_sendAwardMails(settledActivities)
@@ -615,7 +586,7 @@ end
 
 function OnRankingConsumeYbEvent(sysarg, nYuanBao)	
   
-	if not YbConsumeRanking_inTime then	return end
+	if not YbConsumeRanking_inTime or not IsYbConsumeRankingTime() then return end
 	
 	local var = Actor.getStaticVar(sysarg)
 	
@@ -678,13 +649,13 @@ function OnRankingConsumeYbEvent(sysarg, nYuanBao)
 --	--------------------------这个是计算庆典活动消费转盘，能够得到多少次转盘机会-------------------------------
 end
 
--- actType: 0周年庆典；1万服庆典；2春节活动。
+-- 仅 actType=1（万服庆典）可开启或结算消费排行。
 function OnYbConsumeRanking_ActivityStart(actType, curDay, openNDay)
 	if LocalDT.YbConsumeRankingActivityNames[actType] == nil then return end
 	if curDay == nil or openNDay == nil or curDay < 1 or curDay > openNDay then return end
 	OnYbConsumeRankingNewDayArrive()
 	local activities = LocalDT.InitYbConsumeRankingActivities()
-	-- 同时开启另一个活动时保留共用榜单，不提前发奖或清榜。
+	-- 重复开启同一活动时保留榜单，不提前发奖或清榜。
 	if not YbConsumeRanking_inTime then
 		YbConsumeRanking = {}
 		YbConsumeRanking_minYb = 0
@@ -774,7 +745,7 @@ function YbConsumeRanking_sendAwardMails(activities)
 end
 
 function YbConsumeRanking_sendAwardMailToActor(actorId, awardIdx, ranking, activities)
-	for actType = 0, 2 do
+	for actType = 1, 1 do
 		if (activities[actType] or 0) > 0 then
 			local title = LocalDT.YbConsumeRankingActivityNames[actType].."每日消费排行"
 			local desc = string.format("您在%s活动中，获得第%d名，将获得以下奖品：", title, ranking)
@@ -784,17 +755,7 @@ function YbConsumeRanking_sendAwardMailToActor(actorId, awardIdx, ranking, activ
 end
 
 
-function spring_YbConsumeRanking_activity_start_or_end(is_start, is_started_server)
-	if is_start then
-		if is_started_server ~= nil and is_started_server == false then -- 不是服务器启动时
-			OnYbConsumeRanking_ActivityStart(2, 1, 1)
-		end
-	else
-		OnYbConsumeRanking_ActivityEnd(2)
-	end
-end
-
-register_spring_festival_start_end_func(spring_YbConsumeRanking_activity_start_or_end)
+-- 春节与周年庆典不再注册消费排行生命周期。
 
 -- 服务器启动或者 @rsf 时重新装载
 YbConsumeRanking_load()

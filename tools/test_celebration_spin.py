@@ -171,6 +171,12 @@ class CelebrationSpinTests(unittest.TestCase):
             days_name = "StartOneYear_OpenDay" if year else "QingDian_openDay"
             cfg = lua.globals().OneYearActivityCfg if year else lua.globals().QingDianActivityCfg
             cfg = cfg[key][1]
+            if not year:
+                lua.globals().state[state_name] = lua.table_from({"XFZP": 1, "XFZPCosume": 999999999})
+                lua.globals()[name](1)
+                self.assertEqual(0, len(lua.globals().rewards))
+                self.assertEqual(1, lua.globals().state[state_name].XFZP)
+                continue
             for days in (1, 2, 3, 4, 5, 6, 7, 14):
                 lua.globals().svar[days_name] = days
                 self.assertEqual(days * 3000000, math.ceil(cfg[12].needPay * days / baseline))
@@ -244,7 +250,7 @@ class CelebrationSpinTests(unittest.TestCase):
                         elif baseline == 3:
                             win = {"tipsIcon5": {}}
                             _, maximum = execute(qd_red, self.names, {0: win}, globals_)
-                            self.assertEqual(available > claimed, win["tipsIcon5"]["visible"])
+                            self.assertNotIn("visible", win["tipsIcon5"])
                             self.assertLessEqual(maximum, qd_limits[0])
 
     def test_patch_idempotence(self):

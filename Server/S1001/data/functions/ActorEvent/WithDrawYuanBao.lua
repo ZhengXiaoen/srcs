@@ -108,20 +108,7 @@ function OnConsumeYuanBaoEvent(sysarg, nYuanBao, nLogId)
 	end
 	
 	
-	--是否在庆典活动里面，是的话，累加登录次数
-	if (svar.isDringQingDianActivity ==nil or svar.isDringQingDianActivity<1 or  svar.QingDian_openDay==nil or svar.isDringQingDianActivity>svar.QingDian_openDay)==false then 
-		ClearQingDian_Data(sysarg) --清除上次活动的数据
-		
-		local var = Actor.getStaticVar(sysarg)
-		if var.QDHD_Data.XFZPCosume ==nil then
-			var.QDHD_Data.XFZPCosume = nYuanBao
-		else
-			var.QDHD_Data.XFZPCosume = var.QDHD_Data.XFZPCosume + nYuanBao
-		end
-		
-		GetQingDianActivityInfo(sysarg,14)
-	end
-	
+	-- 万服庆典消费转盘已下架，不再累计或发送提醒。
 	
 	--是否在春节活动，累加消费次数
 	if is_spring_festival_time()==true then 

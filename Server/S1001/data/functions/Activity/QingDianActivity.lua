@@ -1,6 +1,6 @@
 --庆典活动
 --#include "data\config\activity\QingDianActivityCfg.lua" once
---#include "data\functions\modules\YbConsumeRanking.lua" once -- 月度活动 元宝消耗排行榜
+--#include "data\functions\modules\YbConsumeRanking.lua" once -- 万服庆典唯一消费排行
 --#include "data\functions\new_activity\qingdian\treasure_hunt.lua" once -- 庆典活动--寻宝
 
 
@@ -1479,6 +1479,7 @@ end
 
 --消费转盘
 function GetQD_FeiZhuanPan(sysarg)
+	if QingDianActivityCfg.XiaoFeiZhuanPanNew.isOpen == false then return end
 	local var = Actor.getStaticVar(sysarg)
 	local svar = System.getStaticVar()
 	if QingDianActivityCfg.XiaoFeiZhuanPanNew[1]==nil then 
@@ -1834,6 +1835,7 @@ GetQingDianActivityInfo = function(sysarg,index)
 		end
 		DataPack.flush(netPack)
 	elseif index==14 then 
+		if QingDianActivityCfg.XiaoFeiZhuanPanNew.isOpen == false then return end
 		ClearQingDian_Data(sysarg)
 		
 		local netPack = DataPack.allocPacket(sysarg,151,LogicCmd.miscSysEx.sub.sQingDianActivity)

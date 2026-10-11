@@ -11,15 +11,15 @@ LocalDT.RecurringActivities = {
     {name = "SanRen", day = "isDringSanRenHongLi", defaultDuration = 3,
         year = "StartSanRenHongLiYear", month = "StartSanRenHongLiMonth", date = "StartSanRenHongLiDay",
         token = "StartSRHL_MiNitime", start = "StartSanRenHongLi", finish = "EndSanRenHongLi",
-        dayOnly = true, rankingIndex = 0, packet = "sSanRenHongLi_IsOpen", fields = {"day"}},
+        dayOnly = true, packet = "sSanRenHongLi_IsOpen", fields = {"day"}},
     {name = "OneYear", day = "isDringOneYearAct", duration = "StartOneYear_OpenDay", defaultDuration = 7, maxDuration = 7,
         year = "StartOneYear_Year", month = "StartOneYear_Month", date = "StartOneYear_Day",
         token = "StartOneYear_Minitime", start = "StartOneYearActivity", finish = "EndOneYearActivity",
-        packet = "sOneYearAct_isOpen", fields = {"duration", "day"}, consumeRankingIndex = 0},
+        packet = "sOneYearAct_isOpen", fields = {"duration", "day"}, rankingIndex = 2},
     {name = "JingJi", day = "isDringJingJi", duration = "JingJiOpenDay", defaultDuration = 3,
         year = "StartJingJIYear", month = "StartJingjiMonth", date = "StartJingJiDay",
         token = "StartJingJi_MiNitime", activityType = "JingJiActivityTypes", defaultType = 2,
-        start = "StartJingJi", finish = "EndJingJi", rankingIndex = 1,
+        start = "StartJingJi", finish = "EndJingJi",
         packet = "sJingJI_isOpen", fields = {"activityType", "duration", "day"}},
     {name = "EndMonth", day = "isDringEndMonth", duration = "EndMonth_openDay", defaultDuration = 3,
         year = "EMActivityYear", month = "EMActivityMonth", date = "EMActivityDay",
@@ -54,8 +54,10 @@ LocalDT.SyncRecurringRanking = function(svar, config, duration, day)
 		LocalDT.InitYbConsumeRankingActivities()[config.consumeRankingIndex] = duration - day + 1
 	end
     if config.rankingIndex == nil then return end
-    svar.daily_pay_ranking_day_data = System.setIntByte(svar.daily_pay_ranking_day_data or 0,
-        config.rankingIndex, duration - day + 1)
+    if config.rankingIndex == 2 then
+        LocalDT.InitAnniversaryPayRanking()
+        svar.daily_pay_ranking_year_days = duration - day + 1
+    end
 end
 
 LocalDT.EnsureRecurringActivity = function(config, today, openDate)
@@ -140,7 +142,7 @@ function EnsureRecurringActivities()
         daily_pay_ranking_ScriptRankingNewDayArrive()
     end
     if DisableJingJiCompetition ~= nil then DisableJingJiCompetition() end
-    OnYbConsumeRankingNewDayArrive() -- 先结算昨日两个庆典的消费奖励，再推进或重开活动。
+    OnYbConsumeRankingNewDayArrive() -- 先结算昨日万服庆典唯一消费榜奖励，再推进或重开活动。
     svar = System.getStaticVar()
     if svar.RecurringActivityCycles == nil then svar.RecurringActivityCycles = {} end
     for _, config in ipairs(LocalDT.RecurringActivities) do

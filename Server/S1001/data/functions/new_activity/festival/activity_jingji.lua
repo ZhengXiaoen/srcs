@@ -353,7 +353,7 @@ StartJingJi = function(openday,nowOpenday,activityType) --开几天，当前是�
 	System.saveStaticVar()
 	
 	-- 竞技大赛每日充值排行榜
-	daily_pay_ranking_start(svar.isDringJingJi, svar.JingJiOpenDay, 1)
+	-- 充值排行统一由周年庆典开启。
 	
 	
 	local playerList = LuaHelp.getAllActorList()

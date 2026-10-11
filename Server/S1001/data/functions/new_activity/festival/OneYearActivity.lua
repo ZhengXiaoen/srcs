@@ -23,7 +23,7 @@ handleOneYearAct = function (sysarg, sysid, packet)
 		GetOneYearEveryDayFirstPay(sysarg)
 	elseif msgid ==4 then --每日累计充值
 		GetOneYearEveryDayTotalPay(sysarg,DataPack.readByte(packet))
-	elseif msgid ==5 then --每日消费排行榜(用以前的)
+	elseif msgid ==5 then --每日充值排行（查询沿用散人红利协议6）
 	elseif msgid ==6 then --写配置就好
 	elseif msgid ==7 then --买水晶
 		BuyOneYearShuiJing(sysarg) 
@@ -1015,7 +1015,7 @@ StartOneYearActivity = function(openday , nowOpenday) --开几天，当前是第
 	-----------------------------------
 	
 	--开启排行
-	OnYbConsumeRanking_ActivityStart(0, svar.isDringOneYearAct, svar.StartOneYear_OpenDay)
+	daily_pay_ranking_start(svar.isDringOneYearAct, svar.StartOneYear_OpenDay, 2)
 	System.trace("one year activity start")
 	
 	local playerList = LuaHelp.getAllActorList()
@@ -1032,6 +1032,7 @@ end
 
 --结束周年活动
 EndOneYearActivity = function()
+	daily_pay_ranking_end()
 	--print("22222")
 	local svar = System.getStaticVar()
 	svar.isDringOneYearAct = nil
@@ -1048,7 +1049,7 @@ EndOneYearActivity = function()
 	System.setActivtyExpRate(0, 0)
 	
 	--结束排行
-	OnYbConsumeRanking_ActivityEnd(0)
+	-- 当日充值排行已保留至零点结算。
 	System.trace("one year activity end")
 	
 	local playerList = LuaHelp.getAllActorList()

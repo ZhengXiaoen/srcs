@@ -87,6 +87,8 @@ class ConsumeRankingTests(unittest.TestCase):
         return self.lua.eval(source)
 
     def start(self, kind, day=1, duration=3):
+        if kind == 1 and 1 <= day <= duration:
+            self.run_lua(f"state.QingDian_openDay={duration};state.isDringQingDianActivity={day}")
         self.run_lua(f"OnYbConsumeRanking_ActivityStart({kind}, {day}, {duration})")
 
     def consume(self, id=1, amount=2_000_000):
@@ -98,171 +100,98 @@ class ConsumeRankingTests(unittest.TestCase):
     def titles(self):
         return [self.value(f"mails[{i}].title") for i in range(1, self.value("#mails") + 1)]
 
-    def test_two_celebrations_send_two_named_identical_rewards(self):
-        self.start(0, duration=7)
-        self.start(1)
-        self.consume()
-        self.midnight()
-        self.assertEqual(["周年庆典每日消费排行", "万服庆典每日消费排行"], self.titles())
-        self.assertEqual(self.value("mails[1].award"), self.value("mails[2].award"))
+    def test_retired_activities_never_start_or_send_rewards(self):
+        self.start(0); self.start(2)
+        self.consume(); self.midnight()
+        self.assertEqual([], self.titles())
+        self.assertFalse(self.value("YbConsumeRanking_inTime"))
+
+    def test_overlap_sends_only_wanfu_with_unchanged_reward(self):
+        self.start(1); self.start(0); self.start(2)
+        self.consume(); self.midnight()
+        self.assertEqual(["万服庆典每日消费排行"], self.titles())
         self.assertEqual("7039,5,1/6820,1,1/6364,1,1/5384,5,1", self.value("mails[1].award"))
         self.assertEqual(0, self.value("#YbConsumeRanking"))
 
-    def test_single_celebration_sends_only_its_reward(self):
-        for kind, name in ((0, "周年庆典"), (1, "万服庆典")):
-            with self.subTest(kind=kind):
-                self.setUp()
-                self.start(kind)
-                self.consume()
-                self.midnight()
-                self.assertEqual([name + "每日消费排行"], self.titles())
-
-    def test_starting_second_activity_keeps_rank_and_defers_rewards(self):
-        self.start(0)
-        self.consume()
-        self.start(1)
-        self.assertEqual(0, self.value("#mails"))
-        self.assertEqual(2_000_000, self.value("YbConsumeRanking[1].yb"))
-        self.midnight()
-        self.assertEqual(2, self.value("#mails"))
-
-    def test_repeated_midnight_cannot_send_duplicate_rewards_or_clear_today(self):
-        self.start(0)
-        self.start(1)
-        self.consume()
-        self.midnight()
+    def test_repeated_midnight_preserves_today_and_sends_once(self):
+        self.start(1); self.consume(); self.midnight()
         self.run_lua("actors = {}")
-        self.consume(2)
-        self.run_lua("OnYbConsumeRankingNewDayArrive()")
-        self.assertEqual(2, self.value("#mails"))
+        self.consume(2); self.run_lua("OnYbConsumeRankingNewDayArrive()")
+        self.assertEqual(1, self.value("#mails"))
         self.assertEqual(2, self.value("YbConsumeRanking[1].id"))
 
-    def test_last_day_pays_both_before_short_activity_stops(self):
-        self.start(0, duration=7)
-        self.start(1, day=3)
-        self.consume()
-        self.midnight()
-        self.run_lua("OnYbConsumeRanking_ActivityEnd(1)")
-        self.assertEqual(2, self.value("#mails"))
-        self.assertTrue(self.value("YbConsumeRanking_inTime"))
-        self.assertIsNone(self.value("state.YbConsumeRankingActivities[1]"))
-        self.run_lua("actors = {}; mails = {}")
-        self.consume()
-        self.midnight()
-        self.assertEqual(["周年庆典每日消费排行"], self.titles())
-
-    def test_end_before_midnight_preserves_today_but_stops_future_rewards(self):
-        self.start(0)
-        self.start(1)
-        self.consume()
+    def test_final_day_and_end_before_midnight_pay_once(self):
+        self.start(1, day=3); self.consume()
         self.run_lua("OnYbConsumeRanking_ActivityEnd(1)")
         self.assertEqual(0, self.value("#mails"))
-        self.assertEqual(1, self.value("#YbConsumeRanking"))
         self.midnight()
-        self.assertEqual(2, self.value("#mails"))
-        self.assertIsNone(self.value("state.YbConsumeRankingActivities[1]"))
-
-    def test_all_activities_end_after_final_settlement(self):
-        self.start(0, day=3)
-        self.start(1, day=3)
-        self.consume()
-        self.midnight()
-        self.assertEqual(2, self.value("#mails"))
+        self.assertEqual(1, self.value("#mails"))
         self.assertFalse(self.value("YbConsumeRanking_inTime"))
         self.assertIsNone(self.value('timers["YbConsumeRanking_OnTimer"]'))
 
-    def test_new_cycle_does_not_send_previous_cycle_twice(self):
-        self.start(0, duration=7)
-        self.start(1, day=3)
-        self.consume()
+    def test_rejected_retired_start_and_end_preserve_current_ranking(self):
+        self.start(1); self.consume()
+        self.start(0); self.start(2)
+        self.run_lua("OnYbConsumeRanking_ActivityEnd(0); OnYbConsumeRanking_ActivityEnd(2)")
+        self.assertEqual(2_000_000, self.value("YbConsumeRanking[1].yb"))
+        self.assertEqual(3, self.value("state.YbConsumeRankingActivities[1]"))
+        self.midnight(); self.assertEqual(1, self.value("#mails"))
+
+    def test_new_cycle_does_not_duplicate_previous_settlement(self):
+        self.start(1, day=3); self.consume()
         self.run_lua("now = now + 86400; OnYbConsumeRanking_ActivityEnd(1)")
-        self.start(1)
-        self.run_lua("OnYbConsumeRankingNewDayArrive()")
-        self.assertEqual(2, self.value("#mails"))
+        self.start(1); self.run_lua("OnYbConsumeRankingNewDayArrive()")
+        self.assertEqual(1, self.value("#mails"))
         self.assertEqual(3, self.value("state.YbConsumeRankingActivities[1]"))
 
-    def test_sparse_thresholds_use_same_rank_in_both_mails(self):
-        self.start(0)
+    def test_sparse_thresholds_leave_top_ranks_empty(self):
         self.start(1)
-        for id, amount in enumerate((999_999, 499_999, 249_999), 1):
-            self.consume(id, amount)
-        self.midnight()
-        self.assertEqual(4, self.value("#mails"))
+        for id, amount in enumerate((999_999, 499_999, 249_999), 1): self.consume(id, amount)
+        self.midnight(); self.assertEqual(2, self.value("#mails"))
         self.assertIn("第3名", self.value("mails[1].desc"))
-        self.assertIn("第4名", self.value("mails[3].desc"))
-        self.assertEqual(self.value("mails[1].id"), self.value("mails[2].id"))
+        self.assertIn("第4名", self.value("mails[2].desc"))
 
-    def test_same_day_reload_preserves_rank_and_activity_states(self):
-        self.start(0)
-        self.start(1)
-        self.consume()
+    def test_same_day_and_cross_day_reload_keep_saved_ranking(self):
+        self.start(1); self.consume()
         self.run_lua("YbConsumeRanking_save(); YbConsumeRanking_load()")
         self.assertEqual(1, self.value("#YbConsumeRanking"))
-        self.midnight()
-        self.assertEqual(2, self.value("#mails"))
+        self.run_lua("now = now + 86400; YbConsumeRanking_load(); OnYbConsumeRankingNewDayArrive(); YbConsumeRanking_load(); OnYbConsumeRankingNewDayArrive()")
+        self.assertEqual(1, self.value("#mails"))
 
-    def test_cross_day_reload_settles_saved_ranking_once(self):
-        self.start(0)
+    def test_legacy_states_migrate_without_clearing_wanfu_ranking(self):
+        self.start(1); self.consume()
+        self.run_lua("state.YbConsumeRankingActivities[0]=7; state.YbConsumeRankingActivities[2]=1; YbConsumeRanking_save(); YbConsumeRanking_load()")
+        self.assertIsNone(self.value("state.YbConsumeRankingActivities[0]"))
+        self.assertIsNone(self.value("state.YbConsumeRankingActivities[2]"))
+        self.assertEqual(2_000_000, self.value("YbConsumeRanking[1].yb"))
+        self.midnight(); self.assertEqual(["万服庆典每日消费排行"],self.titles())
+
+    def test_current_activity_migrates_when_no_legacy_table_exists(self):
+        self.run_lua("state={isDringQingDianActivity=1,QingDian_openDay=3,isDringOneYearAct=1,StartOneYear_OpenDay=7}; YbConsumeRanking_load()")
+        self.consume(); self.midnight()
+        self.assertEqual(["万服庆典每日消费排行"],self.titles())
+        self.assertIsNone(self.value("state.YbConsumeRankingActivities[0]"))
+
+    def test_only_retired_states_and_spring_do_not_enable_ranking(self):
+        self.run_lua("state={isDringOneYearAct=1,StartOneYear_OpenDay=7,YbConsumeRankingActivities={[0]=7,[2]=1}}; spring=true; YbConsumeRanking_load()")
+        self.consume();self.midnight()
+        self.assertEqual([],self.titles())
+        self.assertFalse(self.value("YbConsumeRanking_inTime"))
+
+    def test_userdata_activity_state_supports_reload_and_settlement(self):
         self.start(1)
-        self.consume()
-        self.run_lua("YbConsumeRanking_save(); now = now + 86400; YbConsumeRanking_load()")
-        self.assertEqual(1, self.value("#YbConsumeRanking"))
-        self.run_lua("OnYbConsumeRankingNewDayArrive(); YbConsumeRanking_load(); OnYbConsumeRankingNewDayArrive()")
-        self.assertEqual(2, self.value("#mails"))
+        self.run_lua('''local data=state.YbConsumeRankingActivities
+local proxy=newproxy(true); getmetatable(proxy).__index=data
+getmetatable(proxy).__newindex=function(_,key,value) data[key]=value end
+state.YbConsumeRankingActivities=proxy''')
+        self.consume(); self.run_lua("YbConsumeRanking_save(); YbConsumeRanking_load()")
+        self.midnight();self.assertEqual(1,self.value("#mails"))
 
-    def test_already_settled_previous_file_is_discarded_after_restart(self):
-        self.start(0)
-        self.consume()
-        self.run_lua("YbConsumeRanking_save(); now = now + 86400; state.YbConsumeRankingLastSettleDate = math.floor(now / 86400) * 86400; YbConsumeRanking_load()")
-        self.assertEqual(0, self.value("#YbConsumeRanking"))
-
-    def test_legacy_active_states_migrate_without_losing_current_rank(self):
-        self.run_lua("state = {isDringOneYearAct = 2, StartOneYear_OpenDay = 7, isDringQingDianActivity = 1, QingDian_openDay = 3}; YbConsumeRanking_load()")
-        self.consume()
-        self.midnight()
-        self.assertEqual(2, self.value("#mails"))
-        self.assertEqual(5, self.value("state.YbConsumeRankingActivities[0]"))
-        self.assertEqual(2, self.value("state.YbConsumeRankingActivities[1]"))
-
-    def test_spring_end_does_not_stop_celebrations(self):
-        self.start(0)
-        self.start(1)
-        self.run_lua("spring_YbConsumeRanking_activity_start_or_end(false, false)")
-        self.consume()
-        self.midnight()
-        self.assertEqual(2, self.value("#mails"))
-
-    def test_no_activity_or_under_threshold_sends_no_rewards(self):
-        self.consume()
-        self.midnight()
-        self.assertEqual(0, self.value("#mails"))
-        self.start(0)
-        self.start(1)
-        self.consume(amount=249_999)
-        self.midnight()
-        self.assertEqual(0, self.value("#mails"))
-
-    def test_invalid_activity_does_not_modify_ranking(self):
-        self.start(0)
-        self.consume()
-        self.start(99)
-        self.start(1, day=4)
-        self.assertIsNone(self.value("state.YbConsumeRankingActivities[1]"))
-        self.assertEqual(1, self.value("#YbConsumeRanking"))
-
-    def test_engine_static_nested_userdata_supports_settlement_and_reload(self):
-        self.start(0)
-        self.start(1)
-        self.run_lua('''local data = state.YbConsumeRankingActivities
-local proxy = newproxy(true)
-getmetatable(proxy).__index = data
-getmetatable(proxy).__newindex = function(_, key, value) data[key] = value end
-state.YbConsumeRankingActivities = proxy''')
-        self.consume()
-        self.run_lua("YbConsumeRanking_save(); YbConsumeRanking_load()")
-        self.midnight()
-        self.assertEqual(2, self.value("#mails"))
-        self.assertTrue(self.value("YbConsumeRanking_inTime"))
+    def test_invalid_activity_and_under_threshold_cannot_receive_rewards(self):
+        self.start(99);self.start(1,day=4);self.consume();self.midnight()
+        self.assertEqual([],self.titles())
+        self.start(1);self.consume(amount=249_999);self.midnight()
+        self.assertEqual([],self.titles())
 
     def recurring_setup(self):
         self.run_lua('''
@@ -275,6 +204,9 @@ System.setActivtyExpRate = function() end
 LuaHelp = {getAllActorList = function() return {} end}
 ClearHongYunDangTouSystemData = function() end
 ClearOneYearHongYunDangTouSystemData = function() end
+LocalDT.InitAnniversaryPayRanking = function() end
+daily_pay_ranking_start = function() end
+daily_pay_ranking_end = function() end
 EnsureDaJiDaLiActivity = function() end
 EnsureNationalDayActivity = function() end
 ensure_spring_festival_activity = function() end
@@ -307,7 +239,7 @@ DataPack = {
             self.run_lua("actors = {}; mails = {}")
             self.consume()
             self.run_lua("now = now + 86400; EnsureRecurringActivities(); OnYbConsumeRankingNewDayArrive(); EnsureRecurringActivities()")
-            self.assertEqual(["周年庆典每日消费排行", "万服庆典每日消费排行"], self.titles())
+            self.assertEqual(["万服庆典每日消费排行"], self.titles())
             self.assertEqual((day + 1) % 3 + 1, self.value("state.isDringQingDianActivity"))
             self.assertEqual((day + 1) % 7 + 1, self.value("state.isDringOneYearAct"))
 
@@ -316,8 +248,8 @@ DataPack = {
         self.run_lua("StartQingDianActivity(3, 3); StartOneYearActivity(7, 1)")
         self.consume()
         self.run_lua("now = now + 86400; EndQingDianActivity(); OnYbConsumeRankingNewDayArrive(); StartQingDianActivity(3, 1)")
-        self.assertEqual(2, self.value("#mails"))
-        self.assertEqual(6, self.value("state.YbConsumeRankingActivities[0]"))
+        self.assertEqual(1, self.value("#mails"))
+        self.assertIsNone(self.value("state.YbConsumeRankingActivities[0]"))
         self.assertEqual(3, self.value("state.YbConsumeRankingActivities[1]"))
 
 

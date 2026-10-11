@@ -111,14 +111,14 @@ def execute(code, names, strings, locals_, start=0, end=None, open_slots=(), day
             stack.append(stack[-1])
         elif kind == 0x29:
             stack.pop()
-        elif kind in (0x10, 0x12, 0x13, 0x15):
+        elif kind in (0x10, 0x12, 0x13, 0x15, 0x18):
             if kind == 0x10:
                 take = True
             elif kind == 0x12:
                 take = not stack.pop()
             else:
                 right, left = stack.pop(), stack.pop()
-                take = left == right if kind == 0x13 else left < right
+                take = left == right if kind == 0x13 else left >= right if kind == 0x18 else left < right
             if take:
                 pos = op.branches[0][1]
         elif kind == 0x47:
@@ -168,16 +168,16 @@ class ActivityEntriesTest(unittest.TestCase):
         self.assertNotIn("_loaderbasebutton_4", defined)
         self.assertNotIn("_loaderbasebutton_5", defined)
         self.assertNotIn("_loaderbasebutton_15", defined)
-        self.assertEqual(len(defined), 10)
+        self.assertEqual(len(defined), 9)
         names, code, _ = self.body("QingDianActiveWin", "createChildren")
         ops = instructions(code)
         button_names = [names[ops[i - 1].operands[0]] for i, op in enumerate(ops)
                         if op.opcode == 0x4F and names[op.operands[0]] == "push"]
         self.assertEqual(button_names, ["_loaderbasebutton_" + str(i)
-                                      for i in [0, 1, 2, 3, 9, 10, 11, 6, 13, 14]])
+                                      for i in [0, 1, 2, 3, 9, 10, 11, 13, 14]])
         self.assertEqual({defined[b]["addBtnTxtBmp"].split(",")[0] for b in button_names},
                          {"464", "434", "1145", "550", "600", "661", "840",
-                          "1102", "1250", "1042"})
+                          "1250", "1042"})
         self.assertEqual(len([op for op in ops if op.opcode == 0x66
                                     and names[op.operands[0]] in {"_loaderbasebutton_4", "_loaderbasebutton_5",
                                                                "_loaderbasebutton_7", "_loaderbasebutton_12",
@@ -187,18 +187,18 @@ class ActivityEntriesTest(unittest.TestCase):
             self.assertEqual(pages, ["QDLoginPage", "QDRechargePage", "QDAccRechargePage",
                                     "QDFlashSalePage",
                                     "QDCollectWordPage", "QDHongYunDangTouPage", "QDConsumePage",
-                                    "QDZhuanPanPage", "QDZhenBaoGePage", "QDHaoLiPage"])
+                                    "QDZhenBaoGePage", "QDHaoLiPage"])
 
     def test_legacy_qingdian_links_preserve_page_destination(self):
         names, code, limits = self.body("QingDianActiveWin", "setNavIndex")
         for old in range(15):
             target, calls, maximum = execute(code, names, self.strings, {0: {}, 1: old})
             self.assertLessEqual(maximum, limits[0])
-            if old in (4, 5, 7, 11, 14):
+            if old in (4, 5, 6, 7, 11, 14):
                 self.assertFalse(calls)
                 self.assertNotIn("selectedIndex", target[0])
             else:
-                mapped = old - sum(old > index for index in (4, 5, 7, 11, 14))
+                mapped = old - sum(old > index for index in (4, 5, 6, 7, 11, 14))
                 self.assertEqual(target[0]["selectedIndex"], mapped)
                 self.assertEqual(calls, [("setNavIndex", [mapped])])
 

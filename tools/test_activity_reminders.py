@@ -1,6 +1,14 @@
 """Execute the shipped activity bytecode against actual claim and reply states."""
 from __future__ import annotations
 
+from patch_unique_activity_rankings import MAIN_METHODS, MODULE_METHODS, patch_swf as unique_rankings
+from patch_consume_ranking_client import patch_swf as ranking_description
+
+def current_release(source, module=False):
+    updated = unique_rankings(source, module)
+    return updated if module else ranking_description(updated)
+
+
 import argparse
 from itertools import product
 import math
@@ -35,7 +43,8 @@ MODULE_ORIGINAL = {
 def baseline_swf(path):
     if path == CLIENT:
         return subprocess.check_output(['git', 'show', BASELINE + ':web/GameFrame.swf'], cwd=ROOT)
-    data, (tag, payload, a, b) = abc_section(path.read_bytes())
+    previous = subprocess.check_output(['git', 'show', 'd88426b:' + path.relative_to(ROOT).as_posix()], cwd=ROOT)
+    data, (tag, payload, a, b) = abc_section(previous)
     abc, positions = normalize(data[a:b]); _, _, bodies = inspect_abc(abc, 'HongLiActiveWin'); edits = []
     for mid, (limits, hex_) in MODULE_ORIGINAL.items():
         start, size, current_limits = bodies[mid]; r = ABCReader(abc); r.pos = start + size
@@ -544,7 +553,7 @@ class ActivityRemindersTests(unittest.TestCase):
             # as well as upgrading the deployed version without duplicate edits.
             from patch_main_activity_reminders import patch_swf as main_entries
             from patch_mystery_shop_reminder import patch_swf as shop_reminder
-            self.assertEqual(repaired if module else shop_reminder(main_entries(repaired)), path.read_bytes())
+            self.assertEqual(current_release(repaired if module else shop_reminder(main_entries(repaired)), module), path.read_bytes())
 
     def test_loop_label_relocation_preserves_forward_backward_and_self_branches(self):
         c = Code(); c.add(b'\xd0\x30')
@@ -570,8 +579,8 @@ class ActivityRemindersTests(unittest.TestCase):
     def test_only_expected_methods_and_no_other_packaged_resources_change(self):
         from patch_main_activity_reminders import METHODS, patch_swf as main_entries
         from patch_mystery_shop_reminder import METHODS as SHOP_METHODS, patch_swf as shop_reminder
-        expected = {False: {2648, 2720, 4078, 4080, 6333, 6335, 6353, 6377, 6380, 6382, 6437, 6497, 28528} | METHODS | SHOP_METHODS,
-                    True: {7, 8, 9, 10, 11, 41}}
+        expected = {False: {2648, 2720, 4078, 4080, 6333, 6335, 6353, 6377, 6380, 6382, 6437, 6497, 28528} | METHODS | SHOP_METHODS | MAIN_METHODS,
+                    True: {7, 8, 9, 10, 11, 41} | MODULE_METHODS}
         for module in (False, True):
             _, _, old = inspect_abc(self.before[module], 'HongLiActiveWin' if module else 'NavTopRightArea')
             _, _, new = self.symbols[module]; changed = set()
@@ -582,7 +591,7 @@ class ActivityRemindersTests(unittest.TestCase):
             path = MODULE if module else CLIENT
             old_swf = baseline_swf(path)
             upgraded = patch_swf(old_swf, module)
-            self.assertEqual(upgraded if module else shop_reminder(main_entries(upgraded)), path.read_bytes())
+            self.assertEqual(current_release(upgraded if module else shop_reminder(main_entries(upgraded)), module), path.read_bytes())
             self.assertEqual(patch_swf(path.read_bytes(), module), path.read_bytes())
 
     def test_client_server_and_language_pack_rewards_match(self):

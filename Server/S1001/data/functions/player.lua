@@ -98,6 +98,82 @@
 --#include "data\functions\IdentifyCodeFunc.lua" once
 --#include "data\config\NpcMiscCfg\EquipRecyclingCfg.lua" once
 
+-- 原生堆叠检查不覆盖孔、符文和附魂等独有属性，整理前额外保存全部可读属性。
+LocalDT.GetBagSortItemAttributes = function(sysarg, itemPtr)
+	local values = {}
+	for prop = Item.ipItemStrong, Item.ipItemStaticPropStart - 1 do
+		local value, extra = Item.getItemProperty(sysarg, itemPtr, prop, 0)
+		values[#values + 1] = value or 0
+		values[#values + 1] = extra or 0
+	end
+	for index = 0, 4 do
+		local kind, value = Item.GetItemRuneAttr(sysarg, itemPtr, index, 0)
+		values[#values + 1] = kind or 0
+		values[#values + 1] = value or 0
+	end
+	values[#values + 1] = Item.getFuHunInfo(itemPtr, 1)
+	values[#values + 1] = Item.getFuHunInfo(itemPtr, 2)
+	return values
+end
+
+LocalDT.AreBagSortItemAttributesEqual = function(first, second)
+	if #first ~= #second then return false end
+	for i = 1, #first do
+		if first[i] ~= second[i] then return false end
+	end
+	return true
+end
+
+-- 整理确认后先绑定整个背包，再按引擎原有规则合并同类可堆叠物品。
+-- 按 GUID 快照重新取指针，避免合并后背包重排或物品释放导致漏处理。
+function BindAndSortBag(sysarg)
+	if sysarg == nil then return end
+	local itemGuids = {}
+	local itemCounts = {}
+	local itemAttributes = {}
+	local incompatibleIds = {}
+	for index = 0, Item.getBagItemCount(sysarg) - 1 do
+		local itemPtr = Item.getItemPtrByIndex(sysarg, index)
+		if itemPtr then
+			local itemId = Item.getItemId(itemPtr)
+			itemGuids[#itemGuids + 1] = Item.getItemGuid(itemPtr)
+			itemCounts[itemId] = (itemCounts[itemId] or 0) + 1
+			if Item.getItemProperty(sysarg, itemPtr, Item.ipItemBind, 0) == 0 then
+				Item.setItemProperty(sysarg, itemPtr, Item.ipItemBind, 1)
+			end
+		end
+	end
+	for i = 1, #itemGuids do
+		local itemPtr = Item.getBagItemPtrByGuid(sysarg, itemGuids[i])
+		if itemPtr then
+			local itemId = Item.getItemId(itemPtr)
+			if itemCounts[itemId] > 1 and Item.getItemPropertyById(itemId, Item.ipItemDupCount) > 1 then
+				local attributes = LocalDT.GetBagSortItemAttributes(sysarg, itemPtr)
+				if itemAttributes[itemId] == nil then
+					itemAttributes[itemId] = attributes
+				elseif not LocalDT.AreBagSortItemAttributesEqual(itemAttributes[itemId], attributes) then
+					incompatibleIds[itemId] = true
+				end
+			end
+		end
+	end
+	for i = 1, #itemGuids do
+		local itemPtr = Item.getBagItemPtrByGuid(sysarg, itemGuids[i])
+		if itemPtr then
+			local itemId = Item.getItemId(itemPtr)
+			local count = Item.getItemProperty(sysarg, itemPtr, Item.ipItemCount, 0)
+			if itemAttributes[itemId] ~= nil and not incompatibleIds[itemId] and count > 0 and count <= 9999 then
+				-- false 保留移出的原物品指针，重新加入时恢复数量和全部原属性。
+				-- 先腾出一格且数量不超过单格上限，原生插入保留未合并的余量。
+				if Item.removeItem(sysarg, itemPtr, count, "背包整理", 39, false) == count then
+					Item.addItem(sysarg, itemPtr, "背包整理", 39, count)
+				end
+			end
+		end
+	end
+	return "null"
+end
+
 -- 清除旧神戒宝盒误写到可叠加戒指材料上的随机属性。
 LocalDT.NormalizeSkyRingMaterialStacks = function(sysarg)
 	for index = 0, Item.getBagItemCount(sysarg) - 1 do

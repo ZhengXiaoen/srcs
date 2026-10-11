@@ -1,6 +1,7 @@
 
 -- 只有加到这个列表中的函数才能被全局NPC调用，函数名由前端传来
 GlobalNpcFunctionsFilter = {
+	BindAndSortBag = 1,
 	
 	AskExitMsMap = 1,
 	Button_ExitYuanGuZhanChang = 1,

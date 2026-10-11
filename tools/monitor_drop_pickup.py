@@ -17,6 +17,12 @@ import time
 
 
 SERVER_SHA256 = "d3aafe43859f02a96b61fcf46201aa1ba5305e125ae5f7948ff850ca1aedf6b0"
+SUPPORTED_SERVER_SHA256 = {
+    SERVER_SHA256,
+    # Bag-award compatibility patch: engine, entity lists, property layouts,
+    # loot/error methods and position getters verified against its backup.
+    "db25163cbeb87623cd075f85189a5a0a2bdea6c71e20d57fa73f948f437b5456",
+}
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -160,7 +166,8 @@ def main():
     if path.resolve() != (ROOT / "Server/S1001/x64/LogicServerCQ64_R.exe").resolve():
         raise ValueError("Selected PID is not this workspace's LogicServer")
     source = path.read_bytes()
-    if hashlib.sha256(source).hexdigest() != SERVER_SHA256:
+    server_sha256 = hashlib.sha256(source).hexdigest()
+    if server_sha256 not in SUPPORTED_SERVER_SHA256:
         raise ValueError("Unsupported server build; revalidate offsets before sampling")
     reader = Reader(args.pid)
     try:
@@ -172,7 +179,7 @@ def main():
         # Avoid overwriting earlier observation evidence.
         with args.output.open("x", encoding="utf-8") as output:
             output.write(json.dumps({"kind": "identity", "pid": args.pid,
-                "server_sha256": SERVER_SHA256, "image_base": hex(base), "actor": args.actor,
+                "server_sha256": server_sha256, "image_base": hex(base), "actor": args.actor,
                 "interval_ms": args.interval_ms, "duration_seconds": args.seconds,
                 "read_only": True, "limitations": ["Non-atomic live samples", "No request/call tracing",
                     "Disappearance does not prove pickup", "Transient states between samples are unknown"]},

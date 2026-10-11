@@ -8,14 +8,8 @@ MiscsImplement.handleGetPayGiftOp2 = function (sysarg,msgid,packet)
 	
 	if not EveryDayPayGiftCfg then return end
 	
-	local nDays = System.getDaysSinceOpenServer()
-	local count = #EveryDayPayGiftCfg - 1 -- 去掉最后一个特别的礼包
-	local nConfig 
-	if nDays <= count then
-		nConfig = EveryDayPayGiftCfg[nDays]
-	else
-		nConfig = EveryDayPayGiftCfg[count]
-	end
+	-- 每日充值固定使用开服前六天的奖励，不再随开服天数切换。
+	local nConfig = EveryDayPayGiftCfg[1]
 
 	if level == 0 then
 		

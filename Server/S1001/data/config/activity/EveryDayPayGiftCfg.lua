@@ -1632,91 +1632,103 @@ EveryDayPayGiftCfg =
 
 
 
---开服第7天的配置
-         {
+--开服第7天沿用前6天的固定奖励
+        {
             {
-                name = "精品大礼包",
-                needPayMoney = 1000,
+                name = "每日大礼包",
+                needPayMoney = 10000,
                 worth = 9888, --赠送价值
                 award =
                 {
-{type=0,id=489,count=12,quality=0,strong=0,bind=1},--成就令牌(中)
-{type=0,id=542,count=1,quality=0,strong=0,bind=1},--转生修为丹小
-{type=0,id=507,count=10,quality=0,strong=0,bind=1},--金条(绑金)
-{type=0,id=5645,count=5,quality=0,strong=0,bind=1},--斗笠精华小
-{type=0,id=484,count=3,quality=0,strong=0,bind=1},--功勋令牌
-{type=0,id=6702,count=3,quality=0,strong=0,bind=1},--洛阳铲
+{type=0,id=7827,count=1,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
+{type=0,id=542,count=1,quality=0,strong=0,bind=1},--转生修为丹(小)
+{type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
+{type=0,id=489,count=15,quality=0,strong=0,bind=1},--成就令牌(中)
 {type=0,id=7197,count=1,quality=0,strong=0,bind=1},--玛法晶块
+{type=0,id=7086,count=1,quality=0,strong=0,bind=1},--竹子
+
+                },
+            },
+            {
+                name = "精品大礼包",
+                needPayMoney = 50000,
+                worth = 21000, --赠送价值
+                award =
+                {
+{type=0,id=7827,count=1,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
+{type=0,id=542,count=2,quality=0,strong=0,bind=1},--转生修为丹(小)
+{type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
+{type=0,id=4744,count=15,quality=0,strong=0,bind=1},--内功经验卷(小)
+{type=0,id=7197,count=3,quality=0,strong=0,bind=1},--玛法晶块
+{type=0,id=7086,count=1,quality=0,strong=0,bind=1},--竹子
 
 
-
-
-                
                 },
             },
             {
                 name = "豪华大礼包",
-                needPayMoney = 5000,
-                worth = 21000, --赠送价值
+                needPayMoney = 100000,
+                worth = 33000, --价值
                 award =
                 {
-{type=0,id=4744,count=12,quality=0,strong=0,bind=1},--内功经验卷(小)
+{type=0,id=7827,count=3,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
-{type=0,id=5645,count=10,quality=0,strong=0,bind=1},--斗笠精华小
-{type=0,id=5126,count=1,quality=0,strong=0,bind=1},--中级BOSS挑战卷
-{type=0,id=548,count=15,quality=0,strong=0,bind=1},--转生地宫证明
-{type=0,id=6702,count=5,quality=0,strong=0,bind=1},--洛阳铲
-{type=0,id=7197,count=3,quality=0,strong=0,bind=1},--玛法晶块
+{type=0,id=542,count=3,quality=0,strong=0,bind=1},--转生修为丹(小)
+{type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
+{type=0,id=484,count=15,quality=0,strong=0,bind=1},--功勋令牌(小)
+{type=0,id=7197,count=5,quality=0,strong=0,bind=1},--玛法晶块
+{type=0,id=7086,count=1,quality=0,strong=0,bind=1},--竹子
 
-
-                
-                
                 },
             },
             {
                 name = "超级大礼包",
-                needPayMoney = 10000,
-                worth = 33000, --价值
+                needPayMoney = 200000,
+                worth = 41000, --价值
                 award =
                 {
-{type=0,id=484,count=15,quality=0,strong=0,bind=1},--功勋令牌(小)
+{type=0,id=7827,count=5,quality=0,strong=0,bind=1},--神戒宝盒
 {type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
-{type=0,id=459,count=800,quality=0,strong=0,bind=1},--星纹强化石
-{type=0,id=5127,count=1,quality=0,strong=0,bind=1},--高级BOSS挑战卷
-{type=0,id=507,count=15,quality=0,strong=0,bind=1},--金条(绑金)
-{type=0,id=7197,count=5,quality=0,strong=0,bind=1},--玛法晶块
-
+{type=0,id=527,count=20,quality=0,strong=0,bind=1},--特戒结晶(1)
+{type=0,id=539,count=5,quality=0,strong=0,bind=1},--宝石结晶(10000)
+{type=0,id=489,count=20,quality=0,strong=0,bind=1},--成就令牌(中)
+{type=0,id=7197,count=7,quality=0,strong=0,bind=1},--玛法晶块
+{type=0,id=7086,count=1,quality=0,strong=0,bind=1},--竹子
 
                 },
             },
             {
                 name = "富贵大礼包",
-                needPayMoney = 20000,
-                worth = 41000, --价值
-                award =
-                {
-{type=0,id=539,count=3,quality=0,strong=0,bind=1},--宝石结晶(10000)
-{type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
-{type=0,id=459,count=1600,quality=0,strong=0,bind=1},--星纹强化石
-{type=0,id=5453,count=1,quality=0,strong=0,bind=1},--军魂瓶
-{type=0,id=5166,count=1,quality=0,strong=0,bind=1},--神魂(100)
-{type=0,id=7197,count=7,quality=0,strong=0,bind=1},--玛法晶块
-
-
-                },
-            },
-            {
-                name = "土豪大礼包",
-                needPayMoney = 50000,
+                needPayMoney = 500000,
                 worth = 49000, --价值
                 award =
                 {
-{type=0,id=574,count=3,quality=0,strong=0,bind=1},--圣珠结晶(10000)
-{type=0,id=5468,count=1,quality=0,strong=0,bind=1},--神级经验玉
-{type=0,id=536,count=25,quality=0,strong=0,bind=1},--护符碎片(10000颗)
-{type=0,id=6403,count=10,quality=0,strong=0,bind=1},--五行石
-{type=0,id=507,count=30,quality=0,strong=0,bind=1},--金条(绑金)
+{type=0,id=7827,count=10,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=527,count=30,quality=0,strong=0,bind=1},--特戒结晶(1)
+{type=0,id=574,count=5,quality=0,strong=0,bind=1},--圣珠结晶(10000)
+{type=0,id=4744,count=20,quality=0,strong=0,bind=1},--内功经验卷(小)
 {type=0,id=7197,count=9,quality=0,strong=0,bind=1},--玛法晶块
+{type=0,id=7086,count=1,quality=0,strong=0,bind=1},--竹子
+
+                },
+            },
+
+            {
+                name = "土豪大礼包",
+                needPayMoney = 1000000,
+                worth = 98888, --价值
+                award =
+                {
+{type=0,id=7827,count=15,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
+{type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
+{type=0,id=7650,count=1,quality=0,strong=0,bind=1},--龙腾首饰礼盒
+{type=0,id=7197,count=12,quality=0,strong=0,bind=1},--玛法晶块
+{type=0,id=7086,count=1,quality=0,strong=0,bind=1},--竹子
 
 
                 },
@@ -1724,25 +1736,23 @@ EveryDayPayGiftCfg =
 
             {
                 name = "财神大礼包",
-                needPayMoney = 100000,
+                needPayMoney = 2000000,
                 worth = 98888, --价值
                 award =
                 {
-{type=0,id=527,count=18,quality=0,strong=0,bind=1},--特戒结晶(1)
-{type=0,id=5468,count=2,quality=0,strong=0,bind=1},--神级经验玉
-{type=0,id=570,count=25,quality=0,strong=0,bind=1},--护盾碎片(10000颗)
-{type=0,id=6403,count=20,quality=0,strong=0,bind=1},--五行石
-{type=0,id=860,count=18,quality=0,strong=0,bind=1},--宝藏钥匙
-{type=0,id=7197,count=12,quality=0,strong=0,bind=1},--玛法晶块
-
+{type=0,id=7827,count=20,quality=0,strong=0,bind=1},--神戒宝盒
+{type=0,id=6736,count=5,quality=0,strong=0,bind=1},--突破丹
+{type=0,id=570,count=50,quality=0,strong=0,bind=1},--护盾碎片(10000颗)
+{type=0,id=574,count=10,quality=0,strong=0,bind=1},--圣珠结晶(10000)
+{type=0,id=539,count=10,quality=0,strong=0,bind=1},--宝石结晶(10000)
+{type=0,id=7197,count=15,quality=0,strong=0,bind=1},--玛法晶块
+{type=0,id=7086,count=1,quality=0,strong=0,bind=1},--竹子
 
 
                 },
             },
+
         },
-
-
-
 
 --开服第8天以后的配置
        {

@@ -19,6 +19,7 @@ from patch_drop_pickup_retry import CLIENT, ROOT, abc_section, instructions, ret
 
 BASELINE = None
 OVERLAP_BASELINE = None
+IDLE_BASELINE = None
 
 
 def code_for(swf, class_name, method):
@@ -57,7 +58,7 @@ class PickupVM:
             pc = op.end
             kind = op.opcode
             args = op.operands
-            if kind in (0x02, 0x09, 0x80, 0x76):
+            if kind in (0x02, 0x09, 0x80, 0x76, 0x82):
                 pass
             elif kind == 0x30:
                 stack.pop()  # pushscope: the mocked globals remain available
@@ -85,6 +86,8 @@ class PickupVM:
                 stack.append(locals_[args[0]])
             elif kind == 0x63:
                 locals_[args[0]] = stack.pop()
+            elif kind == 0x08:
+                locals_[args[0]] = None
             elif kind == 0x60:
                 stack.append(self.world[self.names[args[0]]])
             elif kind == 0x5D:
@@ -97,32 +100,39 @@ class PickupVM:
                 else:
                     owner = stack.pop()
                     stack.append(len(owner) if name == "length" else owner[name])
-            elif kind == 0x61:
+            elif kind in (0x61, 0x68):
                 value, owner = stack.pop(), stack.pop()
                 name = self.names[args[0]]
                 owner[name] = int(value) if name == "canPickTime" else value
-            elif kind == 0x46:
+            elif kind in (0x46, 0x4F, 0x4E):
                 index, count = args
                 call_args = [stack.pop() for _ in range(count)][::-1]
                 owner = stack.pop()
-                stack.append(owner[self.names[index]](*call_args))
+                name = "superUpdate" if kind == 0x4E else self.names[index]
+                result = owner[name](*call_args)
+                if kind == 0x46:
+                    stack.append(result)
             elif kind == 0x87:
                 stack.pop()  # astypelate, all supplied drops have the correct type
-            elif kind == 0x73:
+            elif kind in (0x73, 0x74):
                 stack.append(int(stack.pop()))
             elif kind == 0x75:
                 stack.append(float(stack.pop()))
             elif kind in (0x93, 0xC1):
                 stack.append(stack.pop() - 1)
+            elif kind in (0x91, 0xC0):
+                stack.append(stack.pop() + 1)
             elif kind == 0x96:
                 stack.append(not stack.pop())
             elif kind == 0xC2:
                 locals_[args[0]] += 1
-            elif kind in (0xA0, 0xA1, 0xA3, 0xAB, 0xAE, 0xB0):
+            elif kind in (0xA0, 0xA1, 0xA2, 0xA3, 0xAB, 0xAD, 0xAE, 0xAF, 0xB0):
                 b, a = stack.pop(), stack.pop()
                 stack.append({0xA0: lambda: a + b, 0xA1: lambda: a - b,
-                              0xA3: lambda: a / b, 0xAB: lambda: a == b,
-                              0xAE: lambda: a <= b, 0xB0: lambda: a >= b}[kind]())
+                              0xA2: lambda: a * b, 0xA3: lambda: a / b,
+                              0xAB: lambda: a == b, 0xAD: lambda: a < b,
+                              0xAE: lambda: a <= b, 0xAF: lambda: a > b,
+                              0xB0: lambda: a >= b}[kind]())
             elif kind == 0x10:
                 pc = op.branches[0][1]
             elif kind in (0x11, 0x12):
@@ -140,6 +150,8 @@ class PickupVM:
                     pc = op.branches[0][1]
             elif kind == 0x48:
                 return stack.pop()
+            elif kind == 0x47:
+                return None
             else:
                 raise AssertionError(f"Unmocked selector opcode {kind:#x} at {op.start}")
         return stack
@@ -307,6 +319,113 @@ class PickupRetryTests(unittest.TestCase):
         self.assertIsNone(vm.run(code, args))  # old code hides the eligible drop
         self.assertIs(vm.run(self.coordinate_selector, args), drop)
 
+    def stationary_environment(self, source=None):
+        clock, switches, state, drop, manager, select, _ = self.environment(selector="coordinate")
+        names, update, limits = code_for(source or self.client, "LocalPlayer", "update")
+        calls = []
+        player = {"m_dwUpdateTick": 0, "m_autoPickLastTime": 0,
+                  "m_dwActionTimeOut": 0, "m_StateLoopEffect": None,
+                  "m_nAction": 0, "currentX": 10, "currentY": 10,
+                  "superUpdate": lambda tick: None}
+        player.update({name: False for name in ("moving", "jumping", "died",
+                       "isDivineSwording", "stalling", "practice", "fastBattling")})
+        drop["m_nRecog"] = 42
+
+        def at_xy(x, y, auto):
+            self.assertEqual((x, y, auto), (10, 10, True))
+            return select()
+
+        world = {"getTimer": lambda: clock["ms"], "AutoPick": True,
+                 "GameMap": {"defaultMap": {"loadingMap": False}},
+                 "LogicManager": {"defaultManager": {"getDropPacketByXY": at_xy}},
+                 "MsgSender": {"sendPickupDropItem": lambda recog: calls.append(recog)},
+                 "StandardActions": {"SA_RUN": 1, "SA_WALK": 2}}
+        vm = PickupVM(names, self.ints, world)
+        tick = lambda: vm.run(update, [player, clock["ms"]] + [None] * (limits[1] - 2))
+        return clock, switches, state, drop, manager, player, world, calls, tick
+
+    def test_single_drop_retries_without_moving(self):
+        clock, _, _, drop, manager, player, _, calls, tick = self.stationary_environment()
+        tick()
+        self.assertEqual(calls, [42])
+        tick()  # same tick never repeats the scan
+        clock["ms"] += 500
+        tick()
+        self.assertEqual(calls, [42])
+        clock["ms"] += 1500
+        tick()  # no server acknowledgement: retry while standing on same tile
+        self.assertEqual(calls, [42, 42])
+        self.assertEqual((player["currentX"], player["currentY"]), (10, 10))
+        manager["m_DropPacketList"].clear()  # server confirms collection
+        clock["ms"] += 2000
+        tick()
+        self.assertEqual(calls, [42, 42])
+
+    def test_single_drop_recovers_after_protection_settings_and_capacity_change(self):
+        clock, switches, state, drop, _, _, _, calls, tick = self.stationary_environment()
+        drop["canPickTime"] = 20
+        tick()
+        self.assertEqual(calls, [])
+        clock["ms"] = 20000
+        state["capacity"] = False
+        tick()
+        self.assertEqual(calls, [])
+        state["capacity"] = True
+        switches[8] = False
+        clock["ms"] += 500
+        tick()
+        self.assertEqual(calls, [])
+        switches[8] = True
+        clock["ms"] += 500
+        tick()
+        self.assertEqual(calls, [42])
+
+    def test_stationary_pickup_respects_disabled_and_unavailable_player_states(self):
+        for name in ("moving", "jumping", "died", "isDivineSwording",
+                     "stalling", "practice", "fastBattling"):
+            with self.subTest(state=name):
+                _, _, _, _, _, player, _, calls, tick = self.stationary_environment()
+                player[name] = True
+                tick()
+                self.assertEqual(calls, [])
+        for guard in ("disabled", "loading", "no_map", "no_manager"):
+            with self.subTest(guard=guard):
+                _, _, _, _, _, _, world, calls, tick = self.stationary_environment()
+                if guard == "disabled":
+                    world["AutoPick"] = False
+                elif guard == "loading":
+                    world["GameMap"]["defaultMap"]["loadingMap"] = True
+                elif guard == "no_map":
+                    world["GameMap"]["defaultMap"] = None
+                else:
+                    world["LogicManager"]["defaultManager"] = None
+                tick()
+                self.assertEqual(calls, [])
+
+    def test_stationary_pickup_preserves_movement_throttle_and_long_session_retries(self):
+        clock, _, _, _, _, player, _, calls, tick = self.stationary_environment()
+        player["m_autoPickLastTime"] = clock["ms"] - 100
+        tick()
+        self.assertEqual(calls, [])
+        clock["ms"] += 500
+        tick()
+        self.assertEqual(calls, [42])
+        clock["ms"] = 12 * 60 * 60 * 1000
+        for _ in range(100):
+            tick()
+            clock["ms"] += 2000
+        self.assertEqual(len(calls), 101)
+
+    def test_baseline_reproduces_single_drop_missing_stationary_retry(self):
+        if IDLE_BASELINE is None:
+            self.skipTest("Use --idle-baseline to demonstrate missing stationary retries")
+        clock, _, _, _, _, _, _, calls, tick = self.stationary_environment(
+            Path(IDLE_BASELINE).read_bytes())
+        for _ in range(10):
+            tick()
+            clock["ms"] += 2000
+        self.assertEqual(calls, [])  # old player updates never recheck the tile
+
     def test_unconfirmed_stacks_retry_for_all_reported_counts(self):
         for item, count in [(537, 2), (537, 4), (568, 6), (568, 7), (572, 4), (83, 1), (538, 200)]:
             with self.subTest(item=item, count=count):
@@ -444,7 +563,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--baseline", type=Path)
     parser.add_argument("--overlap-baseline", type=Path)
+    parser.add_argument("--idle-baseline", type=Path)
     args = parser.parse_args()
     BASELINE = args.baseline
     OVERLAP_BASELINE = args.overlap_baseline
+    IDLE_BASELINE = args.idle_baseline
     unittest.main(argv=[__file__], verbosity=2)

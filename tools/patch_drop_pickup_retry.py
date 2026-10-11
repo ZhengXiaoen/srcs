@@ -22,6 +22,10 @@ pickup categories.
 In the coordinate selector, continue scanning when an overlapping drop is
 excluded, protected, pending retry or unable to fit in the backpack. Returning
 null at that point used to hide every eligible drop underneath it.
+Recheck the player's current tile every 500 ms during normal player updates.
+Movement used to be the only automatic trigger outside auto-fighting, so a
+protected drop or an unconfirmed request could remain uncollected indefinitely
+while the player stood still. Reuse the existing update tick and request gates.
 Relocate existing branches, switches and exception offsets rather than
 recompiling the Flash application.
 """
@@ -45,6 +49,17 @@ TARGETS = {
 Q_NAMES = {"isAlreadyPickup": 7569, "canPickTime": 7597, "getTimer": 43278}
 SELECTOR_TARGETS = ("getNearestDropPacket", "getDropPacketByXY")
 IS_CHECK = 7570
+IDLE_NAMES = {
+    "AutoPick": 32910, "m_dwUpdateTick": 2835, "currentX": 2011,
+    "currentY": 2012, "moving": 2194, "jumping": 2365,
+    "isDivineSwording": 2994, "died": 2334, "stalling": 2626,
+    "practice": 2628, "fastBattling": 2627, "GameMap": 2084,
+    "defaultMap": 32840, "loadingMap": 2106, "LogicManager": 5710,
+    "defaultManager": 34265, "getDropPacketByXY": 5855,
+    "MapDropItemPacket": 236, "MsgSender": 11023,
+    "sendPickupDropItem": 37283, "m_nRecog": 2203,
+    "m_autoPickLastTime": 2927, "getTimer": 43278,
+}
 
 
 @dataclass(frozen=True)
@@ -327,6 +342,100 @@ def patch_stacked_drops(source):
     return result
 
 
+def idle_pickup_code():
+    """A bounded current-tile check using existing player state and filters."""
+    def q(opcode, name, *args):
+        return (bytes([opcode]) + encode_u30(IDLE_NAMES[name])
+                + b"".join(encode_u30(x) for x in args))
+
+    # Save whether we crossed a 500 ms boundary before m_dwUpdateTick is updated.
+    half_second = b"\x25\xf4\x03\xa3\x73"
+    cadence = (b"\xd1" + half_second + b"\xd0" + q(0x66, "m_dwUpdateTick")
+               + half_second + b"\xab\x96\xd6")
+    block = bytearray()
+    exits = []
+
+    def guard(value, opcode=0x12):
+        block.extend(value)
+        block.append(opcode)
+        exits.append(len(block))
+        block.extend(b"\0\0\0")
+
+    guard(b"\xd2")
+    guard(q(0x60, "AutoPick"))
+    for name in ("died", "moving", "jumping", "isDivineSwording",
+                 "stalling", "practice", "fastBattling"):
+        guard(b"\xd0" + q(0x66, name), 0x11)
+    block.extend(q(0x60, "GameMap") + q(0x66, "defaultMap") + b"\xd7")
+    guard(b"\xd3")
+    guard(b"\xd3" + q(0x66, "loadingMap"), 0x11)
+    block.extend(q(0x60, "LogicManager") + q(0x66, "defaultManager") + b"\xd7")
+    guard(b"\xd3")
+    block.extend(q(0x5D, "getTimer") + q(0x46, "getTimer", 0) + b"\x73\xd6")
+    # Preserve the 500 ms player-wide gate shared with movement and auto-fight.
+    guard(b"\xd2\xd0" + q(0x66, "m_autoPickLastTime")
+          + b"\xa1\x25\xf4\x03\xaf")  # elapsed > 500
+    block.extend(b"\xd3\xd0" + q(0x66, "currentX")
+                 + b"\xd0" + q(0x66, "currentY") + b"\x26"
+                 + q(0x46, "getDropPacketByXY", 3)
+                 + q(0x80, "MapDropItemPacket") + b"\xd7")
+    guard(b"\xd3")
+    # Install the retry delay before dispatch, matching the path-arrival flow.
+    block.extend(b"\xd3" + retry_assignment())
+    block.extend(b"\xd0\xd2" + q(0x68, "m_autoPickLastTime"))
+    block.extend(q(0x60, "MsgSender") + b"\xd3" + q(0x66, "m_nRecog")
+                 + q(0x4F, "sendPickupDropItem", 1))
+    for field in exits:
+        block[field:field + 3] = encode_s24(len(block) - field - 3)
+    instructions(block)
+    return cadence, bytes(block)
+
+
+def patch_idle_pickup(source):
+    names, traits, bodies = inspect_abc(source, "LocalPlayer")
+    if any(names[index] != name for name, index in IDLE_NAMES.items()):
+        raise ValueError("Unexpected stationary pickup properties")
+    method = traits["update"][0]
+    start, length, limits = bodies[method]
+    code = source[start:start + length]
+    cadence, block = idle_pickup_code()
+    if code[2:2 + len(cadence)] == cadence and code.count(block) == 1:
+        if limits != (4, 4, 13, 14):
+            raise ValueError("Unexpected stationary pickup method limits")
+        return source
+    if limits != (3, 2, 13, 14) or code[:2] != b"\xd0\x30":
+        raise ValueError("Unexpected player update method")
+    supers = [op for op in instructions(code) if op.opcode == 0x4E
+              and names[op.operands[0]] == "update" and op.operands[1] == 1]
+    if len(supers) != 1:
+        raise ValueError("Missing superclass player update")
+    hook = supers[0].end
+    changed, moved = relocate(code, [(2, 2, b"\x02" * len(cadence)),
+                                     (hook, hook, b"\x02" * len(block))])
+    changed = bytearray(changed)
+    changed[moved(2) - len(cadence):moved(2)] = cadence
+    changed[moved(hook) - len(block):moved(hook)] = block
+    instructions(changed)
+    reader = ABCReader(source)
+    reader.pos = start + length
+    if reader.u30() != 0 or reader.u30() != 0:
+        raise ValueError("Unexpected player update exception table or traits")
+    length_start = start - len(encode_u30(length))
+    marker = encode_u30(method) + b"".join(encode_u30(x) for x in limits)
+    header_start = length_start - len(marker)
+    if source[header_start:length_start] != marker:
+        raise ValueError("Unexpected player update header")
+    replacement = (encode_u30(method)
+                   + b"".join(encode_u30(x) for x in (4, 4, 13, 14))
+                   + encode_u30(len(changed)) + changed + b"\0\0")
+    result = source[:header_start] + replacement + source[reader.pos:]
+    inspect_abc(result, "LocalPlayer")
+    if (result[:header_start] + source[header_start:reader.pos]
+            + result[header_start + len(replacement):]) != source:
+        raise ValueError("Unrelated stationary pickup client bytes changed")
+    return result
+
+
 def abc_section(source):
     data = swf_data(source)
     pos = 8 + (5 + (data[8] >> 3) * 4 + 7) // 8 + 4
@@ -353,7 +462,7 @@ def abc_section(source):
 
 def patch_swf(source):
     data, (tag, payload, start, end) = abc_section(source)
-    abc = patch_stacked_drops(patch_abc(data[start:end]))
+    abc = patch_idle_pickup(patch_stacked_drops(patch_abc(data[start:end])))
     if abc == data[start:end]:
         return source
     result = (data[:tag + 2] + struct.pack("<I", start - payload + len(abc))
@@ -377,7 +486,7 @@ def main():
             raise ValueError("Pickup retry patch is missing")
     elif source != result:
         CLIENT.write_bytes(result)
-    print("Verified pickup retries, overlapping-drop scans, uncached checks and safe ranges; unrelated client bytes preserved")
+    print("Verified stationary retries, overlapping-drop scans, uncached checks and safe ranges; unrelated client bytes preserved")
 
 
 if __name__ == "__main__":

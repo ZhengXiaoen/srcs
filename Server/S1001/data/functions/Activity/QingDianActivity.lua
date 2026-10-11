@@ -1,6 +1,6 @@
 --庆典活动
 --#include "data\config\activity\QingDianActivityCfg.lua" once
---#include "data\functions\modules\YbConsumeRanking.lua" once -- 万服庆典唯一消费排行
+--#include "data\functions\modules\YbConsumeRanking.lua" once -- 周年庆典唯一消费排行
 --#include "data\functions\new_activity\qingdian\treasure_hunt.lua" once -- 庆典活动--寻宝
 
 
@@ -23,6 +23,20 @@ QingDianActivitys = function (sysarg, sysid, packet)
 	--是否在开关时间内
 	local svar = System.getStaticVar()	
 	local msgid = DataPack.readByte(packet)
+    if msgid == 12 then
+        if not LocalDT.IsAnniversaryActivityOpen() then return end
+        GetQD_EveryTotalPayGife(sysarg, DataPack.readByte(packet), DataPack.readByte(packet))
+        return
+    elseif msgid == 0 then
+        local index = DataPack.readByte(packet)
+        if index == 12 and LocalDT.IsAnniversaryActivityOpen() then
+            GetQingDianActivityInfo(sysarg, 12)
+        elseif index == 6 then
+            GetQingDianActivityInfo(sysarg, 6)
+        end
+        return
+    elseif msgid ~= 6 then return end -- 神秘商店仍使用共用协议
+
 	
 	if msgid == 0 then	--获取数据
 		GetQingDianActivityInfo(sysarg,DataPack.readByte(packet))
@@ -1357,6 +1371,7 @@ end
 
 --得到庆典每天充值礼物
 function GetQD_EveryTotalPayGife(sysarg,x,y)
+	if not LocalDT.IsAnniversaryActivityOpen() then return end
 
 	local cfg = QingDianActivityCfg.EveryTotalPay
 	if x<1 or x>#cfg then 
@@ -1368,26 +1383,26 @@ function GetQD_EveryTotalPayGife(sysarg,x,y)
 	end
 	local var = Actor.getStaticVar(sysarg)
 	
-	ClearQingDian_Data(sysarg)
+	LocalDT.ClearAnniversaryMergedData(sysarg)
 	
-	if var.QDHD_Data.payTotal  == nil then 
-		var.QDHD_Data.payTotal = {}
+	if var.OneYearAct_Data.recharge.payTotal  == nil then
+		var.OneYearAct_Data.recharge.payTotal = {}
 	end
 	
-	if var.QDHD_Data.payTotalFalg  == nil then 
-		var.QDHD_Data.payTotalFalg = {}
+	if var.OneYearAct_Data.recharge.payTotalFalg  == nil then
+		var.OneYearAct_Data.recharge.payTotalFalg = {}
 	end
 	
-	if var.QDHD_Data.payTotalFalg[x]==nil then 
-		var.QDHD_Data.payTotalFalg[x] ={}
+	if var.OneYearAct_Data.recharge.payTotalFalg[x]==nil then
+		var.OneYearAct_Data.recharge.payTotalFalg[x] ={}
 	end
 		
-	if var.QDHD_Data.payTotalFalg[x][y] ~=nil and var.QDHD_Data.payTotalFalg[x][y]==1 then	
+	if var.OneYearAct_Data.recharge.payTotalFalg[x][y] ~=nil and var.OneYearAct_Data.recharge.payTotalFalg[x][y]==1 then
 		Actor.sendTipmsg(sysarg,"不能重复领取",ttFlyTip)
 		return 
 	end
 	
-	if var.QDHD_Data.payTotal[x]==nil or var.QDHD_Data.payTotal[x]<y then 
+	if var.OneYearAct_Data.recharge.payTotal[x]==nil or var.OneYearAct_Data.recharge.payTotal[x]<y then
 		Actor.sendTipmsg(sysarg,"累计达到充值金额的天数不足",ttFlyTip)
 		return 
 	end
@@ -1401,7 +1416,7 @@ function GetQD_EveryTotalPayGife(sysarg,x,y)
 		return 
 	end
 	
-	var.QDHD_Data.payTotalFalg[x][y] = 1
+	var.OneYearAct_Data.recharge.payTotalFalg[x][y] = 1
 	
 	--给奖励
 	local bResult = Awards.Give(sysarg, award, LogIds.qingdianleijichongzhi,"连续累计充值")
@@ -1416,7 +1431,7 @@ function GetQD_EveryTotalPayGife(sysarg,x,y)
 	
 	System.sendCommonLog(LogIds.qingdianleijichongzhi,Actor.getIntProperty(sysarg,PROP_ENTITY_ID),Actor.getName(sysarg),0,0,0,x.."档"..y.."天")
 
-	System.broadcastTipmsg(string.format("<(n%s)>玩家领取了庆典活动连续累计充值礼包,超级丰盛<我也要领取/@@showWin,216,2>",Actor.getName(sysarg)), ttChatWindow)
+	System.broadcastTipmsg(string.format("<(n%s)>玩家领取了周年庆典累计充值礼包,超级丰盛<我也要领取/@@showWin,254,16>",Actor.getName(sysarg)), ttChatWindow)
 	
 end
 
@@ -1552,7 +1567,9 @@ GetQingDianActivityInfo = function(sysarg,index)
 	
 	--是否在开关时间内
 	local svar = System.getStaticVar()
-	if index~=6 then 
+	if index == 12 then
+		if not LocalDT.IsAnniversaryActivityOpen() then return end
+	elseif index~=6 then
 		if svar.QingDian_openDay==nil then 
 		
 			return 
@@ -1785,38 +1802,38 @@ GetQingDianActivityInfo = function(sysarg,index)
 		end
 		DataPack.flush(netPack)
 	elseif index==12 then 
-		ClearQingDian_Data(sysarg)
+		LocalDT.ClearAnniversaryMergedData(sysarg)
 		
 		local netPack = DataPack.allocPacket(sysarg,151,LogicCmd.miscSysEx.sub.sQingDianActivity)
 		DataPack.writeByte(netPack,12)
 		
 		local cfg =QingDianActivityCfg.EveryTotalPay
 		
-		if var.QDHD_Data.payTotal  == nil then 
-			var.QDHD_Data.payTotal = {}
+		if var.OneYearAct_Data.recharge.payTotal  == nil then
+			var.OneYearAct_Data.recharge.payTotal = {}
 		end
 		
-		if var.QDHD_Data.payTotalFalg  == nil then 
-			var.QDHD_Data.payTotalFalg = {}
+		if var.OneYearAct_Data.recharge.payTotalFalg  == nil then
+			var.OneYearAct_Data.recharge.payTotalFalg = {}
 		end
 		
 		for i=1,#cfg do 
-			if var.QDHD_Data.payTotal[i]~=nil then 
-				DataPack.writeByte(netPack,var.QDHD_Data.payTotal[i])
-				--print("var.QDHD_Data.payTotal[i]="..var.QDHD_Data.payTotal[i])
+			if var.OneYearAct_Data.recharge.payTotal[i]~=nil then
+				DataPack.writeByte(netPack,var.OneYearAct_Data.recharge.payTotal[i])
+				--print("var.OneYearAct_Data.recharge.payTotal[i]="..var.OneYearAct_Data.recharge.payTotal[i])
 			else 
 				DataPack.writeByte(netPack,0)
-				--print("var.QDHD_Data.payTotal[i]=0")
+				--print("var.OneYearAct_Data.recharge.payTotal[i]=0")
 			end
 		end
 		
 		--是否领取了
 		for i=1,#cfg do 
 			for j=1,#cfg[i].days do 
-				if var.QDHD_Data.payTotalFalg[i]==nil then 
+				if var.OneYearAct_Data.recharge.payTotalFalg[i]==nil then
 					DataPack.writeByte(netPack,0)
 				else 
-					if var.QDHD_Data.payTotalFalg[i][j]==nil then 
+					if var.OneYearAct_Data.recharge.payTotalFalg[i][j]==nil then
 						DataPack.writeByte(netPack,0)
 					else
 						DataPack.writeByte(netPack,1)
@@ -1907,70 +1924,8 @@ end
 
 ]]
 --开始庆典活动
-StartQingDianActivity = function(openday , nowOpenday,nType) --开几天，当前是第几天,庆典类型
-
-	local svar = System.getStaticVar()
-	if (svar.QingDian_openDay==nil or svar.isDringQingDianActivity ==nil or svar.isDringQingDianActivity<1 or svar.isDringQingDianActivity>svar.QingDian_openDay)==false then 
-		System.trace("please end the qingdian activity first")
-		return 
-	end
-	
-	if nType == nil then nType = 0 end
-    nType = tonumber(nType)
-	--以免活动期间挂机了，这个挺麻烦的。。
-
-	if nowOpenday==nil or nowOpenday==0 then --默认当天是第1天
-		svar.isDringQingDianActivity = 1
-	else 
-		nowOpenday = tonumber(nowOpenday)
-		svar.isDringQingDianActivity = nowOpenday
-	end
-	svar.QingDian_type = nType
-		
-	if openday~=nil then 
-		openday =tonumber(openday)
-		svar.QingDian_openDay = openday
-	end
-	if svar.QingDian_openDay==nil then --默认开启为3天
-		svar.QingDian_openDay=3
-	end
-	
-	--计算一种开启了多少次庆典活动，下一次开的时候，数据是要清空的
-	if svar.StartQDHDtime ==nil or svar.StartQDHDtime==0 then 
-		svar.StartQDHDtime = 1
-	else
-		svar.StartQDHDtime = 1 + svar.StartQDHDtime
-	end
-	
-	local startQDHDtime = svar.StartQDHDtime
-	
-	svar.StartQDHD_MiNitime = System.getCurrMiniTime()
-	
-	System.saveStaticVar()
-	System.trace("qingdian startQDHDtime = "..startQDHDtime)
-	
-	ClearHongYunDangTouSystemData()
-	OnYbConsumeRanking_ActivityStart(1, svar.isDringQingDianActivity, svar.QingDian_openDay)
-	
-	local playerList = LuaHelp.getAllActorList()
-	if not playerList then return end
-	if svar.QingDian_type == nil then 
-        svar.QingDian_type = 0
-    end
-    
-    local _isDringQingDianActivity = svar.isDringQingDianActivity
-    local _QingDian_openDay = svar.QingDian_openDay
-    local _QingDian_type = svar.QingDian_type
-    
-	for i, player in ipairs(playerList) do
-		--是否开启庆典活动
-		local netPack = DataPack.allocPacket(player,151,LogicCmd.miscSysEx.sub.sQingDianActivityIsOpen)
-		DataPack.writeByte(netPack,_isDringQingDianActivity)	--开启第几天
-		DataPack.writeByte(netPack,_QingDian_openDay)	--一共开启几天
-
-	    DataPack.writeByte(netPack,_QingDian_type)
-		DataPack.flush(netPack)
-	end
+StartQingDianActivity = function(openday, nowOpenday, nType)
+    -- 原活动已关闭，消费排行和累计充值由周年庆典提供。
 end
 
 --结束庆典活动
@@ -1979,7 +1934,7 @@ EndQingDianActivity = function()
 	svar.isDringQingDianActivity = nil
 	System.saveStaticVar()
 	
-	OnYbConsumeRanking_ActivityEnd(1)
+
 	
 	local playerList = LuaHelp.getAllActorList()
 	if not playerList then return end

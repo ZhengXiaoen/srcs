@@ -110,13 +110,15 @@ LuaHelp={getAllActorList=function() return {} end}
 ClearOneYearHongYunDangTouSystemData=function() end
 EnsureDaJiDaLiActivity=function() end;EnsureNationalDayActivity=function() end
 ensure_spring_festival_activity=function() end;OnYbConsumeRankingNewDayArrive=function() end
+OnYbConsumeRanking_ActivityStart=function() end;OnYbConsumeRanking_ActivityEnd=function() end
+LocalDT.InitYbConsumeRankingActivities=function() return {} end
 ttScreenCenter=1;ttChatWindow=2''')
         source=(BASE/'new_activity/festival/OneYearActivity.lua').read_text('utf-8-sig')
         for name in ('StartOneYearActivity','EndOneYearActivity'):
             a=source.index(name+' = function(');b=re.search(r'^end\s*$',source[a:],re.M)
             self.exec(source[a:a+b.end()])
         self.exec((BASE/'Activity/RecurringActivities.lua').read_text('utf-8-sig'))
-        self.exec('LocalDT.RecurringActivities={LocalDT.RecurringActivities[4]};EnsureRecurringActivities()')
+        self.exec("for _,cfg in ipairs(LocalDT.RecurringActivities) do if cfg.name=='OneYear' then LocalDT.RecurringActivities={cfg};break end end;EnsureRecurringActivities()")
         for day in range(8):
             self.exec('mails={};ranks={};actors={}')
             self.pay()
@@ -136,6 +138,7 @@ ttScreenCenter=1;ttChatWindow=2''')
         self.exec('state.isDringOneYearAct=nil');self.pay();self.assertEqual(0,self.value('#ranks'))
 
     def test_actual_query_protocol_can_request_rank_without_sanren_or_jingji(self):
+        self.exec('LocalDT.IsAnniversaryActivityOpen=daily_pay_ranking_is_open')
         self.lua.execute((BASE/'new_activity/SanRenHongLi.lua').read_text('utf-8-sig'))
         self.exec('''queries=0;DataPack={readByte=function(p) return table.remove(p,1) end}
 GetSanRenHongLiInfo=function(_,idx) assert(idx==6);queries=queries+1 end''')

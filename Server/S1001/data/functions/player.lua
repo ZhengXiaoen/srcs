@@ -2450,32 +2450,9 @@ function BossKillPayMoney(sysarg, nYuanBao, nYuanGu, szBossName, szSceneName, nL
 			end
 		end
 
-		-- 2. 万服庆典/庆典活动
-		if QingDianActivityCfg ~= nil and QingDianActivityCfg.EveryTotalPay ~= nil then
-			if (svar.isDringQingDianActivity == nil or svar.isDringQingDianActivity < 1 or svar.QingDian_openDay == nil or svar.isDringQingDianActivity > svar.QingDian_openDay) == false then
-				if ClearQingDian_Data ~= nil then ClearQingDian_Data(sysarg) end
-				local cfg = QingDianActivityCfg.EveryTotalPay
-				if var.QDHD_Data == nil then var.QDHD_Data = {} end
-				if var.QDHD_Data.payTotal == nil then var.QDHD_Data.payTotal = {} end
-				if var.days.qingdianPayTime == nil then var.days.qingdianPayTime = {} end
-				for i = 1, #cfg do
-					if cfg[i].needPay <= var.days.PeyNum then
-						if var.QDHD_Data.payTotal[i] == nil then
-							var.QDHD_Data.payTotal[i] = 1
-							var.days.qingdianPayTime[i] = 1
-						else
-							if svar.isDringQingDianActivity ~= nil and var.QDHD_Data.payTotal[i] >= svar.isDringQingDianActivity then
-							else
-								if var.days.qingdianPayTime[i] == nil then
-									var.QDHD_Data.payTotal[i] = 1 + var.QDHD_Data.payTotal[i]
-									var.days.qingdianPayTime[i] = 1
-								end
-							end
-						end
-					end
-				end
-			end
-		end
+		-- 周年庆典累计充值与正式充值共用进度更新。
+		UpdateQingDianEveryTotalPayProgressByDailyPay(sysarg, var, svar)
+		if LocalDT.IsAnniversaryActivityOpen() then GetQingDianActivityInfo(sysarg, 12) end
 
 		-- 3. 大吉大利
 		if activity_DaJiDaLi ~= nil and activity_DaJiDaLi.payGiveAwardNew ~= nil and activity_DaJiDaLi.payGiveAwardNew.needMoney ~= nil then

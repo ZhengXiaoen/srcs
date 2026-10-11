@@ -1,10 +1,18 @@
 --#include "data\config\new_activity\festival\activity_jingji.lua" once --竞技活动
 --#include "data\functions\new_activity\festival\ActivityRankFunc.lua" once 
 --#include "data\functions\modules\daily_pay_ranking.lua" once -- 活动:每日充值排行榜
-JingJiCompetitionDisabled = false -- 竞技大赛按活动周期自动开启；圣诞活动仍可使用共用协议
+JingJiCompetitionDisabled = true -- 竞技大赛已整合到周年庆典；圣诞活动仍可使用共用协议
 
 --竞技协议派发
 handleJingjiActivity = function (sysarg, sysid, packet)
+    local msgid = DataPack.readByte(packet)
+    if msgid >= 6 and msgid <= 9 then
+        if not LocalDT.IsAnniversaryActivityOpen() then return end
+        LocalDT.ClearAnniversaryMergedData(sysarg)
+        MiscHandleGetNewRankInfo(sysarg, msgid, DataPack.readByte(packet), packet)
+        return
+    end
+
 	--是否在开关时间内
 	local svar = System.getStaticVar()
 	if GetJingjiActivityType() == 0 then return end
@@ -18,7 +26,7 @@ handleJingjiActivity = function (sysarg, sysid, packet)
 	
 	ClearJingJi_Data(sysarg)
 	
-	local msgid = DataPack.readByte(packet)
+
 	if msgid == 0 then	--获取数据
 		GetJingjiiInfo(sysarg,DataPack.readByte(packet))
 	elseif msgid == 1 then --登录礼包

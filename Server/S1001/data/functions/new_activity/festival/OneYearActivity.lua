@@ -2,6 +2,27 @@
 
 --周年活动
 
+-- 合并玩法共用周年周期，独立保存进度，旧活动数据不再参与领奖。
+LocalDT.IsAnniversaryActivityOpen = function()
+    local svar = System.getStaticVar()
+    return svar.StartOneYear_OpenDay ~= nil and svar.isDringOneYearAct ~= nil and
+        svar.isDringOneYearAct >= 1 and svar.isDringOneYearAct <= svar.StartOneYear_OpenDay
+end
+
+LocalDT.ClearAnniversaryMergedData = function(sysarg)
+    ClearOneYear_Data(sysarg)
+    local var = Actor.getStaticVar(sysarg)
+    if var.OneYearAct_Data == nil then var.OneYearAct_Data = {} end
+    if var.OneYearAct_Data.material == nil then var.OneYearAct_Data.material = {} end
+    if var.OneYearAct_Data.consumeGift == nil then var.OneYearAct_Data.consumeGift = {} end
+    if var.OneYearAct_Data.recharge == nil then var.OneYearAct_Data.recharge = {} end
+    if var.days == nil then var.days = {} end
+    if var.days.AnniversaryMergedCycle ~= System.getStaticVar().StartOneYear_Minitime then
+        var.days.AnniversaryMergedCycle = System.getStaticVar().StartOneYear_Minitime
+        var.days.AnniversaryPayTime = {}
+    end
+end
+
 --信息派发
 handleOneYearAct = function (sysarg, sysid, packet)
 	--是否在开关时间内
@@ -14,6 +35,7 @@ handleOneYearAct = function (sysarg, sysid, packet)
 	end
 	
 	local msgid = DataPack.readByte(packet)
+	if msgid == 1 or msgid == 3 or msgid == 4 then return end
 	if msgid == 0 then	--获取数据
 		GetOneYearActInfo(sysarg,DataPack.readByte(packet))
 	elseif msgid == 1 then --全服双倍
@@ -815,6 +837,7 @@ end
 
 --得到所有的信息
 GetOneYearActInfo = function(sysarg,index)
+	if index == 1 or index == 3 or index == 4 then return end
 	
 	local var = Actor.getStaticVar(sysarg)
 	local svar = System.getStaticVar()
@@ -1011,17 +1034,9 @@ StartOneYearActivity = function(openday , nowOpenday) --开几天，当前是第
 		
 	System.saveStaticVar()
 	
-	------双倍经验-------
-	local RwData = {"我要挂机", "威龙城", 131,134, "我要挂机"}
-	local NpctFly = string.format("<(x%s:%s:%s:%s)>", RwData[2], RwData[3], RwData[4], RwData[5])
-	
-	System.broadcastTipmsg("周年庆全服双倍经验活动已经开启",ttChatWindow +ttScreenCenter)
-	--System.broadcastTipmsg("周年庆全服双倍经验活动已经开启",ttScreenCenter )
-	System.setActivtyExpRate(1, 0)
-	-----------------------------------
-	
 	--开启排行
 	daily_pay_ranking_start(svar.isDringOneYearAct, svar.StartOneYear_OpenDay, 2)
+	OnYbConsumeRanking_ActivityStart(1, svar.isDringOneYearAct, svar.StartOneYear_OpenDay)
 	System.trace("one year activity start")
 	
 	local playerList = LuaHelp.getAllActorList()
@@ -1039,6 +1054,7 @@ end
 --结束周年活动
 EndOneYearActivity = function()
 	daily_pay_ranking_end()
+	OnYbConsumeRanking_ActivityEnd(1)
 	--print("22222")
 	local svar = System.getStaticVar()
 	svar.isDringOneYearAct = nil
@@ -1049,10 +1065,6 @@ EndOneYearActivity = function()
 	
 	System.saveStaticVar()
 	
-	
-	System.broadcastTipmsg("周年庆双倍经验活动已经结束。", ttScreenCenter+ttChatWindow)
-	--System.broadcastTipmsg("周年庆双倍经验活动已经结束。", ttChatWindow)
-	System.setActivtyExpRate(0, 0)
 	
 	--结束排行
 	-- 当日充值排行已保留至零点结算。

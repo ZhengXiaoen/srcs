@@ -104,6 +104,10 @@ function OnConsumeYuanBaoEvent(sysarg, nYuanBao, nLogId)
 			var.OneYearAct_Data.XFZPCosume = var.OneYearAct_Data.XFZPCosume + nYuanBao
 		end
 		
+
+        LocalDT.ClearAnniversaryMergedData(sysarg)
+        var.OneYearAct_Data.consumeGift.Consume = (var.OneYearAct_Data.consumeGift.Consume or 0) + nYuanBao
+        GetDaJiDaLiInfo(sysarg, 6)
 		GetOneYearActInfo(sysarg,11)
 	end
 	
@@ -276,29 +280,28 @@ end
 
 
 function UpdateQingDianEveryTotalPayProgressByDailyPay(sysarg, var, svar)
-	if (svar.isDringQingDianActivity == nil or svar.isDringQingDianActivity < 1 or svar.QingDian_openDay == nil or svar.isDringQingDianActivity > svar.QingDian_openDay) == false then
-		ClearQingDian_Data(sysarg) -- 清除上次活动的数据
-
+	if LocalDT.IsAnniversaryActivityOpen() then
+		LocalDT.ClearAnniversaryMergedData(sysarg)
 		local cfg = QingDianActivityCfg.EveryTotalPay
-		if var.QDHD_Data.payTotal == nil then
-			var.QDHD_Data.payTotal = {}
+		if var.OneYearAct_Data.recharge.payTotal == nil then
+			var.OneYearAct_Data.recharge.payTotal = {}
 		end
 
 		-- 控制一天只可以加一次
-		if var.days.qingdianPayTime == nil then
-			var.days.qingdianPayTime = {}
+		if var.days.AnniversaryPayTime == nil then
+			var.days.AnniversaryPayTime = {}
 		end
 		for i = 1, #cfg do
 			if cfg[i].needPay <= var.days.PeyNum then
-				if var.QDHD_Data.payTotal[i] == nil then
-					var.QDHD_Data.payTotal[i] = 1
-					var.days.qingdianPayTime[i] = 1
+				if var.OneYearAct_Data.recharge.payTotal[i] == nil then
+					var.OneYearAct_Data.recharge.payTotal[i] = 1
+					var.days.AnniversaryPayTime[i] = 1
 				else
-					if svar.isDringQingDianActivity ~= nil and var.QDHD_Data.payTotal[i] >= svar.isDringQingDianActivity then
+					if svar.isDringOneYearAct ~= nil and var.OneYearAct_Data.recharge.payTotal[i] >= svar.isDringOneYearAct then
 					else
-						if var.days.qingdianPayTime[i] == nil then
-							var.QDHD_Data.payTotal[i] = 1 + var.QDHD_Data.payTotal[i]
-							var.days.qingdianPayTime[i] = 1
+						if var.days.AnniversaryPayTime[i] == nil then
+							var.OneYearAct_Data.recharge.payTotal[i] = 1 + var.OneYearAct_Data.recharge.payTotal[i]
+							var.days.AnniversaryPayTime[i] = 1
 						end
 					end
 				end
@@ -531,6 +534,10 @@ function GetPeyYuanBaoHandlerEx(sysarg, args)
 	
 	
 	UpdateQingDianEveryTotalPayProgressByDailyPay(sysarg, var, svar)
+	if LocalDT.IsAnniversaryActivityOpen() then
+		GetQingDianActivityInfo(sysarg, 12)
+		GetSanRenHongLiInfo(sysarg, 4)
+	end
 	
 	--在国庆活动里面
 	if GetNationalIndexDay ~= nil and EnsureNationalDayRewardCycle ~= nil and

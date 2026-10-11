@@ -2,46 +2,16 @@
 
 
 --大吉大利协议派发
-handleDaJiDaLi = function (sysarg, sysid, packet)
-	--是否在开关时间内
-	if not EnsureDaJiDaLiActivity() then return end
-	local svar = System.getStaticVar()
-	if svar.isDringDaJiDaLi ==nil or svar.isDringDaJiDaLi<1 or svar.isDringDaJiDaLi>3 then 
-		return 
-	end
-	
-	ClearDaJiDaLi_Data(sysarg,4)
-	
-	local msgid = DataPack.readByte(packet)
-	if msgid == 0 then	--获取数据
-		GetDaJiDaLiInfo(sysarg,DataPack.readByte(packet))
-	elseif msgid == 1 then --登录礼包
-		GetDaJiDaLiLoginGift(sysarg,DataPack.readByte(packet))
-	elseif msgid == 2 then --充值礼包
-		--GetChongzhiGift_dajidali(sysarg,DataPack.readByte(packet))
-	elseif msgid == 3 then --3为民除害（杀boss）
-		GetWeiMingChuHaiGift(sysarg,DataPack.readByte(packet))
-	elseif msgid ==4 then  --4激情pk
-		GetJiQingPkGift(sysarg,DataPack.readByte(packet))
-	elseif msgid ==5 then  --5每日限购礼包
-		GetMeiRiXianGouGift(sysarg,DataPack.readByte(packet))
-	elseif msgid ==6 then --6消费赠送
-		GetConsumeGift(sysarg,DataPack.readByte(packet))
-	elseif msgid ==7 then --7副本多倍领取
-		GetDuoBeiFUBenGift(sysarg,DataPack.readByte(packet))
-	elseif msgid==8 then --8跨服
-		GetEnterCrossGift(sysarg,packet)
-	elseif msgid==9 then --9寻宝特惠
-		GeXunBaoGift_dajidali(sysarg,DataPack.readByte(packet))
-	elseif msgid==10 then --10闯地图
-		GetChuangDiTuGift_dajidali(sysarg,DataPack.readByte(packet))
-	elseif msgid==11 then --11杀小怪（boss也算）
-		GetkillMonster_dajidali(sysarg,DataPack.readByte(packet))
-	elseif msgid==12 then  --12新的累计充值
-		GetChongzhiGift_dajidaliNew(sysarg,DataPack.readByte(packet),DataPack.readByte(packet))
-	end
+handleDaJiDaLi = function(sysarg, sysid, packet)
+    if not LocalDT.IsAnniversaryActivityOpen() then return end
+    LocalDT.ClearAnniversaryMergedData(sysarg)
+    local msgid = DataPack.readByte(packet)
+    if msgid == 0 then
+        if DataPack.readByte(packet) == 6 then GetDaJiDaLiInfo(sysarg, 6) end
+    elseif msgid == 6 then
+        GetConsumeGift(sysarg, DataPack.readByte(packet))
+    end
 end
-
 
 --1登录礼包
 GetDaJiDaLiLoginGift = function(sysarg,index)
@@ -355,21 +325,12 @@ end
 function GetConsumeGift(sysarg,index)
 	local svar = System.getStaticVar()
 	
-	local isOpen = false
-	for i=1,#activity_DaJiDaLi.comsumeGiveAward.openDay do 
-		if svar.isDringDaJiDaLi==activity_DaJiDaLi.comsumeGiveAward.openDay[i] then 
-			isOpen =true
-		end
-	end
-	if isOpen==false then 
-		Actor.sendTipmsg(sysarg,"今天不开启",ttFlyTip)
-		return 
-	end
-	
+	if not LocalDT.IsAnniversaryActivityOpen() then return end
+	LocalDT.ClearAnniversaryMergedData(sysarg)
 
 	local var = Actor.getStaticVar(sysarg)
 	--local dayConsumeYB_WUYI = var.dayConsumeYB_WUYI  --通用的每日消费
-	local dayConsumeYB_WUYI = var.DJDL_Data.Consume --大吉大利累计消费
+	local dayConsumeYB_WUYI = var.OneYearAct_Data.consumeGift.Consume --大吉大利累计消费
 	if dayConsumeYB_WUYI == nil then
 		dayConsumeYB_WUYI = 0
 	end
@@ -391,12 +352,12 @@ function GetConsumeGift(sysarg,index)
 	end
 
 	--消费领取标记
-	if var.DJDL_Data.dajidaliConsume==nil then 
-		var.DJDL_Data.dajidaliConsume={}
+	if var.OneYearAct_Data.consumeGift.dajidaliConsume==nil then
+		var.OneYearAct_Data.consumeGift.dajidaliConsume={}
 	end
 	
 	--判断是否领取过
-	if var.DJDL_Data.dajidaliConsume[index] ~=nil then 
+	if var.OneYearAct_Data.consumeGift.dajidaliConsume[index] ~=nil then
 		Actor.sendTipmsg(sysarg,string.format("你已经领取过该奖励，无法再次领取"),ttFlyTip)
 		return 
 	end
@@ -412,7 +373,7 @@ function GetConsumeGift(sysarg,index)
 		print("give dajidali consume award error, actor name = "..Actor.getName(sysarg))
 		return 
 	end
-	var.DJDL_Data.dajidaliConsume[index] = 1
+	var.OneYearAct_Data.consumeGift.dajidaliConsume[index] = 1
 
 	
 	Actor.sendTipmsg(sysarg,"领取奖励成功",ttFlyTip)
@@ -420,7 +381,7 @@ function GetConsumeGift(sysarg,index)
 	GetDaJiDaLiInfo(sysarg,6)
 	
 	--System.broadcastTipmsg(string.format("玩家<(n%s)>领取了节日活动-消费豪礼,<我也要领取/@@showWin,248,2>",Actor.getName(sysarg)),ttChatWindow)
-	System.broadcastTipmsg(string.format("玩家<(n%s)>购买了大吉大利的%s,<我也要领取/@@showWin,251,1>",Actor.getName(sysarg),cfg.name),ttChatWindow)
+	System.broadcastTipmsg(string.format("玩家<(n%s)>购买了周年庆典的%s,<我也要领取/@@showWin,254,14>",Actor.getName(sysarg),cfg.name),ttChatWindow)
 	System.sendCommonLog(LogIds.dajidaliActivity,Actor.getIntProperty(sysarg,PROP_ENTITY_ID),Actor.getName(sysarg),0,0,0,cfg.name)
 	
 	
@@ -840,7 +801,7 @@ end
 GetDaJiDaLiInfo = function(sysarg,index)
 	--是否在开关时间内
 	local var = Actor.getStaticVar(sysarg)
-	ClearDaJiDaLi_Data(sysarg,5)
+	if index == 6 then LocalDT.ClearAnniversaryMergedData(sysarg) else ClearDaJiDaLi_Data(sysarg,5) end
 	
 	if index== 1 then --1登录礼包
 		local netPack = DataPack.allocPacket(sysarg,151,LogicCmd.miscSysEx.sub.sDaJiDaLi_Acts)
@@ -970,13 +931,13 @@ GetDaJiDaLiInfo = function(sysarg,index)
 		
 		local cfg =activity_DaJiDaLi.comsumeGiveAward.Info
 		--local dayConsumeYB_WUYI = var.dayConsumeYB_WUYI  --通用的每日消费
-		local dayConsumeYB_WUYI = var.DJDL_Data.Consume
+		local dayConsumeYB_WUYI = var.OneYearAct_Data.consumeGift.Consume
 		if dayConsumeYB_WUYI == nil then
 			dayConsumeYB_WUYI = 0
 		end
 		DataPack.writeUInt(netPack, dayConsumeYB_WUYI)
 		
-		if var.DJDL_Data.dajidaliConsume==nil then 
+		if var.OneYearAct_Data.consumeGift.dajidaliConsume==nil then
 			for i=1,#cfg do 	--全部都没有购买的
 				DataPack.writeByte(netPack, 0)
 			end
@@ -985,7 +946,7 @@ GetDaJiDaLiInfo = function(sysarg,index)
 		end
 		
 		for i=1,#cfg do 	
-			if var.DJDL_Data.dajidaliConsume[i]~=nil and var.DJDL_Data.dajidaliConsume[i]==1 then 
+			if var.OneYearAct_Data.consumeGift.dajidaliConsume[i]~=nil and var.OneYearAct_Data.consumeGift.dajidaliConsume[i]==1 then
 				DataPack.writeByte(netPack, 1)
 			else 
 				DataPack.writeByte(netPack, 0)
@@ -1257,48 +1218,8 @@ function RepairDaJiDaLiOpenDate()
 end
 
 --开始大吉大利活动
-StartDaJiDaLi = function(nowOpenday, cycleStart) --开几天，当前是第几天
-	if System.getCurrMiniTime() < System.getServerOpenTime() then return end
-	--print("111111")
-	--以免活动期间挂机了，这个挺麻烦的。。
-	local svar = System.getStaticVar()
-	if nowOpenday==nil or nowOpenday==0 then --默认当天是第1天
-		svar.isDringDaJiDaLi = 1
-	else 
-		nowOpenday = tonumber(nowOpenday)
-		if nowOpenday<1 or nowOpenday>3 then
-			return
-		end
-		svar.isDringDaJiDaLi = nowOpenday
-	end
-	local y, m, d = System.GetSystemTimeInMiniTime(System.getCurrMiniTime())
-	svar.DaJiDaLiCycleStart = cycleStart or (System.encodeNumTime(y, m, d, 0, 0, 0) - (svar.isDringDaJiDaLi - 1) * 86400)
-	
-	
-	--计算一种开启了多少次大吉大利，下一次开的时候，数据是要清空的
-	if svar.StartDJDLtime ==nil or svar.StartDJDLtime==0 then 
-		svar.StartDJDLtime = 1
-	else
-		svar.StartDJDLtime = 1 + svar.StartDJDLtime
-	end
-	
-	svar.StartDJDL_MiNitime = System.getCurrMiniTime()
-		
-	System.saveStaticVar()
-	
-	--print("开始大吉大利活动,StartDJDLtime="..svar.StartDJDLtime)
-	System.trace("start dajidali, StartDJDLtime ="..svar.StartDJDLtime)
-	
-	local playerList = LuaHelp.getAllActorList()
-	if not playerList then return end
-	
-	for i, player in ipairs(playerList) do
-		--是否开启庆典活动
-		local netPack = DataPack.allocPacket(player,151,LogicCmd.miscSysEx.sub.sDaJiDaLi_isOpen)
-		DataPack.writeByte(netPack,svar.isDringDaJiDaLi)	--开启第几天(0,1,2,3)
-		DataPack.flush(netPack)
-	end	
-	
+StartDaJiDaLi = function(nowOpenday, cycleStart)
+    -- 原活动已关闭，消费豪礼由周年庆典提供。
 end
 
 --结束春季活动
@@ -1319,33 +1240,10 @@ EndDaJiDaLi = function()
 	end
 end
 
--- 活动结束后按三天一轮重新开启；保留后台指定的未来开启日期。
+-- 兼容旧查询，清除原活动开启状态。
 function EnsureDaJiDaLiActivity()
-	if System.isCrossServer() or not RepairDaJiDaLiOpenDate() then return false end
-	local svar = System.getStaticVar()
-	if svar.isDringDaJiDaLi ~= nil and svar.isDringDaJiDaLi >= 1 and svar.isDringDaJiDaLi <= 3 then return true end
-
-	local y, m, d = System.GetSystemTimeInMiniTime(System.getCurrMiniTime())
-	local today = System.encodeNumTime(y, m, d, 0, 0, 0)
-	local scheduledDate
-	if svar.StartDaJiDaLiYear ~= nil and svar.SpringDaJiDaLiMonth ~= nil and svar.StartDaJiDaLiDay ~= nil then
-		scheduledDate = System.encodeNumTime(svar.StartDaJiDaLiYear, svar.SpringDaJiDaLiMonth, svar.StartDaJiDaLiDay, 0, 0, 0)
-		if scheduledDate > today then return false end
-	end
-
-	local startDate = svar.DaJiDaLiCycleStart or scheduledDate or today
-	local oy, om, od = System.GetSystemTimeInMiniTime(System.getServerOpenTime())
-	local openDate = System.encodeNumTime(oy, om, od, 0, 0, 0)
-	if startDate < openDate then startDate = openDate end
-	if scheduledDate ~= nil and scheduledDate > startDate then startDate = scheduledDate end
-	local elapsedDays = math.floor((today - startDate) / 86400)
-	local cycleStart = startDate + math.floor(elapsedDays / 3) * 3 * 86400
-	y, m, d = System.GetSystemTimeInMiniTime(cycleStart)
-	svar.StartDaJiDaLiYear = y
-	svar.SpringDaJiDaLiMonth = m
-	svar.StartDaJiDaLiDay = d
-	StartDaJiDaLi(elapsedDays % 3 + 1, cycleStart)
-	return true
+    if System.getStaticVar().isDringDaJiDaLi ~= nil then EndDaJiDaLi() end
+    return false
 end
 	
 --是否是春节活动中

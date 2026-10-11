@@ -4,21 +4,24 @@
 --获取各个竞技的信息
 function MiscHandleGetNewRankInfo(sysarg,msgid,types,packet)
 	
-	-- 因为有var.JingJi_Data[msgid]，所以这里再检查一下
+	-- 因为有data[msgid]，所以这里再检查一下
 	if msgid < 6 or msgid > 10 then return end
 	
+    if msgid ~= 10 and not LocalDT.IsAnniversaryActivityOpen() then return end
+    if msgid == 10 then ClearJingJi_Data(sysarg) else LocalDT.ClearAnniversaryMergedData(sysarg) end
     local var = Actor.getStaticVar(sysarg)
-    if var.JingJi_Data[msgid] == nil then
-        var.JingJi_Data[msgid] =  {}
+    local data = msgid == 10 and var.JingJi_Data or var.OneYearAct_Data.material
+    if data[msgid] == nil then
+        data[msgid] =  {}
     end
    local cfg = nil
    if msgid == 6 or msgid == 7 or msgid == 8 or msgid == 9 then
-        if GetJingjiActivityType() ~= 2 then
+        if not LocalDT.IsAnniversaryActivityOpen() then
             Actor.sendTipmsg(sysarg,"不在活动内!",ttFlyTip) 
             return
         end
-        if var.JingJi_Data[msgid].count == nil then 
-            var.JingJi_Data[msgid].count = 0
+        if data[msgid].count == nil then
+            data[msgid].count = 0
         end
         
         if msgid == 6 then --宝石竞技
@@ -30,6 +33,7 @@ function MiscHandleGetNewRankInfo(sysarg,msgid,types,packet)
         elseif msgid == 9 then --特戒竞技
             cfg = activity_jingji.RingRank
         end
+        if data[msgid].isGive == nil then data[msgid].isGive = {} end
     end
     --获取信息
     if types == 1 then
@@ -39,8 +43,8 @@ function MiscHandleGetNewRankInfo(sysarg,msgid,types,packet)
         DataPack.writeByte(netPack,1)
         
         if msgid == 10 then --绝版武器出售
-            if var.JingJi_Data[msgid].isGive == nil then
-                var.JingJi_Data[msgid].isGive = {}
+            if data[msgid].isGive == nil then
+                data[msgid].isGive = {}
             end
             local activityType = GetJingjiActivityType()
              cfg = nil
@@ -54,27 +58,27 @@ function MiscHandleGetNewRankInfo(sysarg,msgid,types,packet)
             end
             DataPack.writeByte(netPack,#cfg )
             for i =1,#cfg do
-                if var.JingJi_Data[msgid].isGive[i] == nil then 
-                    var.JingJi_Data[msgid].isGive[i] = 0
+                if data[msgid].isGive[i] == nil then
+                    data[msgid].isGive[i] = 0
                 end
-                 DataPack.writeByte(netPack,var.JingJi_Data[msgid].isGive[i])
+                 DataPack.writeByte(netPack,data[msgid].isGive[i])
             end
             cfg = nil
         end
 
         if cfg ~= nil then
-             if var.JingJi_Data[msgid].isGive == nil then
-                 var.JingJi_Data[msgid].isGive = {}
+             if data[msgid].isGive == nil then
+                 data[msgid].isGive = {}
                 for i =1,#cfg do
-                    var.JingJi_Data[msgid].isGive[i] = 0
+                    data[msgid].isGive[i] = 0
                 end
              end
-             DataPack.writeInt(netPack,var.JingJi_Data[msgid].count)
+             DataPack.writeInt(netPack,data[msgid].count)
             
              DataPack.writeByte(netPack,#cfg)
              for i =1,#cfg do
-                if var.JingJi_Data[msgid].isGive[i] == nil then var.JingJi_Data[msgid].isGive[i] = 0 end
-                DataPack.writeByte(netPack,var.JingJi_Data[msgid].isGive[i])
+                if data[msgid].isGive[i] == nil then data[msgid].isGive[i] = 0 end
+                DataPack.writeByte(netPack,data[msgid].isGive[i])
              end 
         end
         DataPack.flush(netPack)
@@ -85,24 +89,24 @@ function MiscHandleGetNewRankInfo(sysarg,msgid,types,packet)
                 Actor.sendTipmsg(sysarg,"非法索引,领取失败!",ttFlyTip) 
                 return
               end
-              if var.JingJi_Data[msgid].isGive[nIndex] == 1 then
+              if data[msgid].isGive[nIndex] == 1 then
                     Actor.sendTipmsg(sysarg,"无法再次领取!",ttFlyTip) 
                     return
               end
-              if var.JingJi_Data[msgid].count < cfg[nIndex].count then
+              if data[msgid].count < cfg[nIndex].count then
                     Actor.sendTipmsg(sysarg,"数量不足,无法领取!",ttFlyTip) 
                     return
               end
               if Awards.CheckBagGridCount(sysarg,cfg[nIndex].award) then
-					Awards.Give(sysarg,cfg[nIndex].award,LogIds.JingJiActivity,"竞技"..msgid)
+					if Awards.Give(sysarg,cfg[nIndex].award,LogIds.JingJiActivity,"竞技"..msgid) == false then return end
 				else
                     	Actor.sendTipmsg(sysarg,"包裹空间不足,无法领取!",ttFlyTip) 
                         return
 				end
-                var.JingJi_Data[msgid].isGive[nIndex] = 1
+                data[msgid].isGive[nIndex] = 1
 
                 Actor.sendTipmsg(sysarg,"领取成功!",ttFlyTip) 
-                local szStr = string.format("<(n%s)>玩家领取了竞技大赛材料返利奖励，超级丰厚 <我也要领取/@@showWin,264,4>",Actor.getName(sysarg) )
+                local szStr = string.format("<(n%s)>玩家领取了周年庆典材料返利奖励，超级丰厚 <我也要领取/@@showWin,254,12>",Actor.getName(sysarg) )
                 System.broadcastTipmsg(szStr,ttChatWindow)
                 MiscHandleGetNewRankInfo(sysarg,msgid,1)
                 return
@@ -118,10 +122,10 @@ function MiscHandleGetNewRankInfo(sysarg,msgid,types,packet)
             end
             cfg = cfg[nIndex]
             if cfg ~= nil then
-                if var.JingJi_Data[msgid].isGive == nil then 
-                    var.JingJi_Data[msgid].isGive = {}
+                if data[msgid].isGive == nil then
+                    data[msgid].isGive = {}
                 end
-                if var.JingJi_Data[msgid].isGive[nIndex] == 1 then
+                if data[msgid].isGive[nIndex] == 1 then
                     Actor.sendTipmsg(sysarg,"已购买过,无法再次购买!",ttFlyTip) 
                     return
                 end
@@ -136,7 +140,7 @@ function MiscHandleGetNewRankInfo(sysarg,msgid,types,packet)
                end
                Consumes.Remove(sysarg, cfg.consume, LogIds.JingJiActivity, "竞技"..msgid)   
                Awards.Give(sysarg,cfg.award,LogIds.JingJiActivity,"竞技"..msgid) 
-               var.JingJi_Data[msgid].isGive[nIndex] = 1
+               data[msgid].isGive[nIndex] = 1
                MiscHandleGetNewRankInfo(sysarg,msgid,1)
                Actor.sendTipmsg(sysarg,"购买成功!",ttFlyTip) 
                
@@ -152,22 +156,22 @@ end
 
 function HandleAddNewRankCount(sysarg,types,count)
   
-     if GetJingjiActivityType() ~= 2 then
+     if not LocalDT.IsAnniversaryActivityOpen() then
         return
      end
-     ClearJingJi_Data(sysarg)
+     LocalDT.ClearAnniversaryMergedData(sysarg)
     count = tonumber(count)
     types = tonumber(types)
-    if types < 6 or types > 9 then return end
+    if types == nil or types < 6 or types > 9 or count == nil or count <= 0 then return end
     local var = Actor.getStaticVar(sysarg)
-    if var.JingJi_Data[types] == nil then
-        var.JingJi_Data[types] =  {}
+    if var.OneYearAct_Data.material[types] == nil then
+        var.OneYearAct_Data.material[types] =  {}
 
     end
-    if var.JingJi_Data[types].count == nil then 
-        var.JingJi_Data[types].count = 0
+    if var.OneYearAct_Data.material[types].count == nil then
+        var.OneYearAct_Data.material[types].count = 0
     end
-    var.JingJi_Data[types].count = var.JingJi_Data[types].count + count
-   -- print("types:"..types.."count:"..var.JingJi_Data[types].count)
+    var.OneYearAct_Data.material[types].count = var.OneYearAct_Data.material[types].count + count
+   -- print("types:"..types.."count:"..var.OneYearAct_Data.material[types].count)
     MiscHandleGetNewRankInfo(sysarg,types,1)
 end

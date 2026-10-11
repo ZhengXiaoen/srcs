@@ -1,21 +1,12 @@
 LocalDT.RecurringActivities = {
-    {name = "QingDian", day = "isDringQingDianActivity", duration = "QingDian_openDay", defaultDuration = 3,
-        year = "QingDianActivityYear", month = "QingDianActivityMonth", date = "QingDianActivityDay",
-        token = "StartQDHD_MiNitime", activityType = "QingDian_type", defaultType = 0,
-        start = "StartQingDianActivity", finish = "EndQingDianActivity", packet = "sQingDianActivityIsOpen",
-        fields = {"day", "duration", "activityType"}, consumeRankingIndex = 1},
     {name = "ShenMi", day = "isDringShenMiSD", duration = "SHENMISTORE_openDay", defaultDuration = 3,
         year = "SHENMISTORE_Year", month = "SHENMISTORE_Month", date = "SHENMISTORE_Day",
         token = "StartShenMi_MiNitime", start = "StartShenMiActivity", finish = "EndShenMiActivity",
         packet = "sShenMiShangDianIsOpen", fields = {"day", "duration"}},
-    {name = "SanRen", day = "isDringSanRenHongLi", defaultDuration = 3,
-        year = "StartSanRenHongLiYear", month = "StartSanRenHongLiMonth", date = "StartSanRenHongLiDay",
-        token = "StartSRHL_MiNitime", start = "StartSanRenHongLi", finish = "EndSanRenHongLi",
-        dayOnly = true, packet = "sSanRenHongLi_IsOpen", fields = {"day"}},
     {name = "OneYear", day = "isDringOneYearAct", duration = "StartOneYear_OpenDay", defaultDuration = 7, maxDuration = 7,
         year = "StartOneYear_Year", month = "StartOneYear_Month", date = "StartOneYear_Day",
         token = "StartOneYear_Minitime", start = "StartOneYearActivity", finish = "EndOneYearActivity",
-        packet = "sOneYearAct_isOpen", fields = {"duration", "day"}, rankingIndex = 2},
+        packet = "sOneYearAct_isOpen", fields = {"duration", "day"}, rankingIndex = 2, consumeRankingIndex = 1},
     {name = "JingJi", day = "isDringJingJi", duration = "JingJiOpenDay", defaultDuration = 3,
         year = "StartJingJIYear", month = "StartJingjiMonth", date = "StartJingJiDay",
         token = "StartJingJi_MiNitime", activityType = "JingJiActivityTypes", defaultType = 2,
@@ -141,8 +132,11 @@ function EnsureRecurringActivities()
     elseif svar.daily_pay_ranking_last_settle_date < today then
         daily_pay_ranking_ScriptRankingNewDayArrive()
     end
+    if svar.isDringQingDianActivity ~= nil then EndQingDianActivity() end
+    if svar.isDringSanRenHongLi ~= nil then EndSanRenHongLi() end
+    if svar.isDringDaJiDaLi ~= nil then EndDaJiDaLi() end
     if DisableJingJiCompetition ~= nil then DisableJingJiCompetition() end
-    OnYbConsumeRankingNewDayArrive() -- 先结算昨日万服庆典唯一消费榜奖励，再推进或重开活动。
+    OnYbConsumeRankingNewDayArrive() -- 先结算昨日周年庆典唯一消费榜奖励，再推进或重开活动。
     svar = System.getStaticVar()
     if svar.RecurringActivityCycles == nil then svar.RecurringActivityCycles = {} end
     for _, config in ipairs(LocalDT.RecurringActivities) do

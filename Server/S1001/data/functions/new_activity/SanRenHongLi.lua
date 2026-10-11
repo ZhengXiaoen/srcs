@@ -1,52 +1,15 @@
 --#include "data\config\activity\SanRenHongLiCfg.lua" once
 --#include "data\functions\modules\daily_pay_ranking.lua" once -- 活动:每日充值排行榜
 
-handleSanRenHongLi= function (sysarg, sysid, packet)
-	local msgid = DataPack.readByte(packet)
-	if msgid == 0 then
-		local actIdx = DataPack.readByte(packet)
-		local isActTime = false -- 是否在活动时间内
-		
-		local svar = System.getStaticVar()
-		if svar.isDringSanRenHongLi ~=nil and svar.isDringSanRenHongLi>=1 and svar.isDringSanRenHongLi<=3 then 
-			isActTime = true 
-			ClearSanRenHongLi_Data(sysarg)	
-		end
-		
-        if actIdx == 6 then -- 协议沿用，榜单只在周年庆典中开放。
-            isActTime = daily_pay_ranking_is_open()
-        end
-
-		if isActTime then
-			GetSanRenHongLiInfo(sysarg, actIdx)
-		end
-		
-		return
-	end
-	
-	
-	--是否在开关时间内
-	local svar = System.getStaticVar()
-	if svar.isDringSanRenHongLi ==nil or svar.isDringSanRenHongLi<1 or svar.isDringSanRenHongLi>3 then 
-		return 
-	end
-	
-	ClearSanRenHongLi_Data(sysarg)	
-	
-	if msgid == 0 then	--获取数据
-		GetSanRenHongLiInfo(sysarg,DataPack.readByte(packet))
-	elseif msgid == 1 then --1充值返利
-		SRHL_EveryDaysPay(sysarg,DataPack.readByte(packet),DataPack.readByte(packet))
-	elseif msgid == 2 then --2每日登录
-		SRHL_EveryDaysLogin(sysarg)
-	elseif msgid == 3 then --3每日首充
-		SRHL_EveryDaysFirst(sysarg)
-	elseif msgid ==4 then --4幸运转盘	
-		SRHL_LuckeyZhuanPan(sysarg)
-	elseif msgid ==5 then --5限时礼包
-		SRHL_XinShiGift(sysarg,DataPack.readByte(packet),DataPack.readByte(packet)) --第几个，第几档
-	elseif msgid == 6 then --6每日充值排行榜
-	end
+handleSanRenHongLi = function(sysarg, sysid, packet)
+    if not LocalDT.IsAnniversaryActivityOpen() then return end
+    local msgid = DataPack.readByte(packet)
+    if msgid == 0 then
+        local index = DataPack.readByte(packet)
+        if index == 4 or index == 6 then GetSanRenHongLiInfo(sysarg, index) end
+    elseif msgid == 4 then
+        SRHL_LuckeyZhuanPan(sysarg)
+    end
 end
 
 -- 是否是在圣诞活动或竞技活动中
@@ -225,6 +188,8 @@ end
 
 --4幸运转盘	
 function SRHL_LuckeyZhuanPan(sysarg)
+	if not LocalDT.IsAnniversaryActivityOpen() then return end
+	LocalDT.ClearAnniversaryMergedData(sysarg)
 	local var = Actor.getStaticVar(sysarg)
 	if var.days.PeyNum==nil or var.days.PeyNum==0 then 
 		Actor.sendTipmsg(sysarg,"请先充值",ttFlyTip)
@@ -305,7 +270,7 @@ function SRHL_LuckeyZhuanPan(sysarg)
 	SendSRHL_LucklyDraw(sysarg,index)
 	GetSanRenHongLiInfo(sysarg,4)
 	
-	System.broadcastTipmsg(string.format("<(n%s)>玩家运气太好了,在幸运转盘里抽中了%s倍率元宝返还<我也要抽奖/@@showWin,259,2>",Actor.getName(sysarg),cfg.rate[index][1]), ttChatWindow)
+	System.broadcastTipmsg(string.format("<(n%s)>玩家运气太好了,在幸运转盘里抽中了%s倍率元宝返还<我也要抽奖/@@showWin,254,13>",Actor.getName(sysarg),cfg.rate[index][1]), ttChatWindow)
 	
 end
 
@@ -388,11 +353,12 @@ end
 
 --得到所有的信息
 GetSanRenHongLiInfo = function(sysarg,index)
+    if (index ~= 4 and index ~= 6) or not LocalDT.IsAnniversaryActivityOpen() then return end
 	--是否在开关时间内
 	local var = Actor.getStaticVar(sysarg)
 	local svar = System.getStaticVar()
 	
-	ClearSanRenHongLi_Data(sysarg)
+	LocalDT.ClearAnniversaryMergedData(sysarg)
 	
 	if index== 1 then --1累计充值
 		
@@ -498,41 +464,8 @@ end
 
 
 --开始散人红利活动
-StartSanRenHongLi = function(nowOpenday) --开几天，当前是第几天
-	--print("111111")
-	--以免活动期间挂机了，这个挺麻烦的。。
-	local svar = System.getStaticVar()
-	if nowOpenday==nil or nowOpenday==0 then --默认当天是第1天
-		svar.isDringSanRenHongLi = 1
-	else 
-		nowOpenday = tonumber(nowOpenday)
-		if nowOpenday>3 then 
-			return 
-		end
-		svar.isDringSanRenHongLi = nowOpenday
-	end
-	
-	
-	svar.StartSRHL_MiNitime = System.getCurrMiniTime()
-		
-	System.saveStaticVar()
-	
-	-- 散人红利每日充值排行榜
-	-- 充值排行统一由周年庆典开启。
-	
-	--print("开始散人红利活动,StartDJDLtime="..svar.StartDJDLtime)
-	System.trace("start SanRenHongLi, StartSRHL_MiNitime ="..svar.StartSRHL_MiNitime)
-	
-	local playerList = LuaHelp.getAllActorList()
-	if not playerList then return end
-	
-	for i, player in ipairs(playerList) do
-		--是否开启庆典活动
-		local netPack = DataPack.allocPacket(player,151,LogicCmd.miscSysEx.sub.sSanRenHongLi_IsOpen)
-		DataPack.writeByte(netPack,svar.isDringSanRenHongLi)	--开启第几天(0,1,2,3)
-		DataPack.flush(netPack)
-	end	
-	
+StartSanRenHongLi = function(nowOpenday)
+    -- 原活动已关闭，幸运转盘由周年庆典提供。
 end
 
 --结束散人红利活动

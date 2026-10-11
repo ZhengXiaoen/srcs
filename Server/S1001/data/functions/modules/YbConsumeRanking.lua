@@ -1,4 +1,4 @@
-﻿-- 万服庆典唯一元宝消费排行榜
+﻿-- 周年庆典唯一元宝消费排行榜
 --#include "data\functions\ActorEvent\OfflineMsg.lua" once
 --#include "data\config\activity\PublicTestCfg.lua" once
 --#include "data\functions\Activity\SpringFestivalActivity.lua" once
@@ -9,7 +9,7 @@ YbConsumeRanking_minYb = 0
 YbConsumeRanking_isModified = false
 YbConsumeRanking_inTime = false
 
-LocalDT.YbConsumeRankingActivityNames = {[1] = "万服庆典"}
+LocalDT.YbConsumeRankingActivityNames = {[1] = "周年庆典"}
 
 LocalDT.YbConsumeRankingDate = function(time)
 	local year, month, day = System.GetSystemTimeInMiniTime(time)
@@ -26,12 +26,12 @@ LocalDT.InitYbConsumeRankingActivities = function()
 	local svar = System.getStaticVar()
 	if svar.YbConsumeRankingActivities == nil then
 		svar.YbConsumeRankingActivities = {}
-		if svar.QingDian_openDay ~= nil and svar.isDringQingDianActivity ~= nil and
-			svar.isDringQingDianActivity >= 1 and svar.isDringQingDianActivity <= svar.QingDian_openDay then
-			svar.YbConsumeRankingActivities[1] = svar.QingDian_openDay - svar.isDringQingDianActivity + 1
+		if svar.StartOneYear_OpenDay ~= nil and svar.isDringOneYearAct ~= nil and
+			svar.isDringOneYearAct >= 1 and svar.isDringOneYearAct <= svar.StartOneYear_OpenDay then
+			svar.YbConsumeRankingActivities[1] = svar.StartOneYear_OpenDay - svar.isDringOneYearAct + 1
 		end
 	end
-	-- 退休活动不再结算，保留万服庆典榜单及最后一天待发奖励。
+	-- 退休活动不再结算，保留周年庆典榜单及最后一天待发奖励。
 	svar.YbConsumeRankingActivities[0] = nil
 	svar.YbConsumeRankingActivities[2] = nil
 	if svar.YbConsumeRankingLastSettleDate == nil then
@@ -42,8 +42,8 @@ end
 
 function IsYbConsumeRankingTime()
     local svar = System.getStaticVar()
-    return svar.QingDian_openDay ~= nil and svar.isDringQingDianActivity ~= nil and
-        svar.isDringQingDianActivity >= 1 and svar.isDringQingDianActivity <= svar.QingDian_openDay
+    return svar.StartOneYear_OpenDay ~= nil and svar.isDringOneYearAct ~= nil and
+        svar.isDringOneYearAct >= 1 and svar.isDringOneYearAct <= svar.StartOneYear_OpenDay
 end
 
 function YbConsumeRanking_load()		
@@ -649,9 +649,9 @@ function OnRankingConsumeYbEvent(sysarg, nYuanBao)
 --	--------------------------这个是计算庆典活动消费转盘，能够得到多少次转盘机会-------------------------------
 end
 
--- 仅 actType=1（万服庆典）可开启或结算消费排行。
+-- 仅 actType=1（周年庆典）可开启或结算消费排行。
 function OnYbConsumeRanking_ActivityStart(actType, curDay, openNDay)
-	if LocalDT.YbConsumeRankingActivityNames[actType] == nil then return end
+	if LocalDT.YbConsumeRankingActivityNames[actType] == nil or not IsYbConsumeRankingTime() then return end
 	if curDay == nil or openNDay == nil or curDay < 1 or curDay > openNDay then return end
 	OnYbConsumeRankingNewDayArrive()
 	local activities = LocalDT.InitYbConsumeRankingActivities()
@@ -755,7 +755,7 @@ function YbConsumeRanking_sendAwardMailToActor(actorId, awardIdx, ranking, activ
 end
 
 
--- 春节与周年庆典不再注册消费排行生命周期。
+-- 仅周年庆典注册消费排行生命周期，沿用唯一榜单存档。
 
 -- 服务器启动或者 @rsf 时重新装载
 YbConsumeRanking_load()

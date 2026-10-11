@@ -36,6 +36,12 @@ Keep each drop's retry delay and MsgSender's same-drop throttle authoritative.
 If a nearby pickup path fails, resume auto-fight immediately. The pickup helper
 stops auto-fight before walking; ignoring a rejected path used to leave it off
 until the player manually enabled it again. Retry only on a later update tick.
+Also recover when an accepted pickup path fails during a later movement update.
+Capture its arrival action before aborting, and resume only fight-and-pickup
+paths. Ordinary paths and explicit cancellation retain their original behavior.
+Reset the nearest selector's category result for each drop. Position corrections
+can re-enable a ground-image model with type -2; it must not inherit an earlier
+material's enabled category and displace the actual pickup model.
 Relocate existing branches, switches and exception offsets rather than
 recompiling the Flash application.
 """
@@ -439,6 +445,109 @@ def patch_failed_pickup_path(source):
     return result
 
 
+def patch_nearest_category_state(source):
+    """Do not reuse the preceding drop's category result for an image model."""
+    names, traits, bodies = inspect_abc(source, "LogicManager")
+    method = traits["getNearestDropPacket"][0]
+    start, length, limits = bodies[method]
+    code = source[start:start + length]
+    if limits != (5, 11, 4, 5) or names[5717] != "m_DropPacketList":
+        raise ValueError("Unexpected nearest-drop selector")
+    ops = instructions(code)
+    reads = [op for op in ops if op.opcode == 0x66 and op.operands == (5717,)]
+    if len(reads) != 2:
+        raise ValueError("Unexpected nearest-drop iteration")
+    receiver = reads[1].start - 1
+    if code[receiver] != 0xD0:
+        raise ValueError("Unexpected nearest-drop receiver")
+    reset = b"\x27\x63\x09"  # pickable = false for this iteration
+    if code[receiver - len(reset):receiver] == reset:
+        return source
+    if code[receiver - 1] != 0x09 or code.count(reset) != 1:
+        raise ValueError("Unexpected nearest-drop category state")
+    # Insert after the loop label, so every iteration executes the reset.
+    changed, _ = relocate(code, [(receiver, receiver, reset)])
+    reader = ABCReader(source)
+    reader.pos = start + length
+    if reader.u30() != 0 or reader.u30() != 0:
+        raise ValueError("Unexpected nearest-drop exceptions or traits")
+    length_start = start - len(encode_u30(length))
+    replacement = encode_u30(len(changed)) + changed + b"\0\0"
+    result = source[:length_start] + replacement + source[reader.pos:]
+    inspect_abc(result, "LogicManager")
+    return result
+
+
+def patch_failed_pickup_movement(source):
+    """Restore the paused fight after a later failure of its pickup path."""
+    names, traits, bodies = inspect_abc(source, "LocalPlayer")
+    method = traits["moveOnPath"][0]
+    start, length, limits = bodies[method]
+    code = source[start:start + length]
+    expected = {2855: "m_PathLocation", 13946: "ArrivedAction", 6158: "action",
+                11024: "PathEndActionType", 37297: "PE_ACT_FIGHT_AND_PICKUP",
+                3074: "moveToNextPathPoint", 3011: "abortPath", 2995: "startAutoFight"}
+    if limits != (5, 5, 13, 14) or any(names[q] != name for q, name in expected.items()):
+        raise ValueError("Unexpected pickup movement properties or limits")
+    ops = instructions(code)
+    calls = [op for op in ops if op.opcode == 0x46 and op.operands == (3074, 0)]
+    if len(calls) != 1:
+        raise ValueError("Unexpected movement continuation")
+    call = calls[0]
+    following = next(op for op in ops if op.start == call.end)
+    if following.opcode != 0x11:
+        raise ValueError("Unexpected movement-success branch")
+    failure = following.end
+    finish = following.branches[0][1]
+    if code[finish:] != b"\x47":
+        raise ValueError("Unexpected movement exit")
+
+    def q(op, name, *args):
+        index = next(i for i, value in expected.items() if value == name)
+        return bytes([op]) + encode_u30(index) + b"".join(encode_u30(a) for a in args)
+
+    block = bytearray(b"\xd0" + q(0x66, "m_PathLocation")
+                      + q(0x66, "ArrivedAction") + b"\x63\x04\x62\x04")
+    no_action = len(block)
+    block.extend(b"\x12\0\0\0")
+    block.extend(b"\x62\x04" + q(0x66, "action") + q(0x60, "PathEndActionType")
+                 + q(0x66, "PE_ACT_FIGHT_AND_PICKUP") + b"\xab\x63\x04")
+    to_abort = len(block)
+    block.extend(b"\x10\0\0\0")
+    empty = len(block)
+    block.extend(b"\x27\x63\x04")
+    abort = len(block)
+    block.extend(b"\xd0" + q(0x4F, "abortPath", 0) + b"\x62\x04")
+    no_resume = len(block)
+    block.extend(b"\x12\0\0\0\xd0" + q(0x4F, "startAutoFight", 0))
+    for branch, target in ((no_action, empty), (to_abort, abort), (no_resume, len(block))):
+        block[branch + 1:branch + 4] = encode_s24(target - branch - 4)
+    if code[failure:finish] == block:
+        return source
+    if code[failure:finish] != b"\xd0" + q(0x4F, "abortPath", 0):
+        raise ValueError("Unexpected movement failure handler")
+    # No original branch may enter the replacement's interior. Relocate the
+    # success/guard branches first, then install the self-contained failure block.
+    neutral = bytearray(code)
+    neutral[failure:finish] = b"\x02" * (finish - failure)
+    changed, moved = relocate(bytes(neutral),
+                              [(failure, finish, b"\x02" * len(block))])
+    changed = bytearray(changed)
+    changed[failure:failure + len(block)] = block
+    instructions(changed)
+    if moved(finish) != failure + len(block):
+        raise ValueError("Unexpected pickup movement relocation")
+    reader = ABCReader(source)
+    reader.pos = start + length
+    if reader.u30() != 0 or reader.u30() != 0:
+        raise ValueError("Unexpected movement exceptions or traits")
+    length_start = start - len(encode_u30(length))
+    replacement = encode_u30(len(changed)) + changed + b"\0\0"
+    result = source[:length_start] + replacement + source[reader.pos:]
+    inspect_abc(result, "LocalPlayer")
+    return result
+
+
 def idle_pickup_code(nearby=True):
     """Check the current tile and nearby combat drops with existing filters."""
     def q(opcode, name, *args):
@@ -614,6 +723,8 @@ def patch_swf(source):
     abc = patch_stacked_drops(abc)
     abc = patch_movement_pickup(abc)
     abc = patch_failed_pickup_path(abc)
+    abc = patch_nearest_category_state(abc)
+    abc = patch_failed_pickup_movement(abc)
     abc = patch_idle_pickup(abc)
     if abc == data[start:end]:
         return source
@@ -638,7 +749,7 @@ def main():
             raise ValueError("Pickup retry patch is missing")
     elif source != result:
         CLIENT.write_bytes(result)
-    print("Verified movement pickup, nearby combat pickup, stationary retries, overlapping drops and safe ranges; unrelated client bytes preserved")
+    print("Verified pickup selection, path-failure recovery, movement, combat and stationary retries; unrelated client bytes preserved")
 
 
 if __name__ == "__main__":

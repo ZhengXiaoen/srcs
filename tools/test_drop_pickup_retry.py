@@ -18,6 +18,7 @@ from patch_god_equip_state import inspect_abc
 from patch_guild_quest_config import read_cbp
 from patch_drop_pickup_retry import (CLIENT, ROOT, abc_section, instructions,
                                      patch_failed_pickup_path, patch_movement_pickup,
+                                     patch_failed_pickup_movement, patch_nearest_category_state,
                                      retry_assignment)
 
 BASELINE = None
@@ -25,6 +26,7 @@ OVERLAP_BASELINE = None
 IDLE_BASELINE = None
 COMBAT_BASELINE = None
 MOVEMENT_BASELINE = "c5f3249efe228ce16a3a91cf2e58b2fb5392e181"
+PATH_STATE_BASELINE = "ada6448"
 
 
 def code_for(swf, class_name, method):
@@ -175,6 +177,8 @@ class PickupRetryTests(unittest.TestCase):
         _, cls.coordinate_selector, cls.coordinate_limits = code_for(
             cls.client, "LogicManager", "getDropPacketByXY")
         cls.ints = integer_pool(cls.client)
+        cls.path_state_baseline = subprocess.check_output(
+            ["git", "show", PATH_STATE_BASELINE + ":web/GameFrame.swf"], cwd=ROOT)
         cls.assignment = retry_assignment()
         _, cfg = read_cbp((ROOT / "web/v2/lang/zh-cn/SystemConfig.cbp").read_bytes())
         cls.lookup_names, cls.lookup_code, cls.lookup_limits = code_for(
@@ -389,7 +393,16 @@ class PickupRetryTests(unittest.TestCase):
         self.assertEqual(inspect_abc(patched, "LocalPlayer")[2], bodies)
         current, (current_tag, current_payload, current_a, current_b) = abc_section(self.client)
         expected = patch_failed_pickup_path(patched)
-        self.assertEqual(current[current_a:current_b], expected)
+        # Later, unrelated item/config edits can change the constant pool.
+        # Compare the historical movement fix's two method bodies directly.
+        _, _, current_bodies = inspect_abc(current[current_a:current_b], "LocalPlayer")
+        _, _, expected_bodies = inspect_abc(expected, "LocalPlayer")
+        for method_name in ("setCurrentXY", "leaveForNearestItemForAutoFight"):
+            method = traits[method_name][0]
+            expected_pos, expected_size, _ = expected_bodies[method]
+            current_pos, current_size, _ = current_bodies[method]
+            self.assertEqual(expected[expected_pos:expected_pos + expected_size],
+                             current[current_a + current_pos:current_a + current_pos + current_size])
         self.assertEqual((current_tag, current_payload, current_a), (tag, payload, a))
         self.assertEqual(current[8:tag], data[8:tag])
         self.assertEqual(current[payload:current_a], data[payload:a])
@@ -595,6 +608,181 @@ class PickupRetryTests(unittest.TestCase):
             self.assertEqual(player["pathAttempts"], count)
             clock["ms"] += 1000
         self.assertEqual(calls, [])
+
+    def pickup_movement_environment(self, source=None, action=6):
+        """Run the actual movement and abort bodies; mock only engine boundaries."""
+        clock, switches, state, drop, manager, player, world, calls, tick = (
+            self.stationary_environment(source=source, item_id=491))
+        drop["currentX"] = 11
+        location = {"ArrivedAction": None if action is None else
+                    {"action": action, "actionData": drop}, "sAcrossLocationMap": None}
+        player.update(m_PathLocation=location, m_boPathSuspended=False,
+                      m_nDenyMoveStateCount=0, m_boAutoFight=False,
+                      m_boPassiveMineing=False, m_nRemovePathNode=0,
+                      m_PathNodes={"length": 1}, m_boPathingForAttack=False,
+                      m_nHinderFindPath=False, m_boUnderPath=True)
+
+        class EventClass(dict):
+            def __call__(self, *args):
+                return args
+
+        events = []
+        onhook = []
+        world.update(isBarrierFreeRide=False,
+                     LogicEventDispatcher={"dispatcher": {"dispatchEvent": events.append}},
+                     DataEventDispatcher={"dispatchEvent": events.append},
+                     LocalPlayer={"mainActor": player},
+                     LogicEvent=EventClass(PATH_ABORTED=1),
+                     OtherEvent=EventClass(HIDE_AUTO_STATUS=2),
+                     PathEndActionType={"PE_ACT_FIGHT_AND_PICKUP": 6})
+        world["MsgSender"]["sendOnhookStatus"] = onhook.append
+        names, abort, limits = code_for(source or self.client, "LocalPlayer", "abortPath")
+        player["abortPath"] = lambda: PickupVM(names, self.ints, world).run(
+            abort, [player, 0] + [None] * (limits[1] - 2))
+        player["setAutoPathKillMonster"] = lambda enabled: None
+        player["startAutoFight"] = lambda: player.update(autoFighting=True, m_boAutoFight=True)
+        result = {"accepted": False, "attempts": 0}
+
+        def step():
+            result["attempts"] += 1
+            return result["accepted"]
+
+        player["moveToNextPathPoint"] = step
+        move_names, move, move_limits = code_for(source or self.client, "LocalPlayer", "moveOnPath")
+        move_tick = lambda: PickupVM(move_names, self.ints, world).run(
+            move, [player] + [None] * (move_limits[1] - 1))
+        return clock, player, location, result, onhook, move_tick, tick
+
+    def test_baseline_later_path_failure_needs_manual_restart(self):
+        clock, player, location, result, onhook, move, tick = (
+            self.pickup_movement_environment(source=self.path_state_baseline))
+        move()
+        self.assertFalse(player["autoFighting"])
+        self.assertFalse(player["m_boUnderPath"])
+        self.assertIsNone(location["ArrivedAction"])
+        for _ in range(5):
+            clock["ms"] += 1000
+            tick()
+        self.assertEqual(player["paths"], [])
+        player["startAutoFight"]()
+        clock["ms"] += 1000
+        tick()
+        self.assertEqual(player["paths"], [(11, 10, 491)])
+
+    def test_later_pickup_path_failure_restores_fight_and_retries_later(self):
+        clock, player, location, result, onhook, move, tick = (
+            self.pickup_movement_environment())
+        move()
+        self.assertTrue(player["autoFighting"])
+        self.assertFalse(player["m_boUnderPath"])
+        self.assertIsNone(location["ArrivedAction"])
+        self.assertEqual(player["paths"], [])  # no recursive path attempt
+        self.assertEqual(result["attempts"], 1)
+        self.assertEqual(onhook, [False])
+        clock["ms"] += 1000
+        tick()
+        self.assertEqual(player["paths"], [(11, 10, 491)])
+
+    def test_later_failure_does_not_enable_fight_for_other_actions_or_manual_abort(self):
+        for action in (None, 0, 1, 2, 4, 7, 8):
+            with self.subTest(action=action):
+                _, player, location, _, _, move, _ = (
+                    self.pickup_movement_environment(action=action))
+                move()
+                self.assertFalse(player["autoFighting"])
+                self.assertFalse(player["m_boUnderPath"])
+                self.assertIsNone(location["ArrivedAction"])
+        _, player, location, _, _, _, _ = self.pickup_movement_environment()
+        player["abortPath"]()  # explicit user cancellation still calls original body
+        self.assertFalse(player["autoFighting"])
+
+    def test_successful_suspended_or_denied_movement_preserves_pickup_path(self):
+        for reason in ("success", "suspended", "denied"):
+            with self.subTest(reason=reason):
+                _, player, location, result, onhook, move, _ = self.pickup_movement_environment()
+                if reason == "success": result["accepted"] = True
+                elif reason == "suspended": player["m_boPathSuspended"] = True
+                else: player["m_nDenyMoveStateCount"] = 1
+                move()
+                self.assertFalse(player["autoFighting"])
+                self.assertTrue(player["m_boUnderPath"])
+                self.assertIsNotNone(location["ArrivedAction"])
+                self.assertEqual(onhook, [])
+
+    def test_repeated_later_failures_retry_once_per_later_update(self):
+        clock, player, location, result, onhook, move, tick = self.pickup_movement_environment()
+        for count in range(1, 6):
+            move()
+            self.assertTrue(player["autoFighting"])
+            self.assertEqual(result["attempts"], count)
+            self.assertEqual(len(player["paths"]), count - 1)
+            clock["ms"] += 1000
+            tick()
+            self.assertEqual(len(player["paths"]), count)
+            # The actual helper installs this action when its mocked path is accepted.
+            location["ArrivedAction"] = {"action": 6}
+
+    def test_position_corrected_image_cannot_inherit_another_materials_category(self):
+        clock, switches, state, drop, manager, select, _ = self.environment(item_id=491)
+        drop.update(m_nRecog=42, canPickTime=99)
+        image = self.overlapping_drop(drop, clock, itemType=-2,
+                                      isAlreadyPickup=True, canPickTime=0)
+        other = self.overlapping_drop(drop, clock, itemId=537, currentX=11,
+                                      m_nRecog=43, canPickTime=0)
+        manager["m_DropPacketList"] = [image, drop, other]
+        names, correction, limits = code_for(self.client, "LogicManager", "doChangePacketPos")
+        values = iter((10, 10))
+        packet = {"readUnsignedInt": lambda: 42,
+                  "readUnsignedShort": lambda: next(values)}
+        for model in (drop, image):
+            model["setCurrentXY"] = lambda x, y, model=model: model.update(currentX=x, currentY=y)
+        vm = PickupVM(names, self.ints, {"getTimer": lambda: clock["ms"]})
+        vm.run(correction, [manager, packet] + [None] * (limits[1] - 2))
+        self.assertFalse(image["isAlreadyPickup"])
+        drop["canPickTime"] = 99  # request pending, while image is selectable by old code
+        world = {"getTimer": lambda: clock["ms"], "Boolean": bool,
+                 "MapDropItemPacket": object, "GameMap": {"defaultMap": {
+                     "currentX": 10, "currentY": 10, "mapId": 1}},
+                 "Math": {"sqrt": math.sqrt, "pow": pow}, "CallBack": {
+                     "isCanPickUpByPack": lambda d: state["capacity"],
+                     "getPickUpStatusByItemId": lambda item, action: True,
+                     "getPickUpSelectByType": lambda kind, action: True}}
+        old_names, old_selector, old_limits = code_for(
+            self.path_state_baseline, "LogicManager", "getNearestDropPacket")
+        old = PickupVM(old_names, self.ints, world)
+        self.assertIs(old.run(old_selector, [manager, True] + [None] * (old_limits[1] - 2)), image)
+        self.assertIs(select(), other)
+        drop["canPickTime"] = 0
+        self.assertIs(select(), drop)
+        drop["canPickTime"] = 99
+        switches[13] = False
+        switches[8] = False
+        self.assertIsNone(select())
+        switches[13] = True
+        switches[8] = True
+        state["capacity"] = False
+        self.assertIsNone(select())
+
+    def test_path_state_patch_changes_only_two_bodies_and_preserves_other_tags(self):
+        original, (tag, payload, a, b) = abc_section(self.path_state_baseline)
+        current, (ctag, cpayload, ca, cb) = abc_section(self.client)
+        abc, patched = original[a:b], current[ca:cb]
+        _, traits, old_bodies = inspect_abc(abc, "LocalPlayer")
+        _, _, new_bodies = inspect_abc(patched, "LocalPlayer")
+        self.assertEqual(old_bodies.keys(), new_bodies.keys())
+        changed = []
+        for method, (pos, size, limits) in old_bodies.items():
+            new_pos, new_size, new_limits = new_bodies[method]
+            self.assertEqual(limits, new_limits)
+            if abc[pos:pos + size] != patched[new_pos:new_pos + new_size]:
+                changed.append(method)
+        self.assertEqual(changed, [traits["moveOnPath"][0], 4600])
+        self.assertEqual(abc[:min(pos for pos, _, _ in old_bodies.values())],
+                         patched[:min(pos for pos, _, _ in new_bodies.values())])
+        self.assertEqual((tag, payload, a), (ctag, cpayload, ca))
+        self.assertEqual(original[8:tag], current[8:ctag])
+        self.assertEqual(original[payload:a], current[cpayload:ca])
+        self.assertEqual(original[b:], current[cb:])
 
     def test_auto_fight_collects_nearby_first_tier_weapon_and_both_clothes(self):
         for item_id in (430, 431, 432):

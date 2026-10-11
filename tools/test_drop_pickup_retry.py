@@ -20,6 +20,7 @@ from patch_drop_pickup_retry import CLIENT, ROOT, abc_section, instructions, ret
 BASELINE = None
 OVERLAP_BASELINE = None
 IDLE_BASELINE = None
+COMBAT_BASELINE = None
 
 
 def code_for(swf, class_name, method):
@@ -112,6 +113,11 @@ class PickupVM:
                 result = owner[name](*call_args)
                 if kind == 0x46:
                     stack.append(result)
+            elif kind == 0x4A:
+                index, count = args
+                call_args = [stack.pop() for _ in range(count)][::-1]
+                factory = stack.pop()
+                stack.append(factory[self.names[index]](*call_args))
             elif kind == 0x87:
                 stack.pop()  # astypelate, all supplied drops have the correct type
             elif kind in (0x73, 0x74):
@@ -192,14 +198,15 @@ class PickupRetryTests(unittest.TestCase):
                 _, code, _ = code_for(cls.client, class_name, method)
                 assert cls.assignment in code
 
-    def environment(self, item_id=537, count=4, selector="nearest", automatic=True):
+    def environment(self, item_id=537, count=4, selector="nearest", automatic=True,
+                    indexes=None):
         clock = {"ms": 12345}
         switches = {8: True, 13: True}
         state = {"capacity": True}
 
         def pickup(item, action):
             # Run the real item-range lookup too; category order is authoritative.
-            owner = {"getPickUpSelectIndexByType": lambda kind: 0,
+            owner = {"getPickUpSelectIndexByType": lambda kind: (indexes or {}).get(kind, 0),
                      "getPickUpSelectByType": lambda kind, action: switches.get(kind, False)}
             vm = PickupVM(self.lookup_names, self.ints, {
                 "GameData": {"systemConfigProvider": {"getCfg": lambda: self.config}}})
@@ -319,14 +326,18 @@ class PickupRetryTests(unittest.TestCase):
         self.assertIsNone(vm.run(code, args))  # old code hides the eligible drop
         self.assertIs(vm.run(self.coordinate_selector, args), drop)
 
-    def stationary_environment(self, source=None):
-        clock, switches, state, drop, manager, select, _ = self.environment(selector="coordinate")
+    def stationary_environment(self, source=None, item_id=537, indexes=None):
+        clock, switches, state, drop, manager, select, _ = self.environment(
+            item_id, selector="coordinate", indexes=indexes)
+        nearest = self.environment(item_id, indexes=indexes)
+        nearest[4]["m_DropPacketList"] = manager["m_DropPacketList"]
         names, update, limits = code_for(source or self.client, "LocalPlayer", "update")
         calls = []
         player = {"m_dwUpdateTick": 0, "m_autoPickLastTime": 0,
                   "m_dwActionTimeOut": 0, "m_StateLoopEffect": None,
                   "m_nAction": 0, "currentX": 10, "currentY": 10,
                   "superUpdate": lambda tick: None}
+        player.update(autoFighting=False, m_boUnderPath=False)
         player.update({name: False for name in ("moving", "jumping", "died",
                        "isDivineSwording", "stalling", "practice", "fastBattling")})
         drop["m_nRecog"] = 42
@@ -335,14 +346,142 @@ class PickupRetryTests(unittest.TestCase):
             self.assertEqual((x, y, auto), (10, 10, True))
             return select()
 
+        def nearest_drop(auto):
+            self.assertTrue(auto)
+            nearest[0]["ms"] = clock["ms"]
+            nearest[1].clear()
+            nearest[1].update(switches)
+            nearest[2].update(state)
+            return nearest[5]()
+
+        def leave_for_drop():
+            item = nearest_drop(True)
+            self.assertIsNotNone(item)
+            player["paths"].append((item["currentX"], item["currentY"], item["itemId"]))
+            player["m_boUnderPath"] = True
+            player["autoFighting"] = False  # existing stopAutoFight behavior
+
+        player.update(paths=[], leaveForNearestItemForAutoFight=leave_for_drop)
         world = {"getTimer": lambda: clock["ms"], "AutoPick": True,
+                 "Math": {"abs": abs},
                  "GameMap": {"defaultMap": {"loadingMap": False}},
-                 "LogicManager": {"defaultManager": {"getDropPacketByXY": at_xy}},
+                 "LogicManager": {"defaultManager": {"getDropPacketByXY": at_xy,
+                                  "getNearestDropPacket": nearest_drop}},
                  "MsgSender": {"sendPickupDropItem": lambda recog: calls.append(recog)},
                  "StandardActions": {"SA_RUN": 1, "SA_WALK": 2}}
         vm = PickupVM(names, self.ints, world)
         tick = lambda: vm.run(update, [player, clock["ms"]] + [None] * (limits[1] - 2))
         return clock, switches, state, drop, manager, player, world, calls, tick
+
+    def test_auto_fight_collects_nearby_first_tier_weapon_and_both_clothes(self):
+        for item_id in (430, 431, 432):
+            with self.subTest(item=item_id):
+                clock, switches, _, drop, manager, player, _, calls, tick = (
+                    self.stationary_environment(item_id=item_id))
+                switches[5] = True  # unmodified default for all rebirth equipment
+                drop.update(currentX=11, currentY=12)
+                player.update(autoFighting=True, m_boDoAttack=True)
+                tick()
+                self.assertEqual(player["paths"], [(11, 12, item_id)])
+                self.assertEqual(calls, [])  # pickup uses path arrival, never at a distance
+                clock["ms"] += 2000
+                tick()
+                self.assertEqual(len(player["paths"]), 1)
+                drop.update(currentX=10, currentY=10)
+                player.update(m_boUnderPath=False)
+                clock["ms"] += 500
+                tick()
+                self.assertEqual(calls, [42])
+                manager["m_DropPacketList"].clear()
+                clock["ms"] += 2000
+                tick()
+                self.assertEqual(calls, [42])
+
+    def test_nearby_equipment_preserves_settings_protection_capacity_and_distance(self):
+        for reason in ("disabled", "tier", "protected", "capacity", "far_x", "far_y",
+                       "manual", "path", "moving", "died", "jumping", "autopick"):
+            with self.subTest(reason=reason):
+                indexes = {5: 1} if reason == "tier" else None
+                clock, switches, state, drop, _, player, world, calls, tick = (
+                    self.stationary_environment(item_id=430, indexes=indexes))
+                switches[5] = reason != "disabled"
+                drop.update(currentX=11)
+                player["autoFighting"] = reason != "manual"
+                if reason == "protected": drop["canPickTime"] = 20
+                if reason == "capacity": state["capacity"] = False
+                if reason == "far_x": drop["currentX"] = 13
+                if reason == "far_y": drop["currentY"] = 13
+                if reason == "path": player["m_boUnderPath"] = True
+                if reason in ("moving", "died", "jumping"): player[reason] = True
+                if reason == "autopick": world["AutoPick"] = False
+                tick()
+                self.assertEqual(player["paths"], [])
+                self.assertEqual(calls, [])
+
+    def test_nearby_equipment_recovers_when_protection_ends_during_attacks(self):
+        clock, switches, _, drop, _, player, _, calls, tick = (
+            self.stationary_environment(item_id=431))
+        switches[5] = True
+        drop.update(currentX=12, currentY=10, canPickTime=20)
+        player.update(autoFighting=True, m_boDoAttack=True)
+        tick()
+        self.assertEqual(player["paths"], [])
+        clock["ms"] = 20000
+        tick()
+        self.assertEqual(player["paths"], [(12, 10, 431)])
+        self.assertEqual(calls, [])
+
+    def test_existing_pickup_path_uses_action_that_resumes_auto_fight(self):
+        _, switches, _, drop, manager, select, _ = self.environment(430)
+        switches[5] = True
+        drop.update(currentX=11, currentY=12)
+        names, code, limits = code_for(
+            self.client, "LocalPlayer", "leaveForNearestItemForAutoFight")
+        paths, stopped = [], []
+        player = {"stopAutoFight": lambda: stopped.append(True),
+                  "leaveFor": lambda x, y, action: paths.append((x, y, action)),
+                  "startAutoFight": lambda: self.fail("Drop exists; must schedule pickup")}
+        world = {"LogicManager": {"defaultManager": {"getNearestDropPacket":
+                  lambda automatic: select()}},
+                 "PathEndAction": lambda kind, item: (kind, item),
+                 "PathEndActionType": {"PE_ACT_FIGHT_AND_PICKUP": "resume_fight"}}
+        PickupVM(names, self.ints, world).run(code, [player] + [None] * (limits[1] - 1))
+        self.assertEqual(stopped, [True])
+        self.assertEqual(paths, [(11, 12, ("resume_fight", drop))])
+
+    def test_baseline_reproduces_nearby_equipment_skipped_during_continuous_combat(self):
+        if COMBAT_BASELINE is None:
+            self.skipTest("Use --combat-baseline to demonstrate combat pickup gap")
+        clock, switches, _, drop, _, player, _, calls, tick = self.stationary_environment(
+            Path(COMBAT_BASELINE).read_bytes(), item_id=430)
+        switches[5] = True
+        drop.update(currentX=11)
+        player.update(autoFighting=True, m_boDoAttack=True)
+        for _ in range(10):
+            tick()
+            clock["ms"] += 2000
+        self.assertEqual(player["paths"], [])
+        self.assertEqual(calls, [])
+
+    def test_all_boss_weapon_and_clothes_candidates_follow_default_equipment_switch(self):
+        from lupa.lua51 import LuaRuntime
+        lua = LuaRuntime(unpack_returned_tuples=True)
+        lua.execute("LocalDT={}")
+        lua.execute((ROOT / "Server/S1001/data/config/monster/BossEquipmentDropCfg.lua")
+                    .read_text("utf-8"))
+        ids = {int(item) for profile in lua.globals().LocalDT.BossEquipmentDrop.profiles.values()
+               for weights in profile.weights.values() for row in weights.values()
+               for field in ("weapons", "clothes") for item in row[field].values()}
+        self.assertTrue({430, 431, 432}.issubset(ids))
+        for item_id in sorted(ids):
+            for selector in ("nearest", "coordinate"):
+                with self.subTest(item=item_id, selector=selector):
+                    _, switches, _, drop, _, select, _ = self.environment(
+                        item_id, 1, selector=selector)
+                    switches[5] = True
+                    self.assertIs(select(), drop)
+                    switches[5] = False
+                    self.assertIsNone(select())
 
     def test_single_drop_retries_without_moving(self):
         clock, _, _, drop, manager, player, _, calls, tick = self.stationary_environment()
@@ -564,8 +703,10 @@ if __name__ == "__main__":
     parser.add_argument("--baseline", type=Path)
     parser.add_argument("--overlap-baseline", type=Path)
     parser.add_argument("--idle-baseline", type=Path)
+    parser.add_argument("--combat-baseline", type=Path)
     args = parser.parse_args()
     BASELINE = args.baseline
     OVERLAP_BASELINE = args.overlap_baseline
     IDLE_BASELINE = args.idle_baseline
+    COMBAT_BASELINE = args.combat_baseline
     unittest.main(argv=[__file__], verbosity=2)

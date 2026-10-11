@@ -26,6 +26,9 @@ Recheck the player's current tile every 500 ms during normal player updates.
 Movement used to be the only automatic trigger outside auto-fighting, so a
 protected drop or an unconfirmed request could remain uncollected indefinitely
 while the player stood still. Reuse the existing update tick and request gates.
+While auto-fighting, also collect eligible drops within two tiles when the
+current tile is empty. Continuous attacks otherwise skip the original drop
+scan. Use the existing pickup path that resumes auto-fight, with the same filters.
 Relocate existing branches, switches and exception offsets rather than
 recompiling the Flash application.
 """
@@ -59,6 +62,9 @@ IDLE_NAMES = {
     "MapDropItemPacket": 236, "MsgSender": 11023,
     "sendPickupDropItem": 37283, "m_nRecog": 2203,
     "m_autoPickLastTime": 2927, "getTimer": 43278,
+    "autoFighting": 2977, "m_boUnderPath": 2852,
+    "getNearestDropPacket": 5763, "leaveForNearestItemForAutoFight": 3009,
+    "Math": 43301, "abs": 43413,
 }
 
 
@@ -342,8 +348,8 @@ def patch_stacked_drops(source):
     return result
 
 
-def idle_pickup_code():
-    """A bounded current-tile check using existing player state and filters."""
+def idle_pickup_code(nearby=True):
+    """Check the current tile and nearby combat drops with existing filters."""
     def q(opcode, name, *args):
         return (bytes([opcode]) + encode_u30(IDLE_NAMES[name])
                 + b"".join(encode_u30(x) for x in args))
@@ -379,6 +385,25 @@ def idle_pickup_code():
                  + b"\xd0" + q(0x66, "currentY") + b"\x26"
                  + q(0x46, "getDropPacketByXY", 3)
                  + q(0x80, "MapDropItemPacket") + b"\xd7")
+    if nearby:
+        # Prefer the current tile. Only walk for drops during auto-fight, without
+        # replacing an already active path or walking farther than two tiles.
+        block.extend(b"\xd3\x11\0\0\0")
+        on_tile = len(block) - 3
+        guard(b"\xd0" + q(0x66, "autoFighting"))
+        guard(b"\xd0" + q(0x66, "m_boUnderPath"), 0x11)
+        block.extend(q(0x60, "LogicManager") + q(0x66, "defaultManager")
+                     + b"\x26" + q(0x46, "getNearestDropPacket", 1)
+                     + q(0x80, "MapDropItemPacket") + b"\xd7")
+        guard(b"\xd3")
+        for name in ("currentX", "currentY"):
+            guard(q(0x60, "Math") + b"\xd3" + q(0x66, name)
+                  + b"\xd0" + q(0x66, name) + b"\xa1"
+                  + q(0x46, "abs", 1) + b"\x24\x02", 0x17)
+        block.extend(b"\xd0\xd2" + q(0x68, "m_autoPickLastTime"))
+        block.extend(b"\xd0" + q(0x4F, "leaveForNearestItemForAutoFight", 0))
+        guard(b"\x26", 0x11)
+        block[on_tile:on_tile + 3] = encode_s24(len(block) - on_tile - 3)
     guard(b"\xd3")
     # Install the retry delay before dispatch, matching the path-arrival flow.
     block.extend(b"\xd3" + retry_assignment())
@@ -403,6 +428,38 @@ def patch_idle_pickup(source):
         if limits != (4, 4, 13, 14):
             raise ValueError("Unexpected stationary pickup method limits")
         return source
+    _, legacy = idle_pickup_code(nearby=False)
+    if code[2:2 + len(cadence)] == cadence and code.count(legacy) == 1:
+        if limits != (4, 4, 13, 14):
+            raise ValueError("Unexpected legacy stationary pickup limits")
+        hook = code.index(legacy)
+        # Neutralize old hook branches before replacing it. Original branches
+        # may skip the hook but must never enter its interior.
+        neutral = bytearray(code)
+        for op in instructions(code):
+            if hook <= op.start < hook + len(legacy):
+                neutral[op.start:op.end] = b"\x02" * (op.end - op.start)
+            elif any(hook < target < hook + len(legacy)
+                     for _, target, _ in op.branches):
+                raise ValueError("Original branch enters stationary pickup hook")
+        changed, moved = relocate(bytes(neutral),
+                                  [(hook, hook + len(legacy), b"\x02" * len(block))])
+        changed = bytearray(changed)
+        destination = moved(hook)
+        changed[destination:destination + len(block)] = block
+        instructions(changed)
+        reader = ABCReader(source)
+        reader.pos = start + length
+        if reader.u30() != 0 or reader.u30() != 0:
+            raise ValueError("Unexpected stationary pickup exceptions or traits")
+        length_start = start - len(encode_u30(length))
+        replacement = encode_u30(len(changed)) + changed + b"\0\0"
+        result = source[:length_start] + replacement + source[reader.pos:]
+        inspect_abc(result, "LocalPlayer")
+        if (result[:length_start] + source[length_start:reader.pos]
+                + result[length_start + len(replacement):]) != source:
+            raise ValueError("Unrelated nearby pickup client bytes changed")
+        return result
     if limits != (3, 2, 13, 14) or code[:2] != b"\xd0\x30":
         raise ValueError("Unexpected player update method")
     supers = [op for op in instructions(code) if op.opcode == 0x4E
@@ -486,7 +543,7 @@ def main():
             raise ValueError("Pickup retry patch is missing")
     elif source != result:
         CLIENT.write_bytes(result)
-    print("Verified stationary retries, overlapping-drop scans, uncached checks and safe ranges; unrelated client bytes preserved")
+    print("Verified nearby combat pickup, stationary retries, overlapping drops and safe ranges; unrelated client bytes preserved")
 
 
 if __name__ == "__main__":

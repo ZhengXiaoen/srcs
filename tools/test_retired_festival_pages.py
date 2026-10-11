@@ -15,6 +15,7 @@ from patch_activity_reminders import normalize
 from patch_drop_pickup_retry import abc_section, instructions
 from patch_god_equip_state import inspect_abc
 from patch_guild_quest_config import read_cbp, read_pack, write_node
+from patch_spring_recharge import patch_config as spring_recharge, server_rewards
 from test_activity_reminders import execute
 
 SERVER = ROOT / 'Server/S1001/data'
@@ -226,9 +227,22 @@ class RetiredClientTests(unittest.TestCase):
             b,length,newlimits=self.bodies[method]
             if before[a:a+size]!=self.abc[b:b+length] or limits!=newlimits:changed.add(method)
         self.assertEqual(DISPLAY_METHODS | WANFU_METHODS,changed);self.assertEqual(strings_of(before),self.strings)
-        for path in ('web/v2/lang/zh-cn/zh-cn.dat','web/v2/lang/zh-cn/SpringFestivalCfg.cbp',
-                     'Server/S1001/data/config/activity/SpringFestivalCfg.lua'):
-            self.assertEqual(subprocess.check_output(['git','show',DISPLAY_BASELINE+':'+path],cwd=ROOT),(ROOT/path).read_bytes())
+        # Recharge rewards were subsequently revised; other Spring sections and
+        # packed resources remain identical to the retired-page release.
+        path='Server/S1001/data/config/activity/SpringFestivalCfg.lua'
+        old=subprocess.check_output(['git','show',DISPLAY_BASELINE+':'+path],cwd=ROOT)
+        current=(ROOT/path).read_bytes()
+        def without_recharge(source):
+            return source.split(b'\tEveryTotalPay =',1)[0]+source.split(b'\tXiaoFeiZhuanPanNew =',1)[1]
+        self.assertEqual(without_recharge(old),without_recharge(current))
+        for path in ('web/v2/lang/zh-cn/zh-cn.dat','web/v2/lang/zh-cn/SpringFestivalCfg.cbp'):
+            old=subprocess.check_output(['git','show',DISPLAY_BASELINE+':'+path],cwd=ROOT)
+            if path.endswith('.dat'):
+                old=dict(read_pack(old));current=dict(read_pack((ROOT/path).read_bytes()))
+                old['SpringFestivalCfg.cbp']=spring_recharge(old['SpringFestivalCfg.cbp'],server_rewards())
+                self.assertEqual(old,current)
+            else:
+                self.assertEqual(spring_recharge(old,server_rewards()),(ROOT/path).read_bytes())
         compiler=LuaRuntime(unpack_returned_tuples=True).eval('function(s) local f,e=loadstring(s);return f~=nil,e end')
         links={
             'spring_total.lua':(('我也要购买/@@showWin,243,5','我也要购买/@@showWin,243,3'),
@@ -296,13 +310,17 @@ class RetiredClientTests(unittest.TestCase):
         lua=LuaRuntime()
         for name,fields in SWITCHES.items():
             self.assertEqual(after[name],(directory/name).read_bytes())
-            self.assertEqual(after[name],patch_config(before[name],name));self.assertEqual(after[name],patch_config(after[name],name))
+            expected=patch_config(before[name],name)
+            if name=='SpringFestivalCfg.cbp':expected=spring_recharge(expected,server_rewards())
+            self.assertEqual(after[name],expected);self.assertEqual(after[name],patch_config(after[name],name))
             header,old=read_cbp(before[name]);_,new=read_cbp(after[name])
             lua.execute((SERVER/'config/activity'/name.replace('.cbp','.lua')).read_text('utf-8-sig'))
             for field in fields:
                 node=new.child(field);self.assertFalse(lua.globals()[name[:-4]][field].isOpen)
                 flag=node.child('isOpen');self.assertEqual((1,b'\0'*8),(flag.kind,flag.value))
                 node.children=[v for v in node.children if v.name!='isOpen']
+            if name=='SpringFestivalCfg.cbp':
+                new.child('EveryTotalPay').children=old.child('EveryTotalPay').children
             self.assertEqual(write_node(old),write_node(new),name)
         self.assertFalse(lua.globals().SpringFestivalCfg.shousui.isOpen)
 

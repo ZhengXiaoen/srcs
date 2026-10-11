@@ -1885,7 +1885,7 @@ SpringFestivalCfg =
 	{
 		{
 			name ="累计充值达标天",
-			needPay =10000,
+			needPay =100000,
 			days = 
 			{
 				--累计1天超过needPay
@@ -1893,7 +1893,7 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7780,count = 1,bind = 1},--仙钻2
 					{type = 0, id = 7194,count = 5,bind = 1},--火龙结晶小
-					{type = 0, id = 7046,count = 10,bind = 1},--三国时装碎片
+					{type = 0, id = 7043,count = 1,bind = 1},--足迹礼盒
                     {type = 0, id = 6363,count = 1,bind = 1},--壕礼宝箱
                     {type = 0, id = 6369,count = 1,bind = 1},--绿色生肖袋
 					       }
@@ -1903,9 +1903,9 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7780,count = 2,bind = 1},--仙钻2
 					{type = 0, id = 7194,count = 10,bind = 1},--火龙结晶小
-					{type = 0, id = 7043,count = 1,bind = 1},--足迹礼盒
+					{type = 0, id = 7690,count = 1,bind = 1},--神盾礼盒
                     {type = 0, id = 6363,count = 2,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6403,count = 15,bind = 1},--五行石
+                    {type = 0, id = 6369,count = 1,bind = 1},--绿色生肖袋
 					       }
 				},
 				--累计3天超过needPay
@@ -1913,9 +1913,9 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7780,count = 3,bind = 1},--仙钻2
 					{type = 0, id = 7194,count = 20,bind = 1},--火龙结晶小
-					{type = 0, id = 7046,count = 10,bind = 1},--三国时装碎片
+					{type = 0, id = 7047,count = 1,bind = 1},--坐骑礼盒
                     {type = 0, id = 6363,count = 3,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6369,count = 1,bind = 1},--qq_99绿色生肖袋
+                    {type = 0, id = 6369,count = 1,bind = 1},--绿色生肖袋
 					       }
 				},
 				--累计4天超过needPay
@@ -1923,9 +1923,9 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7780,count = 4,bind = 1},--仙钻2
 					{type = 0, id = 7194,count = 30,bind = 1},--火龙结晶小
-					{type = 0, id = 7047,count = 1,bind = 1},--坐骑礼盒
+					{type = 0, id = 7827,count = 1,bind = 1},--神戒宝盒
                     {type = 0, id = 6363,count = 4,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6403,count = 15,bind = 1},--五行石
+                    {type = 0, id = 6369,count = 1,bind = 1},--绿色生肖袋
 					       }
 				},
 				--累计5天超过needPay
@@ -1933,7 +1933,7 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7780,count = 5,bind = 1},--仙钻2
 					{type = 0, id = 7194,count = 40,bind = 1},--火龙结晶小
-					{type = 0, id = 7039,count = 1,bind = 1},--屠龙至尊碎片
+					{type = 0, id = 6887,count = 1,bind = 1},--龍装Ⅰ首饰箱
                     {type = 0, id = 6363,count = 5,bind = 1},--壕礼宝箱
                     {type = 0, id = 6369,count = 1,bind = 1},--绿色生肖袋
 					       }
@@ -1943,7 +1943,7 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7780,count = 6,bind = 1},--仙钻2
 					{type = 0, id = 7194,count = 50,bind = 1},--火龙结晶小
-					{type = 0, id = 6659,count = 1,bind = 1},--传世礼盒
+					{type = 0, id = 7813,count = 1,bind = 1},--太初仙装礼盒
                     {type = 0, id = 6363,count = 6,bind = 1},--壕礼宝箱
                     {type = 0, id = 6369,count = 2,bind = 1},--绿色生肖袋
 					       }
@@ -1954,7 +1954,7 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7780,count = 7,bind = 1},--仙钻2
 					{type = 0, id = 7194,count = 60,bind = 1},--火龙结晶小
-					{type = 0, id = 7651,count = 1,bind = 1},--雷神首饰礼盒
+					{type = 0, id = 7043,count = 1,bind = 1},--足迹礼盒
                     {type = 0, id = 6363,count = 7,bind = 1},--壕礼宝箱
                     {type = 0, id = 6369,count = 3,bind = 1},--绿色生肖袋
 					       }
@@ -1965,7 +1965,7 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7780,count = 8,bind = 1},--仙钻2
 					{type = 0, id = 7194,count = 70,bind = 1},--火龙结晶小
-					{type = 0, id = 7651,count = 1,bind = 1},--雷神首饰礼盒
+					{type = 0, id = 7690,count = 1,bind = 1},--神盾礼盒
                     {type = 0, id = 6363,count = 8,bind = 1},--壕礼宝箱
                     {type = 0, id = 6369,count = 4,bind = 1},--绿色生肖袋
 					       }
@@ -1976,7 +1976,7 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7780,count = 9,bind = 1},--仙钻2
 					{type = 0, id = 7194,count = 80,bind = 1},--火龙结晶小
-					{type = 0, id = 7651,count = 1,bind = 1},--雷神首饰礼盒
+					{type = 0, id = 7047,count = 1,bind = 1},--坐骑礼盒
                     {type = 0, id = 6363,count = 9,bind = 1},--壕礼宝箱
                     {type = 0, id = 6369,count = 5,bind = 1},--绿色生肖袋
 					       }
@@ -1987,7 +1987,7 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7780,count = 10,bind = 1},--仙钻2
 					{type = 0, id = 7194,count = 90,bind = 1},--火龙结晶小
-					{type = 0, id = 7651,count = 1,bind = 1},--雷神首饰礼盒
+					{type = 0, id = 7827,count = 1,bind = 1},--神戒宝盒
                     {type = 0, id = 6363,count = 10,bind = 1},--壕礼宝箱
                     {type = 0, id = 6369,count = 6,bind = 1},--绿色生肖袋
 					       }
@@ -1998,7 +1998,7 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7780,count = 11,bind = 1},--仙钻2
 					{type = 0, id = 7194,count = 100,bind = 1},--火龙结晶小
-					{type = 0, id = 7651,count = 1,bind = 1},--雷神首饰礼盒
+					{type = 0, id = 6887,count = 1,bind = 1},--龍装Ⅰ首饰箱
                     {type = 0, id = 6363,count = 11,bind = 1},--壕礼宝箱
                     {type = 0, id = 6369,count = 7,bind = 1},--绿色生肖袋
 					       }
@@ -2009,7 +2009,7 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7780,count = 12,bind = 1},--仙钻2
 					{type = 0, id = 7194,count = 110,bind = 1},--火龙结晶小
-					{type = 0, id = 7651,count = 1,bind = 1},--雷神首饰礼盒
+					{type = 0, id = 7813,count = 1,bind = 1},--太初仙装礼盒
                     {type = 0, id = 6363,count = 12,bind = 1},--壕礼宝箱
                     {type = 0, id = 6369,count = 8,bind = 1},--绿色生肖袋
 					       }
@@ -2019,126 +2019,126 @@ SpringFestivalCfg =
 		
 		{
 			name ="累计充值达标天",
-			needPay =50000,
+			needPay =500000,
 			days = 
 			{
 				--累计1天超过needPay
 				{
 					award ={
-                    {type = 0, id = 5661,count = 25,bind = 1},--幻羽精华
+                    {type = 0, id = 5951,count = 20,bind = 1},--时装升星符
 					{type = 0, id = 7195,count = 2,bind = 1},--火龙结晶中					
-					{type = 0, id = 6887,count = 1,bind = 1},--龍装Ⅰ首饰箱
-					{type = 0, id = 7046,count = 10,bind = 1},--三国时装碎片
+					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
+					{type = 0, id = 7049,count = 2,bind = 1},--翅膀装备礼盒
                     {type = 0, id = 6363,count = 1,bind = 1},--壕礼宝箱
 					       }
 				},
 				--累计2天超过needPay
 				{
 					award ={
-					{type = 0, id = 6271,count = 30,bind = 1},--五彩石
+					{type = 0, id = 5951,count = 20,bind = 1},--时装升星符
 					{type = 0, id = 7195,count = 4,bind = 1},--火龙结晶中
-					{type = 0, id = 7049,count = 2,bind = 1},--翅膀装备礼盒
-					{type = 0, id = 6691,count = 10,bind = 1},--西游时装碎片
+					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
+					{type = 0, id = 7048,count = 2,bind = 1},--坐骑装备礼盒
                     {type = 0, id = 6363,count = 2,bind = 1},--壕礼宝箱
 					       }
 				},
 				--累计3天超过needPay
 				{
 					award ={
-					{type = 0, id = 5661,count = 25,bind = 1},--幻羽精华
+					{type = 0, id = 5951,count = 20,bind = 1},--时装升星符
 					{type = 0, id = 7195,count = 6,bind = 1},--火龙结晶中
-					{type = 0, id = 7039,count = 1,bind = 1},--屠龙至尊碎片
-					{type = 0, id = 392,count = 1,bind = 1},--九转首饰盒
+					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
+					{type = 0, id = 7049,count = 2,bind = 1},--翅膀装备礼盒
                     {type = 0, id = 6363,count = 4,bind = 1},--壕礼宝箱
 					       }
 				},
 				--累计4天超过needPay
 				{
 					award ={
-                    {type = 0, id = 6271,count = 30,bind = 1},--五彩石
+                    {type = 0, id = 5951,count = 20,bind = 1},--时装升星符
 					{type = 0, id = 7195,count = 8,bind = 1},--火龙结晶中
-					{type = 0, id = 6659,count = 1,bind = 1},--传世礼盒
-					{type = 0, id = 6691,count = 10,bind = 1},--西游时装碎片
+					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
+					{type = 0, id = 7048,count = 2,bind = 1},--坐骑装备礼盒
                     {type = 0, id = 6363,count = 6,bind = 1},--壕礼宝箱
 					       }
 				},
 				--累计5天超过needPay
 				{
 					award ={
-					{type = 0, id = 5951,count = 35,bind = 1},--时装升星符
+					{type = 0, id = 5951,count = 20,bind = 1},--时装升星符
 					{type = 0, id = 7195,count = 10,bind = 1},--火龙结晶中
-					{type = 0, id = 7039,count = 1,bind = 1},--屠龙至尊碎片
-					{type = 0, id = 6818,count = 3,bind = 1},--元神装备箱
+					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
+					{type = 0, id = 7049,count = 2,bind = 1},--翅膀装备礼盒
                     {type = 0, id = 6363,count = 8,bind = 1},--壕礼宝箱
 					       }
 				},
 				--累计6天超过needPay
 				{
 					award ={
-					{type = 0, id = 5951,count = 40,bind = 1},--时装升星符
+					{type = 0, id = 5951,count = 30,bind = 1},--时装升星符
 					{type = 0, id = 7195,count = 12,bind = 1},--火龙结晶中
-					{type = 0, id = 7650,count = 1,bind = 1},--龙腾首饰礼盒
-					{type = 0, id = 6818,count = 4,bind = 1},--元神装备箱
+					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
+					{type = 0, id = 7048,count = 2,bind = 1},--坐骑装备礼盒
                     {type = 0, id = 6363,count = 10,bind = 1},--壕礼宝箱
 					       }
 				},
 				--累计7天超过needPay
 				{
 					award ={
-					{type = 0, id = 5951,count = 50,bind = 1},--时装升星符
+					{type = 0, id = 5951,count = 40,bind = 1},--时装升星符
 					{type = 0, id = 7195,count = 15,bind = 1},--火龙结晶中
-					{type = 0, id = 7039,count = 1,bind = 1},--屠龙至尊碎片
-					{type = 0, id = 6818,count = 5,bind = 1},--元神装备箱
+					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
+					{type = 0, id = 7049,count = 2,bind = 1},--翅膀装备礼盒
                     {type = 0, id = 6363,count = 12,bind = 1},--壕礼宝箱
 					       }
 				},
 				--累计8天超过needPay
 				{
 					award ={
-					{type = 0, id = 5951,count = 60,bind = 1},--时装升星符
+					{type = 0, id = 5951,count = 50,bind = 1},--时装升星符
 					{type = 0, id = 7195,count = 18,bind = 1},--火龙结晶中
-					{type = 0, id = 7039,count = 1,bind = 1},--屠龙至尊碎片
-					{type = 0, id = 6818,count = 6,bind = 1},--元神装备箱
+					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
+					{type = 0, id = 7048,count = 2,bind = 1},--坐骑装备礼盒
                     {type = 0, id = 6363,count = 14,bind = 1},--壕礼宝箱
 					       }
 				},
 				--累计9天超过needPay
 				{
 					award ={
-					{type = 0, id = 5951,count = 70,bind = 1},--时装升星符
+					{type = 0, id = 5951,count = 60,bind = 1},--时装升星符
 					{type = 0, id = 7195,count = 21,bind = 1},--火龙结晶中
-					{type = 0, id = 7039,count = 1,bind = 1},--屠龙至尊碎片
-					{type = 0, id = 6818,count = 7,bind = 1},--元神装备箱
+					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
+					{type = 0, id = 7049,count = 2,bind = 1},--翅膀装备礼盒
                     {type = 0, id = 6363,count = 16,bind = 1},--壕礼宝箱
 					       }
 				},
 				--累计10天超过needPay
 				{
 					award ={
-					{type = 0, id = 5951,count = 80,bind = 1},--时装升星符
+					{type = 0, id = 5951,count = 70,bind = 1},--时装升星符
 					{type = 0, id = 7195,count = 25,bind = 1},--火龙结晶中
-					{type = 0, id = 7039,count = 1,bind = 1},--屠龙至尊碎片
-					{type = 0, id = 6818,count = 8,bind = 1},--元神装备箱
+					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
+					{type = 0, id = 7048,count = 2,bind = 1},--坐骑装备礼盒
                     {type = 0, id = 6363,count = 18,bind = 1},--壕礼宝箱
 					       }
 				},
 				--累计11天超过needPay
 				{
 					award ={
-					{type = 0, id = 5951,count = 90,bind = 1},--时装升星符
+					{type = 0, id = 5951,count = 80,bind = 1},--时装升星符
 					{type = 0, id = 7195,count = 30,bind = 1},--火龙结晶中
-					{type = 0, id = 7039,count = 1,bind = 1},--屠龙至尊碎片
-					{type = 0, id = 6818,count = 9,bind = 1},--元神装备箱
+					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
+					{type = 0, id = 7049,count = 2,bind = 1},--翅膀装备礼盒
                     {type = 0, id = 6363,count = 20,bind = 1},--壕礼宝箱
 					       }
 				},
 				--累计12天超过needPay
 				{
 					award ={
-					{type = 0, id = 5951,count = 100,bind = 1},--时装升星符
+					{type = 0, id = 5951,count = 90,bind = 1},--时装升星符
 					{type = 0, id = 7195,count = 35,bind = 1},--火龙结晶中
-					{type = 0, id = 7039,count = 1,bind = 1},--屠龙至尊碎片
-					{type = 0, id = 6818,count = 10,bind = 1},--元神装备箱
+					{type = 0, id = 7039,count = 1,bind = 1},--至尊屠龙碎片
+					{type = 0, id = 7048,count = 2,bind = 1},--坐骑装备礼盒
                     {type = 0, id = 6363,count = 25,bind = 1},--壕礼宝箱
 					       }
 				},
@@ -2148,7 +2148,7 @@ SpringFestivalCfg =
 
 		{
 			name ="累计充值达标天",
-			needPay =200000,
+			needPay =1000000,
 			days = 
 			{
 				--累计1天超过needPay
@@ -2156,9 +2156,9 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7196,count = 1,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 1,bind = 1},--屠龙至尊碎片
-					{type = 0, id = 6887,count = 2,bind = 1},--龍装Ⅰ首饰箱
+					{type = 0, id = 7651,count = 1,bind = 1},--雷神首饰礼盒
                     {type = 0, id = 6363,count = 5,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6370,count = 1,bind = 1},--蓝色生肖袋
+                    {type = 0, id = 6402,count = 10,bind = 1},--传世宝钻
 					       }
 				},
 				--累计2天超过needPay
@@ -2166,9 +2166,9 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7196,count = 2,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 2,bind = 1},--屠龙至尊碎片
-					{type = 0, id = 6364,count = 1,bind = 1},--九转装备箱
+					{type = 0, id = 6659,count = 1,bind = 1},--传世礼盒
                     {type = 0, id = 6363,count = 10,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6402,count = 10,bind = 1},--传世宝钻
+                    {type = 0, id = 7151,count = 80,bind = 1},--仙力(1点)
 					       }
 				},
 				--累计3天超过needPay
@@ -2176,9 +2176,9 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7196,count = 3,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 3,bind = 1},--屠龙至尊碎片
-					{type = 0, id = 6820,count = 1,bind = 1},--龍装Ⅱ装备箱
+					{type = 0, id = 7651,count = 2,bind = 1},--雷神首饰礼盒
                     {type = 0, id = 6363,count = 15,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6370,count = 3,bind = 1},--蓝色生肖袋
+                    {type = 0, id = 6402,count = 15,bind = 1},--传世宝钻
 					       }
 				},
 				--累计4天超过needPay
@@ -2186,9 +2186,9 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7196,count = 4,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 4,bind = 1},--屠龙至尊碎片
-					{type = 0, id = 6714,count = 1,bind = 1},--11转首饰盒
+					{type = 0, id = 6659,count = 2,bind = 1},--传世礼盒
                     {type = 0, id = 6363,count = 20,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6402,count = 15,bind = 1},--传世宝钻
+                    {type = 0, id = 7151,count = 120,bind = 1},--仙力(1点)
 					       }
 				},
 				--累计5天超过needPay
@@ -2196,9 +2196,9 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7196,count = 5,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 5,bind = 1},--屠龙至尊碎片
-					{type = 0, id = 6821,count = 1,bind = 1},--龍装Ⅲ装备箱
+					{type = 0, id = 7651,count = 3,bind = 1},--雷神首饰礼盒
                     {type = 0, id = 6363,count = 25,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6370,count = 5,bind = 1},--蓝色生肖袋
+                    {type = 0, id = 6402,count = 20,bind = 1},--传世宝钻
 					       }
 				},
 				--累计6天超过needPay
@@ -2206,9 +2206,9 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7196,count = 6,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 6,bind = 1},--屠龙至尊碎片
-					{type = 0, id = 6821,count = 1,bind = 1},--龍装Ⅲ装备箱
+					{type = 0, id = 6659,count = 3,bind = 1},--传世礼盒
                     {type = 0, id = 6363,count = 30,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6402,count = 20,bind = 1},--传世宝钻
+                    {type = 0, id = 7151,count = 160,bind = 1},--仙力(1点)
 					       }
 				},
 				--累计7天超过needPay
@@ -2216,9 +2216,9 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7196,count = 7,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 7,bind = 1},--屠龙至尊碎片
-					{type = 0, id = 6821,count = 2,bind = 1},--龍装Ⅲ装备箱
+					{type = 0, id = 7651,count = 4,bind = 1},--雷神首饰礼盒
                     {type = 0, id = 6363,count = 35,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6370,count = 7,bind = 1},--蓝色生肖袋
+                    {type = 0, id = 6402,count = 25,bind = 1},--传世宝钻
 					       }
 				},
 				--累计8天超过needPay
@@ -2226,9 +2226,9 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7196,count = 8,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 8,bind = 1},--屠龙至尊碎片
-					{type = 0, id = 6821,count = 1,bind = 1},--龍装Ⅲ装备箱
+					{type = 0, id = 6659,count = 4,bind = 1},--传世礼盒
                     {type = 0, id = 6363,count = 40,bind = 1},--壕礼宝箱
-                  	{type = 0, id = 6402,count = 25,bind = 1},--传世宝钻
+                    {type = 0, id = 7151,count = 200,bind = 1},--仙力(1点)
 					       }
 				},
 				--累计9天超过needPay
@@ -2236,9 +2236,9 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7196,count = 9,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 9,bind = 1},--屠龙至尊碎片
-					{type = 0, id = 6821,count = 1,bind = 1},--龍装Ⅲ装备箱
+					{type = 0, id = 7651,count = 5,bind = 1},--雷神首饰礼盒
                     {type = 0, id = 6363,count = 45,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6370,count = 8,bind = 1},--蓝色生肖袋
+                    {type = 0, id = 6402,count = 30,bind = 1},--传世宝钻
 					       }
 				},
 				--累计10天超过needPay
@@ -2246,9 +2246,9 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7196,count = 10,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 10,bind = 1},--屠龙至尊碎片
-					{type = 0, id = 6821,count = 1,bind = 1},--龍装Ⅲ装备箱
+					{type = 0, id = 6659,count = 5,bind = 1},--传世礼盒
                     {type = 0, id = 6363,count = 50,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6402,count = 30,bind = 1},--传世宝钻
+                    {type = 0, id = 7151,count = 240,bind = 1},--仙力(1点)
 					       }
 				},
 				--累计11天超过needPay
@@ -2256,9 +2256,9 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7196,count = 11,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 11,bind = 1},--屠龙至尊碎片
-					{type = 0, id = 6821,count = 1,bind = 1},--龍装Ⅲ装备箱
+					{type = 0, id = 7651,count = 6,bind = 1},--雷神首饰礼盒
                     {type = 0, id = 6363,count = 55,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6370,count = 9,bind = 1},--蓝色生肖袋
+                    {type = 0, id = 6402,count = 35,bind = 1},--传世宝钻
 					       }
 				},
 				--累计12天超过needPay
@@ -2266,9 +2266,9 @@ SpringFestivalCfg =
 					award ={
 					{type = 0, id = 7196,count = 12,bind = 1},--火龙结晶大
 					{type = 0, id = 7039,count = 12,bind = 1},--屠龙至尊碎片
-					{type = 0, id = 6821,count = 2,bind = 1},--龍装Ⅲ装备箱
+					{type = 0, id = 6659,count = 6,bind = 1},--传世礼盒
                     {type = 0, id = 6363,count = 60,bind = 1},--壕礼宝箱
-                    {type = 0, id = 6402,count = 35,bind = 1},--传世宝钻
+                    {type = 0, id = 7151,count = 280,bind = 1},--仙力(1点)
 					       }
 				},
 			},
@@ -2277,127 +2277,127 @@ SpringFestivalCfg =
 
 		{
 			name ="累计充值达标天",
-			needPay =500000,
+			needPay =2000000,
 			days = 
 			{
 				--累计1天超过needPay
 				{
 					award ={
-					{type = 0, id = 7695,count = 1,bind = 1},--至尊屠龙卷
+					{type = 0, id = 7039,count = 4,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7650,count = 2,bind = 1},--龙腾首饰箱
-					{type = 0, id = 5384,count = 2,bind = 1},--4阶宝石袋
-                    {type = 0, id = 527,count = 15,bind = 1},--特戒结晶
-                    {type = 0, id = 6371,count = 1,bind = 1},--紫色生肖袋
+					{type = 0, id = 6364,count = 1,bind = 1},--九转装备箱
+                    {type = 0, id = 5661,count = 20,bind = 1},--幻羽精华
+                    {type = 0, id = 6371,count = 2,bind = 1},--幻羽礼盒
 					       }
 				},
 				--累计2天超过needPay
 				{
 					award ={
-					{type = 0, id = 7039,count = 3,bind = 1},--屠龙至尊碎片
+					{type = 0, id = 7039,count = 8,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7650,count = 3,bind = 1},--龙腾首饰箱
-					{type = 0, id = 5384,count = 3,bind = 1},--4阶宝石袋
-                    {type = 0, id = 527,count = 20,bind = 1},--特戒结晶
-                   {type = 0, id = 6371,count = 1,bind = 1},--紫色生肖袋
+					{type = 0, id = 6364,count = 1,bind = 1},--九转装备箱
+                    {type = 0, id = 7052,count = 5,bind = 1},--凡·南明离火
+                   {type = 0, id = 6658,count = 2,bind = 1},--灵器礼盒
 					       }
 				},
 				--累计3天超过needPay
 				{
 					award ={
-					{type = 0, id = 7695,count = 1,bind = 1},--至尊屠龙卷
+					{type = 0, id = 7039,count = 12,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7650,count = 4,bind = 1},--龙腾首饰箱
-					{type = 0, id = 5384,count = 4,bind = 1},--4阶宝石袋
-                    {type = 0, id = 527,count = 25,bind = 1},--特戒结晶
-                   {type = 0, id = 6371,count = 1,bind = 1},--紫色生肖袋
+					{type = 0, id = 6364,count = 1,bind = 1},--九转装备箱
+                    {type = 0, id = 5661,count = 30,bind = 1},--幻羽精华
+                   {type = 0, id = 6371,count = 4,bind = 1},--幻羽礼盒
 					       }
 				},
 				--累计4天超过needPay
 				{
 					award ={
-					{type = 0, id = 7039,count = 5,bind = 1},--屠龙至尊碎片
+					{type = 0, id = 7039,count = 16,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7650,count = 5,bind = 1},--龙腾首饰箱
-					{type = 0, id = 5384,count = 5,bind = 1},--4阶宝石袋
-                    {type = 0, id = 527,count = 30,bind = 1},--特戒结晶
-                   {type = 0, id = 6371,count = 1,bind = 1},--紫色生肖袋
+					{type = 0, id = 6364,count = 1,bind = 1},--九转装备箱
+                    {type = 0, id = 7052,count = 8,bind = 1},--凡·南明离火
+                   {type = 0, id = 6658,count = 4,bind = 1},--灵器礼盒
 					       }
 				},
 				--累计5天超过needPay
 				{
 					award ={
-					{type = 0, id = 7695,count = 1,bind = 1},--至尊屠龙卷
+					{type = 0, id = 7039,count = 20,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7650,count = 6,bind = 1},--龙腾首饰箱
-					{type = 0, id = 5384,count = 6,bind = 1},--4阶宝石袋
-                    {type = 0, id = 527,count = 35,bind = 1},--特戒结晶
-                    {type = 0, id = 6371,count = 1,bind = 1},--紫色生肖袋
+					{type = 0, id = 6714,count = 1,bind = 1},--十一转装备箱
+                    {type = 0, id = 5661,count = 40,bind = 1},--幻羽精华
+                    {type = 0, id = 6371,count = 6,bind = 1},--幻羽礼盒
 					       }
 				},
 				--累计6天超过needPay
 				{
 					award ={
-					{type = 0, id = 7039,count = 7,bind = 1},--屠龙至尊碎片
+					{type = 0, id = 7039,count = 24,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7650,count = 7,bind = 1},--龙腾首饰箱
-					{type = 0, id = 5384,count = 7,bind = 1},--4阶宝石袋
-                    {type = 0, id = 527,count = 40,bind = 1},--特戒结晶
-                    {type = 0, id = 6371,count = 1,bind = 1},--紫色生肖袋
+					{type = 0, id = 6714,count = 1,bind = 1},--十一转装备箱
+                    {type = 0, id = 7052,count = 11,bind = 1},--凡·南明离火
+                    {type = 0, id = 6658,count = 6,bind = 1},--灵器礼盒
 					       }
 				},
 				--累计7天超过needPay
 				{
 					award ={
-					{type = 0, id = 7695,count = 1,bind = 1},--至尊屠龙卷
+					{type = 0, id = 7039,count = 28,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7650,count = 8,bind = 1},--龙腾首饰箱
-					{type = 0, id = 5384,count = 8,bind = 1},--4阶宝石袋
-                    {type = 0, id = 527,count = 50,bind = 1},--特戒结晶
-                   {type = 0, id = 6371,count = 1,bind = 1},--紫色生肖袋
+					{type = 0, id = 6714,count = 1,bind = 1},--十一转装备箱
+                    {type = 0, id = 5661,count = 50,bind = 1},--幻羽精华
+                   {type = 0, id = 6371,count = 8,bind = 1},--幻羽礼盒
 					       }
 				},
 				--累计8天超过needPay
 				{
 					award ={
-					{type = 0, id = 7039,count = 9,bind = 1},--屠龙至尊碎片
+					{type = 0, id = 7039,count = 32,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7650,count = 9,bind = 1},--龙腾首饰箱
-					{type = 0, id = 5384,count = 9,bind = 1},--4阶宝石袋
-                    {type = 0, id = 527,count = 60,bind = 1},--特戒结晶
-                   {type = 0, id = 6371,count = 1,bind = 1},--紫色生肖袋
+					{type = 0, id = 6714,count = 1,bind = 1},--十一转装备箱
+                    {type = 0, id = 7052,count = 14,bind = 1},--凡·南明离火
+                   {type = 0, id = 6658,count = 8,bind = 1},--灵器礼盒
 					       }
 				},
 				--累计9天超过needPay
 				{
 					award ={
-					{type = 0, id = 7695,count = 1,bind = 1},--至尊屠龙卷
+					{type = 0, id = 7039,count = 36,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7650,count = 10,bind = 1},--龙腾首饰箱
-					{type = 0, id = 5384,count = 10,bind = 1},--4阶宝石袋
-                    {type = 0, id = 527,count = 70,bind = 1},--特戒结晶
-                   {type = 0, id = 6371,count = 1,bind = 1},--紫色生肖袋
+					{type = 0, id = 7182,count = 1,bind = 1},--13转装备箱
+                    {type = 0, id = 5661,count = 60,bind = 1},--幻羽精华
+                   {type = 0, id = 6371,count = 10,bind = 1},--幻羽礼盒
 					       }
 				},
 				--累计10天超过needPay
 				{
 					award ={
-					{type = 0, id = 7039,count = 10,bind = 1},--屠龙至尊碎片
+					{type = 0, id = 7039,count = 40,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7650,count = 11,bind = 1},--龙腾首饰箱
-					{type = 0, id = 5384,count = 11,bind = 1},--4阶宝石袋
-                    {type = 0, id = 527,count = 80,bind = 1},--特戒结晶
-                   {type = 0, id = 6371,count = 1,bind = 1},--紫色生肖袋
+					{type = 0, id = 7182,count = 1,bind = 1},--13转装备箱
+                    {type = 0, id = 7052,count = 17,bind = 1},--凡·南明离火
+                   {type = 0, id = 6658,count = 10,bind = 1},--灵器礼盒
 					       }
 				},
 				--累计11天超过needPay
 				{
 					award ={
-					{type = 0, id = 7695,count = 1,bind = 1},--至尊屠龙卷
+					{type = 0, id = 7039,count = 44,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7650,count = 12,bind = 1},--龙腾首饰箱
-					{type = 0, id = 5384,count = 12,bind = 1},--4阶宝石袋
-                    {type = 0, id = 527,count = 90,bind = 1},--特戒结晶
-                   {type = 0, id = 6371,count = 1,bind = 1},--紫色生肖袋
+					{type = 0, id = 7182,count = 1,bind = 1},--13转装备箱
+                    {type = 0, id = 5661,count = 70,bind = 1},--幻羽精华
+                   {type = 0, id = 6371,count = 12,bind = 1},--幻羽礼盒
 					       }
 				},
 				--累计12天超过needPay
 				{
 					award ={
-					{type = 0, id = 7695,count = 1,bind = 1},--至尊屠龙卷
+					{type = 0, id = 7039,count = 48,bind = 1},--至尊屠龙碎片
 					{type = 0, id = 7650,count = 13,bind = 1},--龙腾首饰箱
-					{type = 0, id = 5384,count = 13,bind = 1},--4阶宝石袋
-                    {type = 0, id = 527,count = 100,bind = 1},--特戒结晶
-                   {type = 0, id = 6371,count = 1,bind = 1},--紫色生肖袋
+					{type = 0, id = 7182,count = 1,bind = 1},--13转装备箱
+                    {type = 0, id = 7052,count = 20,bind = 1},--凡·南明离火
+                   {type = 0, id = 6658,count = 12,bind = 1},--灵器礼盒
 					       }
 				},
 			},

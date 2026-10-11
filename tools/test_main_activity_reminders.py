@@ -6,11 +6,12 @@ from patch_consume_ranking_client import patch_swf as ranking_description
 from patch_spring_activity_icon import METHODS as SPRING_METHODS, patch_swf as spring_icon
 from patch_retired_festival_pages import METHODS as RETIRED_METHODS, patch_swf as retired_pages
 
+from patch_wanfu_opening import METHODS as WANFU_METHODS, patch_swf as wanfu_opening
 from patch_spring_display import patch_swf as spring_display
 
 def current_release(source, module=False):
     updated = unique_rankings(source, module)
-    return updated if module else spring_display(retired_pages(spring_icon(ranking_description(updated))))
+    return updated if module else wanfu_opening(spring_display(retired_pages(spring_icon(ranking_description(updated)))))
 
 
 from itertools import product
@@ -239,7 +240,7 @@ class MainActivityRemindersTests(unittest.TestCase):
         for method, (a, size, limits) in old.items():
             b, length, new_limits = self.symbols[False][2][method]
             if before[a:a + size] != self.abc[False][b:b + length] or limits != new_limits: changed.add(method)
-        self.assertEqual(changed, METHODS | SHOP_METHODS | MAIN_METHODS | SPRING_METHODS | RETIRED_METHODS)
+        self.assertEqual(changed, METHODS | SHOP_METHODS | MAIN_METHODS | SPRING_METHODS | RETIRED_METHODS | WANFU_METHODS)
 
 
 if __name__ == '__main__': unittest.main(verbosity=2)

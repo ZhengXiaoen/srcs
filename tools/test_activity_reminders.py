@@ -6,11 +6,12 @@ from patch_consume_ranking_client import patch_swf as ranking_description
 from patch_spring_activity_icon import METHODS as SPRING_METHODS, patch_swf as spring_icon
 from patch_retired_festival_pages import METHODS as RETIRED_METHODS, patch_swf as retired_pages
 
+from patch_wanfu_opening import METHODS as WANFU_METHODS, patch_swf as wanfu_opening
 from patch_spring_display import patch_swf as spring_display
 
 def current_release(source, module=False):
     updated = unique_rankings(source, module)
-    return updated if module else spring_display(retired_pages(spring_icon(ranking_description(updated))))
+    return updated if module else wanfu_opening(spring_display(retired_pages(spring_icon(ranking_description(updated)))))
 
 
 import argparse
@@ -69,9 +70,17 @@ def truth(value):
 
 
 def strict(left, right):
+    if isinstance(left, (dict, list, tuple)) or isinstance(right, (dict, list, tuple)):
+        return left is right
     if isinstance(left, (int, float)) and not isinstance(left, bool):
         return isinstance(right, (int, float)) and not isinstance(right, bool) and left == right
     return type(left) == type(right) and left == right
+
+
+def equal(left, right):
+    if isinstance(left, (dict, list, tuple)) and isinstance(right, (dict, list, tuple)):
+        return left is right
+    return left == right
 
 
 def execute(code, names, strings, locals_, globals_, invoke, start=0, end=None):
@@ -93,7 +102,8 @@ def execute(code, names, strings, locals_, globals_, invoke, start=0, end=None):
         elif kind == 0x66:
             name = names[args[0]]; key = name if name else stack.pop(); obj = stack.pop()
             if name == 'length': value = len(obj)
-            elif isinstance(obj, (list, tuple)): value = obj[key] if 0 <= key < len(obj) else None
+            elif isinstance(obj, (list, tuple)):
+                value = (obj[key] if 0 <= key < len(obj) else None) if isinstance(key, int) else obj.get(key, ('method', key, obj))
             elif isinstance(obj, dict): value = obj.get(key, ('method', key, obj))
             else: raise ValueError(f'Property {name} on {obj}')
             stack.append(value)
@@ -126,6 +136,7 @@ def execute(code, names, strings, locals_, globals_, invoke, start=0, end=None):
         elif kind == 0x29: stack.pop()
         elif kind in (0x73, 0x76, 0x93):
             value = stack.pop(); stack.append(int(value or 0) if kind == 0x73 else truth(value) if kind == 0x76 else value - 1)
+        elif kind == 0xc0: stack.append(int(stack.pop()) + 1)
         elif kind == 0xc2: locals_[args[0]] += 1
         elif kind == 0x32:
             obj, index = args; locals_[index] += 1; stack.append(locals_[index] <= len(locals_[obj]))
@@ -139,7 +150,7 @@ def execute(code, names, strings, locals_, globals_, invoke, start=0, end=None):
             value = {0xa0: lambda: left + right, 0xa1: lambda: left - right,
                      0xa2: lambda: left * right, 0xa3: lambda: left / right, 0xa4: lambda: left % right,
                      0xa6: lambda: int(left) >> (int(right) & 31), 0xa8: lambda: int(left) & int(right),
-                     0xab: lambda: left == right, 0xad: lambda: left < right,
+                     0xab: lambda: equal(left, right), 0xad: lambda: left < right,
                      0xae: lambda: left <= right, 0xaf: lambda: left > right,
                      0xb0: lambda: left >= right}[kind]()
             stack.append(value)
@@ -152,7 +163,7 @@ def execute(code, names, strings, locals_, globals_, invoke, start=0, end=None):
                 try:
                     take = {0x0c: lambda: not left < right, 0x0d: lambda: not left <= right,
                             0x0e: lambda: not left > right, 0x0f: lambda: not left >= right,
-                            0x13: lambda: left == right, 0x14: lambda: left != right,
+                            0x13: lambda: equal(left, right), 0x14: lambda: not equal(left, right),
                             0x15: lambda: left < right, 0x16: lambda: left <= right,
                             0x17: lambda: left > right, 0x18: lambda: left >= right,
                             0x19: lambda: strict(left, right), 0x1a: lambda: not strict(left, right)}[kind]()
@@ -485,7 +496,7 @@ class ActivityRemindersTests(unittest.TestCase):
     def test_all_modified_bytecode_paths_have_balanced_stack_and_local_limits(self):
         # Explore the control-flow graph, including paths not taken by claim
         # scenarios; Flash verifies these paths before executing a method.
-        for module, methods in ((False, (2648, 2720, 4078, 4080, 6333, 6334, 6335, 6353, 6357, 6377, 6379, 6380, 6382, 6393, 6403, 6405, 6408, 6437, 6497, 6692, 8763, 28528)),
+        for module, methods in ((False, (2648, 2720, 4078, 4080, 6333, 6334, 6335, 6353, 6357, 6377, 6379, 6380, 6382, 6393, 6403, 6405, 6408, 6437, 6497, 6692, 8763, 28528, *sorted(WANFU_METHODS))),
                                 (True, (7, 8, 9, 10, 11, 41))):
             names, _, bodies = self.symbols[module]
             for method in methods:
@@ -497,17 +508,18 @@ class ActivityRemindersTests(unittest.TestCase):
                         self.assertEqual(seen[pos], depth, (method, pos)); continue
                     seen[pos] = depth; op = ops[pos]; k, args = op.opcode, op.operands
                     consumed, added = 0, 0
-                    if 0xd0 <= k <= 0xd3 or k in (0x60, 0x62, 0x20, 0x24, 0x25, 0x26, 0x27, 0x2c, 0x5d): added = 1
+                    if 0xd0 <= k <= 0xd3 or k in (0x60, 0x62, 0x20, 0x24, 0x25, 0x26, 0x27, 0x2c, 0x5d, 0x5e): added = 1
                     elif 0xd4 <= k <= 0xd7 or k in (0x63, 0x29, 0x30, 0x48): consumed = 1
                     elif k in (0x66, 0x61, 0x68):
                         dynamic = not names[args[0]]
                         consumed = (1 if k == 0x66 else 2) + dynamic; added = int(k == 0x66)
                     elif k in (0x46, 0x4f, 0x4e, 0x4a):
                         consumed = args[1] + 1; added = int(k in (0x46, 0x4a))
+                    elif k == 0x42: consumed, added = args[0] + 1, 1
                     elif k in (0x49, 0x56): consumed = args[0] + int(k == 0x49); added = int(k == 0x56)
                     elif k == 0x55: consumed, added = args[0] * 2, 1
                     elif k == 0x2a: consumed, added = 1, 2
-                    elif k in (0x73, 0x74, 0x76, 0x80, 0x82, 0x85, 0x93, 0x96, 0xb2): consumed, added = 1, 1
+                    elif k in (0x73, 0x74, 0x76, 0x80, 0x82, 0x85, 0x93, 0x96, 0xb2, 0xc0): consumed, added = 1, 1
                     elif k == 0x87: consumed, added = 2, 1
                     elif k in (0x1e, 0x23): consumed, added = 2, 1
                     elif k == 0x32: added = 1
@@ -591,7 +603,7 @@ class ActivityRemindersTests(unittest.TestCase):
     def test_only_expected_methods_and_no_other_packaged_resources_change(self):
         from patch_main_activity_reminders import METHODS, patch_swf as main_entries
         from patch_mystery_shop_reminder import METHODS as SHOP_METHODS, patch_swf as shop_reminder
-        expected = {False: {2648, 2720, 4078, 4080, 6333, 6335, 6353, 6377, 6380, 6382, 6437, 6497, 28528} | METHODS | SHOP_METHODS | MAIN_METHODS | SPRING_METHODS | RETIRED_METHODS,
+        expected = {False: {2648, 2720, 4078, 4080, 6333, 6335, 6353, 6377, 6380, 6382, 6437, 6497, 28528} | METHODS | SHOP_METHODS | MAIN_METHODS | SPRING_METHODS | RETIRED_METHODS | WANFU_METHODS,
                     True: {7, 8, 9, 10, 11, 41} | MODULE_METHODS}
         for module in (False, True):
             _, _, old = inspect_abc(self.before[module], 'HongLiActiveWin' if module else 'NavTopRightArea')

@@ -8,6 +8,7 @@ import sys
 import unittest
 
 from patch_retired_festival_pages import BASELINE, CLIENT, METHODS, ROOT, SWITCHES, patch_swf, patch_config
+from patch_wanfu_opening import METHODS as WANFU_METHODS, patch_swf as wanfu_opening
 from patch_spring_display import BASELINE as DISPLAY_BASELINE, BUTTONS as SPRING_BUTTONS, METHODS as DISPLAY_METHODS, patch_swf as spring_display
 from patch_activity_entries import QD_ARRAYS, strings_of
 from patch_activity_reminders import normalize
@@ -218,13 +219,13 @@ class RetiredClientTests(unittest.TestCase):
 
     def test_display_patch_changes_only_three_bodies_and_preserves_configuration_and_rewards(self):
         baseline=subprocess.check_output(['git','show',DISPLAY_BASELINE+':web/GameFrame.swf'],cwd=ROOT)
-        self.assertEqual(self.source,spring_display(baseline));self.assertEqual(self.source,spring_display(self.source))
+        self.assertEqual(self.source,wanfu_opening(spring_display(baseline)));self.assertEqual(self.source,spring_display(self.source))
         raw,(_,_,a,b)=abc_section(baseline);before,_=normalize(raw[a:b]);_,_,old=inspect_abc(before)
         changed=set()
         for method,(a,size,limits) in old.items():
             b,length,newlimits=self.bodies[method]
             if before[a:a+size]!=self.abc[b:b+length] or limits!=newlimits:changed.add(method)
-        self.assertEqual(DISPLAY_METHODS,changed);self.assertEqual(strings_of(before),self.strings)
+        self.assertEqual(DISPLAY_METHODS | WANFU_METHODS,changed);self.assertEqual(strings_of(before),self.strings)
         for path in ('web/v2/lang/zh-cn/zh-cn.dat','web/v2/lang/zh-cn/SpringFestivalCfg.cbp',
                      'Server/S1001/data/config/activity/SpringFestivalCfg.lua'):
             self.assertEqual(subprocess.check_output(['git','show',DISPLAY_BASELINE+':'+path],cwd=ROOT),(ROOT/path).read_bytes())
@@ -272,13 +273,13 @@ class RetiredClientTests(unittest.TestCase):
 
     def test_full_patch_is_reproducible_idempotent_and_branch_targets_keep_loop_labels(self):
         baseline=subprocess.check_output(['git','show',BASELINE+':web/GameFrame.swf'],cwd=ROOT)
-        self.assertEqual(self.source,spring_display(patch_swf(baseline)));self.assertEqual(self.source,patch_swf(self.source))
+        self.assertEqual(self.source,wanfu_opening(spring_display(patch_swf(baseline))));self.assertEqual(self.source,patch_swf(self.source))
         raw,(_,_,a,b)=abc_section(baseline);before,_=normalize(raw[a:b]);_,_,old=inspect_abc(before)
         changed=set()
         for method,(a,size,limits) in old.items():
             b,length,newlimits=self.bodies[method]
             if before[a:a+size]!=self.abc[b:b+length] or limits!=newlimits:changed.add(method)
-        self.assertEqual(METHODS,changed);self.assertEqual(strings_of(before),self.strings)
+        self.assertEqual(METHODS | WANFU_METHODS,changed);self.assertEqual(strings_of(before),self.strings)
         for method in METHODS:
             code,limits=self.body(method);ops=instructions(code)
             for o in ops:

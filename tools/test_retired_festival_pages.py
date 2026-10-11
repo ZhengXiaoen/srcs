@@ -7,7 +7,8 @@ import subprocess
 import sys
 import unittest
 
-from patch_retired_festival_pages import BASELINE, CLIENT, METHODS, ROOT, SPRING_BUTTONS, SWITCHES, patch_swf, patch_config
+from patch_retired_festival_pages import BASELINE, CLIENT, METHODS, ROOT, SWITCHES, patch_swf, patch_config
+from patch_spring_display import BASELINE as DISPLAY_BASELINE, BUTTONS as SPRING_BUTTONS, METHODS as DISPLAY_METHODS, patch_swf as spring_display
 from patch_activity_entries import QD_ARRAYS, strings_of
 from patch_activity_reminders import normalize
 from patch_drop_pickup_retry import abc_section, instructions
@@ -20,8 +21,8 @@ LUA_FILES = ('config/activity/SpringFestivalCfg.lua', 'config/activity/QingDianA
     'functions/Activity/spring/spring_goods.lua', 'functions/Activity/spring/spring_total.lua',
     'functions/ActorEvent/WithDrawYuanBao.lua', 'functions/RedPacketFunc.lua',
     'functions/Activity/QingDianActivity.lua')
-SPRING_PAGES = ['NewYearPackPage', 'NewYearGiveGiftsPage', 'NewYearBeastPage', 'NewYearRechargePage',
-    'NewYearTreasuePage', 'NewYearTeHuiPage', 'NewYearHongYunPage', 'NewYearHaoliPage']
+SPRING_PAGES = ['NewYearGiveGiftsPage', 'NewYearBeastPage', 'NewYearRechargePage',
+    'NewYearTeHuiPage', 'NewYearHongYunPage', 'NewYearHaoliPage']
 
 
 class RetiredServerTests(unittest.TestCase):
@@ -134,11 +135,27 @@ class RetiredClientTests(unittest.TestCase):
                 for child in v: yield from buttons(child)
         entries = list(buttons(values[0]['_editor']))
         self.assertEqual(['_loaderbasebutton_'+str(i) for i in SPRING_BUTTONS], [v['instanceName'] for v in entries])
-        self.assertEqual([f'84,{148+45*i}' for i in range(8)], [v['move'] for v in entries])
+        self.assertEqual([f'84,{148+45*i}' for i in range(6)], [v['move'] for v in entries])
+        baseline=subprocess.check_output(['git','show',DISPLAY_BASELINE+':web/GameFrame.swf'],cwd=ROOT)
+        raw,(_,_,a,b)=abc_section(baseline);before,_=normalize(raw[a:b]);_,_,old_bodies=inspect_abc(before)
+        a,size,_=old_bodies[5903];old_code=before[a:a+size]
+        old_end=next(o.end for o in instructions(old_code) if o.opcode==0x68 and self.names[o.operands[0]]=='_editor')
+        old_values={0:{}}
+        execute(old_code,self.names,self.strings,old_values,{},lambda *_:None,end=old_end)
+        def hide(v):
+            if isinstance(v,dict):
+                if v.get('instanceName','').startswith('_loaderbasebutton_'):
+                    index=int(v['instanceName'].rsplit('_',1)[1])
+                    if index not in SPRING_BUTTONS:return None
+                    v['move']=f'84,{148+45*SPRING_BUTTONS.index(index)}'
+                return {k:hide(child) for k,child in v.items()}
+            if isinstance(v,list):return [changed for child in v if (changed:=hide(child)) is not None]
+            return v
+        self.assertEqual(hide(old_values[0]['_editor']),values[0]['_editor'])
         pages = [self.names[o.operands[0]] for o in ops if o.opcode == 0x60 and self.names[o.operands[0]] in SPRING_PAGES]
-        # Later references attach marks; the first eight are the actual page array.
-        self.assertEqual(SPRING_PAGES, pages[:8])
-        self.assertFalse(any(o.opcode in (0x66,0x68) and o.operands[0] in (7446,7447,7449,7451,7465,7466) for o in ops))
+        # Later references attach marks; the first six are the actual page array.
+        self.assertEqual(SPRING_PAGES, pages[:6])
+        self.assertFalse(any(o.opcode in (0x66,0x68) and o.operands[0] in (7442,7446,7447,7448,7449,7451,7465,7466,7468) for o in ops))
 
     def test_spring_clicks_select_correct_page_and_retired_buttons_do_nothing(self):
         for clicked in range(13):
@@ -153,43 +170,78 @@ class RetiredClientTests(unittest.TestCase):
                     self.assertEqual([(99,'setSelect',[False]),(clicked,'setSelect',[True])],calls)
                 else:self.assertEqual(-1,ctrl['activePageIndex']);self.assertEqual([],calls)
 
-    def test_treasure_creation_refresh_and_hunt_gift_mark_use_compacted_slots(self):
+    def test_hidden_treasure_is_never_constructed_or_refreshed_and_marks_use_retained_pages(self):
         code,_=self.body(5903);ops=instructions(code)
-        start=next(o.start for o in ops if o.opcode==0x60 and self.names[o.operands[0]]=='NewYearPackPage')
-        end=next(o.start for o in ops if o.opcode==0xd0 and o.start>start and
-            ops[ops.index(o)+1].opcode==0x66 and self.names[ops[ops.index(o)+1].operands[0]]=='_basesprite_0')
-        treasure=[{'class':f'Treasure{i}'} for i in range(4)]
+        start=next(o.start for o in ops if o.opcode==0x60 and self.names[o.operands[0]]=='NewYearGiveGiftsPage')
+        end=next(o.start for i,o in enumerate(ops) if o.opcode==0xd0 and o.start>start and
+            ops[i+1].opcode==0x66 and self.names[ops[i+1].operands[0]]=='_basesprite_0')
         for day in range(1,13):
-            ctrl={'pageCount':8};obj={'_pageCtrl':ctrl,'_treasurePages':treasure};created=[]
+            ctrl={'pageCount':6};obj={'_pageCtrl':ctrl};created=[];initialized=[]
             def invoke(o,n,a):
                 if n=='__construct__':return {'class':o['class']}
                 if n=='addPage':created.append(a[0]);return None
+                if n=='getPage':return created[a[0]]
+                if n=='initEvent':initialized.append(o['class']);return None
                 raise ValueError(n)
             self.run_code(5903,{0:obj,5:0},{'openDay':day},invoke,start=start,end=end)
-            self.assertEqual(8,len(created));self.assertEqual(f'Treasure{(day-1)%3}',created[4]['class'])
-            # The original daily replacement formula is retained, with only its slot moved.
-            ctrl['pages']=created;swaps=[]
-            def refresh(o,n,a):
-                if n=='int':return int(a[0])
-                if n=='getPage':return ctrl['pages'][a[0]]
-                if n=='removePageAt':swaps.append(a[0]);ctrl['pages'].pop(a[0]);return None
-                if n=='addPageAt':ctrl['pages'].insert(a[1],a[0]);return None
-                if n=='__construct__':return {'class':o['class']}
-                if n=='initEvent':return None
-                raise ValueError(n)
-            self.run_code(5904,{0:obj,7:0,6:8},{'openDay':day},refresh,start=273)
-            self.assertTrue(all(slot==4 for slot in swaps))
-            self.assertEqual(f'Treasure{int((day-2)/3)}',ctrl['pages'][4]['class'])
-            swaps.clear()
-            self.run_code(5904,{0:obj,7:0,6:8},{'openDay':day},refresh,start=273)
-            self.assertEqual([],swaps)
+            self.assertEqual(SPRING_PAGES,[p['class'] for p in created])
+            added,_=self.body(5904);ops2=instructions(added)
+            loop=next(o.start for i,o in enumerate(ops2) if o.opcode==0xd0 and
+                ops2[i+1].opcode==0x66 and self.names[ops2[i+1].operands[0]]=='_pageCtrl' and
+                ops2[i+2].opcode==0x66 and self.names[ops2[i+2].operands[0]]=='pageCount')
+            self.run_code(5904,{0:obj},{'openDay':day},invoke,start=loop)
+            self.assertEqual(SPRING_PAGES,initialized)
+        # Marks attach to the matching page classes after both hidden pages are removed.
         marks=[]
-        self.run_code(5903,{0:{'_pageCtrl':ctrl,'_tipsMark1':{},'_tipsMark2':{},'_tipsMark5':{},
-            '_loaderbasebutton_1':{'x':84,'y':193},'_loaderbasebutton_3':{'x':84,'y':283},
-            '_loaderbasebutton_12':{'x':84,'y':463},'_basesprite_0':{}},7:130,8:5},
-            invoke=lambda o,n,a: (marks.append(a[0]) or {}) if n=='getPage' else {} if n=='__construct__' else None,
-            start=1666,end=1846)
-        self.assertEqual([1,3,7],marks)
+        code,_=self.body(5903);ops=instructions(code)
+        start=next(ops[i-3].start for i,o in enumerate(ops) if o.opcode==0x68 and o.operands==(7463,))
+        end=next(ops[i-2].start for i,o in enumerate(ops) if o.opcode==0x4f and o.operands==(1868,1)
+            and i and ops[i-1].opcode==0x60 and self.names[ops[i-1].operands[0]]=='m_CloseBtn')
+        values={0:{'_pageCtrl':ctrl,'_loaderbasebutton_1':{'x':84,'y':148},
+            '_loaderbasebutton_3':{'x':84,'y':238},'_loaderbasebutton_12':{'x':84,'y':373},'_basesprite_0':{}},7:130,8:5}
+        def marks_invoke(o,n,a):
+            if n=='getPage':marks.append(a[0]);return created[a[0]]
+            if n=='__construct__':return {}
+            if n=='addChild':return None
+            raise ValueError(n)
+        self.run_code(5903,values,invoke=marks_invoke,start=start,end=end)
+        self.assertEqual([0,2,5],marks)
+        for page,key in ((0,'_tipsMark1'),(2,'_tipsMark2'),(5,'_tipsMark5')):
+            self.assertEqual(values[0][key],created[page]['mark'])
+        # The first displayed button is also the default selected button.
+        start=next(ops[i-3].start for i,o in enumerate(ops) if o.opcode==0x68 and o.operands==(7461,))
+        end=next(ops[i-2].start for i,o in enumerate(ops) if o.opcode==0x4a and o.operands==(303,0))
+        selections=[]
+        self.run_code(5903,values,invoke=lambda o,n,a:selections.append((o,a)),start=start,end=end)
+        self.assertIs(values[0]['_lastBtn'],values[0]['_loaderbasebutton_1'])
+        self.assertEqual([(values[0]['_loaderbasebutton_1'],[True])],selections)
+
+    def test_display_patch_changes_only_three_bodies_and_preserves_configuration_and_rewards(self):
+        baseline=subprocess.check_output(['git','show',DISPLAY_BASELINE+':web/GameFrame.swf'],cwd=ROOT)
+        self.assertEqual(self.source,spring_display(baseline));self.assertEqual(self.source,spring_display(self.source))
+        raw,(_,_,a,b)=abc_section(baseline);before,_=normalize(raw[a:b]);_,_,old=inspect_abc(before)
+        changed=set()
+        for method,(a,size,limits) in old.items():
+            b,length,newlimits=self.bodies[method]
+            if before[a:a+size]!=self.abc[b:b+length] or limits!=newlimits:changed.add(method)
+        self.assertEqual(DISPLAY_METHODS,changed);self.assertEqual(strings_of(before),self.strings)
+        for path in ('web/v2/lang/zh-cn/zh-cn.dat','web/v2/lang/zh-cn/SpringFestivalCfg.cbp',
+                     'Server/S1001/data/config/activity/SpringFestivalCfg.lua'):
+            self.assertEqual(subprocess.check_output(['git','show',DISPLAY_BASELINE+':'+path],cwd=ROOT),(ROOT/path).read_bytes())
+        compiler=LuaRuntime(unpack_returned_tuples=True).eval('function(s) local f,e=loadstring(s);return f~=nil,e end')
+        links={
+            'spring_total.lua':(('我也要购买/@@showWin,243,5','我也要购买/@@showWin,243,3'),
+                ('我也要购买/@@showWin,243,6','我也要购买/@@showWin,243,4'),
+                ('我也要领取/@@showWin,243,3','我也要领取/@@showWin,243,2')),
+            'spring_monster.lua':(('立即前往/@@showWin,243>','立即前往/@@showWin,243,1>'),),
+            'spring_redpacket.lua':(('<赠送红包给好友！/@@showWin,243>',''),)}
+        for name,replacements in links.items():
+            path=SERVER/'functions/Activity/spring'/name
+            baseline=subprocess.check_output(['git','show',DISPLAY_BASELINE+':'+path.relative_to(ROOT).as_posix()],cwd=ROOT)
+            for old,new in replacements:
+                self.assertEqual(1,baseline.count(old.encode()));baseline=baseline.replace(old.encode(),new.encode())
+            self.assertEqual(baseline,path.read_bytes(),name)
+            self.assertEqual((True,None),compiler(path.read_text('utf-8-sig')),name)
 
     def test_all_wanfu_page_variants_and_legacy_navigation_are_aligned(self):
         code,_=self.body(6021);ops=instructions(code)
@@ -220,7 +272,7 @@ class RetiredClientTests(unittest.TestCase):
 
     def test_full_patch_is_reproducible_idempotent_and_branch_targets_keep_loop_labels(self):
         baseline=subprocess.check_output(['git','show',BASELINE+':web/GameFrame.swf'],cwd=ROOT)
-        self.assertEqual(self.source,patch_swf(baseline));self.assertEqual(self.source,patch_swf(self.source))
+        self.assertEqual(self.source,spring_display(patch_swf(baseline)));self.assertEqual(self.source,patch_swf(self.source))
         raw,(_,_,a,b)=abc_section(baseline);before,_=normalize(raw[a:b]);_,_,old=inspect_abc(before)
         changed=set()
         for method,(a,size,limits) in old.items():

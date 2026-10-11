@@ -134,7 +134,7 @@ function spring_redpacket_send_redpacket(sysarg, packet)
 	
 	Actor.sendTipmsg(sysarg, "发放新春红包成功", ttFlyTip)
 	
-	local noticeStr = string.format("<(n%s)>赠送<(n%s)>新春红包！祝福他新春快乐！<赠送红包给好友！/@@showWin,243>",myName,destActorName)
+	local noticeStr = string.format("<(n%s)>赠送<(n%s)>新春红包！祝福他新春快乐！",myName,destActorName)
 	System.broadcastTipmsg(noticeStr, ttChatWindow)
 	
 	local netPack = DataPack.allocPacket(sysarg, 139, LogicCmd.miscSys.sub.sSendSpringFestivalData)

@@ -180,7 +180,7 @@ GetSpringXianShiQiangGou = function(sysarg,index)
 	--给前端发协议
 	GetSpringXianShibuyInfo(sysarg)
 	
-	System.broadcastTipmsg(string.format("<(n%s)>玩家通过限时抢购购买了%s,此物品只有今天特惠出售.<我也要购买/@@showWin,243,5>",Actor.getName(sysarg),Item.getItemLinkMsg(cgf.award[1].id)), ttChatWindow)
+	System.broadcastTipmsg(string.format("<(n%s)>玩家通过限时抢购购买了%s,此物品只有今天特惠出售.<我也要购买/@@showWin,243,3>",Actor.getName(sysarg),Item.getItemLinkMsg(cgf.award[1].id)), ttChatWindow)
 end
 -------------------------------------------------------------------------------------------------------------------------------------
 
@@ -433,7 +433,7 @@ BuySpringHongYunDangTouTeHui= function(sysarg)
 		data.NumberData[thisNumber].userID = Actor.getIntProperty(sysarg,PROP_ENTITY_ID)
 		data.NumberData[thisNumber].sex = Actor.getIntProperty(sysarg,PROP_ACTOR_SEX)
 		
-		System.broadcastTipmsg(string.format("<(n%s)>玩家购买了鸿运当头今日特惠,获得一个幸运数字,祝福他拿大奖吧,<我也要购买/@@showWin,243,6>",Actor.getName(sysarg)),ttChatWindow)
+		System.broadcastTipmsg(string.format("<(n%s)>玩家购买了鸿运当头今日特惠,获得一个幸运数字,祝福他拿大奖吧,<我也要购买/@@showWin,243,4>",Actor.getName(sysarg)),ttChatWindow)
 	end
 	----------------------------------------------------------------------------------------------
 	--给前端发协议
@@ -788,7 +788,7 @@ function GetSpringLiJiChongzhiGife(sysarg,x,y)
 	
 	System.sendCommonLog(LogIds.spring_lijichongzhi,Actor.getIntProperty(sysarg,PROP_ENTITY_ID),Actor.getName(sysarg),0,0,0,x.."档"..y.."天")
 
-	System.broadcastTipmsg(string.format("<(n%s)>玩家领取了春节连续累计充值礼包,超级丰盛<我也要领取/@@showWin,243,3>",Actor.getName(sysarg)), ttChatWindow)
+	System.broadcastTipmsg(string.format("<(n%s)>玩家领取了春节连续累计充值礼包,超级丰盛<我也要领取/@@showWin,243,2>",Actor.getName(sysarg)), ttChatWindow)
 	
 end
 

@@ -13,6 +13,7 @@ from patch_consume_ranking_client import patch_swf as descriptions, verify_rewar
 from patch_activity_reminders import normalize, get, number, prop
 from patch_spring_activity_icon import METHODS as SPRING_METHODS, patch_swf as spring_icon
 from patch_retired_festival_pages import METHODS as RETIRED_METHODS, patch_swf as retired_pages, patch_config as retired_config
+from patch_spring_display import patch_swf as spring_display
 from patch_activity_entries import q, strings_of
 from patch_drop_pickup_retry import abc_section, instructions
 from patch_god_equip_state import inspect_abc
@@ -242,7 +243,7 @@ class UniqueClientTests(unittest.TestCase):
         for path,module,expected in ((CLIENT,False,MAIN_METHODS),(MODULE,True,MODULE_METHODS)):
             source=subprocess.check_output(['git','show',BASELINE+':'+path.relative_to(ROOT).as_posix()],cwd=ROOT)
             upgraded=patch_swf(source,module)
-            if not module:upgraded=retired_pages(spring_icon(descriptions(upgraded)));expected=expected|SPRING_METHODS|RETIRED_METHODS
+            if not module:upgraded=spring_display(retired_pages(spring_icon(descriptions(upgraded))));expected=expected|SPRING_METHODS|RETIRED_METHODS
             self.assertEqual(upgraded,path.read_bytes());self.assertEqual(patch_swf(upgraded,module),upgraded)
             d,(_,_,a,b)=abc_section(source);before,_=normalize(d[a:b]);oldnames,_,old=inspect_abc(before)
             abc,n,st,new=self.data[path];changed=set()

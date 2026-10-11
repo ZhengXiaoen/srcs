@@ -6,9 +6,11 @@ from patch_consume_ranking_client import patch_swf as ranking_description
 from patch_spring_activity_icon import METHODS as SPRING_METHODS, patch_swf as spring_icon
 from patch_retired_festival_pages import METHODS as RETIRED_METHODS, patch_swf as retired_pages
 
+from patch_spring_display import patch_swf as spring_display
+
 def current_release(source, module=False):
     updated = unique_rankings(source, module)
-    return updated if module else retired_pages(spring_icon(ranking_description(updated)))
+    return updated if module else spring_display(retired_pages(spring_icon(ranking_description(updated))))
 
 
 import argparse

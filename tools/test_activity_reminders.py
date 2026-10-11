@@ -3,10 +3,11 @@ from __future__ import annotations
 
 from patch_unique_activity_rankings import MAIN_METHODS, MODULE_METHODS, patch_swf as unique_rankings
 from patch_consume_ranking_client import patch_swf as ranking_description
+from patch_spring_activity_icon import METHODS as SPRING_METHODS, patch_swf as spring_icon
 
 def current_release(source, module=False):
     updated = unique_rankings(source, module)
-    return updated if module else ranking_description(updated)
+    return updated if module else spring_icon(ranking_description(updated))
 
 
 import argparse
@@ -109,6 +110,10 @@ def execute(code, names, strings, locals_, globals_, invoke, start=0, end=None):
             count = args[0]; values = stack[-count:] if count else []
             if count: del stack[-count:]
             stack.append(list(values))
+        elif kind == 0x55:
+            count = args[0] * 2; values = stack[-count:] if count else []
+            if count: del stack[-count:]
+            stack.append(dict(zip(values[::2], values[1::2])))
         elif kind == 0x49:
             if args[0]: del stack[-args[0]:]
             stack.pop()
@@ -579,7 +584,7 @@ class ActivityRemindersTests(unittest.TestCase):
     def test_only_expected_methods_and_no_other_packaged_resources_change(self):
         from patch_main_activity_reminders import METHODS, patch_swf as main_entries
         from patch_mystery_shop_reminder import METHODS as SHOP_METHODS, patch_swf as shop_reminder
-        expected = {False: {2648, 2720, 4078, 4080, 6333, 6335, 6353, 6377, 6380, 6382, 6437, 6497, 28528} | METHODS | SHOP_METHODS | MAIN_METHODS,
+        expected = {False: {2648, 2720, 4078, 4080, 6333, 6335, 6353, 6377, 6380, 6382, 6437, 6497, 28528} | METHODS | SHOP_METHODS | MAIN_METHODS | SPRING_METHODS,
                     True: {7, 8, 9, 10, 11, 41} | MODULE_METHODS}
         for module in (False, True):
             _, _, old = inspect_abc(self.before[module], 'HongLiActiveWin' if module else 'NavTopRightArea')

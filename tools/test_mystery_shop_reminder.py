@@ -3,10 +3,11 @@ from __future__ import annotations
 
 from patch_unique_activity_rankings import MAIN_METHODS, MODULE_METHODS, patch_swf as unique_rankings
 from patch_consume_ranking_client import patch_swf as ranking_description
+from patch_spring_activity_icon import METHODS as SPRING_METHODS, patch_swf as spring_icon
 
 def current_release(source, module=False):
     updated = unique_rankings(source, module)
-    return updated if module else ranking_description(updated)
+    return updated if module else spring_icon(ranking_description(updated))
 
 
 import argparse
@@ -232,7 +233,7 @@ class ShopReminderTests(unittest.TestCase):
         for method, (a, size, limits) in old.items():
             b, size2, limits2 = self.bodies[method]
             if before[a:a + size] != self.abc[b:b + size2] or limits != limits2: changed.add(method)
-        self.assertEqual(changed, METHODS | MAIN_METHODS)
+        self.assertEqual(changed, METHODS | MAIN_METHODS | SPRING_METHODS)
 
     def test_server_query_and_refresh_packets_preserve_goods_and_buy_flags(self):
         lua = server_runtime(); g = lua.globals()

@@ -4,10 +4,11 @@ from __future__ import annotations
 from patch_unique_activity_rankings import MAIN_METHODS, MODULE_METHODS, patch_swf as unique_rankings
 from patch_consume_ranking_client import patch_swf as ranking_description
 from patch_spring_activity_icon import METHODS as SPRING_METHODS, patch_swf as spring_icon
+from patch_retired_festival_pages import METHODS as RETIRED_METHODS, patch_swf as retired_pages
 
 def current_release(source, module=False):
     updated = unique_rankings(source, module)
-    return updated if module else spring_icon(ranking_description(updated))
+    return updated if module else retired_pages(spring_icon(ranking_description(updated)))
 
 
 import argparse
@@ -84,6 +85,7 @@ def execute(code, names, strings, locals_, globals_, invoke, start=0, end=None):
             stack.append(None if kind == 0x20 else True if kind == 0x26 else False if kind == 0x27
                          else strings[args[0]] if kind == 0x2c else args[0])
         elif kind in (0x09, 0x80, 0x82): pass
+        elif kind == 0x96: stack.append(not truth(stack.pop()))
         elif kind == 0x30: stack.pop()
         elif kind in (0x5d, 0x60): stack.append(globals_.get(names[args[0]], {'class': names[args[0]]}))
         elif kind == 0x66:
@@ -102,8 +104,8 @@ def execute(code, names, strings, locals_, globals_, invoke, start=0, end=None):
             obj = stack.pop(); name = names[args[0]]
             result = None if kind == 0x4e else invoke(obj, name, values)
             if kind == 0x46: stack.append(result)
-        elif kind == 0x4a:
-            count = args[1]; values = stack[-count:] if count else []
+        elif kind in (0x4a, 0x42):
+            count = args[1] if kind == 0x4a else args[0]; values = stack[-count:] if count else []
             if count: del stack[-count:]
             obj = stack.pop(); stack.append(invoke(obj, '__construct__', values))
         elif kind == 0x56:
@@ -128,10 +130,13 @@ def execute(code, names, strings, locals_, globals_, invoke, start=0, end=None):
         elif kind == 0x23:
             index, obj = stack.pop(), stack.pop(); stack.append(obj[index - 1])
         elif kind == 0x08: locals_[args[0]] = None
-        elif kind in (0xa0, 0xa1, 0xa2, 0xa3, 0xab, 0xad, 0xae, 0xaf, 0xb0):
+        elif kind == 0xb3:
+            cls, obj = stack.pop(), stack.pop(); stack.append(obj.get('class') == cls.get('class'))
+        elif kind in (0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa6, 0xa8, 0xab, 0xad, 0xae, 0xaf, 0xb0):
             right, left = stack.pop(), stack.pop()
             value = {0xa0: lambda: left + right, 0xa1: lambda: left - right,
-                     0xa2: lambda: left * right, 0xa3: lambda: left / right,
+                     0xa2: lambda: left * right, 0xa3: lambda: left / right, 0xa4: lambda: left % right,
+                     0xa6: lambda: int(left) >> (int(right) & 31), 0xa8: lambda: int(left) & int(right),
                      0xab: lambda: left == right, 0xad: lambda: left < right,
                      0xae: lambda: left <= right, 0xaf: lambda: left > right,
                      0xb0: lambda: left >= right}[kind]()
@@ -584,7 +589,7 @@ class ActivityRemindersTests(unittest.TestCase):
     def test_only_expected_methods_and_no_other_packaged_resources_change(self):
         from patch_main_activity_reminders import METHODS, patch_swf as main_entries
         from patch_mystery_shop_reminder import METHODS as SHOP_METHODS, patch_swf as shop_reminder
-        expected = {False: {2648, 2720, 4078, 4080, 6333, 6335, 6353, 6377, 6380, 6382, 6437, 6497, 28528} | METHODS | SHOP_METHODS | MAIN_METHODS | SPRING_METHODS,
+        expected = {False: {2648, 2720, 4078, 4080, 6333, 6335, 6353, 6377, 6380, 6382, 6437, 6497, 28528} | METHODS | SHOP_METHODS | MAIN_METHODS | SPRING_METHODS | RETIRED_METHODS,
                     True: {7, 8, 9, 10, 11, 41} | MODULE_METHODS}
         for module in (False, True):
             _, _, old = inspect_abc(self.before[module], 'HongLiActiveWin' if module else 'NavTopRightArea')

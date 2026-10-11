@@ -4,10 +4,11 @@ from __future__ import annotations
 from patch_unique_activity_rankings import MAIN_METHODS, MODULE_METHODS, patch_swf as unique_rankings
 from patch_consume_ranking_client import patch_swf as ranking_description
 from patch_spring_activity_icon import METHODS as SPRING_METHODS, patch_swf as spring_icon
+from patch_retired_festival_pages import METHODS as RETIRED_METHODS, patch_swf as retired_pages
 
 def current_release(source, module=False):
     updated = unique_rankings(source, module)
-    return updated if module else spring_icon(ranking_description(updated))
+    return updated if module else retired_pages(spring_icon(ranking_description(updated)))
 
 
 from itertools import product
@@ -158,16 +159,16 @@ class MainActivityRemindersTests(unittest.TestCase):
                     self.assertFalse(self.qd_dot())
             self.qd.update(zpIndex=len(cfg), curPayNum=999999999); self.assertFalse(self.qd_dot())
 
-    def test_qingdian_collect_requires_every_configured_quantity(self):
+    def test_qingdian_retired_collect_never_highlights(self):
         first = self.qd_cfg['QingDianJiZi']['needCollect'][0]
         for counts in product((0, 1), repeat=len(first)):
             self.items['bag'] = {row['id']: counts[i] for i, row in enumerate(first)}
-            self.assertEqual(self.qd_dot(), all(counts))
+            self.assertFalse(self.qd_dot())
         # Mutate the mock config to exercise quantities >1 and empty groups.
         self.globals['GameData']['qingdianActiveProvider']['cfg'] = dict(self.qd_cfg,
                     QingDianJiZi={'needCollect': [[], [{'id': 5649, 'count': 2}]]})
         for count in (0, 1, 2):
-            self.items['bag'] = {5649: count}; self.assertEqual(self.qd_dot(), count >= 2)
+            self.items['bag'] = {5649: count}; self.assertFalse(self.qd_dot())
 
     def test_qingdian_hunt_every_tier_and_missing_reply(self):
         cfg = self.hunt_cfg['hunt_times']
@@ -179,7 +180,7 @@ class MainActivityRemindersTests(unittest.TestCase):
 
     def test_qingdian_initial_queries_and_event_bridge_without_year_button(self):
         self.run_method(6408, self.nav, {'data': 1})
-        self.assertEqual(self.requests, [('sendQDActiveInfo', (0, slot)) for slot in (2, 3, 8, 11, 12, 13, 17)])
+        self.assertEqual(self.requests, [('sendQDActiveInfo', (0, slot)) for slot in (2, 3, 11, 12, 13, 17)])
         self.assertFalse(self.buttons['qd']['effect']); self.requests.clear()
         self.qd.update(loginDay=1, loginStatu=[0])
         self.run_method(6379, self.nav, {'type': 'QINGDIAN_LOGIN_STATU'})
@@ -236,7 +237,7 @@ class MainActivityRemindersTests(unittest.TestCase):
         for method, (a, size, limits) in old.items():
             b, length, new_limits = self.symbols[False][2][method]
             if before[a:a + size] != self.abc[False][b:b + length] or limits != new_limits: changed.add(method)
-        self.assertEqual(changed, METHODS | SHOP_METHODS | MAIN_METHODS | SPRING_METHODS)
+        self.assertEqual(changed, METHODS | SHOP_METHODS | MAIN_METHODS | SPRING_METHODS | RETIRED_METHODS)
 
 
 if __name__ == '__main__': unittest.main(verbosity=2)

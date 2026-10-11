@@ -3,6 +3,7 @@
 
 -- 获得数据
 function spring_goods_get_data(sysarg)
+	if SpringFestivalCfg.goods.isOpen == false then return end
 	local netPack = DataPack.allocPacket(sysarg, 139, LogicCmd.miscSys.sub.sSendSpringFestivalData)
 	DataPack.writeByte(netPack, 5) -- 5 绝版年货
 	DataPack.writeByte(netPack, 1) -- 1 下发数据
@@ -21,6 +22,7 @@ end
 
 -- 购买年货
 function spring_goods_buy(sysarg, packet)
+	if SpringFestivalCfg.goods.isOpen == false then return end
 	local idx = DataPack.readByte(packet) -- 从1开始
 	if idx < 1 or idx > 8 then return end
 	
@@ -68,6 +70,7 @@ function spring_goods_buy(sysarg, packet)
 end
 
 function spring_goods_main(sysarg, packet)
+	if SpringFestivalCfg.goods.isOpen == false then return end
 	local msgId = DataPack.readByte(packet)
 	
 	if msgId == 1 then -- 获得数据

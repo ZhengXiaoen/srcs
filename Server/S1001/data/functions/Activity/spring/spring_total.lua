@@ -180,7 +180,7 @@ GetSpringXianShiQiangGou = function(sysarg,index)
 	--给前端发协议
 	GetSpringXianShibuyInfo(sysarg)
 	
-	System.broadcastTipmsg(string.format("<(n%s)>玩家通过限时抢购购买了%s,此物品只有今天特惠出售.<我也要购买/@@showWin,243,2>",Actor.getName(sysarg),Item.getItemLinkMsg(cgf.award[1].id)), ttChatWindow)
+	System.broadcastTipmsg(string.format("<(n%s)>玩家通过限时抢购购买了%s,此物品只有今天特惠出售.<我也要购买/@@showWin,243,5>",Actor.getName(sysarg),Item.getItemLinkMsg(cgf.award[1].id)), ttChatWindow)
 end
 -------------------------------------------------------------------------------------------------------------------------------------
 
@@ -200,6 +200,7 @@ end
 -------------------------------------------------------------------------------------------------------------------------------------
 --集字活动
 function spring_JiZi_main(sysarg, packet)
+	if SpringFestivalCfg.SpringJiZi.isOpen == false then return end
 
 	--是否在开关时间内
 	if is_spring_festival_time()~=true then 
@@ -215,6 +216,7 @@ end
 
 --领取集字活动奖励
 GetSpringJiZiGift= function(sysarg,index)
+	if SpringFestivalCfg.SpringJiZi.isOpen == false then return end
 
 	--判断index是否合法
 	if index<1 or index>#SpringFestivalCfg.SpringJiZi.needCollect then 
@@ -431,7 +433,7 @@ BuySpringHongYunDangTouTeHui= function(sysarg)
 		data.NumberData[thisNumber].userID = Actor.getIntProperty(sysarg,PROP_ENTITY_ID)
 		data.NumberData[thisNumber].sex = Actor.getIntProperty(sysarg,PROP_ACTOR_SEX)
 		
-		System.broadcastTipmsg(string.format("<(n%s)>玩家购买了鸿运当头今日特惠,获得一个幸运数字,祝福他拿大奖吧,<我也要购买/@@showWin,243,9>",Actor.getName(sysarg)),ttChatWindow)
+		System.broadcastTipmsg(string.format("<(n%s)>玩家购买了鸿运当头今日特惠,获得一个幸运数字,祝福他拿大奖吧,<我也要购买/@@showWin,243,6>",Actor.getName(sysarg)),ttChatWindow)
 	end
 	----------------------------------------------------------------------------------------------
 	--给前端发协议
@@ -612,11 +614,12 @@ function spring_hongyun_activity_start_or_end(is_start, is_started_server)
 			System.saveStaticVar()
 		end
 
-        --守岁红包
-       local sys = System.getStaticVar()
-    
-        sys.redpack = nil
-        InitRedPacket(false)
+        -- 守岁礼包已下架，保留独立抢红包活动的数据。
+        if SpringFestivalCfg.shousui.isOpen ~= false then
+            local sys = System.getStaticVar()
+            sys.redpack = nil
+            InitRedPacket(false)
+        end
       
 	else 
 		svar.SpringHYDT_data = nil
@@ -785,7 +788,7 @@ function GetSpringLiJiChongzhiGife(sysarg,x,y)
 	
 	System.sendCommonLog(LogIds.spring_lijichongzhi,Actor.getIntProperty(sysarg,PROP_ENTITY_ID),Actor.getName(sysarg),0,0,0,x.."档"..y.."天")
 
-	System.broadcastTipmsg(string.format("<(n%s)>玩家领取了春节连续累计充值礼包,超级丰盛<我也要领取/@@showWin,243,2>",Actor.getName(sysarg)), ttChatWindow)
+	System.broadcastTipmsg(string.format("<(n%s)>玩家领取了春节连续累计充值礼包,超级丰盛<我也要领取/@@showWin,243,3>",Actor.getName(sysarg)), ttChatWindow)
 	
 end
 
@@ -793,6 +796,7 @@ end
 
 --消费转盘
 function spring_xiaofeizhuanpan_main(sysarg,packet)
+	if SpringFestivalCfg.XiaoFeiZhuanPanNew.isOpen == false then return end
 	--是否在开关时间内
 	if is_spring_festival_time()~=true then 
 		return
@@ -808,6 +812,7 @@ end
 
 --消费转盘数据
 function GetSpringXiaoFeiZhuanPanData(sysarg)
+	if SpringFestivalCfg.XiaoFeiZhuanPanNew.isOpen == false then return end
 	ClearAllSpringData(sysarg)
 	local var = Actor.getStaticVar(sysarg)
 	
@@ -833,6 +838,7 @@ end
 
 --消费转盘
 function GetSpringXiaoFeiZhuanPanGife(sysarg)
+	if SpringFestivalCfg.XiaoFeiZhuanPanNew.isOpen == false then return end
 
 	local var = Actor.getStaticVar(sysarg)
 	local svar = System.getStaticVar()

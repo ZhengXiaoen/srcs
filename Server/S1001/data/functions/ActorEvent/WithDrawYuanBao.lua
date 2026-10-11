@@ -110,8 +110,8 @@ function OnConsumeYuanBaoEvent(sysarg, nYuanBao, nLogId)
 	
 	-- 万服庆典消费转盘已下架，不再累计或发送提醒。
 	
-	--是否在春节活动，累加消费次数
-	if is_spring_festival_time()==true then 
+	-- 春节消费转盘已下架，不再累计消费或发送提醒。
+	if is_spring_festival_time()==true and SpringFestivalCfg.XiaoFeiZhuanPanNew.isOpen ~= false then
 		ClearAllSpringData(sysarg) --清除上次活动的数据
 		
 		local var = Actor.getStaticVar(sysarg)

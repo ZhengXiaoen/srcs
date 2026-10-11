@@ -1064,6 +1064,7 @@ QingDianXunBaoF = --周年庆寻宝
 	--庆典集字
 	QingDianJiZi = 
 	{
+		isOpen = false, -- 万服庆典集字有礼已下架
 		--字的id
 		JiZiId ={5649,5650,5651,5652,5653,5654,5655,5656},
 		--需要收集的物品

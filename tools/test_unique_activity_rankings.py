@@ -12,6 +12,7 @@ from patch_unique_activity_rankings import (BASELINE, CLIENT, MODULE, ROOT, MAIN
 from patch_consume_ranking_client import patch_swf as descriptions, verify_rewards
 from patch_activity_reminders import normalize, get, number, prop
 from patch_spring_activity_icon import METHODS as SPRING_METHODS, patch_swf as spring_icon
+from patch_retired_festival_pages import METHODS as RETIRED_METHODS, patch_swf as retired_pages, patch_config as retired_config
 from patch_activity_entries import q, strings_of
 from patch_drop_pickup_retry import abc_section, instructions
 from patch_god_equip_state import inspect_abc
@@ -241,7 +242,7 @@ class UniqueClientTests(unittest.TestCase):
         for path,module,expected in ((CLIENT,False,MAIN_METHODS),(MODULE,True,MODULE_METHODS)):
             source=subprocess.check_output(['git','show',BASELINE+':'+path.relative_to(ROOT).as_posix()],cwd=ROOT)
             upgraded=patch_swf(source,module)
-            if not module:upgraded=spring_icon(descriptions(upgraded));expected=expected|SPRING_METHODS
+            if not module:upgraded=retired_pages(spring_icon(descriptions(upgraded)));expected=expected|SPRING_METHODS|RETIRED_METHODS
             self.assertEqual(upgraded,path.read_bytes());self.assertEqual(patch_swf(upgraded,module),upgraded)
             d,(_,_,a,b)=abc_section(source);before,_=normalize(d[a:b]);oldnames,_,old=inspect_abc(before)
             abc,n,st,new=self.data[path];changed=set()
@@ -269,10 +270,10 @@ class UniqueClientTests(unittest.TestCase):
         before=dict(read_pack(subprocess.check_output(['git','show',BASELINE+':'+packpath.relative_to(ROOT).as_posix()],cwd=ROOT)))
         after=dict(read_pack(packpath.read_bytes()))
         self.assertEqual(before.keys(),after.keys())
-        self.assertEqual(['QingDianActivityCfg.cbp'],[k for k in before if before[k]!=after[k]])
-        self.assertEqual(patch_config(before['QingDianActivityCfg.cbp']),after['QingDianActivityCfg.cbp'])
+        self.assertEqual({'QingDianActivityCfg.cbp','SpringFestivalCfg.cbp'},{k for k in before if before[k]!=after[k]})
+        self.assertEqual(retired_config(patch_config(before['QingDianActivityCfg.cbp']),'QingDianActivityCfg.cbp'),after['QingDianActivityCfg.cbp'])
         _,old=read_cbp(before['QingDianActivityCfg.cbp']);_,new=read_cbp(after['QingDianActivityCfg.cbp'])
-        spin=new.child('XiaoFeiZhuanPanNew');spin.children=[v for v in spin.children if v.name!='isOpen']
+        spin=new.child('XiaoFeiZhuanPanNew');spin.children=[v for v in spin.children if v.name!='isOpen'];words=new.child('QingDianJiZi');words.children=[v for v in words.children if v.name!='isOpen']
         self.assertEqual(write_node(old),write_node(new));verify_rewards()
         lua=LuaRuntime();lua.execute((ROOT/'Server/S1001/data/config/activity/SanRenHongLiCfg.lua').read_text('utf-8-sig'))
         _,cfg=read_cbp(next(v for k,v in after.items() if k.lower()=='sanrenhonglicfg.cbp'));client=config_value(cfg)['DailyPayRanking']

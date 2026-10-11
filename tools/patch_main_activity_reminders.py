@@ -165,7 +165,9 @@ def patch_abc(source):
         if names[index] != name: raise ValueError(f'Unexpected QName {index}')
     a, size, _ = bodies[6403]
     from patch_unique_activity_rankings import no_spin_effect
-    if abc[a:a + size] in (qingdian_effect(), no_spin_effect(qingdian_effect())[0]): return source
+    from patch_retired_festival_pages import no_word_effect
+    without_spin = no_spin_effect(qingdian_effect())[0]
+    if abc[a:a + size] in (qingdian_effect(), without_spin, no_word_effect(without_spin)[0]): return source
     for method, expected in ORIGINAL_HASHES.items():
         a, size, _ = bodies[method]
         if hashlib.sha256(abc[a:a + size]).hexdigest() != expected:

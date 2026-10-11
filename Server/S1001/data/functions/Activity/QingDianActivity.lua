@@ -49,8 +49,8 @@ QingDianActivitys = function (sysarg, sysid, packet)
 		end
 	elseif msgid==7 then  --购买翅膀
 		BuyQingDianActivitySwing(sysarg,DataPack.readByte(packet))
-	elseif msgid==8 then  --兑换集字
-		GetQingDianJiZiGift(sysarg,DataPack.readByte(packet))
+	elseif msgid==8 then  -- 已下架的集字有礼
+		return
 	elseif msgid ==9 then  --鸿运当头
 		local optType = DataPack.readByte(packet) --操作类型
 		if optType==1 then --购买特惠
@@ -651,6 +651,7 @@ end
 
 --领取集字活动奖励
 GetQingDianJiZiGift= function(sysarg,index)
+	if QingDianActivityCfg.QingDianJiZi.isOpen == false then return end
 	--是否在开关时间内
 	local svar = System.getStaticVar()
 	if svar.QingDian_openDay==nil then 
@@ -1710,7 +1711,8 @@ GetQingDianActivityInfo = function(sysarg,index)
 			end			
 		end
 		DataPack.flush(netPack)			
-	elseif index==8 then 
+	elseif index==8 then -- 集字有礼已下架
+		if QingDianActivityCfg.QingDianJiZi.isOpen == false then return end
 		--初始化
 		--local var = Actor.getStaticVar(sysarg)
 		--if var.days.qingdianjizhi==nil then 

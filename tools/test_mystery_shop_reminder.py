@@ -4,10 +4,11 @@ from __future__ import annotations
 from patch_unique_activity_rankings import MAIN_METHODS, MODULE_METHODS, patch_swf as unique_rankings
 from patch_consume_ranking_client import patch_swf as ranking_description
 from patch_spring_activity_icon import METHODS as SPRING_METHODS, patch_swf as spring_icon
+from patch_retired_festival_pages import METHODS as RETIRED_METHODS, patch_swf as retired_pages
 
 def current_release(source, module=False):
     updated = unique_rankings(source, module)
-    return updated if module else spring_icon(ranking_description(updated))
+    return updated if module else retired_pages(spring_icon(ranking_description(updated)))
 
 
 import argparse
@@ -233,7 +234,7 @@ class ShopReminderTests(unittest.TestCase):
         for method, (a, size, limits) in old.items():
             b, size2, limits2 = self.bodies[method]
             if before[a:a + size] != self.abc[b:b + size2] or limits != limits2: changed.add(method)
-        self.assertEqual(changed, METHODS | MAIN_METHODS | SPRING_METHODS)
+        self.assertEqual(changed, METHODS | MAIN_METHODS | SPRING_METHODS | RETIRED_METHODS)
 
     def test_server_query_and_refresh_packets_preserve_goods_and_buy_flags(self):
         lua = server_runtime(); g = lua.globals()
@@ -347,6 +348,10 @@ class ShopReminderTests(unittest.TestCase):
         compile_ = lua.eval('function(s) local f,e=loadstring(s); return f~=nil,e end')
         self.assertEqual(compile_(source.decode('utf-8-sig')), (True, None))
         baseline = subprocess.check_output(['git', 'show', BASELINE + ':' + SERVER.relative_to(ROOT).as_posix()], cwd=ROOT)
+        source = source.replace('\telseif index==8 then -- 集字有礼已下架\r\n\t\tif QingDianActivityCfg.QingDianJiZi.isOpen == false then return end'.encode(), b'\telseif index==8 then ')
+        source = source.replace(b'\tif QingDianActivityCfg.QingDianJiZi.isOpen == false then return end\r\n', b'')
+        source = source.replace('\telseif msgid==8 then  -- 已下架的集字有礼\r\n\t\treturn'.encode(), '\telseif msgid==8 then  --兑换集字\r\n\t\tGetQingDianJiZiGift(sysarg,DataPack.readByte(packet))'.encode())
+
         source = source.replace('\t\tif QingDianActivityCfg.XiaoFeiZhuanPanNew.isOpen == false then return end\r\n'.encode(), b'')
         source = source.replace('\tif QingDianActivityCfg.XiaoFeiZhuanPanNew.isOpen == false then return end\r\n'.encode(), b'')
         source = source.replace('万服庆典唯一消费排行'.encode(), '月度活动 元宝消耗排行榜'.encode())

@@ -82,7 +82,7 @@ function RedPacketCross()
     end
 
     --春节活动，注入资金
-    if is_spring_festival_time() then
+    if is_spring_festival_time() and SpringFestivalCfg.shousui.isOpen ~= false then
         InitRedPacket()
         local sys = System.getStaticVar()
         sys.redpack.count = sys.redpack.count + SpringFestivalCfg.shousui.money

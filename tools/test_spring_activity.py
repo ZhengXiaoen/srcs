@@ -9,6 +9,7 @@ import sys
 import unittest
 
 from patch_spring_activity_icon import BASELINE, CLIENT, ROOT, ROW_FLAGS, patch_swf
+from patch_retired_festival_pages import patch_swf as retired_pages
 from patch_activity_entries import strings_of
 from patch_activity_reminders import normalize
 from patch_drop_pickup_retry import abc_section
@@ -98,12 +99,12 @@ class SpringClientTests(unittest.TestCase):
 
     def test_only_two_row_flags_change_in_entire_uncompressed_swf(self):
         original = subprocess.check_output(['git', 'show', BASELINE + ':web/GameFrame.swf'], cwd=ROOT)
-        self.assertEqual(self.source, patch_swf(original))
+        self.assertEqual(self.source, retired_pages(patch_swf(original)))
         self.assertEqual(self.source, patch_swf(self.source))
         old, (_, _, a, b) = abc_section(original)
         abc, _ = normalize(old[a:b]); _, _, bodies = inspect_abc(abc)
         offset, _, _ = bodies[6440]
-        new, _ = abc_section(self.source)
+        new, _ = abc_section(patch_swf(original))
         changed = [i for i, (x, y) in enumerate(zip(old, new, strict=True)) if x != y]
         self.assertEqual([a + offset + p for p in ROW_FLAGS], changed)
 
@@ -148,7 +149,8 @@ class SpringClientTests(unittest.TestCase):
             elif isinstance(value, dict):
                 for k, child in value.items():
                     if k in ('id','count','bind','type','needPay','needCount','times','ybmin','ybmax','itemID','itemId') or isinstance(child, (dict, list)):
-                        verify(child, expected[k], k)
+                        lua_key = [n for n in value if n.isdecimal()].index(k) + 1 if k.isdecimal() else k
+                        verify(child, expected[lua_key], k)
             else:
                 self.assertEqual(value, expected, key); checked.append(key)
         verify(config_value(read_cbp(source)[1]), lua.globals().SpringFestivalCfg)

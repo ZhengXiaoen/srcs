@@ -246,6 +246,8 @@ SpringFestivalCfg =
 	
 	-- 5 绝版年货
 	goods = {
+		isOpen = false, -- 已下架
+
 		itemList = {
 			{itemId = 7821, count = 1, bind = 1, yb = 6888},
 			{itemId = 7822, count = 1, bind = 1, yb = 19888},
@@ -257,6 +259,7 @@ SpringFestivalCfg =
 	-- 6 守岁礼包
 	shousui =
     {
+        isOpen = false, -- 守岁礼包已下架
         money = 18888, --奖金池
     },
 	-- 7 新春寻宝
@@ -1631,6 +1634,8 @@ SpringFestivalCfg =
 	--10集字有奖
 	SpringJiZi = 
 	{
+		isOpen = false, -- 已下架
+
 		--字的id(id必须连续！！！！！！！！！！！！！！)
 		JiZiId ={5649,5650,5651,5652,5653,5654,5655,5656},
 		--需要收集的物品
@@ -2404,6 +2409,8 @@ SpringFestivalCfg =
 	--13消费转盘
 	XiaoFeiZhuanPanNew = 
 	{
+		isOpen = false, -- 已下架
+
 		{
 			--第1挡
 			{

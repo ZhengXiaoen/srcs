@@ -7377,3 +7377,63 @@ function setbossrate(sysarg, rate)
 
 	Actor.sendTipmsg(sysarg, string.format("【神炉控制】已成功将「Boss战爆元宝/爆充值」的「基础奖励倍率」调整为：%.2f 倍！", rate), ttDialog)
 end
+
+-- GM 一键吸附：仅移动当前场景实例的存活 Boss，保留原怪物的血量、归属和刷新数据。
+-- Actor.moveToEntity 仅支持玩家；monsterEnterScene 仅支持未入场的怪物，均不能用于此处。
+LocalDT.GmMoveBossNearPlayer = function(monster, scene, sceneId, x, y)
+    for radius = 1, 3 do
+        for dx = -radius, radius do
+            for dy = -radius, radius do
+                if math.abs(dx) == radius or math.abs(dy) == radius then
+                    if Actor.getScenePtr(monster) ~= scene or Actor.isDeath(monster) then return false end
+                    -- enterScene 使用怪物自身所在的副本，同场景分支只移动原实体。
+                    if Actor.enterScene(monster, sceneId, x + dx, y + dy, 0, 0) then return true end
+                end
+            end
+        end
+    end
+    return false
+end
+
+-- @func gmAbsorbBosses；GM 面板“一键吸附”按钮调用。
+function gmAbsorbBosses(sysarg)
+    if not sysarg or Actor.getEntityType(sysarg) ~= 0 then return end
+    if Actor.getGMLevel(sysarg) <= 0 then
+        Actor.sendTipmsg(sysarg, "该功能仅限 GM 使用", ttFlyTip)
+        return
+    end
+    if Actor.isDeath(sysarg) then
+        Actor.sendTipmsg(sysarg, "请复活后再吸附 Boss", ttFlyTip)
+        return
+    end
+    local scene = Actor.getScenePtr(sysarg)
+    if not scene then return end
+    local sceneId = Actor.getSceneId(sysarg)
+    local x, y = Actor.getEntityPosition(sysarg, 0, 0)
+    local moved, failed = 0, 0
+    local seen = {}
+    for _, monster in ipairs(LuaHelp.getSceneMonsterListByType(scene, 4) or {}) do
+        if monster and not seen[monster] then
+            seen[monster] = true
+            if Actor.getScenePtr(monster) == scene and Actor.getEntityType(monster) == 1
+                and not Actor.isDeath(monster)
+                and System.getMonsterTypeById(Actor.getIntProperty(monster, PROP_ENTITY_ID)) == 4 then
+                local owner = Actor.getMonsterOwner(monster)
+                if not owner or owner == 0 then
+                    if LocalDT.GmMoveBossNearPlayer(monster, scene, sceneId, x, y) then
+                        moved = moved + 1
+                    else
+                        failed = failed + 1
+                    end
+                end
+            end
+        end
+    end
+    if moved == 0 and failed == 0 then
+        Actor.sendTipmsg(sysarg, "当前地图没有可吸附的 Boss", ttFlyTip)
+    elseif failed > 0 then
+        Actor.sendTipmsg(sysarg, string.format("已吸附 %d 只 Boss，%d 只周围无可用位置", moved, failed), ttFlyTip)
+    else
+        Actor.sendTipmsg(sysarg, string.format("已吸附 %d 只 Boss", moved), ttFlyTip)
+    end
+end

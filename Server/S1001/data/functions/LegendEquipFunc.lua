@@ -139,7 +139,7 @@ function handExChangeLegendPage(sysarg,nPage)
    
     nPage = tonumber(nPage)
     
-    if nPage < 1 or nPage > #LegendExchangeCfg then return end
+    if not nPage or nPage%1 ~= 0 or nPage < 1 or nPage > #LegendExchangeCfg then return end
     local str = "\\         <(c0xFF00c0ff)传世道具用于激活装备,宝钻用于升级装备等级>\\<(idecoLine#350)>\\\\\\        "
     
     local cfg = LegendExchangeCfg[nPage].exchange
@@ -155,6 +155,7 @@ function handExChangeLegendPage(sysarg,nPage)
         str = str .."\\        "
     end
     if nPage == 1 then
+        str = str.."              <#c0xFF15EA40#一键兑换/@handExChangeLegendAll,1>\\        "
         --str =str.."\\\\                    <#c0xFF15EA40#宝钻兑换传世装备/@handExChangeLegendPage,2>".."\\"
     else
         str =str.."\\\\                    <#c0xFF15EA40#传世装备兑换宝钻/@handExChangeLegendPage,1>".."\\"
@@ -171,9 +172,9 @@ function handExChangeLegendItem(sysarg,nPage,nIndex)
     nPage = tonumber(nPage)
     nIndex = tonumber(nIndex)
     
-    if nPage < 1 or nPage > #LegendExchangeCfg then return end
+    if not nPage or nPage%1 ~= 0 or nPage < 1 or nPage > #LegendExchangeCfg then return end
     local cfg = LegendExchangeCfg[nPage].exchange
-    if nIndex < 1 or nIndex > #cfg then
+    if not nIndex or nIndex%1 ~= 0 or nIndex < 1 or nIndex > #cfg then
         return
     end
    
@@ -183,13 +184,14 @@ function handExChangeLegendItem(sysarg,nPage,nIndex)
         
         return
     end
-   if Item.getBagEmptyGridCount(sysarg) < 0 then
-        Actor.sendTipmsg(sysarg,"包裹空间不足!",ttFlyTip)
-        return
-   end 
-   Actor.removeItem(sysarg,cfg.itemid,cfg.count,-1,-1,-1,"传世装备兑换",LogIds.legendequipexchange)
-
-   Actor.addItem(sysarg,cfg.exchangeid,0,0,cfg.exchangecount,cfg.exchangebind,0,"传世装备兑换",LogIds.legendequipexchange)
+   local times,success = LocalDT.EquipExchangeBatch(sysarg,cfg,LogIds.legendequipexchange,"传世装备兑换",1)
+   if not success then return handExChangeLegendPage(sysarg,nPage) end
    Actor.sendTipmsg(sysarg,"兑换成功",ttFlyTip)
    return handExChangeLegendPage(sysarg,nPage)
+end
+
+function handExChangeLegendAll(sysarg,nPage)
+    if tonumber(nPage) ~= 1 then return end
+    LocalDT.EquipExchangeAll(sysarg,LegendExchangeCfg[1].exchange,LogIds.legendequipexchange,"传世装备兑换")
+    return handExChangeLegendPage(sysarg,1)
 end

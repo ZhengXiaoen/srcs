@@ -22,6 +22,88 @@
     };
 
 
+-- 两种装备共用批量兑换；单次物品数量不超过服务器的 16 位接口范围。
+LocalDT.EquipExchangeBagFits = function(sysarg,cfg,times,available)
+    local fits,need = Awards.CheckBagGridCount(sysarg,{{type=0,id=cfg.exchangeid,
+        count=times*cfg.exchangecount,bind=cfg.exchangebind}},true)
+    -- 全部扣完该材料至少释放一格，满背包时也允许利用这格兑换。
+    return fits == true or (times*cfg.count == available and need <= Item.getBagEmptyGridCount(sysarg)+1)
+end
+
+LocalDT.EquipExchangeBatch = function(sysarg,cfg,logId,logStr,requested)
+    local available = Actor.getItemCount(sysarg,cfg.itemid)
+    local times = math.min(math.floor(available/cfg.count),requested or math.huge,
+        math.floor(65535/cfg.count),math.floor(65535/cfg.exchangecount))
+    if times < 1 then return 0,false end
+    if not LocalDT.EquipExchangeBagFits(sysarg,cfg,times,available) then
+        local low,high = 0,times-1
+        while low < high do
+            local middle = math.floor((low+high+1)/2)
+            if LocalDT.EquipExchangeBagFits(sysarg,cfg,middle,available) then
+                low = middle
+            else
+                high = middle-1
+            end
+        end
+        times = low
+        if times < 1 then
+            Actor.sendTipmsg(sysarg,"包裹空间不足!",ttFlyTip)
+            return 0,false
+        end
+    end
+    local bound = Actor.getItemCount(sysarg,cfg.itemid,-1,-1,1)
+    local removed = Actor.removeItem(sysarg,cfg.itemid,times*cfg.count,-1,-1,-1,logStr,logId)
+    local given = 0
+    if removed == times*cfg.count then
+        given = Actor.addItem(sysarg,cfg.exchangeid,0,0,times*cfg.exchangecount,cfg.exchangebind,0,logStr,logId)
+        if given == times*cfg.exchangecount then return times,true end
+    end
+    -- 发放失败时撤回已发部分，再按材料原绑定状态返还，避免重复奖励。
+    if given > 0 and Actor.removeItem(sysarg,cfg.exchangeid,given,-1,-1,cfg.exchangebind,logStr.."撤回",logId) ~= given then
+        Actor.sendTipmsg(sysarg,"兑换失败，奖励撤回异常，请联系管理员。",ttFlyTip)
+        return 0,false
+    end
+    local returned = 0
+    if removed > 0 then
+        local removedBound = math.min(removed,math.max(0,bound-Actor.getItemCount(sysarg,cfg.itemid,-1,-1,1)))
+        if removedBound > 0 then
+            returned = returned+Actor.addItem(sysarg,cfg.itemid,0,0,removedBound,1,0,logStr.."返还",logId)
+        end
+        if removed > removedBound then
+            returned = returned+Actor.addItem(sysarg,cfg.itemid,0,0,removed-removedBound,0,0,logStr.."返还",logId)
+        end
+    end
+    if returned == removed then
+        Actor.sendTipmsg(sysarg,"兑换失败，已返还扣除的材料。",ttFlyTip)
+    else
+        Actor.sendTipmsg(sysarg,"兑换失败，材料返还异常，请联系管理员。",ttFlyTip)
+    end
+    return 0,false
+end
+
+LocalDT.EquipExchangeAll = function(sysarg,recipes,logId,logStr)
+    local total,rewards = 0,0
+    local stopped = false
+    for _,cfg in ipairs(recipes) do
+        while Actor.getItemCount(sysarg,cfg.itemid) >= cfg.count do
+            local times,success = LocalDT.EquipExchangeBatch(sysarg,cfg,logId,logStr)
+            if not success then
+                stopped = true
+                break
+            end
+            total = total+times*cfg.count
+            rewards = rewards+times*cfg.exchangecount
+        end
+        if stopped then break end
+    end
+    if total > 0 then
+        Actor.sendTipmsg(sysarg,string.format("一键兑换成功，共兑换%d件，获得%s×%d！",
+            total,Item.getItemLinkMsg(recipes[1].exchangeid),rewards),ttFlyTip)
+    elseif not stopped then
+        Actor.sendTipmsg(sysarg,"没有可兑换的装备!",ttFlyTip)
+    end
+end
+
 function handExChangeThor(sysarg)
 	--print("1111111")
    
@@ -33,7 +115,7 @@ function handExChangeThorPage(sysarg,nPage)
    
     nPage = tonumber(nPage)
     
-    if nPage < 1 or nPage > #ThorExchangeCfg then return end
+    if not nPage or nPage%1 ~= 0 or nPage < 1 or nPage > #ThorExchangeCfg then return end
     local str = "\\         <(c0xFF00c0ff)雷神装备用于激活/突破部位,仙力用于升级部位等级>\\<(idecoLine#350)>\\\\\\        "
     
     local cfg = ThorExchangeCfg[nPage].exchange
@@ -54,6 +136,7 @@ function handExChangeThorPage(sysarg,nPage)
 --        str =str.."\\\\                    <#c0xFF15EA40#雷神装备兑换宝钻/@handExChangeThorPage,1>".."\\"
 --    end
     
+    str = str.."              <#c0xFF15EA40#一键兑换/@handExChangeThorAll,1>\\        "
     str = str.."<(idecoLine#350)>\\ <(c0xFF00c0ff)雷神装备、仙力>\\     <(c0xFFffff00)1.将在探索宝藏和个人竞技中产出>"
     return str
 
@@ -64,12 +147,9 @@ function handExChangeThorItem(sysarg,nPage,nIndex)
     
     nPage = tonumber(nPage)
     nIndex = tonumber(nIndex)
-	print("nPage="..nPage)
-    print("nIndex="..nIndex)
-	
-    if nPage < 1 or nPage > #ThorExchangeCfg then return end
+    if not nPage or nPage%1 ~= 0 or nPage < 1 or nPage > #ThorExchangeCfg then return end
     local cfg = ThorExchangeCfg[nPage].exchange
-    if nIndex < 1 or nIndex > #cfg then
+    if not nIndex or nIndex%1 ~= 0 or nIndex < 1 or nIndex > #cfg then
         return
     end
    
@@ -79,13 +159,14 @@ function handExChangeThorItem(sysarg,nPage,nIndex)
         
         return
     end
-   if Item.getBagEmptyGridCount(sysarg) < 0 then
-        Actor.sendTipmsg(sysarg,"包裹空间不足!",ttFlyTip)
-        return
-   end 
-   Actor.removeItem(sysarg,cfg.itemid,cfg.count,-1,-1,-1,"雷神装备兑换",LogIds.Thorequipexchange)
-
-   Actor.addItem(sysarg,cfg.exchangeid,0,0,cfg.exchangecount,cfg.exchangebind,0,"雷神装备兑换",LogIds.Thorequipexchange)
+   local times,success = LocalDT.EquipExchangeBatch(sysarg,cfg,LogIds.Thorequipexchange,"雷神装备兑换",1)
+   if not success then return handExChangeThorPage(sysarg,nPage) end
    Actor.sendTipmsg(sysarg,"兑换成功",ttFlyTip)
    return handExChangeThorPage(sysarg,nPage)
+end
+
+function handExChangeThorAll(sysarg,nPage)
+    if tonumber(nPage) ~= 1 then return end
+    LocalDT.EquipExchangeAll(sysarg,ThorExchangeCfg[1].exchange,LogIds.Thorequipexchange,"雷神装备兑换")
+    return handExChangeThorPage(sysarg,1)
 end

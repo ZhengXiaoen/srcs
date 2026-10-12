@@ -197,7 +197,7 @@ end
 
 function LongTengMakeMkaeList(sysarg,index)
     index = tonumber(index)
-    if index <= 0 or index > #LongTengMakeCfg then return end
+    if not index or index%1 ~= 0 or index <= 0 or index > #LongTengMakeCfg then return end
     
     local str = "\\ <(c0xFFb6946c)3个相同的龙腾装备可合成1个高级龙腾装备：>\\<(idecoLine#350)> \\"
     
@@ -212,29 +212,78 @@ function LongTengMakeMkaeList(sysarg,index)
         
 
     end
-        str = str .."\\\\			<返回主页/@LongTengMakeInit> "
+        str = str .."\\\\			<返回主页/@LongTengMakeInit>        <一键合成/@LongTengMakeAll,"..index.."> "
     return str
+end
+
+-- 龙腾装备不堆叠，扣除材料释放格子后发放成品；失败时按原绑定状态返还。
+LocalDT.LongTengMakeOne = function(sysarg,cfg)
+    if Actor.getItemCount(sysarg,cfg.itemid) < cfg.count then
+        Actor.sendTipmsg(sysarg,"材料不足,无法合成!",ttFlyTip)
+        return false
+    end
+    local bound = Actor.getItemCount(sysarg,cfg.itemid,-1,-1,1)
+    local removed = Actor.removeItem(sysarg,cfg.itemid,cfg.count,-1,-1,-1,"龙腾合成",LogIds.longtengMake)
+    if removed == cfg.count and Actor.addItem(sysarg,cfg.destid,0,0,1,cfg.bind,0,"龙腾合成",LogIds.longtengMake) == 1 then
+        return true
+    end
+    local returned = 0
+    if removed > 0 then
+        local removedBound = math.min(removed,math.max(0,bound-Actor.getItemCount(sysarg,cfg.itemid,-1,-1,1)))
+        if removedBound > 0 then
+            returned = returned+Actor.addItem(sysarg,cfg.itemid,0,0,removedBound,1,0,"龙腾合成返还",LogIds.longtengMake)
+        end
+        if removed > removedBound then
+            returned = returned+Actor.addItem(sysarg,cfg.itemid,0,0,removed-removedBound,0,0,"龙腾合成返还",LogIds.longtengMake)
+        end
+    end
+    if returned == removed then
+        Actor.sendTipmsg(sysarg,"合成失败，已返还扣除的材料。",ttFlyTip)
+    else
+        Actor.sendTipmsg(sysarg,"合成失败，材料返还异常，请联系管理员。",ttFlyTip)
+    end
+    return false
 end
 
 function LongTengMakeMkae(sysarg,index,i)
     index = tonumber(index)
     i = tonumber(i)
     local cfg = LongTengMakeCfg[index]
-    if cfg == nil then return end
-    cfg = cfg.list[i]
-    if Actor.getItemCount(sysarg,cfg.itemid) < cfg.count then
-        Actor.sendTipmsg(sysarg,"材料不足,无法合成!",ttFlyTip)
-        return
-    end
-    if Actor.removeItem(sysarg,cfg.itemid,cfg.count,-1,-1,-1,"龙腾合成",LogIds.longtengMake)~=cfg.count then
-		return 
-	end
-    Actor.addItem(sysarg,cfg.destid,0,0,1,cfg.bind,0,"龙腾合成",LogIds.longtengMake)
+    cfg = cfg and cfg.list[i]
+    if not cfg or not LocalDT.LongTengMakeOne(sysarg,cfg) then return end
     Actor.sendTipmsg(sysarg,"合成成功!",ttFlyTip)
-	 
-	System.broadcastTipmsg(string.format("恭喜<(n%s)>玩家合成%s,战力暴涨！<我也要合成/@@showWin,200>",Actor.getName(sysarg),Item.getItemLinkMsg(cfg.destid)),   ttChatWindow)
+    System.broadcastTipmsg(string.format("恭喜<(n%s)>玩家合成%s,战力暴涨！<我也要合成/@@showWin,200>",Actor.getName(sysarg),Item.getItemLinkMsg(cfg.destid)),ttChatWindow)
 end
 
+function LongTengMakeAll(sysarg,index)
+    index = tonumber(index)
+    local cfg = LongTengMakeCfg[index]
+    if not cfg then return end
+    local total = 0
+    local stopped = false
+    for _,recipe in ipairs(cfg.list) do
+        local made = 0
+        local count = math.floor(Actor.getItemCount(sysarg,recipe.itemid)/recipe.count)
+        for n = 1,count do
+            if not LocalDT.LongTengMakeOne(sysarg,recipe) then
+                stopped = true
+                break
+            end
+            made = made+1
+        end
+        total = total+made
+        if made > 0 then
+            System.broadcastTipmsg(string.format("恭喜<(n%s)>玩家合成%s×%d,战力暴涨！<我也要合成/@@showWin,200>",Actor.getName(sysarg),Item.getItemLinkMsg(recipe.destid),made),ttChatWindow)
+        end
+        if stopped then break end
+    end
+    if total > 0 then
+        Actor.sendTipmsg(sysarg,string.format("一键合成成功，共合成%d件装备！",total),ttFlyTip)
+    elseif not stopped then
+        Actor.sendTipmsg(sysarg,"材料不足,无法合成!",ttFlyTip)
+    end
+    return LongTengMakeMkaeList(sysarg,index)
+end
 
 
 --龙腾男女互换

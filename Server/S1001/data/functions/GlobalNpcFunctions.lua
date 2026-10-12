@@ -79,6 +79,7 @@ GlobalNpcFunctionsFilter = {
 	LongTengMakeInit =1,
 	LongTengMakeMkaeList =1,
 	LongTengMakeMkae =1,
+	LongTengMakeAll =1,
 	LongTengChangeInit=1,
 	LongTengChangeMkaeList=1,
 	LongTengChangeMkae=1,

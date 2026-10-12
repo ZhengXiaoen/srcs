@@ -104,8 +104,43 @@ def sections(data):
                 ss=ss,si=si,se=se,scripts=scripts,count=count,bc=bc,bi=bi)
 
 
+def label_backward_branches(code):
+    """Flash requires loop back edges to land on an AVM2 label instruction."""
+    ops = instructions(code)
+    by_offset = {op.start: op for op in ops}
+    targets = {target for op in ops for _, target, _ in op.branches
+               if target < op.start and by_offset[target].opcode != 0x09}
+    # Replace the target instruction so relocated branches land on the label,
+    # rather than inserting before it (which would shift them past the label).
+    edits = [(target, by_offset[target].end,
+              b'\x09' + code[target:by_offset[target].end]) for target in targets]
+    return relocate(code, edits)[0] if edits else code
+
+
+def repair_installed_page(original):
+    """Upgrade the already installed page without rebuilding other client code."""
+    _, catalog, _ = inspect_abc(original)
+    page = catalog[CLASS]['instance']
+    full = inspect_abc_full(original)
+    result = bytearray(original)
+    edits = []
+    for name in ['initEvent', 'removeEvent', 'gmClick']:
+        mid = page[name][0]
+        old = full['bodies'][mid]
+        code = label_backward_branches(old['code'])
+        if code == old['code']:
+            continue
+        if old['exceptions'] or old['body_traits'] != b'\0':
+            raise ValueError('Unexpected GM loop body traits')
+        body = u(mid, *old['limits'], len(code)) + code + b'\0\0'
+        edits.append((old['record_start'], old['end'], body))
+    for start, end, value in sorted(edits, reverse=True):
+        result[start:end] = value
+    return bytes(result)
+
+
 def patch_abc(original):
-    if CLASS in pools(original)["strings"][3]: return original
+    if CLASS in pools(original)["strings"][3]: return repair_installed_page(original)
     texts=[CLASS,LABEL,COMMAND,KILL_LABEL,KILL_COMMAND,"a|killAll|4|0","GM命令","参数", "留空使用默认值",
            "请输入有效物品名","金额格式或范围错误","参数格式错误",
            "|",""," ",'"',' "',"1000",'@func gmCommand "',"c","^[0-9]{1,10}$(?![\\s\\S])", '^[^\\s@;|"\\\\]{1,64}$(?![\\s\\S])',
@@ -238,7 +273,7 @@ def patch_abc(original):
               ('remove',lifecycle(False),(4,2,14,15)),('click',click,(7,5,14,15)),
               ('script',scriptcode,(2,1,1,13))]
     def body(mid,code,limits):instructions(code);return u(mid,*limits,len(code))+code+b'\0\0'
-    newbodies=b''.join(body(ids[name],code,lim) for name,code,lim in newcodes)
+    newbodies=b''.join(body(ids[name],label_backward_branches(code),lim) for name,code,lim in newcodes)
     edits=[(sec['ms'],sec['me'],u(mid+7)+source[sec['mc']:sec['me']]+infos),
            (sec['cs'],sec['ci'],u(newclass+1)),(sec['ce'],sec['ce'],instance),
            (sec['ss'],sec['si'],classinfo+u(sec['scripts']+1)),(sec['se'],sec['bi'],script+u(sec['bc']+7)),

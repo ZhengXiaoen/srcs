@@ -53,7 +53,7 @@ class PageVM:
                 count=args[0]; values=stack[-count:] if count else []
                 if count:del stack[-count:]
                 stack.append(values)
-            elif op==0x80:pass
+            elif op in (0x80,0x09):pass
             elif op==0x75:
                 value=stack.pop()
                 try:value=float(value)
@@ -182,10 +182,40 @@ class CommandClientTests(unittest.TestCase):
             vm.run('removeEvent');self.assertEqual(0,sum(len(x) for x in vm.listeners.values()))
 
     def test_patch_reproduction_and_no_retired_gm_commands(self):
-        baseline=subprocess.check_output(['git','show','HEAD:web/GameFrame.swf'],cwd=CLIENT.parent.parent)
+        baseline=subprocess.check_output(['git','show','5e5792c:web/GameFrame.swf'],cwd=CLIENT.parent.parent)
         self.assertEqual(CLIENT.read_bytes(),patch_swf(baseline))
         self.assertEqual(CLIENT.read_bytes(),patch_swf(CLIENT.read_bytes()))
         for action in ACTIONS:self.assertNotIn(action[1],('xfzp10','xfzp100'))
+
+    def test_flash_loop_verification_and_existing_page_upgrade(self):
+        from patch_gm_commands import label_backward_branches
+        from patch_item_count_u16_client import inspect_abc_full
+        baseline=subprocess.check_output(['git','show','5e5792c:web/GameFrame.swf'],cwd=CLIENT.parent.parent)
+        data,(tag,_,a,b)=abc_section(baseline)
+        before=data[a:b]
+        names,catalog,_=inspect_abc(before)
+        old=inspect_abc_full(before)['bodies']
+        current=inspect_abc_full(self.abc)['bodies']
+        changed={catalog[CLASS]['instance'][name][0] for name in ['initEvent','removeEvent','gmClick']}
+        for mid,body in old.items():
+            if mid in changed:
+                self.assertNotEqual(body['code'],current[mid]['code'])
+                self.assertEqual(label_backward_branches(body['code']),current[mid]['code'])
+                self.assertEqual(body['limits'],current[mid]['limits'])
+                ops=instructions(current[mid]['code']);by={op.start:op for op in ops}
+                for op in ops:
+                    for _,target,_ in op.branches:
+                        if target<op.start:self.assertEqual(0x09,by[target].opcode)
+            else:
+                self.assertEqual(before[body['record_start']:body['end']],
+                                 self.abc[current[mid]['record_start']:current[mid]['end']],mid)
+        # A fresh install and an in-place upgrade must produce the same artifact.
+        fresh=subprocess.check_output(['git','show','5e5792c^:web/GameFrame.swf'],cwd=CLIENT.parent.parent)
+        self.assertEqual(CLIENT.read_bytes(),patch_swf(fresh))
+        current_data,(_,_,c,d)=abc_section(CLIENT.read_bytes())
+        self.assertEqual(data[8:tag+2],current_data[8:tag+2])
+        self.assertEqual(data[tag+6:a],current_data[tag+6:c])
+        self.assertEqual(data[b:],current_data[d:])
 
     def test_original_player_and_common_pages_detach_focus_listeners(self):
         names,catalog,bodies=inspect_abc(self.abc)

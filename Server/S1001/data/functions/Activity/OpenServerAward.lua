@@ -478,6 +478,7 @@ MiscsImplement.registerMsgHandler(LogicCmd.miscSys.sub.cGiveOpenServerAward3, Mi
 
 --测试用的，把已经领取的数据清空
 function tobezero(sysarg)
+	if not LocalDT.GmRequire(sysarg) then return end
 	local sVar = System.getStaticVar()
 	sVar.openSrvAward = nil
 	System.saveStaticVar()
@@ -486,6 +487,6 @@ function tobezero(sysarg)
 		local var = Actor.getStaticVar(sysarg)
 		var.openSrvFlags = 0
 	end
-	print("开服活动领取人数已重置")
+	Actor.sendTipmsg(sysarg, "全服开服活动领取人数及自身领取标志已重置", ttFlyTip)
 end
 

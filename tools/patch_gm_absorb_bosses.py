@@ -25,6 +25,9 @@ Q = {"Button54": 15659, "autoSize": 11017, "height": 1618,
 
 
 def patch_abc(original):
+    # The categorized GM page supersedes this toolbar-only patch.
+    if "CustomerServiceCommandPage" in pools(original)["strings"][3]:
+        return original
     if COMMAND in pools(original)["strings"][3]:
         return original
     source, strings, _ = extend_pools(original, [LABEL, COMMAND], [])

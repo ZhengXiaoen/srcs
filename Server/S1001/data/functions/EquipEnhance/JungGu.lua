@@ -261,7 +261,10 @@ end
 
 --用于测试
 function addjunhunping(sysarg,nValue)
-	nValue =tonumber(nValue)
+	if not LocalDT.GmRequire(sysarg) then return end
+	nValue = LocalDT.GmReadNumber(sysarg, "addjunhunping", nValue)
+	if nValue == nil then return end
+	nValue = math.min(nValue, Item.getItemPropertyById(5453, Item.ipItemStaticDuaMax))
 	local canUseItemPrt=nil
 	local canUseItemMaxDura =-1
 	local bagCount = Item.getBagItemCount(sysarg)
@@ -279,7 +282,8 @@ function addjunhunping(sysarg,nValue)
 	end
 	if canUseItemPrt~=nil then 
 		Item.setItemDura(sysarg,Item.getItemGuid(canUseItemPrt),nValue)
-	else 
-		print("没有适合军魂瓶的可以增加")
+		Actor.sendTipmsg(sysarg, string.format("军魂瓶已设置为 %d", nValue), ttFlyTip)
+	else
+		Actor.sendTipmsg(sysarg, "背包没有未满的军魂瓶", ttFlyTip)
 	end			
 end

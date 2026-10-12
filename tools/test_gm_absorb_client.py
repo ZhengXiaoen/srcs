@@ -4,7 +4,7 @@ import unittest
 
 from patch_appearance_upgrade import inspect_abc, pools
 from patch_drop_pickup_retry import abc_section, instructions
-from patch_gm_absorb_bosses import CLIENT, COMMAND, LABEL, Q, patch_swf
+from patch_gm_commands import CLIENT, COMMAND, LABEL, Q, patch_swf, KILL_COMMAND, KILL_LABEL
 from patch_guild_quest_config import read_cbp
 
 
@@ -116,13 +116,18 @@ class GMClientTests(unittest.TestCase):
     def vm(self):
         vm = GMVM(self.abc)
         # Start at the original six-button construction segment after tab setup.
-        vm.run("init", start_at=315)
+        method = vm.catalog["CustomerServiceWin"]["instance"]["init"][0]
+        start, size, _ = vm.bodies[method]
+        ops = instructions(vm.abc[start:start + size])
+        marker = next(i for i, op in enumerate(ops)
+                      if op.opcode == 0x68 and vm.names[op.operands[0]] == "_stateBtnList")
+        vm.run("init", start_at=ops[marker - 3].start)
         return vm
 
     def test_layout_next_to_show_title_and_no_overlap(self):
         vm = self.vm()
         buttons = vm.page["_stateBtnList"]
-        self.assertEqual(7, len(buttons))
+        self.assertEqual(8, len(buttons))
         title, pull = buttons[4], buttons[6]
         self.assertEqual("显示头衔", title["caption"])
         self.assertEqual(LABEL, pull["caption"])
@@ -131,11 +136,15 @@ class GMClientTests(unittest.TestCase):
         self.assertGreater(pull["x"], title["x"] + title["width"])
         self.assertLessEqual(pull["x"] + pull["width"], 442 - 17)
         self.assertEqual(buttons, vm.page["children"])
+        kill = buttons[7]
+        self.assertEqual(KILL_LABEL, kill["caption"])
+        self.assertEqual((324, 78), (kill["x"], kill["y"]))
+        self.assertGreaterEqual(kill["y"], pull["y"] + pull["height"])
 
     def test_one_click_one_command_and_existing_commands(self):
         vm = self.vm()
         expected = ["@sethide GM测试角色 1", "@sethide GM测试角色 0",
-                    "@superman 0", "@superman 1", "@setgm 1", "@setgm 0", COMMAND]
+                    "@superman 0", "@superman 1", "@setgm 1", "@setgm 0", COMMAND, KILL_COMMAND]
         for button, command in zip(vm.page["_stateBtnList"], expected):
             vm.commands.clear()
             vm.run("onBtnClick", {"target": button, "currentTarget": button})

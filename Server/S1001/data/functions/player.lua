@@ -5913,6 +5913,7 @@ end
 
 --查看开区合区天数
 function whatday(sysarg)
+	if not LocalDT.GmRequire(sysarg) then return end
 	local openday = System.getDaysSinceOpenServer(); --获取现在是开服的第几天
 	local combineday = System.getDaysSinceCombineServer(); --合服以来的第几天
 	Actor.sendTipmsg(sysarg, string.format("当前合服天数第<%s>天,开区第<%s>天.",combineday,openday), 256);
@@ -5939,10 +5940,11 @@ function settask(sysarg,n)
 end
 --杀死所有的怪,测试用的 @func killAll 
 function killAll(sysarg)
+	if not LocalDT.GmRequire(sysarg) then return end
 	local hScene = Actor.getSceneHandle(sysarg)
-	Fuben.killAllMonsters(sysarg, hScene, true)
-	
-	print("PROP_ACTOR_CIRCLE="..Actor.getIntProperty(sysarg,PROP_ACTOR_CIRCLE))
+	if not Actor.getScenePtr(sysarg) or not hScene or hScene == 0 then return end
+	local count = Fuben.killAllMonsters(sysarg, hScene, true, -1)
+	Actor.sendTipmsg(sysarg, string.format("已击杀当前地图 %d 只怪物", count or 0), ttFlyTip)
 end
 
 --服务器自启动后每分钟检测BOSS刷新以及提示
@@ -6093,15 +6095,18 @@ end
 
 --@func qlck2 清理当前角色的寻宝仓库物品和寻宝积分,清理寻宝次数变量
 function qlck2(sysarg)
+	if not LocalDT.GmRequire(sysarg) then return end
 	Dmkj.clearStore(sysarg);
 	local var = Actor.getStaticVar(sysarg);
 	var.TreasureHuntValue = 0;
 
 	set_d_val(sysarg,199,0);
+	Actor.sendTipmsg(sysarg, "寻宝仓库、积分及次数已清理", ttFlyTip)
 end
 
 --查看当前地图ID
 function ckmapid(sysarg)
+	if not LocalDT.GmRequire(sysarg) then return end
 	local nSceneId = Actor.getSceneId(sysarg);
 	Actor.sendTipmsg(sysarg, "当前地图ID: "..nSceneId, 256);
 end
@@ -6149,7 +6154,8 @@ end
 
 --按ID刷套装
 function GiveTotal(sysarg,str)
-	if str == nil or str == 0 or str == "" then str = 1; end
+	if not LocalDT.GmRequire(sysarg) then return end
+	if str == nil or str == "" then str = 5; end
 
 	local keyMap = {
 		{ "霸主", 1 }, { "通天", 2 }, { "毁灭", 3 }, { "上古", 4 }, 
@@ -6191,21 +6197,19 @@ function GiveTotal(sysarg,str)
 	};
 
 	if key and tz[key] then
-		local a = tz[key].startId;
-		local job = Actor.getIntProperty(sysarg, PROP_ACTOR_VOCATION);
-		if job == 2 then
-			a = a + 9;
-		elseif job == 3 then
-			a = a + 18;
+		local a = tz[key].startId
+		local job = Actor.getIntProperty(sysarg, PROP_ACTOR_VOCATION)
+		local sex = Actor.getIntProperty(sysarg, PROP_ACTOR_SEX)
+		if key >= 7 then a = a + (job - 1) * 9 end
+		if Item.getBagEmptyGridCount(sysarg) < 10 then
+			Actor.sendTipmsg(sysarg, "请至少预留 10 格背包空位", ttFlyTip)
+			return
 		end
-
 		for i = 1, 9 do
-			local itemid = a + i - 1;
-			local num = 1;
-			if i == 6 or i == 7 then
-				num = 2;
+			if i ~= 2 and i ~= 3 or i == 2 + sex then
+				local num = (i == 6 or i == 7) and 2 or 1
+				Actor.addItem(sysarg, a + i - 1, 0, 0, num)
 			end
-			Actor.addItem(sysarg, itemid, 0, 0, num);
 		end
 		Actor.sendTipmsg(sysarg, "成功获取 [" .. tz[key].name .. "] 全套！", 1);
 	else
@@ -6216,6 +6220,11 @@ end
 --gfunc GmGiveLongTeng 套衣
 --大天·龙腾圣装发放 (支持性别判断，修正手镯戒指两个，腰带/圣带一个)
 function GmGiveLongTeng(sysarg)
+	if not LocalDT.GmRequire(sysarg) then return end
+	if Item.getBagEmptyGridCount(sysarg) < 10 then
+		Actor.sendTipmsg(sysarg, "请至少预留 10 格背包空位", ttFlyTip)
+		return
+	end
 	local nSex = Actor.getIntProperty(sysarg, PROP_ACTOR_SEX)
 	-- 男圣甲: 7274, 女圣衣: 7275
 	local clothId = 7274
@@ -6243,6 +6252,11 @@ end
 --gfunc GmGiveZhiZun 套衣
 --神·至尊屠龙刀发放 (支持性别判断)
 function GmGiveZhiZun(sysarg)
+	if not LocalDT.GmRequire(sysarg) then return end
+	if Item.getBagEmptyGridCount(sysarg) < 10 then
+		Actor.sendTipmsg(sysarg, "请至少预留 10 格背包空位", ttFlyTip)
+		return
+	end
 	local nSex = Actor.getIntProperty(sysarg, PROP_ACTOR_SEX)
 	-- 男神甲: 7622, 女神衣: 7623
 	local clothId = 7622
@@ -6270,6 +6284,7 @@ end
 --gfunc GmOneKeyFullAttribute 给属性拉满
 -- 属性21亿调整GM命令
 function GmOneKeyFullAttribute(sysarg)
+	if not LocalDT.GmRequire(sysarg) then return end
 	local fullValue = 2100000000
 
 	-- 1. 等级调整为255级
@@ -6333,15 +6348,8 @@ function GmOneKeyFullAttribute(sysarg)
 	-- 血炼精华
 	Actor.setXueLianValue(sysarg, fullValue)
 
-	-- 5. 个人变量级及声望等辅助备份
-	if var ~= nil then
-		if var.d == nil then var.d = {} end
-		var.d[12] = fullValue -- 额外声望/功勋值
-		var.godSoulValue = fullValue -- 神魂/注魂备份值
-		var.allOffLineTime = fullValue
-	end
-
-	Actor.collectOperate(sysarg, 0) -- 重新核算人物最新属性属性
+	Actor.collectOperate(sysarg, 0)
+	Quest_ShuaXin(sysarg)
 	Actor.sendTipmsg(sysarg, "各类材料一键21亿及255满级设置成功！", ttFlyTip)
 end
 
@@ -6429,9 +6437,11 @@ end
 
 --测试转职
 function TestChangeJob(sysarg,Job)
-    Job = tonumber(Job)
+    if not LocalDT.GmRequire(sysarg) then return end
+    Job = LocalDT.GmReadNumber(sysarg, "TestChangeJob", Job)
+    if Job == nil then return end
     Actor.changeVocation(sysarg,Job)
-
+    Actor.sendTipmsg(sysarg, "职业已切换", ttFlyTip)
 end
 
 function TestExpBall(sysarg)
@@ -6869,13 +6879,20 @@ end
 
 --设置行会旗帜经验
 function SetGuildFlagExp(sysarg,nValue)
+    if not LocalDT.GmRequire(sysarg) then return end
+    nValue = LocalDT.GmReadNumber(sysarg, "SetGuildFlagExp", nValue)
+    if nValue == nil then return end
     local nGuildId = Actor.getGuildId(sysarg)
     if nGuildId <= 0 then
         Actor.sendTipmsg(sysarg,"无行会,无法设置!",ttFlyTip)
         return
     end
 
-    Guild.setFlagExp(nGuildId,tonumber(nValue))
+    if not Guild.setFlagExp(nGuildId,nValue) then
+        Actor.sendTipmsg(sysarg, "行会不存在，无法设置旗帜经验", ttFlyTip)
+        return
+    end
+    Actor.sendTipmsg(sysarg, string.format("行会旗帜经验已设置为 %d", nValue), ttFlyTip)
 end
 
 --设置行会旗帜等级
@@ -7098,7 +7115,9 @@ end
 -- 1. 等级调整GM命令
 -- @func setlevel 255
 function setlevel(sysarg, val)
-	val = tonumber(val) or 255
+	if not LocalDT.GmRequire(sysarg) then return end
+	val = LocalDT.GmReadNumber(sysarg, "setlevel", val)
+	if val == nil then return end
 	Actor.setIntProperty(sysarg, PROP_CREATURE_LEVEL, val)
 	Actor.collectOperate(sysarg, 0) -- 重新核算人物最新属性属性
 	Quest_ShuaXin(sysarg) -- 刷新任务
@@ -7108,7 +7127,9 @@ end
 -- 2. 护符碎片设置GM命令
 -- @func sethufu 50000
 function sethufu(sysarg, val)
-	val = tonumber(val) or 2100000000
+	if not LocalDT.GmRequire(sysarg) then return end
+	val = LocalDT.GmReadNumber(sysarg, "sethufu", val)
+	if val == nil then return end
 	Actor.setUIntProperty(sysarg, PROP_ACTOR_MAGIC_SOUL, val)
 	Actor.collectOperate(sysarg, 0)
 	Actor.sendTipmsg(sysarg, string.format("设置「护符碎片」为 %d 成功！", val), ttFlyTip)
@@ -7117,7 +7138,9 @@ end
 -- 3. 护盾碎片设置GM命令
 -- @func setdun 50000
 function setdun(sysarg, val)
-	val = tonumber(val) or 2100000000
+	if not LocalDT.GmRequire(sysarg) then return end
+	val = LocalDT.GmReadNumber(sysarg, "setdun", val)
+	if val == nil then return end
 	Actor.setUIntProperty(sysarg, PROP_ACTOR_SHIELD_SPIRIT, val)
 	Actor.collectOperate(sysarg, 0)
 	Actor.sendTipmsg(sysarg, string.format("设置「护盾碎片」为 %d 成功！", val), ttFlyTip)
@@ -7126,7 +7149,9 @@ end
 -- 4. 宝石结晶设置GM命令
 -- @func setbaoshi 50000
 function setbaoshi(sysarg, val)
-	val = tonumber(val) or 2100000000
+	if not LocalDT.GmRequire(sysarg) then return end
+	val = LocalDT.GmReadNumber(sysarg, "setbaoshi", val)
+	if val == nil then return end
 	Actor.setUIntProperty(sysarg, PROP_ACTOR_GEM_CRYSTAL, val)
 	Actor.collectOperate(sysarg, 0)
 	Actor.sendTipmsg(sysarg, string.format("设置「宝石结晶」为 %d 成功！", val), ttFlyTip)
@@ -7135,7 +7160,9 @@ end
 -- 5. 圣珠结晶设置GM命令
 -- @func setshengzhu 50000
 function setshengzhu(sysarg, val)
-	val = tonumber(val) or 2100000000
+	if not LocalDT.GmRequire(sysarg) then return end
+	val = LocalDT.GmReadNumber(sysarg, "setshengzhu", val)
+	if val == nil then return end
 	Actor.setUIntProperty(sysarg, PROP_ACTOR_PEARL_CHIP, val)
 	Actor.collectOperate(sysarg, 0)
 	Actor.sendTipmsg(sysarg, string.format("设置「圣珠结晶」为 %d 成功！", val), ttFlyTip)
@@ -7144,7 +7171,9 @@ end
 -- 6. 特戒结晶设置GM命令
 -- @func settejie 50000
 function settejie(sysarg, val)
-	val = tonumber(val) or 2100000000
+	if not LocalDT.GmRequire(sysarg) then return end
+	val = LocalDT.GmReadNumber(sysarg, "settejie", val)
+	if val == nil then return end
 	Actor.setUIntProperty(sysarg, PROP_ACTOR_RING_CRYSTAL, val)
 	Actor.collectOperate(sysarg, 0)
 	Actor.sendTipmsg(sysarg, string.format("设置「特戒结晶」为 %d 成功！", val), ttFlyTip)
@@ -7153,7 +7182,9 @@ end
 -- 7. 成就点设置GM命令
 -- @func setchengj 50000
 function setchengj(sysarg, val)
-	val = tonumber(val) or 2100000000
+	if not LocalDT.GmRequire(sysarg) then return end
+	val = LocalDT.GmReadNumber(sysarg, "setchengj", val)
+	if val == nil then return end
 	Actor.setUIntProperty(sysarg, PROP_ACTOR_ACIEVEPOINT, val)
 	Actor.collectOperate(sysarg, 0)
 	Actor.sendTipmsg(sysarg, string.format("设置「成就点」为 %d 成功！", val), ttFlyTip)
@@ -7162,7 +7193,9 @@ end
 -- 8. 转生灵力设置GM命令
 -- @func setzsll 50000
 function setzsll(sysarg, val)
-	val = tonumber(val) or 2100000000
+	if not LocalDT.GmRequire(sysarg) then return end
+	val = LocalDT.GmReadNumber(sysarg, "setzsll", val)
+	if val == nil then return end
 	Actor.setUIntProperty(sysarg, PROP_ACTOR_CIRCLE_SOUL, val)
 	Actor.collectOperate(sysarg, 0)
 	Actor.sendTipmsg(sysarg, string.format("设置「转生灵力」为 %d 成功！", val), ttFlyTip)
@@ -7171,7 +7204,9 @@ end
 -- 9. 功勋/荣誉值设置GM命令
 -- @func setgongxun 50000
 function setgongxun(sysarg, val)
-	val = tonumber(val) or 2100000000
+	if not LocalDT.GmRequire(sysarg) then return end
+	val = LocalDT.GmReadNumber(sysarg, "setgongxun", val)
+	if val == nil then return end
 	Actor.setUIntProperty(sysarg, PROP_ACTOR_HONOR_VALUE, val)
 	Actor.collectOperate(sysarg, 0)
 	Actor.sendTipmsg(sysarg, string.format("设置「功勋/荣誉值」为 %d 成功！", val), ttFlyTip)
@@ -7180,7 +7215,9 @@ end
 -- 10. 斗笠精华设置GM命令
 -- @func setdouli 50000
 function setdouli(sysarg, val)
-	val = tonumber(val) or 2100000000
+	if not LocalDT.GmRequire(sysarg) then return end
+	val = LocalDT.GmReadNumber(sysarg, "setdouli", val)
+	if val == nil then return end
 	local var = Actor.getStaticVar(sysarg)
 	if var ~= nil then
 		if var.newdays == nil then var.newdays = {} end
@@ -7196,7 +7233,9 @@ end
 -- 11. 军魂值设置GM命令
 -- @func setjunhun 50000
 function setjunhun(sysarg, val)
-	val = tonumber(val) or 2100000000
+	if not LocalDT.GmRequire(sysarg) then return end
+	val = LocalDT.GmReadNumber(sysarg, "setjunhun", val)
+	if val == nil then return end
 	local var = Actor.getStaticVar(sysarg)
 	if var ~= nil then
 		if var.newdays == nil then var.newdays = {} end
@@ -7212,19 +7251,20 @@ end
 -- 12. 心法值设置GM命令
 -- @func setxinfa 50000
 function setxinfa(sysarg, val)
-	val = tonumber(val) or 2100000000
+	if not LocalDT.GmRequire(sysarg) then return end
+	val = LocalDT.GmReadNumber(sysarg, "setxinfa", val)
+	if val == nil then return end
 	Actor.setXinFaValue(sysarg, val)
-	if XinFaSystemCfg ~= nil and XinFaSystemCfg.XinFaLevelUp ~= nil then
-		Actor.setXinFaData(sysarg, #XinFaSystemCfg.XinFaLevelUp)
-	end
 	Actor.collectOperate(sysarg, 0)
-	Actor.sendTipmsg(sysarg, string.format("设置「心法值」为 %d 且满重成功！", val), ttFlyTip)
+	Actor.sendTipmsg(sysarg, string.format("设置「心法值」为 %d 成功！", val), ttFlyTip)
 end
 
 -- 12_2. 内功经验/内功能量设置GM命令
 -- @func setneigong 50000
 function setneigong(sysarg, val)
-	val = tonumber(val) or 2100000000
+	if not LocalDT.GmRequire(sysarg) then return end
+	val = LocalDT.GmReadNumber(sysarg, "setneigong", val)
+	if val == nil then return end
 	Actor.setUIntProperty(sysarg, PROP_ACTOR_INNER_EXP, val)
 	Actor.collectOperate(sysarg, 0)
 	Actor.sendTipmsg(sysarg, string.format("设置「内功经验/内功能量」为 %d 成功！", val), ttFlyTip)
@@ -7233,7 +7273,9 @@ end
 -- 13. 元神灵力设置GM命令
 -- @func setyuanshen 50000
 function setyuanshen(sysarg, val)
-	val = tonumber(val) or 2100000000
+	if not LocalDT.GmRequire(sysarg) then return end
+	val = LocalDT.GmReadNumber(sysarg, "setyuanshen", val)
+	if val == nil then return end
 	Actor.setUIntProperty(sysarg, PROP_ACTOR_YUANSHEN_EXP, val)
 	Actor.collectOperate(sysarg, 0)
 	Actor.sendTipmsg(sysarg, string.format("设置「元神灵力」为 %d 成功！", val), ttFlyTip)
@@ -7242,13 +7284,11 @@ end
 -- 14. 注魂值设置GM命令
 -- @func setzhuhun 50000
 function setzhuhun(sysarg, val)
-	val = tonumber(val) or 2100000000
+	if not LocalDT.GmRequire(sysarg) then return end
+	val = LocalDT.GmReadNumber(sysarg, "setzhuhun", val)
+	if val == nil then return end
 	if Actor.setSoulValue ~= nil then
 		Actor.setSoulValue(sysarg, val)
-	end
-	local var = Actor.getStaticVar(sysarg)
-	if var ~= nil then
-		var.godSoulValue = val
 	end
 	Actor.collectOperate(sysarg, 0)
 	Actor.sendTipmsg(sysarg, string.format("设置「注魂值」为 %d 成功！", val), ttFlyTip)
@@ -7257,7 +7297,9 @@ end
 -- 15. 注灵值设置GM命令
 -- @func setlingli 50000
 function setlingli(sysarg, val)
-	val = tonumber(val) or 2100000000
+	if not LocalDT.GmRequire(sysarg) then return end
+	val = LocalDT.GmReadNumber(sysarg, "setlingli", val)
+	if val == nil then return end
 	Actor.setUIntProperty(sysarg, PROP_ACTOR_LINGLI_VALUE, val)
 	Actor.collectOperate(sysarg, 0)
 	Actor.sendTipmsg(sysarg, string.format("设置「灵力/灵宠灵力」为 %d 成功！", val), ttFlyTip)
@@ -7266,7 +7308,9 @@ end
 -- 16. 龙灵经验设置GM命令
 -- @func setlongling 100000
 function setlongling(sysarg, val)
-	val = tonumber(val) or 100000
+	if not LocalDT.GmRequire(sysarg) then return end
+	val = LocalDT.GmReadNumber(sysarg, "setlongling", val)
+	if val == nil then return end
 	Actor.setUIntProperty(sysarg, PROP_ACTOR_GUARD_DRAGON_EXP, val)
 	Actor.collectOperate(sysarg, 0)
 	Actor.sendTipmsg(sysarg, string.format("设置「龙灵经验」为 %d 成功！", val), ttFlyTip)
@@ -7275,7 +7319,9 @@ end
 -- 17. 灵宠献祭值设置GM命令
 -- @func setspiritpet 50000
 function setspiritpet(sysarg, val)
-	val = tonumber(val) or 2100000000
+	if not LocalDT.GmRequire(sysarg) then return end
+	val = LocalDT.GmReadNumber(sysarg, "setspiritpet", val)
+	if val == nil then return end
 	if Actor.setSpiritPetExp ~= nil then
 		Actor.setSpiritPetExp(sysarg, val)
 	end
@@ -7286,9 +7332,11 @@ end
 -- 18. 一键发放军团及职位升级全套资料与装备GM命令
 -- @func givelegion
 function givelegion(sysarg)
+	if not LocalDT.GmRequire(sysarg) then return end
 	-- 包裹格子检查提示
-	if Item.getBagEmptyGridCount ~= nil and Item.getBagEmptyGridCount(sysarg) < 30 then
-		Actor.sendTipmsg(sysarg, "注意：当前包裹空位不足 30 格，部分材料或装备可能掉落或无法领取，请清理后重试！", ttFlyTip)
+	if Item.getBagEmptyGridCount ~= nil and Item.getBagEmptyGridCount(sysarg) < 31 then
+		Actor.sendTipmsg(sysarg, "请至少预留 31 格背包空位", ttFlyTip)
+		return
 	end
 
 	-- 一元、两仪、三才、五行、六合、八荒、九宫
@@ -7328,7 +7376,9 @@ end
 -- 19. 血炼精华设置GM命令
 -- @func setxuelian 50000
 function setxuelian(sysarg, val)
-	val = tonumber(val) or 2100000000
+	if not LocalDT.GmRequire(sysarg) then return end
+	val = LocalDT.GmReadNumber(sysarg, "setxuelian", val)
+	if val == nil then return end
 	Actor.setXueLianValue(sysarg, val)
 	Actor.collectOperate(sysarg, 0)
 	Actor.sendTipmsg(sysarg, string.format("设置「血炼精华」为 %d 成功！", val), ttFlyTip)
@@ -7337,6 +7387,12 @@ end
 -- 20. 开启/关闭 Boss战爆元宝/爆充值功能 GM命令
 -- @func togglebosspay [0或1]
 function togglebosspay(sysarg, state)
+	if not LocalDT.GmRequire(sysarg) then return end
+	if state == "" then state = nil end
+	if state ~= nil then
+		state = LocalDT.GmReadNumber(sysarg, "togglebosspay", state)
+		if state == nil then return end
+	end
 	local svar = System.getStaticVar()
 	if state == nil then
 		-- 不带参数时，自动切换当前状态
@@ -7365,27 +7421,165 @@ end
 -- 21. 动态设置/调整 Boss战爆元宝的「基础奖励倍率」GM命令
 -- @func setbossrate [基础倍率值, 如 1.5 表示 1.5 倍爆率]
 function setbossrate(sysarg, rate)
+	if not LocalDT.GmRequire(sysarg) then return end
 	if rate == nil then
 		local svar = System.getStaticVar()
 		local curRate = 1.0
 		if svar ~= nil and svar.bossPayMoneyBaseRate ~= nil then
 			curRate = tonumber(svar.bossPayMoneyBaseRate) or 1.0
 		end
-		Actor.sendTipmsg(sysarg, string.format("当前Boss爆充值的基础奖励倍率为：%.2f。用法: @setbossrate [倍率浮点值，如2.0/0.5]", curRate), ttDialog)
+		Actor.sendTipmsg(sysarg, string.format("当前Boss爆充值的基础奖励倍率为：%.2f。用法: @func gmCommand \"setbossrate\" \"1.5\"", curRate), ttDialog)
 		return
 	end
 
-	rate = tonumber(rate)
-	if rate == nil or rate < 0 then
-		Actor.sendTipmsg(sysarg, "错误：倍率数值必须是大于或等于 0 的数字！", ttFlyTip)
-		return
-	end
+	rate = LocalDT.GmReadNumber(sysarg, "setbossrate", rate)
+	if rate == nil then return end
 
 	local svar = System.getStaticVar()
 	svar.bossPayMoneyBaseRate = rate
 	System.saveStaticVar()
 
 	Actor.sendTipmsg(sysarg, string.format("【神炉控制】已成功将「Boss战爆元宝/爆充值」的「基础奖励倍率」调整为：%.2f 倍！", rate), ttDialog)
+end
+
+-- GM 面板统一入口：白名单与参数规则共用；直接使用原命令时保留原材料默认值。
+LocalDT.GmCommandConfig = {
+    gmAbsorbBosses = { kind = "none" },
+    killAll = { kind = "none" },
+    whatday = { kind = "none" },
+    ckmapid = { kind = "none" },
+    qlck2 = { kind = "none" },
+    tobezero = { kind = "none" },
+    GmOneKeyFullAttribute = { kind = "none" },
+    GmGiveLongTeng = { kind = "none" },
+    GmGiveZhiZun = { kind = "none" },
+    givelegion = { kind = "none" },
+    GiveTotal = { kind = "suite", default = 5 },
+    GmRecharge = { kind = "number", default = 1000, min = 1, max = 1000000, integer = true },
+    TestChangeJob = { kind = "number", default = 1, min = 1, max = 3, integer = true },
+    setlevel = { kind = "number", default = 255, min = 1, max = 255, integer = true },
+    SetGuildFlagExp = { kind = "number", default = 50000, min = 0, max = 2100000000, integer = true },
+    addjunhunping = { kind = "number", default = 50000, min = 0, max = 50000, integer = true },
+    togglebosspay = { kind = "number", min = 0, max = 1, integer = true, optional = true },
+    setbossrate = { kind = "number", default = 1.5, min = 0, max = 10000 },
+    sethufu = { kind = "number", default = 2100000000, uiDefault = 50000, min = 0, max = 2100000000, integer = true },
+    setdun = { kind = "number", default = 2100000000, uiDefault = 50000, min = 0, max = 2100000000, integer = true },
+    setbaoshi = { kind = "number", default = 2100000000, uiDefault = 50000, min = 0, max = 2100000000, integer = true },
+    setshengzhu = { kind = "number", default = 2100000000, uiDefault = 50000, min = 0, max = 2100000000, integer = true },
+    settejie = { kind = "number", default = 2100000000, uiDefault = 50000, min = 0, max = 2100000000, integer = true },
+    setchengj = { kind = "number", default = 2100000000, uiDefault = 50000, min = 0, max = 2100000000, integer = true },
+    setzsll = { kind = "number", default = 2100000000, uiDefault = 50000, min = 0, max = 2100000000, integer = true },
+    setgongxun = { kind = "number", default = 2100000000, uiDefault = 50000, min = 0, max = 2100000000, integer = true },
+    setdouli = { kind = "number", default = 2100000000, uiDefault = 50000, min = 0, max = 2100000000, integer = true },
+    setjunhun = { kind = "number", default = 2100000000, uiDefault = 50000, min = 0, max = 2100000000, integer = true },
+    setxinfa = { kind = "number", default = 2100000000, uiDefault = 50000, min = 0, max = 2100000000, integer = true },
+    setneigong = { kind = "number", default = 2100000000, uiDefault = 50000, min = 0, max = 2100000000, integer = true },
+    setyuanshen = { kind = "number", default = 2100000000, uiDefault = 50000, min = 0, max = 2100000000, integer = true },
+    setzhuhun = { kind = "number", default = 2100000000, uiDefault = 50000, min = 0, max = 2100000000, integer = true },
+    setlingli = { kind = "number", default = 2100000000, uiDefault = 50000, min = 0, max = 2100000000, integer = true },
+    setlongling = { kind = "number", default = 100000, min = 0, max = 2100000000, integer = true },
+    setspiritpet = { kind = "number", default = 2100000000, uiDefault = 50000, min = 0, max = 2100000000, integer = true },
+    setxuelian = { kind = "number", default = 2100000000, uiDefault = 50000, min = 0, max = 2100000000, integer = true },
+}
+
+LocalDT.GmRequire = function(sysarg)
+    if not sysarg or Actor.getEntityType(sysarg) ~= 0 then return false end
+    if (Actor.getGMLevel(sysarg) or 0) <= 0 then
+        Actor.sendTipmsg(sysarg, "该功能仅供 GM 使用", ttFlyTip)
+        return false
+    end
+    return true
+end
+
+LocalDT.GmReadNumber = function(sysarg, command, value)
+    local config = LocalDT.GmCommandConfig[command]
+    if not config or config.kind ~= "number" then return nil end
+    if value == nil or value == "" then value = config.default end
+    local number = tonumber(value)
+    if not number or number ~= number or number == math.huge or number == -math.huge
+        or number < config.min or number > config.max
+        or config.integer and number ~= math.floor(number) then
+        Actor.sendTipmsg(sysarg, string.format("%s 参数须为 %s～%s 范围内的%s", command,
+            config.min, config.max, config.integer and "整数" or "数值"), ttFlyTip)
+        return nil
+    end
+    return number
+end
+
+-- 与原生 @paymoney 使用相同的 ChangeMoney 充值路径；先检查所有受影响的数值。
+LocalDT.GmRechargeFits = function(current, increment, maximum)
+    return type(current) == "number" and current == current and current >= 0
+        and current <= maximum and current == math.floor(current)
+        and increment >= 0 and increment <= maximum - current
+end
+
+function GmRecharge(sysarg, amount)
+    if not LocalDT.GmRequire(sysarg) then return end
+    amount = LocalDT.GmReadNumber(sysarg, "GmRecharge", amount)
+    if amount == nil then return end
+    -- 原生 GlobalConfig 以 signed int 读取同一项，当前配置为 10。
+    local rate = GlobalConfig and GlobalConfig.nBuyItemGetPointRate
+    if type(rate) ~= "number" or rate ~= rate or rate < 0 or rate > 2147483647
+        or rate ~= math.floor(rate) then
+        Actor.sendTipmsg(sysarg, "充值积分倍率配置无效，无法模拟充值", ttFlyTip)
+        return
+    end
+    local yuanbao = Actor.getUIntProperty(sysarg, PROP_ACTOR_YUANBAO)
+    local total = Actor.getUIntProperty(sysarg, PROP_ACTOR_DRAW_YB_COUNT)
+    local points = Actor.getUIntProperty(sysarg, PROP_ACTOR_STOREPOINT)
+    local vipPoints = Actor.getUIntProperty(sysarg, PROP_ACTOR_VIP_POINT)
+    -- 余额与 VIP 原生支持 uint32-1；累计领奖与积分计算仍使用 signed int。
+    if not LocalDT.GmRechargeFits(yuanbao, amount, 4294967294)
+        or not LocalDT.GmRechargeFits(total, amount, 2147483647)
+        or not LocalDT.GmRechargeFits(vipPoints, amount, 4294967294)
+        or not LocalDT.GmRechargeFits(points, 0, 2147483647)
+        or rate > 0 and amount > math.floor((2147483647 - points) / rate) then
+        Actor.sendTipmsg(sysarg, "元宝、累计充值或积分将超过上限，无法模拟充值", ttFlyTip)
+        return
+    end
+    -- type=3、way=138、日志与开关均与原生 GM_PAY_MONEY 一致，保留充值回调及统计。
+    if not Actor.changeMoney(sysarg, 3, amount, 138, "GM_PAY_MONEY", false) then
+        Actor.sendTipmsg(sysarg, "模拟充值失败", ttFlyTip)
+        return
+    end
+    Actor.sendTipmsg(sysarg, string.format("模拟充值 %d 元宝成功", amount), ttFlyTip)
+end
+
+-- 字符串命令名必须带引号：@func gmCommand "setlevel" 255。
+function gmCommand(sysarg, command, value, value2)
+    if not LocalDT.GmRequire(sysarg) then return end
+    local config = type(command) == "string" and LocalDT.GmCommandConfig[command] or nil
+    if not config then
+        Actor.sendTipmsg(sysarg, "未知 GM 命令", ttFlyTip)
+        return
+    end
+    if value2 ~= nil or config.kind == "none" and value ~= nil and value ~= "" then
+        Actor.sendTipmsg(sysarg, "该 GM 命令的参数数量不正确", ttFlyTip)
+        return
+    end
+    if config.kind == "number" then
+        if value == nil or value == "" then
+            value = config.uiDefault or config.default
+            if config.optional then value = nil end
+        end
+        if value ~= nil or not config.optional then
+            value = LocalDT.GmReadNumber(sysarg, command, value)
+            if value == nil then return end
+        end
+    elseif config.kind == "suite" then
+        if value == nil or value == "" then value = config.default end
+        if type(value) ~= "string" and type(value) ~= "number" then
+            Actor.sendTipmsg(sysarg, "请输入转生套装等级或套装名", ttFlyTip)
+            return
+        end
+    end
+    -- 只能到达上述白名单中的固定函数，不能通过面板调用任意脚本函数。
+    local handler = _G[command]
+    if type(handler) ~= "function" then
+        Actor.sendTipmsg(sysarg, "该 GM 命令当前不可用", ttFlyTip)
+        return
+    end
+    return handler(sysarg, value)
 end
 
 -- GM 一键吸附：仅移动当前场景实例的存活 Boss，保留原怪物的血量、归属和刷新数据。
@@ -7405,15 +7599,11 @@ LocalDT.GmMoveBossNearPlayer = function(monster, scene, sceneId, x, y)
     return false
 end
 
--- @func gmAbsorbBosses；GM 面板“一键吸附”按钮调用。
+-- @func gmAbsorbBosses；GM 面板“聚怪”按钮调用。
 function gmAbsorbBosses(sysarg)
-    if not sysarg or Actor.getEntityType(sysarg) ~= 0 then return end
-    if Actor.getGMLevel(sysarg) <= 0 then
-        Actor.sendTipmsg(sysarg, "该功能仅限 GM 使用", ttFlyTip)
-        return
-    end
+    if not LocalDT.GmRequire(sysarg) then return end
     if Actor.isDeath(sysarg) then
-        Actor.sendTipmsg(sysarg, "请复活后再吸附 Boss", ttFlyTip)
+        Actor.sendTipmsg(sysarg, "请复活后再聚怪", ttFlyTip)
         return
     end
     local scene = Actor.getScenePtr(sysarg)
@@ -7440,10 +7630,10 @@ function gmAbsorbBosses(sysarg)
         end
     end
     if moved == 0 and failed == 0 then
-        Actor.sendTipmsg(sysarg, "当前地图没有可吸附的 Boss", ttFlyTip)
+        Actor.sendTipmsg(sysarg, "当前地图没有可聚拢的 Boss", ttFlyTip)
     elseif failed > 0 then
-        Actor.sendTipmsg(sysarg, string.format("已吸附 %d 只 Boss，%d 只周围无可用位置", moved, failed), ttFlyTip)
+        Actor.sendTipmsg(sysarg, string.format("已聚拢 %d 只 Boss，%d 只周围无可用位置", moved, failed), ttFlyTip)
     else
-        Actor.sendTipmsg(sysarg, string.format("已吸附 %d 只 Boss", moved), ttFlyTip)
+        Actor.sendTipmsg(sysarg, string.format("已聚拢 %d 只 Boss", moved), ttFlyTip)
     end
 end

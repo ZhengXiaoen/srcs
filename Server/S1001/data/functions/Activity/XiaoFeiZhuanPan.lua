@@ -494,13 +494,3 @@ function AskLucklyZP_multiDraw(sysarg, drawCount, isAuto)
 		LocalDT.XFZPAutoReply(sysarg, true)
 	end
 end
-
---@func xfzp10 消费转盘十连抽（GM命令）
-function xfzp10(sysarg)
-	AskLucklyZP_multiDraw(sysarg, 10)
-end
-
---@func xfzp100 消费转盘百连抽（GM命令）
-function xfzp100(sysarg)
-	AskLucklyZP_multiDraw(sysarg, 100)
-end

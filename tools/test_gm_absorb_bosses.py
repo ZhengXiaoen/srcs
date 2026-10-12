@@ -10,7 +10,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "Server/S1001/data/functions/player.lua"
-MARKER = "-- GM 一键吸附："
+MARKER = "-- GM 面板统一入口："
 
 
 class AbsorbBossTests(unittest.TestCase):

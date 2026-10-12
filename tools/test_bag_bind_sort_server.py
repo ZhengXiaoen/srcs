@@ -1,6 +1,7 @@
 """Backpack binding and direct stack consolidation; no live server is touched."""
 import argparse
 import hashlib
+import json
 import re
 import sys
 import unittest
@@ -21,7 +22,7 @@ SETUP = '''
 LocalDT = {}; bag = {}; warehouse = {}; equipped = {}; removed = {}; additions = {}; changes = {}
 failRemoval = false; failWrite = false; dealing = false
 Actor = {isDealing=function() return dealing end}
-Item = {ipItemCount=1, ipItemStrong=2, ipItemBind=4, ipItemStaticPropStart=44, ipItemDupCount=68}
+Item = {ipItemCount=1, ipItemStrong=2, ipItemBind=4, ipItemType=5, ipItemStaticPropStart=44, ipItemDupCount=68}
 Item.getBagItemCount = function() return #bag end
 Item.getItemPtrByIndex = function(_, index) return bag[index+1] end
 Item.getItemId = function(item) assert(not item.destroyed) return item.id end
@@ -31,6 +32,7 @@ Item.getItemProperty = function(_, item, prop)
  assert(not item.destroyed)
  if prop==1 then return item.count, 0 end
  if prop==4 then return item.bind, 0 end
+ if prop==5 then return item.type, item.extra[prop] or 0 end
  return item.attrs[prop] or 0, item.extra[prop] or 0
 end
 Item.setItemProperty = function(_, item, prop, value)
@@ -68,7 +70,7 @@ class BagSortTests(unittest.TestCase):
         return lua
 
     def add(self, lua, guid, count=1, item_id=100, bind=0, **kwargs):
-        data = dict(guid=guid, count=count, id=item_id, bind=bind,
+        data = dict(guid=guid, count=count, id=item_id, bind=bind, type=120,
                     attrs=lua.table(), extra=lua.table(), runes=lua.table(),
                     runeValues=lua.table(), fuhun=lua.table())
         data.update(kwargs)
@@ -99,7 +101,14 @@ class BagSortTests(unittest.TestCase):
             lua.globals().limits=limits
             lua.execute('Item.getItemPropertyById=function(id) return limits[id] end')
             self.add(lua,1,1,item_id,0)
-            second=self.add(lua,2,1,item_id,9)
+            item_type=int(re.search(rb'\btype=(\d+)',block)[1])
+            first=lua.globals().bag[1];first.type=item_type
+            second=self.add(lua,2,1,item_id,9,type=item_type)
+            # Different unused payloads must not prevent ordinary items stacking.
+            if item_type!=120:
+                for index in range(5):
+                    first.runes[index]=173;first.runeValues[index]=float('nan')
+                    second.runes[index]=3;second.runeValues[index]=4.5
             lua.globals().BindAndSortBag(42)
             self.assertEqual(len(lua.globals().bag),1,item_id)
             self.assertEqual(lua.globals().bag[1].count,2,item_id)
@@ -148,13 +157,16 @@ class BagSortTests(unittest.TestCase):
                     lua = self.runtime()
                     self.add(lua,1,255)
                     item = self.add(lua,2,256)
-                    item[field][index]=7
+                    if field=='attrs' and index==5:
+                        item.type=7
+                    else:
+                        item[field][index]=7
                     if field=='runeValues': item.runes[index]=1
                     self.add(lua,3,1)
                     lua.globals().BindAndSortBag(42)
                     self.assertEqual(len(lua.globals().bag),2)
                     self.assertEqual(len(lua.globals().removed),1)
-                    self.assertEqual(item[field][index],7)
+                    self.assertEqual(item.type if field=='attrs' and index==5 else item[field][index],7)
 
     def test_equal_equipment_attributes_and_fuhun_can_merge(self):
         lua = self.runtime()
@@ -297,6 +309,63 @@ class BagSortTests(unittest.TestCase):
                         unchanged(before[unpack(machine.read(p,8))],machine.read(p,129),skip=(0x2d,0x2e,0x80))
                     lua.globals().BindAndSortBag(actor)
                     self.assertEqual(sum(machine.count(p) for p in machine.items.values()),total)
+
+    def captured_material_runtime(self, case):
+        lua,machine,actor=self.native_runtime()
+        machine.items.clear()
+        for guid,row in enumerate(case['items'],1):
+            ptr=machine.add(1,guid,0)
+            raw=bytearray(129)
+            raw[:8]=guid.to_bytes(8,'little')
+            raw[8:10]=case['id'].to_bytes(2,'little')
+            raw[0x2e]=row['bind']
+            raw[0x67:0x80]=bytes.fromhex(row['unused_rune_payload'])
+            machine.u.mem_write(ptr,bytes(raw))
+            machine.setcount(ptr,row['count'])
+        machine.u.mem_write(machine.std+0x30,bytes([case['type']]))
+        return lua,machine,actor
+
+    def test_captured_material_payloads_merge_with_real_native_engine(self):
+        from test_item_count_u16_native import unchanged,unpack
+        fixture=json.loads((ROOT/'tools/fixtures/bag_sort_material_items.json').read_text('utf-8'))
+        for case in fixture['cases']:
+            with self.subTest(item_id=case['id']):
+                lua,machine,actor=self.captured_material_runtime(case)
+                before={guid:machine.read(ptr,129) for guid,ptr in machine.items.items()}
+                total=sum(row['count'] for row in case['items'])
+                lua.globals().BindAndSortBag(actor)
+                self.assertEqual(len(machine.items),1)
+                ptr=next(iter(machine.items.values()))
+                self.assertEqual(machine.count(ptr),total)
+                unchanged(before[unpack(machine.read(ptr,8))],machine.read(ptr,129),skip=(0x2d,0x2e,0x80))
+                lua.globals().BindAndSortBag(actor)
+                self.assertEqual(len(machine.items),1)
+                self.assertEqual(machine.count(ptr),total)
+
+    def test_previous_sort_rejects_captured_material_payloads(self):
+        import subprocess
+        source=subprocess.check_output(['git','show','bc20001:Server/S1001/data/functions/player.lua'],cwd=ROOT).decode('utf-8-sig')
+        legacy=source[source.index('LocalDT.GetBagSortItemAttributes ='):source.index('-- 清除旧神戒')]
+        fixture=json.loads((ROOT/'tools/fixtures/bag_sort_material_items.json').read_text('utf-8'))
+        for case in fixture['cases']:
+            with self.subTest(item_id=case['id']):
+                lua,machine,actor=self.captured_material_runtime(case)
+                lua.execute(legacy)
+                lua.globals().BindAndSortBag(actor)
+                self.assertGreater(len(machine.items),1)
+                self.assertEqual(sum(machine.count(ptr) for ptr in machine.items.values()),
+                                 sum(row['count'] for row in case['items']))
+
+    def test_real_rune_payloads_remain_distinct(self):
+        lua,machine,actor=self.native_runtime()
+        machine.u.mem_write(machine.std+0x30,bytes([120]))
+        first,second=list(machine.items.values())
+        machine.u.mem_write(first+0x67,bytes([1])+bytes.fromhex('0000803f'))
+        machine.u.mem_write(second+0x67,bytes([1])+bytes.fromhex('00000040'))
+        lua.globals().BindAndSortBag(actor)
+        self.assertEqual(len(machine.items),2)
+        self.assertEqual(sum(machine.count(ptr) for ptr in machine.items.values()),2)
+
 
     def test_previous_sort_reproduces_two_slots_with_real_native_engine(self):
         import subprocess

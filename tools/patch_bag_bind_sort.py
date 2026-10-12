@@ -1,12 +1,15 @@
-"""Add the backpack binding confirmation without recompiling other Flash code.
+"""Patch backpack confirmation and full-query refresh without recompiling Flash.
 
 Reuse MsgCheckBox and keep session state on the backpack's existing Array.
 Append one callback method; every existing unrelated method, trait and SWF
 resource is preserved byte for byte. The NPC request and bag query use the
 same ordered socket, so the full bag refresh follows server binding/merging.
+The original initializer ignored every query after login; accept each full
+snapshot and reset the category indexes before the existing sort/event path.
 """
 from pathlib import Path
 import argparse
+import hashlib
 import struct
 import zlib
 
@@ -26,6 +29,10 @@ Q = {"MsgCheckBox": 326, "show": 1531, "checkSelceted": 13591,
      "BackPackWin": 399, "instance": 30725, "_btnNames": 9983,
      "onClickSortBagBtn": 10026, "MsgSender": 11023,
      "sendTalkToNPC": 5690, "BagCC": 15729, "sendQueryBagItem": 41568}
+REFRESH_Q = {"bagItems": 4497, "bagItemTypeIndex": 4499,
+             "goodHasChange": 4556, "Vector": 43872, "uint": 12}
+ORIGINAL_INIT_SHA256 = "bd930b20e6ec1b2e77481d3c13624f77b311bd83db88fa9b9f1ed0caf7d3c2df"
+PATCHED_INIT_SHA256 = "485e9087ec157c347acc3f4fcf386f2ed95999c5d814f3e951f2b3e55ee024f6"
 
 
 def method_info_end(source):
@@ -50,7 +57,7 @@ def method_info_end(source):
     return start, content, r.pos, count
 
 
-def patch_abc(original):
+def patch_confirmation_abc(original):
     original_strings = pools(original)["strings"][3]
     if PROMPT in original_strings:
         return original
@@ -155,6 +162,56 @@ def patch_abc(original):
     return result
 
 
+def patch_refresh_abc(source):
+    names, catalog, _ = inspect_abc(source)
+    for name, index in REFRESH_Q.items():
+        if names[index] != name:
+            raise ValueError(f"Unexpected refresh QName {name}: {names[index]}")
+    full = inspect_abc_full(source)
+    method = catalog["UserItemMgr"]["instance"]["initBagItems"][0]
+    body = full["bodies"][method]
+    guard = b"\xd0" + q(0x66, REFRESH_Q["bagItems"]) + b"\x12\x01\0\0\x47"
+    # Reuse the exact Vector.<uint>(7, true) constructor from UserItemMgr.
+    # Its indexes are cumulative during sortItems and must start at zero on
+    # every full snapshot. Cached item totals must also use the new snapshot.
+    reset = (b"\xd0" + q(0x60, REFRESH_Q["Vector"]) + q(0x60, REFRESH_Q["uint"])
+             + q(0x53, 1) + b"\x24\x07\x26" + q(0x42, 2)
+             + q(0x68, REFRESH_Q["bagItemTypeIndex"])
+             + b"\xd0\x26" + q(0x68, REFRESH_Q["goodHasChange"]))
+    if body["code"][2:2 + len(reset)] == reset:
+        if (hashlib.sha256(body["code"]).hexdigest() != PATCHED_INIT_SHA256
+                or body["limits"] != (4, 2, 4, 5) or body["exceptions"]
+                or body["body_traits"] != b"\0"):
+            raise ValueError("Installed backpack refresh initializer no longer matches")
+        return source
+    if (hashlib.sha256(body["code"]).hexdigest() != ORIGINAL_INIT_SHA256
+            or body["code"][2:2 + len(guard)] != guard
+            or body["limits"] != (3, 2, 4, 5) or body["exceptions"]
+            or body["body_traits"] != b"\0"):
+        raise ValueError("Unexpected backpack full-query initializer")
+    constructor = full["bodies"][catalog["UserItemMgr"]["constructor"]]["code"]
+    if reset[:17] not in constructor:
+        raise ValueError("Category index constructor no longer matches")
+    code, _ = relocate(body["code"], [(2, 2 + len(guard), reset)])
+    instructions(code)
+    limits = (4, *body["limits"][1:])
+    replacement = b"".join(encode_u30(x) for x in (method, *limits, len(code)))
+    replacement += code + b"\0\0"
+    result = source[:body["record_start"]] + replacement + source[body["end"]:]
+    after = inspect_abc_full(result)
+    if full["classes"] != after["classes"]:
+        raise ValueError("Unrelated class traits changed during bag refresh patch")
+    for index, old in full["bodies"].items():
+        new = after["bodies"][index]
+        if index != method and any(old[key] != new[key] for key in ("code", "limits", "exceptions", "body_traits")):
+            raise ValueError(f"Unrelated method changed during bag refresh patch: {index}")
+    return result
+
+
+def patch_abc(original):
+    return patch_refresh_abc(patch_confirmation_abc(original))
+
+
 def patch_swf(source):
     data, (tag, payload, start, end) = abc_section(source)
     abc = patch_abc(data[start:end])
@@ -175,8 +232,8 @@ if __name__ == "__main__":
     result = patch_swf(source)
     if args.check:
         if result != source:
-            raise SystemExit("Backpack binding confirmation is not installed")
-        print("Backpack binding confirmation verified")
+            raise SystemExit("Backpack binding confirmation/full refresh is not installed")
+        print("Backpack binding confirmation and full refresh verified")
     else:
         CLIENT.write_bytes(result)
-        print("Backpack binding confirmation installed")
+        print("Backpack binding confirmation and full refresh installed")

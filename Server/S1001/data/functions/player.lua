@@ -98,7 +98,7 @@
 --#include "data\functions\IdentifyCodeFunc.lua" once
 --#include "data\config\NpcMiscCfg\EquipRecyclingCfg.lua" once
 
--- 原生堆叠检查不覆盖孔、符文和附魂等独有属性，整理前额外保存全部可读属性。
+-- 原生堆叠检查不覆盖孔、符文和附魂等独有属性，整理前保存有效属性。
 LocalDT.GetBagSortItemAttributes = function(sysarg, itemPtr)
 	local values = {}
 	for prop = Item.ipItemStrong, Item.ipItemStaticPropStart - 1 do
@@ -108,11 +108,15 @@ LocalDT.GetBagSortItemAttributes = function(sysarg, itemPtr)
 		values[#values + 1] = value or 0
 		values[#values + 1] = extra or 0
 	end
-	for index = 0, 4 do
-		local kind, value = Item.GetItemRuneAttr(sysarg, itemPtr, index, 0)
-		values[#values + 1] = kind or 0
-		-- 空符文槽的浮点载荷无效，历史数据可能为 NaN（与自身也不相等）。
-		values[#values + 1] = kind ~= nil and kind ~= 0 and (value or 0) or 0
+	-- GetItemRuneAttr 不校验类型，普通道具的未使用区域会被读成随机符文。
+	-- 只有 120 类符文使用这五个槽，材料、礼盒等不能据此拒绝合并。
+	if Item.getItemProperty(sysarg, itemPtr, Item.ipItemType, 0) == 120 then
+		for index = 0, 4 do
+			local kind, value = Item.GetItemRuneAttr(sysarg, itemPtr, index, 0)
+			values[#values + 1] = kind or 0
+			-- 空符文槽的浮点载荷无效，历史数据可能为 NaN（与自身也不相等）。
+			values[#values + 1] = kind ~= nil and kind ~= 0 and (value or 0) or 0
+		end
 	end
 	values[#values + 1] = Item.getFuHunInfo(itemPtr, 1)
 	values[#values + 1] = Item.getFuHunInfo(itemPtr, 2)

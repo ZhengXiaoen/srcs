@@ -1,0 +1,149 @@
+{
+  "description": "Unused rune-region bytes from ordinary material stacks, captured read-only from the running server. No player names, GUIDs or addresses retained.",
+  "server_sha256": "db25163cbeb87623cd075f85189a5a0a2bdea6c71e20d57fa73f948f437b5456",
+  "cases": [
+    {
+      "id": 6710,
+      "type": 106,
+      "items": [
+        {
+          "count": 30,
+          "bind": 1,
+          "unused_rune_payload": "0058ae44020000000058ad44020000000068ad440200000000"
+        },
+        {
+          "count": 1,
+          "bind": 1,
+          "unused_rune_payload": "00000000000000000000000000000000000000000000000000"
+        },
+        {
+          "count": 1,
+          "bind": 0,
+          "unused_rune_payload": "00000000000000000000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "id": 7197,
+      "type": 106,
+      "items": [
+        {
+          "count": 30,
+          "bind": 1,
+          "unused_rune_payload": "0000000008709f0300000000106f9f03000000003638353738"
+        },
+        {
+          "count": 2,
+          "bind": 1,
+          "unused_rune_payload": "000300000000389494030000000048949403000000004d9494"
+        }
+      ]
+    },
+    {
+      "id": 6711,
+      "type": 106,
+      "items": [
+        {
+          "count": 13,
+          "bind": 1,
+          "unused_rune_payload": "00003f000000888e8b0300000000908d8b0300000000e0b68b"
+        },
+        {
+          "count": 1,
+          "bind": 1,
+          "unused_rune_payload": "00000000000000000000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "id": 7198,
+      "type": 106,
+      "items": [
+        {
+          "count": 10,
+          "bind": 1,
+          "unused_rune_payload": "00000000988d890300000000908c89030000000040b7890300"
+        },
+        {
+          "count": 12,
+          "bind": 1,
+          "unused_rune_payload": "000003000000389994030000000048999403000000004d9994"
+        }
+      ]
+    },
+    {
+      "id": 6712,
+      "type": 106,
+      "items": [
+        {
+          "count": 4,
+          "bind": 1,
+          "unused_rune_payload": "000001000000e0a39b0300000000d0a29b0300000000080000"
+        },
+        {
+          "count": 2,
+          "bind": 1,
+          "unused_rune_payload": "00000000000000000000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "id": 6709,
+      "type": 106,
+      "items": [
+        {
+          "count": 7,
+          "bind": 1,
+          "unused_rune_payload": "00800000b8889a0300000000c0879a03000000000000000000"
+        },
+        {
+          "count": 8,
+          "bind": 1,
+          "unused_rune_payload": "00000600000040989403000000005098940300000000559894"
+        },
+        {
+          "count": 10,
+          "bind": 1,
+          "unused_rune_payload": "00000000000000000000000000000000000000000000000000"
+        },
+        {
+          "count": 3,
+          "bind": 0,
+          "unused_rune_payload": "00000000000000000000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "id": 6703,
+      "type": 106,
+      "items": [
+        {
+          "count": 21,
+          "bind": 1,
+          "unused_rune_payload": "000000000000000000000000e0899a03000000000b00000008"
+        },
+        {
+          "count": 401,
+          "bind": 0,
+          "unused_rune_payload": "00000000000000000000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "id": 5581,
+      "type": 106,
+      "items": [
+        {
+          "count": 18,
+          "bind": 1,
+          "unused_rune_payload": "00940300000000409594030000000050959403000000005395"
+        },
+        {
+          "count": 32,
+          "bind": 1,
+          "unused_rune_payload": "0000800000309a940300000000409a940300000000459a9403"
+        }
+      ]
+    }
+  ]
+}

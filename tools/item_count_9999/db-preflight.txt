@@ -1,0 +1,111 @@
+TABLE_NAME	COLUMN_TYPE	DATA_TYPE	IS_NULLABLE
+actorbagitem	int(11)	int	YES
+actorconsignment	int(11)	int	YES
+actordepotitem	int(11)	int	YES
+actordmkjitem	int(11)	int	YES
+actorequipitem	int(11)	int	YES
+actormagicitem	int(11)	int	YES
+actorpetitem	int(11)	int	YES
+guildstore	int(11)	int	YES
+useritem	int(11)	int	YES
+table_name	total	lo	hi	unexpected_high_or_negative
+actorbagitem	330	0	0	0
+table_name	total	lo	hi	unexpected_high_or_negative
+actorconsignment	0	NULL	NULL	0
+table_name	total	lo	hi	unexpected_high_or_negative
+actordepotitem	247	0	0	0
+table_name	total	lo	hi	unexpected_high_or_negative
+actordmkjitem	0	NULL	NULL	0
+table_name	total	lo	hi	unexpected_high_or_negative
+actorequipitem	139	0	0	0
+table_name	total	lo	hi	unexpected_high_or_negative
+actormagicitem	0	NULL	NULL	0
+table_name	total	lo	hi	unexpected_high_or_negative
+actorpetitem	5	0	0	0
+table_name	total	lo	hi	unexpected_high_or_negative
+guildstore	1	0	0	0
+table_name	total	lo	hi	unexpected_high_or_negative
+useritem	0	NULL	NULL	0
+Procedure	sql_mode	Create Procedure	character_set_client	collation_connection	Database Collation
+loadcharitems	NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION	CREATE DEFINER=`root`@`%` PROCEDURE `loadcharitems`(in nactorid integer,
+
+    in nitemtableid integer)
+begin
+
+     declare boexists integer default null;
+
+
+
+
+
+     if nitemtableid =1 then
+
+         select itemguid,itemidquastrong,itemduration,itemcountflag,iteminlayhole,itemtime,itemreservs,itemsmith1,itemsmith2,itemsmith3,itemreservs2,initsmith,strongdata,circleforge,typevalue,appraisal,thebestlevel,scenetag,actorname,taostrong,realinjury,runedebris from actorbagitem  where `actorid` = nactorid;
+
+     end if;
+
+     if nitemtableid =2 then
+
+         select itemguid,itemidquastrong,itemduration,itemcountflag,iteminlayhole,itemtime,itemreservs,itemsmith1,itemsmith2,itemsmith3,itemreservs2,initsmith,strongdata,circleforge,typevalue,appraisal,thebestlevel,scenetag,actorname,taostrong,realinjury,runedebris from actorequipitem  where `actorid` = nactorid;
+
+     end if;
+
+     if nitemtableid =3 then
+
+          select itemguid,itemidquastrong,itemduration,itemcountflag,iteminlayhole,itemtime,itemreservs,itemsmith1,itemsmith2,itemsmith3,itemreservs2,initsmith,strongdata,circleforge,typevalue,appraisal,thebestlevel,scenetag,actorname,taostrong,realinjury,runedebris  from actordepotitem  where `actorid` = nactorid;
+
+     end if;
+
+     if nitemtableid =4 then
+
+          select itemguid,itemidquastrong,itemduration,itemcountflag,iteminlayhole,itemtime,itemreservs,itemsmith1,itemsmith2,itemsmith3,itemreservs2,initsmith,strongdata,circleforge,typevalue,appraisal,thebestlevel,scenetag,actorname,taostrong,realinjury,runedebris  from actorconsignment;
+
+     end if;
+
+     if nitemtableid =5 then
+
+          select itemguid,itemidquastrong,itemduration,itemcountflag,iteminlayhole,itemtime,itemreservs,itemsmith1,itemsmith2,itemsmith3,itemreservs2,initsmith,strongdata,circleforge,typevalue,appraisal,thebestlevel,scenetag,actorname,taostrong,realinjury,runedebris  from actorpetitem where `actorid` = nactorid;
+
+     end if;
+
+     if nitemtableid =6 then
+
+          select itemguid,itemidquastrong,itemduration,itemcountflag,iteminlayhole,itemtime,itemreservs,itemsmith1,itemsmith2,itemsmith3,itemreservs2,initsmith,strongdata,circleforge,typevalue,appraisal,thebestlevel,scenetag,actorname,taostrong,realinjury,runedebris  from actordmkjitem where `actorid` = nactorid;
+
+     end if;
+
+     if nitemtableid =8 then
+
+          select itemguid,itemidquastrong,itemduration,itemcountflag,iteminlayhole,itemtime,itemreservs,itemsmith1,itemsmith2,itemsmith3,itemreservs2,initsmith,strongdata,circleforge,typevalue,appraisal,thebestlevel,scenetag,actorname,taostrong,realinjury,runedebris from actormagicitem where `actorid` = nactorid;
+
+     end if;
+
+end	utf8mb4	utf8mb4_general_ci	utf8_general_ci
+Procedure	sql_mode	Create Procedure	character_set_client	collation_connection	Database Collation
+loadguildstoredata	NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION	CREATE DEFINER=`root`@`%` PROCEDURE `loadguildstoredata`(in nguildid integer)
+begin
+
+    select itemguid,itemidquastrong,itemduration,itemcountflag,iteminlayhole,itemtime,itemreservs,itemsmith1,itemsmith2,itemsmith3,itemreservs2,initsmith,actorid,ntype,nmoney,strongdata,circleforge,typevalue,appraisal,thebestlevel,scenetag,actorname,taostrong,realinjury,runedebris from guildstore  where guildid = nguildid;
+
+end	utf8mb4	utf8mb4_general_ci	utf8_general_ci
+Procedure	sql_mode	Create Procedure	character_set_client	collation_connection	Database Collation
+loadconsignmentext	NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION	CREATE DEFINER=`root`@`%` PROCEDURE `loadconsignmentext`(in nactorid int,in nserverindex int)
+begin
+
+    if nactorid = 0 then
+
+    select itemguid,itemidquastrong,itemduration,itemcountflag,iteminlayhole,itemtime,itemreservs,itemsmith1,itemsmith2,itemsmith3,itemreservs2,initsmith,resttime,price,actorconsignment.actorid,actors.actorname,typestatus,strongdata,circleforge,typevalue,appraisal,thebestlevel,scenetag,actorconsignment.actorname,taostrong,realinjury,runedebris
+
+      from actorconsignment,actors where (typestatus & 1) = 0 and actorconsignment.actorid=actors.actorid and actorconsignment.serverindex=nserverindex;
+
+     else
+
+     select itemguid,itemidquastrong,itemduration,itemcountflag,iteminlayhole,itemtime,itemreservs,itemsmith1,itemsmith2,itemsmith3,itemreservs2,initsmith,resttime,price,actorconsignment.actorid,actors.actorname,typestatus,strongdata,circleforge,typevalue,appraisal,thebestlevel,scenetag,actorconsignment.actorname,taostrong,realinjury,runedebris
+
+      from actorconsignment,actors where actorconsignment.actorid =nactorid and actorconsignment.actorid=actors.actorid and (typestatus & 1) = 1;
+
+    end if;
+
+
+
+end	utf8mb4	utf8mb4_general_ci	utf8_general_ci

@@ -1,0 +1,1979 @@
+{
+  "binary": "D:\\SRCS-item-stack-9999-20261012\\fixed-candidate\\Server\\S1001\\x64\\LogicServerCQ64_R.exe",
+  "sha256": "d3aafe43859f02a96b61fcf46201aa1ba5305e125ae5f7948ff850ca1aedf6b0",
+  "case_count": 105,
+  "tests": [
+    {
+      "requested": 255,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": 0,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 0,
+      "unaccepted": 255,
+      "active_counts": [],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 255,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 255,
+      "unaccepted": 0,
+      "active_counts": [
+        255
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 255,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": 3,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 255,
+      "unaccepted": 0,
+      "active_counts": [
+        255
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 255,
+      "existing_counts": [],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 0,
+      "unaccepted": 255,
+      "active_counts": [],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 255,
+      "existing_counts": [],
+      "free_grids": 1,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 255,
+      "unaccepted": 0,
+      "active_counts": [
+        255
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 255,
+      "existing_counts": [],
+      "free_grids": 2,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 255,
+      "unaccepted": 0,
+      "active_counts": [
+        255
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 255,
+      "existing_counts": [],
+      "free_grids": 6,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 255,
+      "unaccepted": 0,
+      "active_counts": [
+        255
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 255,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 255,
+      "unaccepted": 0,
+      "active_counts": [
+        255
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 256,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": 0,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 0,
+      "unaccepted": 256,
+      "active_counts": [],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 256,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 256,
+      "unaccepted": 0,
+      "active_counts": [
+        256
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 256,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": 3,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 256,
+      "unaccepted": 0,
+      "active_counts": [
+        256
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 256,
+      "existing_counts": [],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 0,
+      "unaccepted": 256,
+      "active_counts": [],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 256,
+      "existing_counts": [],
+      "free_grids": 1,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 256,
+      "unaccepted": 0,
+      "active_counts": [
+        256
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 256,
+      "existing_counts": [],
+      "free_grids": 2,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 256,
+      "unaccepted": 0,
+      "active_counts": [
+        256
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 256,
+      "existing_counts": [],
+      "free_grids": 6,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 256,
+      "unaccepted": 0,
+      "active_counts": [
+        256
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 256,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 256,
+      "unaccepted": 0,
+      "active_counts": [
+        256
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 9999,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": 0,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 0,
+      "unaccepted": 9999,
+      "active_counts": [],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 9999,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 9999,
+      "unaccepted": 0,
+      "active_counts": [
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 9999,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": 3,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 9999,
+      "unaccepted": 0,
+      "active_counts": [
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 9999,
+      "existing_counts": [],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 0,
+      "unaccepted": 9999,
+      "active_counts": [],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 9999,
+      "existing_counts": [],
+      "free_grids": 1,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 9999,
+      "unaccepted": 0,
+      "active_counts": [
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 9999,
+      "existing_counts": [],
+      "free_grids": 2,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 9999,
+      "unaccepted": 0,
+      "active_counts": [
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 9999,
+      "existing_counts": [],
+      "free_grids": 6,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 9999,
+      "unaccepted": 0,
+      "active_counts": [
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 9999,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 9999,
+      "unaccepted": 0,
+      "active_counts": [
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 10000,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": 0,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 0,
+      "unaccepted": 10000,
+      "active_counts": [],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 10000,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 9999,
+      "unaccepted": 1,
+      "active_counts": [
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 10000,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": 3,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 10000,
+      "unaccepted": 0,
+      "active_counts": [
+        9999,
+        1
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 10000,
+      "existing_counts": [],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 0,
+      "unaccepted": 10000,
+      "active_counts": [],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 10000,
+      "existing_counts": [],
+      "free_grids": 1,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 9999,
+      "unaccepted": 1,
+      "active_counts": [
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 10000,
+      "existing_counts": [],
+      "free_grids": 2,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 10000,
+      "unaccepted": 0,
+      "active_counts": [
+        9999,
+        1
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 10000,
+      "existing_counts": [],
+      "free_grids": 6,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 10000,
+      "unaccepted": 0,
+      "active_counts": [
+        9999,
+        1
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 10000,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 10000,
+      "unaccepted": 0,
+      "active_counts": [
+        9999,
+        1
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": 0,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 0,
+      "unaccepted": 65535,
+      "active_counts": [],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 9999,
+      "unaccepted": 55536,
+      "active_counts": [
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": 3,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 29997,
+      "unaccepted": 35538,
+      "active_counts": [
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 0,
+      "unaccepted": 65535,
+      "active_counts": [],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [],
+      "free_grids": 1,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 9999,
+      "unaccepted": 55536,
+      "active_counts": [
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [],
+      "free_grids": 2,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 19998,
+      "unaccepted": 45537,
+      "active_counts": [
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [],
+      "free_grids": 6,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 59994,
+      "unaccepted": 5541,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 65535,
+      "unaccepted": 0,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        5541
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [
+        9998
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": 0,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 1,
+      "unaccepted": 65534,
+      "active_counts": [
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [
+        9998
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 10000,
+      "unaccepted": 55535,
+      "active_counts": [
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [
+        9998
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": 3,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 29998,
+      "unaccepted": 35537,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [
+        9998
+      ],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 1,
+      "unaccepted": 65534,
+      "active_counts": [
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [
+        255,
+        256
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": 0,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 19487,
+      "unaccepted": 46048,
+      "active_counts": [
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [
+        255,
+        256
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 29486,
+      "unaccepted": 36049,
+      "active_counts": [
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [
+        255,
+        256
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": 3,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 49484,
+      "unaccepted": 16051,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [
+        255,
+        256
+      ],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 19487,
+      "unaccepted": 46048,
+      "active_counts": [
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [
+        1,
+        255,
+        256,
+        9998
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": 0,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 29486,
+      "unaccepted": 36049,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [
+        1,
+        255,
+        256,
+        9998
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 39485,
+      "unaccepted": 26050,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [
+        1,
+        255,
+        256,
+        9998
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": 3,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 59483,
+      "unaccepted": 6052,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [
+        1,
+        255,
+        256,
+        9998
+      ],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 29486,
+      "unaccepted": 36049,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [
+        9999
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": 0,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 0,
+      "unaccepted": 65535,
+      "active_counts": [
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [
+        9999
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 9999,
+      "unaccepted": 55536,
+      "active_counts": [
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [
+        9999
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": 3,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 29997,
+      "unaccepted": 35538,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [
+        9999
+      ],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 0,
+      "unaccepted": 65535,
+      "active_counts": [
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [
+        9998
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": true,
+      "binding": 0,
+      "stack_limit": 9999,
+      "accepted": 10000,
+      "unaccepted": 55535,
+      "active_counts": [
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [
+        9998
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": true,
+      "binding": 1,
+      "stack_limit": 9999,
+      "accepted": 10000,
+      "unaccepted": 55535,
+      "active_counts": [
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [
+        9998
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": true,
+      "binding": 2,
+      "stack_limit": 9999,
+      "accepted": 10000,
+      "unaccepted": 55535,
+      "active_counts": [
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [
+        9998
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 10000,
+      "unaccepted": 55535,
+      "active_counts": [
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 65535,
+      "existing_counts": [
+        9998
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": true,
+      "binding": 255,
+      "stack_limit": 9999,
+      "accepted": 10000,
+      "unaccepted": 55535,
+      "active_counts": [
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 3,
+      "existing_counts": [],
+      "free_grids": 1,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 1,
+      "accepted": 1,
+      "unaccepted": 2,
+      "active_counts": [
+        1
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 10,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": 0,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 1,
+      "accepted": 0,
+      "unaccepted": 10,
+      "active_counts": [],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 10,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 1,
+      "accepted": 1,
+      "unaccepted": 9,
+      "active_counts": [
+        1
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 10,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": 3,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 1,
+      "accepted": 3,
+      "unaccepted": 7,
+      "active_counts": [
+        1,
+        1,
+        1
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 26723,
+      "existing_counts": [
+        2619
+      ],
+      "free_grids": 5,
+      "allocation_fail_after": 3,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 26723,
+      "unaccepted": 0,
+      "active_counts": [
+        9999,
+        9999,
+        9344
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 49645,
+      "existing_counts": [
+        869,
+        698
+      ],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 18431,
+      "unaccepted": 31214,
+      "active_counts": [
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 48453,
+      "existing_counts": [
+        1365,
+        1164,
+        8359,
+        8671
+      ],
+      "free_grids": 6,
+      "allocation_fail_after": 0,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 20437,
+      "unaccepted": 28016,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 54915,
+      "existing_counts": [
+        885
+      ],
+      "free_grids": 3,
+      "allocation_fail_after": 0,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 9114,
+      "unaccepted": 45801,
+      "active_counts": [
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 511,
+      "existing_counts": [
+        3012,
+        1556,
+        9166,
+        5498
+      ],
+      "free_grids": 6,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 511,
+      "unaccepted": 0,
+      "active_counts": [
+        3012,
+        1556,
+        9166,
+        6009
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 60420,
+      "existing_counts": [
+        7917,
+        3649,
+        2147
+      ],
+      "free_grids": 4,
+      "allocation_fail_after": 0,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 16284,
+      "unaccepted": 44136,
+      "active_counts": [
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 63071,
+      "existing_counts": [
+        176
+      ],
+      "free_grids": 4,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 19822,
+      "unaccepted": 43249,
+      "active_counts": [
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 38376,
+      "existing_counts": [],
+      "free_grids": 7,
+      "allocation_fail_after": 0,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 0,
+      "unaccepted": 38376,
+      "active_counts": [],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 27532,
+      "existing_counts": [
+        7022,
+        1921,
+        5499,
+        9452
+      ],
+      "free_grids": 6,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 26101,
+      "unaccepted": 1431,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 51908,
+      "existing_counts": [
+        1013,
+        7684
+      ],
+      "free_grids": 3,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 41298,
+      "unaccepted": 10610,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 29303,
+      "existing_counts": [
+        3016
+      ],
+      "free_grids": 2,
+      "allocation_fail_after": 3,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 26981,
+      "unaccepted": 2322,
+      "active_counts": [
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 8107,
+      "existing_counts": [
+        7580,
+        2811
+      ],
+      "free_grids": 1,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 8107,
+      "unaccepted": 0,
+      "active_counts": [
+        8499,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 54565,
+      "existing_counts": [],
+      "free_grids": 4,
+      "allocation_fail_after": 3,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 29997,
+      "unaccepted": 24568,
+      "active_counts": [
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 6436,
+      "existing_counts": [],
+      "free_grids": 4,
+      "allocation_fail_after": 3,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 6436,
+      "unaccepted": 0,
+      "active_counts": [
+        6436
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 29213,
+      "existing_counts": [
+        8349,
+        261,
+        3150
+      ],
+      "free_grids": 2,
+      "allocation_fail_after": 3,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 29213,
+      "unaccepted": 0,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        977
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 61525,
+      "existing_counts": [
+        6968,
+        3297,
+        401
+      ],
+      "free_grids": 6,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 29330,
+      "unaccepted": 32195,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 15355,
+      "existing_counts": [
+        91,
+        6874,
+        5330
+      ],
+      "free_grids": 2,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 15355,
+      "unaccepted": 0,
+      "active_counts": [
+        7652,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 23440,
+      "existing_counts": [
+        3867
+      ],
+      "free_grids": 1,
+      "allocation_fail_after": 3,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 16131,
+      "unaccepted": 7309,
+      "active_counts": [
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 5057,
+      "existing_counts": [
+        9995,
+        1936,
+        7785,
+        6424
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": 0,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 5057,
+      "unaccepted": 0,
+      "active_counts": [
+        9995,
+        1936,
+        9267,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 12149,
+      "existing_counts": [],
+      "free_grids": 0,
+      "allocation_fail_after": 0,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 0,
+      "unaccepted": 12149,
+      "active_counts": [],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 23667,
+      "existing_counts": [],
+      "free_grids": 6,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 23667,
+      "unaccepted": 0,
+      "active_counts": [
+        9999,
+        9999,
+        3669
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 58877,
+      "existing_counts": [
+        6537,
+        1872
+      ],
+      "free_grids": 2,
+      "allocation_fail_after": 0,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 11589,
+      "unaccepted": 47288,
+      "active_counts": [
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 15016,
+      "existing_counts": [
+        3582
+      ],
+      "free_grids": 3,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 15016,
+      "unaccepted": 0,
+      "active_counts": [
+        9999,
+        8599
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 58194,
+      "existing_counts": [
+        8922
+      ],
+      "free_grids": 5,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 11076,
+      "unaccepted": 47118,
+      "active_counts": [
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 30786,
+      "existing_counts": [
+        9761,
+        6496,
+        3212
+      ],
+      "free_grids": 6,
+      "allocation_fail_after": 0,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 10528,
+      "unaccepted": 20258,
+      "active_counts": [
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 30609,
+      "existing_counts": [
+        6189,
+        5531,
+        3069
+      ],
+      "free_grids": 1,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 25207,
+      "unaccepted": 5402,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 35183,
+      "existing_counts": [
+        2083,
+        8606,
+        4819,
+        1620
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 32867,
+      "unaccepted": 2316,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 52873,
+      "existing_counts": [
+        5246,
+        5329,
+        3733
+      ],
+      "free_grids": 4,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 25688,
+      "unaccepted": 27185,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 1753,
+      "existing_counts": [
+        8494,
+        5956,
+        1715
+      ],
+      "free_grids": 3,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 1753,
+      "unaccepted": 0,
+      "active_counts": [
+        8494,
+        5956,
+        3468
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 345,
+      "existing_counts": [],
+      "free_grids": 2,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 345,
+      "unaccepted": 0,
+      "active_counts": [
+        345
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 63438,
+      "existing_counts": [
+        6653
+      ],
+      "free_grids": 4,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 13345,
+      "unaccepted": 50093,
+      "active_counts": [
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 43454,
+      "existing_counts": [
+        9025,
+        3619,
+        9161,
+        6764
+      ],
+      "free_grids": 4,
+      "allocation_fail_after": 3,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 41424,
+      "unaccepted": 2030,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 20511,
+      "existing_counts": [
+        425
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 19573,
+      "unaccepted": 938,
+      "active_counts": [
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 23016,
+      "existing_counts": [
+        8147,
+        5176,
+        7543,
+        9694
+      ],
+      "free_grids": 5,
+      "allocation_fail_after": 0,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 9436,
+      "unaccepted": 13580,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 37274,
+      "existing_counts": [
+        2805
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 37274,
+      "unaccepted": 0,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        83
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 44561,
+      "existing_counts": [
+        2664,
+        1176,
+        4075,
+        6176
+      ],
+      "free_grids": 2,
+      "allocation_fail_after": null,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 44561,
+      "unaccepted": 0,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        8657
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 39229,
+      "existing_counts": [
+        2091
+      ],
+      "free_grids": 3,
+      "allocation_fail_after": 3,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 37905,
+      "unaccepted": 1324,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 53721,
+      "existing_counts": [
+        1887,
+        3773
+      ],
+      "free_grids": 6,
+      "allocation_fail_after": 0,
+      "allocation_failure_reached": true,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 14338,
+      "unaccepted": 39383,
+      "active_counts": [
+        9999,
+        9999
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 7766,
+      "existing_counts": [
+        876
+      ],
+      "free_grids": 3,
+      "allocation_fail_after": 1,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 7766,
+      "unaccepted": 0,
+      "active_counts": [
+        8642
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    },
+    {
+      "requested": 8756,
+      "existing_counts": [
+        7160
+      ],
+      "free_grids": 1,
+      "allocation_fail_after": 3,
+      "allocation_failure_reached": false,
+      "binding": 5,
+      "stack_limit": 9999,
+      "accepted": 8756,
+      "unaccepted": 0,
+      "active_counts": [
+        9999,
+        5917
+      ],
+      "completion_last_item_preserved": true,
+      "quantity_conserved": true
+    }
+  ],
+  "status": "passed",
+  "execution": "Complete candidate AddItem x64 code under Unicorn; no server process started",
+  "limitations": [
+    "Allocator returns fresh synthetic GUIDs or null; real allocator failure frequency is unknown",
+    "Container insertion always succeeds; insertion failure and real notification side effects are not modeled",
+    "Unaccepted units are verified against the returned accepted count; caller award retry policy is not executed",
+    "No real database transaction, save, restart or client session is exercised"
+  ]
+}

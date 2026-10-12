@@ -1,0 +1,67 @@
+{
+  "deployable": false,
+  "reason": "Matching Logic/DB/client candidates require runtime save/relogin validation before deployment",
+  "count_encoding": "low byte @45 + high byte in btReserve @128; serialized size stays 129",
+  "capacity": 65535,
+  "stack_limit": 9999,
+  "server_items": 7967,
+  "stackable_items": 1265,
+  "original_dup_distribution": {
+    "1": 6702,
+    "200": 1143,
+    "255": 4,
+    "10": 11,
+    "100": 58,
+    "250": 40,
+    "20": 1,
+    "50": 8
+  },
+  "swf_before_sha256": "6226c471fb93fd231cca330303a20a71cb5436646732f65c09d6f1de9f2611f8",
+  "swf_after_sha256": "49bfa1311a981f06897e7d7ba962f972225ba91b96da4ec258959a5a2974fb8c",
+  "methods": {
+    "5252": {
+      "before_size": 688,
+      "after_size": 695,
+      "before_sha256": "a65ecd4137d8c45e5348f78dc25e4f60ffc612163ad7e70737f9e6395336324f",
+      "after_sha256": "2fb065a86f8f09d8866feca3fc1f6c31e88b02381dea056064aebcc9be5090f1"
+    },
+    "14531": {
+      "before_size": 48,
+      "after_size": 48,
+      "before_sha256": "65d4b02318e36a08c01875f3b8dd15f0a928a57aa56fcf8d1df89de7b8c2107d",
+      "after_sha256": "c61123ced0f7c3d776b3b64695872f97808c9d9b0f0d509cefdd156a3ea262f9"
+    },
+    "14702": {
+      "before_size": 138,
+      "after_size": 138,
+      "before_sha256": "b53fb761307995c6bf0f02238a30365e65f5f026cf9ea2c6c42c34231744766c",
+      "after_sha256": "75048997a877fa6f7b537137843e28cf806417503a70375871e7a5553f1c29e1"
+    },
+    "21134": {
+      "before_size": 128,
+      "after_size": 128,
+      "before_sha256": "5968baa2d4b0ae58714e9e4aa3a5d1bebe0f67777e99379597d3dbab4c575a38",
+      "after_sha256": "ff5738a7d6757b4ab39bb84e018fc55323368643f2f64d2100d417966bcb4d41"
+    }
+  },
+  "language_pack_entries": 216,
+  "unrelated_pack_entries_verified": 211,
+  "known_prior_config_mismatch_fixed": {
+    "6369": "server 200/client 1 -> both 9999"
+  },
+  "files": {
+    "web\\GameFrame.swf": "49bfa1311a981f06897e7d7ba962f972225ba91b96da4ec258959a5a2974fb8c",
+    "Server\\S1001\\data\\config\\item\\StdItems.txt": "4bdd59e5d408e55bc891c9376d34ea86b0d059a2c6e69704a53006b5339fadb9",
+    "Server\\S1001\\data\\config\\item\\StdItems - 副本.txt": "caf31c6fc758574b2e84c46072b7d53a5f7909cedb7a061696d7990915a973df",
+    "Server\\S1001\\data\\config\\item\\stdItemForClient\\StdItems1.txt": "0c9498ba0fdc6a7aa76b6a0250927939d03a53c067e7b62d08db17137a396285",
+    "Server\\S1001\\data\\config\\item\\stdItemForClient\\StdItems2.txt": "41801e75e23772aff1418d2cd144189e46b669f2c7fcdbc2b8ce2c6cd7c6664a",
+    "Server\\S1001\\data\\config\\item\\stdItemForClient\\StdItems3.txt": "f9e18c81b0cf48022fd90c76c8cd28458438df60fd6d2c69ec90c4dc64738cd9",
+    "Server\\S1001\\data\\config\\item\\stdItemForClient\\StdItems4.txt": "8905ddc63fd20040b54a4c73510bcb96a920184aa2526ff97b5d28a924f8f347",
+    "web\\v2\\lang\\zh-cn\\stditems.cbp": "a175f266574ab99cc31094eefe4db7fe8ec25d15dc850ebca4793c45e28c9fcb",
+    "web\\v2\\lang\\zh-cn\\stditems1.cbp": "11fb8d1920ffb91f80f45eddce14376448e6f4cf622eb4c4de2d2b7de50818bf",
+    "web\\v2\\lang\\zh-cn\\stditems2.cbp": "041f25d220b73f19f12749cefaeff393f9f200578fee89eac15521a3adc53306",
+    "web\\v2\\lang\\zh-cn\\stditems3.cbp": "c3d3067aff2e18eb7b6542594fd3b7c743c1ca05b3c4337cbbace8a771fa69b8",
+    "web\\v2\\lang\\zh-cn\\stditems4.cbp": "a73756e7d171fff07e1cdb3f0363057c8fb471ef3bbe28bfe52c3b6bcfc747c8",
+    "web\\v2\\lang\\zh-cn\\zh-cn.dat": "f1cff3c4280f209d21099b27d7482ff7dc11ab6dbfa538154f5b88bf449550b3"
+  }
+}

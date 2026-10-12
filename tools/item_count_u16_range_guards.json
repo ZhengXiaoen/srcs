@@ -1,0 +1,58 @@
+[
+  {
+    "rva": "0x328d36",
+    "function_rva": "0x328d20",
+    "function": "Item.createItem count capacity guard",
+    "kind": "explicit",
+    "bytes": "e8755aceff",
+    "original": "call 0x14000e7b0",
+    "replacement_asm": "cmp dword ptr [rsp+0x58],1; jl reject; cmp dword ptr [rsp+0x58],65535; jg reject; call 5368768432; jmp okay; reject: xor eax,eax; jmp 5372022441; okay:",
+    "evidence_type": "current native PE and exact count full-argument/failure-path audit",
+    "range": [
+      1,
+      65535
+    ]
+  },
+  {
+    "rva": "0x329269",
+    "function_rva": "0x329220",
+    "function": "Item.addItem optional count capacity guard",
+    "kind": "explicit",
+    "bytes": "83bc248000000000",
+    "original": "cmp dword ptr [rsp + 0x80], 0",
+    "replacement_asm": "cmp dword ptr [rsp+0x80],65535; ja reject; cmp dword ptr [rsp+0x80],0; jmp okay; reject: jmp 5372023375; okay:",
+    "evidence_type": "current native PE and exact count full-argument/failure-path audit",
+    "range": [
+      0,
+      65535
+    ]
+  },
+  {
+    "rva": "0x32a5ab",
+    "function_rva": "0x32a570",
+    "function": "Item.addSellItem count capacity guard",
+    "kind": "explicit",
+    "bytes": "0fb64c2440",
+    "original": "movzx ecx, byte ptr [rsp + 0x40]",
+    "replacement_asm": "cmp dword ptr [rsp+0x40],1; jl reject; cmp dword ptr [rsp+0x40],65535; jg reject; movzx ecx,word ptr [rsp+0x40]; jmp okay; reject: jmp 5372028322; okay:",
+    "evidence_type": "current native PE and exact count full-argument/failure-path audit",
+    "range": [
+      1,
+      65535
+    ]
+  },
+  {
+    "rva": "0x3352d2",
+    "function_rva": "0x3351c0",
+    "function": "System.createDropBox int count capacity guard",
+    "kind": "explicit",
+    "bytes": "488d4c2478",
+    "original": "lea rcx, [rsp + 0x78]",
+    "replacement_asm": "cmp dword ptr [rsp+0xe8],1; jl reject; cmp dword ptr [rsp+0xe8],65535; jg reject; lea rcx,[rsp+0x78]; jmp okay; reject: jmp 5372073500; okay:",
+    "evidence_type": "current native PE and exact count full-argument/failure-path audit",
+    "range": [
+      1,
+      65535
+    ]
+  }
+]

@@ -1,0 +1,38 @@
+{
+  "windows_api": "RtlVirtualUnwind",
+  "image_executed": false,
+  "memory_protection": "PAGE_READWRITE",
+  "targets": {
+    "logic": {
+      "candidate_sha256": "d3aafe43859f02a96b61fcf46201aa1ba5305e125ae5f7948ff850ca1aedf6b0",
+      "block_instruction_boundaries": 2000,
+      "independent_helpers": {
+        "windows_api": "RtlVirtualUnwind",
+        "results": [
+          {
+            "name": "oversize",
+            "instruction_boundaries": 101,
+            "status": "passed"
+          }
+        ],
+        "total_boundaries": 101,
+        "image_executed": false,
+        "memory_protection": "PAGE_READWRITE"
+      },
+      "status": "passed"
+    },
+    "db": {
+      "candidate_sha256": "7813eefbf93493cff115bf2e7229f5d01005540d0a388b219358c18040dd3079",
+      "block_instruction_boundaries": 50,
+      "independent_helpers": {
+        "windows_api": "RtlVirtualUnwind",
+        "results": [],
+        "total_boundaries": 0,
+        "image_executed": false,
+        "memory_protection": "PAGE_READWRITE"
+      },
+      "status": "passed"
+    }
+  },
+  "total_boundaries": 2151
+}

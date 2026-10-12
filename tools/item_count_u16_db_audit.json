@@ -1,0 +1,730 @@
+{
+  "status": "READ_ONLY_DB_PREFLIGHT_PARTIALLY_RESOLVED",
+  "connection": {
+    "host": "127.0.0.1",
+    "port": 3306,
+    "schema": "cq_actor",
+    "config_path": "D:\\SRCS\\Server\\common\\DBServer.txt",
+    "credentials": "not retained or displayed",
+    "listener": "absent at inspection; service not started"
+  },
+  "schema": [
+    {
+      "table": "actorbagitem",
+      "path": "D:\\SRCS\\phpStudy\\PHPTutorial\\MySQL\\data\\cq_actor\\actorbagitem.frm",
+      "sha256": "b034ec003f375bb8dfefb56f509e6dc46b6e78ddf3704841f7a42c2dbc6c3295",
+      "engine": "INNODB",
+      "initsmith": {
+        "name": "initsmith",
+        "metadata_offset": 9107,
+        "raw": "100a0b0b003800001b8000000003210000",
+        "type": "int",
+        "field_length": 11,
+        "unsigned": false,
+        "flags": 32795,
+        "record_position": 56
+      },
+      "capacity_65535": true
+    },
+    {
+      "table": "actorconsignment",
+      "path": "D:\\SRCS\\phpStudy\\PHPTutorial\\MySQL\\data\\cq_actor\\actorconsignment.frm",
+      "sha256": "8faba9e02e813a78b69d63f2dff85e453b7b26852c668928a12eeceac8a70a40",
+      "engine": "INNODB",
+      "initsmith": {
+        "name": "initsmith",
+        "metadata_offset": 9225,
+        "raw": "140a0b0b004900001b8000000003210000",
+        "type": "int",
+        "field_length": 11,
+        "unsigned": false,
+        "flags": 32795,
+        "record_position": 73
+      },
+      "capacity_65535": true
+    },
+    {
+      "table": "actordepotitem",
+      "path": "D:\\SRCS\\phpStudy\\PHPTutorial\\MySQL\\data\\cq_actor\\actordepotitem.frm",
+      "sha256": "f6c01b135b4b148902311ae5e8184a4e6fbd1ded039350f45cbd9b30efcbd1dc",
+      "engine": "INNODB",
+      "initsmith": {
+        "name": "initsmith",
+        "metadata_offset": 9107,
+        "raw": "100a0b0b003800001b8000000003210000",
+        "type": "int",
+        "field_length": 11,
+        "unsigned": false,
+        "flags": 32795,
+        "record_position": 56
+      },
+      "capacity_65535": true
+    },
+    {
+      "table": "actordmkjitem",
+      "path": "D:\\SRCS\\phpStudy\\PHPTutorial\\MySQL\\data\\cq_actor\\actordmkjitem.frm",
+      "sha256": "bd0c9c48a843360bf5d5dfba2f6bdf48c1e21a927f883d1b8b8c293bc9bb570a",
+      "engine": "INNODB",
+      "initsmith": {
+        "name": "initsmith",
+        "metadata_offset": 9107,
+        "raw": "100a0b0b003800001b8000000003210000",
+        "type": "int",
+        "field_length": 11,
+        "unsigned": false,
+        "flags": 32795,
+        "record_position": 56
+      },
+      "capacity_65535": true
+    },
+    {
+      "table": "actorequipitem",
+      "path": "D:\\SRCS\\phpStudy\\PHPTutorial\\MySQL\\data\\cq_actor\\actorequipitem.frm",
+      "sha256": "fe6a6a201377d31948720c66e18edb3c0ef4b625dc26c6e392ffdc4947af0c93",
+      "engine": "INNODB",
+      "initsmith": {
+        "name": "initsmith",
+        "metadata_offset": 9107,
+        "raw": "100a0b0b003800001b8000000003210000",
+        "type": "int",
+        "field_length": 11,
+        "unsigned": false,
+        "flags": 32795,
+        "record_position": 56
+      },
+      "capacity_65535": true
+    },
+    {
+      "table": "actormagicitem",
+      "path": "D:\\SRCS\\phpStudy\\PHPTutorial\\MySQL\\data\\cq_actor\\actormagicitem.frm",
+      "sha256": "46c8958f496fb8e7b1f75156ed76c954d785be9b4d54d24c9b630932e216812e",
+      "engine": "INNODB",
+      "initsmith": {
+        "name": "initsmith",
+        "metadata_offset": 9107,
+        "raw": "100a0b0b003800001b8000000003210000",
+        "type": "int",
+        "field_length": 11,
+        "unsigned": false,
+        "flags": 32795,
+        "record_position": 56
+      },
+      "capacity_65535": true
+    },
+    {
+      "table": "actorpetitem",
+      "path": "D:\\SRCS\\phpStudy\\PHPTutorial\\MySQL\\data\\cq_actor\\actorpetitem.frm",
+      "sha256": "21e900ca728b629e8209aa37a544d83d4be6054dda7b81306cc10e4fc1e32d4a",
+      "engine": "INNODB",
+      "initsmith": {
+        "name": "initsmith",
+        "metadata_offset": 9107,
+        "raw": "100a0b0b003800001b8000000003210000",
+        "type": "int",
+        "field_length": 11,
+        "unsigned": false,
+        "flags": 32795,
+        "record_position": 56
+      },
+      "capacity_65535": true
+    },
+    {
+      "table": "guildstore",
+      "path": "D:\\SRCS\\phpStudy\\PHPTutorial\\MySQL\\data\\cq_actor\\guildstore.frm",
+      "sha256": "0f3a205e865f87ea282f725614ffdd9cf946f05331541c077b52a179c69a190a",
+      "engine": "INNODB",
+      "initsmith": {
+        "name": "initsmith",
+        "metadata_offset": 9120,
+        "raw": "0f0a0b0b003500001b8000000003210000",
+        "type": "int",
+        "field_length": 11,
+        "unsigned": false,
+        "flags": 32795,
+        "record_position": 53
+      },
+      "capacity_65535": true
+    },
+    {
+      "table": "useritem",
+      "path": "D:\\SRCS\\phpStudy\\PHPTutorial\\MySQL\\data\\cq_actor\\useritem.frm",
+      "sha256": "233d9bedd849545fcecc6793fe838cd1143d1e72a141f034895b2243ae0ed98e",
+      "engine": "INNODB",
+      "initsmith": {
+        "name": "initsmith",
+        "metadata_offset": 8974,
+        "raw": "130a0b0b009800001b8000000003210000",
+        "type": "int",
+        "field_length": 11,
+        "unsigned": false,
+        "flags": 32795,
+        "record_position": 152
+      },
+      "capacity_65535": true
+    }
+  ],
+  "procedures": [
+    {
+      "name": "loadcharitems",
+      "carrier": "D:\\SRCS\\phpStudy\\PHPTutorial\\MySQL\\data\\mysql\\proc.MYD",
+      "carrier_sha256": "96eb3b4458c5b00f81c2295f08168fffa523cedd01fbd13731c8c411f73519cf",
+      "body_offset": 69892,
+      "body_length": 2559,
+      "body_sha256": "12493e0497d48d73a77550f02b0fe9f745ca84416aa9feb1c9523d6925713c25",
+      "body": "begin\r\n     declare boexists integer default null;\r\n    \r\n \r\n     if nitemtableid =1 then\r\n         select itemguid,itemidquastrong,itemduration,itemcountflag,iteminlayhole,itemtime,itemreservs,itemsmith1,itemsmith2,itemsmith3,itemreservs2,initsmith,strongdata,circleforge,typevalue,appraisal,thebestlevel,scenetag,actorname,taostrong,realinjury,runedebris from actorbagitem  where `actorid` = nactorid;\r\n     end if;\r\n     if nitemtableid =2 then\r\n         select itemguid,itemidquastrong,itemduration,itemcountflag,iteminlayhole,itemtime,itemreservs,itemsmith1,itemsmith2,itemsmith3,itemreservs2,initsmith,strongdata,circleforge,typevalue,appraisal,thebestlevel,scenetag,actorname,taostrong,realinjury,runedebris from actorequipitem  where `actorid` = nactorid;\r\n     end if;\r\n     if nitemtableid =3 then\r\n          select itemguid,itemidquastrong,itemduration,itemcountflag,iteminlayhole,itemtime,itemreservs,itemsmith1,itemsmith2,itemsmith3,itemreservs2,initsmith,strongdata,circleforge,typevalue,appraisal,thebestlevel,scenetag,actorname,taostrong,realinjury,runedebris  from actordepotitem  where `actorid` = nactorid;\r\n     end if;\r\n     if nitemtableid =4 then\r\n          select itemguid,itemidquastrong,itemduration,itemcountflag,iteminlayhole,itemtime,itemreservs,itemsmith1,itemsmith2,itemsmith3,itemreservs2,initsmith,strongdata,circleforge,typevalue,appraisal,thebestlevel,scenetag,actorname,taostrong,realinjury,runedebris  from actorconsignment;\r\n     end if;\r\n     if nitemtableid =5 then\r\n          select itemguid,itemidquastrong,itemduration,itemcountflag,iteminlayhole,itemtime,itemreservs,itemsmith1,itemsmith2,itemsmith3,itemreservs2,initsmith,strongdata,circleforge,typevalue,appraisal,thebestlevel,scenetag,actorname,taostrong,realinjury,runedebris  from actorpetitem where `actorid` = nactorid;\r\n     end if;\r\n     if nitemtableid =6 then\r\n          select itemguid,itemidquastrong,itemduration,itemcountflag,iteminlayhole,itemtime,itemreservs,itemsmith1,itemsmith2,itemsmith3,itemreservs2,initsmith,strongdata,circleforge,typevalue,appraisal,thebestlevel,scenetag,actorname,taostrong,realinjury,runedebris  from actordmkjitem where `actorid` = nactorid;\r\n     end if;\r\n     if nitemtableid =8 then\r\n          select itemguid,itemidquastrong,itemduration,itemcountflag,iteminlayhole,itemtime,itemreservs,itemsmith1,itemsmith2,itemsmith3,itemreservs2,initsmith,strongdata,circleforge,typevalue,appraisal,thebestlevel,scenetag,actorname,taostrong,realinjury,runedebris from actormagicitem where `actorid` = nactorid;\r\n     end if;\r\nend"
+    },
+    {
+      "name": "loadguildstoredata",
+      "carrier": "D:\\SRCS\\phpStudy\\PHPTutorial\\MySQL\\data\\mysql\\proc.MYD",
+      "carrier_sha256": "96eb3b4458c5b00f81c2295f08168fffa523cedd01fbd13731c8c411f73519cf",
+      "body_offset": 90248,
+      "body_length": 336,
+      "body_sha256": "b5d70b7b85b80cc2f2f424bbfe3e54d617452827543b370337c1771859668a20",
+      "body": "begin\r\n    select itemguid,itemidquastrong,itemduration,itemcountflag,iteminlayhole,itemtime,itemreservs,itemsmith1,itemsmith2,itemsmith3,itemreservs2,initsmith,actorid,ntype,nmoney,strongdata,circleforge,typevalue,appraisal,thebestlevel,scenetag,actorname,taostrong,realinjury,runedebris from guildstore  where guildid = nguildid;\r\nend"
+    },
+    {
+      "name": "loadconsignmentext",
+      "carrier": "D:\\SRCS\\phpStudy\\PHPTutorial\\MySQL\\data\\mysql\\proc.MYD",
+      "carrier_sha256": "96eb3b4458c5b00f81c2295f08168fffa523cedd01fbd13731c8c411f73519cf",
+      "body_offset": 78104,
+      "body_length": 1062,
+      "body_sha256": "3c6bf59e2ca01a8e20b94e567b276c853c33908c47e4253753034a0b12ed297d",
+      "body": "begin\r\n    if nactorid = 0 then\r\n    select itemguid,itemidquastrong,itemduration,itemcountflag,iteminlayhole,itemtime,itemreservs,itemsmith1,itemsmith2,itemsmith3,itemreservs2,initsmith,resttime,price,actorconsignment.actorid,actors.actorname,typestatus,strongdata,circleforge,typevalue,appraisal,thebestlevel,scenetag,actorconsignment.actorname,taostrong,realinjury,runedebris\r\n      from actorconsignment,actors where (typestatus & 1) = 0 and actorconsignment.actorid=actors.actorid and actorconsignment.serverindex=nserverindex;\r\n     else\r\n     select itemguid,itemidquastrong,itemduration,itemcountflag,iteminlayhole,itemtime,itemreservs,itemsmith1,itemsmith2,itemsmith3,itemreservs2,initsmith,resttime,price,actorconsignment.actorid,actors.actorname,typestatus,strongdata,circleforge,typevalue,appraisal,thebestlevel,scenetag,actorconsignment.actorname,taostrong,realinjury,runedebris\r\n      from actorconsignment,actors where actorconsignment.actorid =nactorid and actorconsignment.actorid=actors.actorid and (typestatus & 1) = 1;\r\n    end if;\r\n    \r\nend"
+    }
+  ],
+  "physical_item_indexes": [
+    {
+      "table": {
+        "name": "cq_actor/actorbagitem",
+        "deleted": false,
+        "page": 8,
+        "offset": 535,
+        "space": 0
+      },
+      "table_id": 1116,
+      "index_id": 18,
+      "name": "GEN_CLUST_INDEX",
+      "n_fields": 0,
+      "type": 1,
+      "space": 0,
+      "root_page": 545,
+      "deleted": false,
+      "page": 11,
+      "offset": 6744,
+      "physical_pages": [
+        {
+          "page": 545,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61397344
+        }
+      ]
+    },
+    {
+      "table": {
+        "name": "cq_actor/actorbagitem",
+        "deleted": false,
+        "page": 8,
+        "offset": 535,
+        "space": 0
+      },
+      "table_id": 1116,
+      "index_id": 19,
+      "name": "bagitem_id",
+      "n_fields": 1,
+      "type": 0,
+      "space": 0,
+      "root_page": 547,
+      "deleted": false,
+      "page": 11,
+      "offset": 6819,
+      "physical_pages": [
+        {
+          "page": 547,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61398655
+        }
+      ]
+    },
+    {
+      "table": {
+        "name": "cq_actor/actorconsignment",
+        "deleted": false,
+        "page": 8,
+        "offset": 784,
+        "space": 0
+      },
+      "table_id": 1119,
+      "index_id": 23,
+      "name": "GEN_CLUST_INDEX",
+      "n_fields": 0,
+      "type": 1,
+      "space": 0,
+      "root_page": 552,
+      "deleted": false,
+      "page": 11,
+      "offset": 7105,
+      "physical_pages": [
+        {
+          "page": 552,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61414046
+        }
+      ]
+    },
+    {
+      "table": {
+        "name": "cq_actor/actorconsignment",
+        "deleted": false,
+        "page": 8,
+        "offset": 784,
+        "space": 0
+      },
+      "table_id": 1119,
+      "index_id": 24,
+      "name": "consi_id",
+      "n_fields": 1,
+      "type": 0,
+      "space": 0,
+      "root_page": 553,
+      "deleted": false,
+      "page": 11,
+      "offset": 7180,
+      "physical_pages": [
+        {
+          "page": 553,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61415456
+        }
+      ]
+    },
+    {
+      "table": {
+        "name": "cq_actor/actorconsignment",
+        "deleted": false,
+        "page": 8,
+        "offset": 784,
+        "space": 0
+      },
+      "table_id": 1119,
+      "index_id": 25,
+      "name": "consi_guid",
+      "n_fields": 1,
+      "type": 0,
+      "space": 0,
+      "root_page": 554,
+      "deleted": false,
+      "page": 11,
+      "offset": 7248,
+      "physical_pages": [
+        {
+          "page": 554,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61416751
+        }
+      ]
+    },
+    {
+      "table": {
+        "name": "cq_actor/actordepotitem",
+        "deleted": false,
+        "page": 8,
+        "offset": 870,
+        "space": 0
+      },
+      "table_id": 1120,
+      "index_id": 26,
+      "name": "GEN_CLUST_INDEX",
+      "n_fields": 0,
+      "type": 1,
+      "space": 0,
+      "root_page": 555,
+      "deleted": false,
+      "page": 11,
+      "offset": 7318,
+      "physical_pages": [
+        {
+          "page": 555,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61423759
+        }
+      ]
+    },
+    {
+      "table": {
+        "name": "cq_actor/actordepotitem",
+        "deleted": false,
+        "page": 8,
+        "offset": 870,
+        "space": 0
+      },
+      "table_id": 1120,
+      "index_id": 27,
+      "name": "depot_id",
+      "n_fields": 1,
+      "type": 0,
+      "space": 0,
+      "root_page": 556,
+      "deleted": false,
+      "page": 11,
+      "offset": 7393,
+      "physical_pages": [
+        {
+          "page": 556,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61425054
+        }
+      ]
+    },
+    {
+      "table": {
+        "name": "cq_actor/actordmkjitem",
+        "deleted": false,
+        "page": 8,
+        "offset": 954,
+        "space": 0
+      },
+      "table_id": 1121,
+      "index_id": 28,
+      "name": "GEN_CLUST_INDEX",
+      "n_fields": 0,
+      "type": 1,
+      "space": 0,
+      "root_page": 557,
+      "deleted": false,
+      "page": 11,
+      "offset": 7461,
+      "physical_pages": [
+        {
+          "page": 557,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61431156
+        }
+      ]
+    },
+    {
+      "table": {
+        "name": "cq_actor/actordmkjitem",
+        "deleted": false,
+        "page": 8,
+        "offset": 954,
+        "space": 0
+      },
+      "table_id": 1121,
+      "index_id": 29,
+      "name": "dmkj_idx",
+      "n_fields": 1,
+      "type": 0,
+      "space": 0,
+      "root_page": 559,
+      "deleted": false,
+      "page": 11,
+      "offset": 7536,
+      "physical_pages": [
+        {
+          "page": 559,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61432467
+        }
+      ]
+    },
+    {
+      "table": {
+        "name": "cq_actor/actorequipitem",
+        "deleted": false,
+        "page": 8,
+        "offset": 1037,
+        "space": 0
+      },
+      "table_id": 1122,
+      "index_id": 30,
+      "name": "GEN_CLUST_INDEX",
+      "n_fields": 0,
+      "type": 1,
+      "space": 0,
+      "root_page": 560,
+      "deleted": false,
+      "page": 11,
+      "offset": 7604,
+      "physical_pages": [
+        {
+          "page": 560,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61438548
+        }
+      ]
+    },
+    {
+      "table": {
+        "name": "cq_actor/actorequipitem",
+        "deleted": false,
+        "page": 8,
+        "offset": 1037,
+        "space": 0
+      },
+      "table_id": 1122,
+      "index_id": 31,
+      "name": "equip_id",
+      "n_fields": 1,
+      "type": 0,
+      "space": 0,
+      "root_page": 564,
+      "deleted": false,
+      "page": 11,
+      "offset": 7679,
+      "physical_pages": [
+        {
+          "page": 564,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61439843
+        }
+      ]
+    },
+    {
+      "table": {
+        "name": "cq_actor/actormagicitem",
+        "deleted": false,
+        "page": 8,
+        "offset": 1445,
+        "space": 0
+      },
+      "table_id": 1127,
+      "index_id": 39,
+      "name": "GEN_CLUST_INDEX",
+      "n_fields": 0,
+      "type": 1,
+      "space": 0,
+      "root_page": 326,
+      "deleted": false,
+      "page": 11,
+      "offset": 8248,
+      "physical_pages": [
+        {
+          "page": 159,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61465674
+        },
+        {
+          "page": 326,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61465674
+        }
+      ]
+    },
+    {
+      "table": {
+        "name": "cq_actor/actormagicitem",
+        "deleted": false,
+        "page": 8,
+        "offset": 1445,
+        "space": 0
+      },
+      "table_id": 1127,
+      "index_id": 40,
+      "name": "magicitem_id",
+      "n_fields": 1,
+      "type": 0,
+      "space": 0,
+      "root_page": 330,
+      "deleted": false,
+      "page": 11,
+      "offset": 8323,
+      "physical_pages": [
+        {
+          "page": 160,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61466969
+        },
+        {
+          "page": 330,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61466969
+        }
+      ]
+    },
+    {
+      "table": {
+        "name": "cq_actor/actorpetitem",
+        "deleted": false,
+        "page": 8,
+        "offset": 1687,
+        "space": 0
+      },
+      "table_id": 1130,
+      "index_id": 44,
+      "name": "GEN_CLUST_INDEX",
+      "n_fields": 0,
+      "type": 1,
+      "space": 0,
+      "root_page": 356,
+      "deleted": false,
+      "page": 11,
+      "offset": 8600,
+      "physical_pages": [
+        {
+          "page": 168,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61480491
+        },
+        {
+          "page": 356,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61480491
+        }
+      ]
+    },
+    {
+      "table": {
+        "name": "cq_actor/actorpetitem",
+        "deleted": false,
+        "page": 8,
+        "offset": 1687,
+        "space": 0
+      },
+      "table_id": 1130,
+      "index_id": 45,
+      "name": "actor_id",
+      "n_fields": 1,
+      "type": 0,
+      "space": 0,
+      "root_page": 357,
+      "deleted": false,
+      "page": 11,
+      "offset": 8675,
+      "physical_pages": [
+        {
+          "page": 169,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61481786
+        },
+        {
+          "page": 357,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61481786
+        }
+      ]
+    },
+    {
+      "table": {
+        "name": "cq_actor/guildstore",
+        "deleted": false,
+        "page": 8,
+        "offset": 3218,
+        "space": 0
+      },
+      "table_id": 1147,
+      "index_id": 81,
+      "name": "GEN_CLUST_INDEX",
+      "n_fields": 0,
+      "type": 1,
+      "space": 0,
+      "root_page": 501,
+      "deleted": false,
+      "page": 11,
+      "offset": 11131,
+      "physical_pages": [
+        {
+          "page": 148,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61593207
+        },
+        {
+          "page": 501,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61593207
+        },
+        {
+          "page": 737,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61591990
+        }
+      ]
+    },
+    {
+      "table": {
+        "name": "cq_actor/guildstore",
+        "deleted": false,
+        "page": 8,
+        "offset": 3218,
+        "space": 0
+      },
+      "table_id": 1147,
+      "index_id": 82,
+      "name": "index_guildid",
+      "n_fields": 1,
+      "type": 0,
+      "space": 0,
+      "root_page": 505,
+      "deleted": false,
+      "page": 11,
+      "offset": 11206,
+      "physical_pages": [
+        {
+          "page": 151,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61594502
+        },
+        {
+          "page": 505,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61594502
+        },
+        {
+          "page": 738,
+          "n_records": 0,
+          "level": 0,
+          "lsn": 61593295
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "No live SQL query because MySQL was stopped; services were not started during this offline patch task",
+    "Empty flushed index roots do not prove recovered latest logical tables empty; redo not replayed",
+    "Before install run only SELECT/SHOW preflight queries against the active database, rejecting preexisting high bits or negative initsmith"
+  ],
+  "module": {
+    "path": "tools/patch_item_count_u16_db.py",
+    "sha256": "b87dd5ed98ddce708d3002869bcaffb1afc512bdacf93b13a5526e6363a5a920",
+    "import_side_effects": false,
+    "test_vectors": 216
+  },
+  "offline_evidence": {
+    "frm_format_reference": "https://raw.githubusercontent.com/mysql/mysql-utilities/release-1.6.5/mysql/utilities/common/frm_reader.py",
+    "parser_reference_sha256": "1c435e01779a56d9a1d841acdbe346c5803dccde6fdb8634f73fb0dd4ce13223",
+    "dictionary_inventory_sha256": "b05cecc79059907b0f4e42f5a2e922afb86a77d4a0250953add2ad125ec22d7f"
+  },
+  "offline_pe_builder": {
+    "path": "tools/build_count_pe_candidate.py",
+    "db_windows_unwind_boundary_tests": 50,
+    "logic_windows_unwind_boundary_tests": 2095,
+    "server_executed": false,
+    "windows_api": "RtlVirtualUnwind",
+    "candidate_db_sha256": "7813eefbf93493cff115bf2e7229f5d01005540d0a388b219358c18040dd3079",
+    "candidate_logic_sha256": "1c2525f8278b473fab2848976655892be3ce216f8f849e6ce1da701a72e7e85d",
+    "verification_reference": "candidate/verification.json; includes 101 independent helper boundaries"
+  }
+}

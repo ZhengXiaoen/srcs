@@ -1,0 +1,62 @@
+{
+  "sections": [
+    {
+      "name": ".text",
+      "size": 4153252,
+      "unrelated_bytes_unchanged": true
+    },
+    {
+      "name": ".rdata",
+      "size": 631866,
+      "unrelated_bytes_unchanged": true
+    },
+    {
+      "name": ".data",
+      "size": 341920,
+      "unrelated_bytes_unchanged": true
+    },
+    {
+      "name": ".pdata",
+      "size": 193680,
+      "unrelated_bytes_unchanged": true
+    },
+    {
+      "name": ".rsrc",
+      "size": 1040,
+      "unrelated_bytes_unchanged": true
+    },
+    {
+      "name": ".reloc",
+      "size": 27858,
+      "unrelated_bytes_unchanged": true
+    },
+    {
+      "name": ".mtstack",
+      "size": 380,
+      "unrelated_bytes_unchanged": true
+    },
+    {
+      "name": ".jjmount",
+      "size": 252,
+      "unrelated_bytes_unchanged": true
+    },
+    {
+      "name": ".jjbuy",
+      "size": 408,
+      "unrelated_bytes_unchanged": true
+    },
+    {
+      "name": ".wjsurv",
+      "size": 144,
+      "unrelated_bytes_unchanged": true
+    }
+  ],
+  "tables": 8,
+  "cases": 403,
+  "existing_patches_preserved": [
+    ".mtstack",
+    ".jjmount",
+    ".jjbuy",
+    ".wjsurv"
+  ]
+}

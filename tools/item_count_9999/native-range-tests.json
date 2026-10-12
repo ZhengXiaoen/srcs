@@ -1,0 +1,264 @@
+{
+  "binary": "D:\\SRCS-item-stack-9999-20261012\\fixed-candidate\\Server\\S1001\\x64\\LogicServerCQ64_R.exe",
+  "sha256": "d3aafe43859f02a96b61fcf46201aa1ba5305e125ae5f7948ff850ca1aedf6b0",
+  "execution": "Unicorn candidate guard and covered successor instructions; no Windows process started",
+  "case_count": 36,
+  "tests": [
+    {
+      "test": "CreateItemCapacityGuard",
+      "input": 0,
+      "accepted": false,
+      "stop_rva": "0x328ea9",
+      "item_unchanged_on_reject": true
+    },
+    {
+      "test": "CreateItemCapacityGuard",
+      "input": 1,
+      "accepted": true,
+      "stop_rva": "0x328d3e",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "CreateItemCapacityGuard",
+      "input": 255,
+      "accepted": true,
+      "stop_rva": "0x328d3e",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "CreateItemCapacityGuard",
+      "input": 256,
+      "accepted": true,
+      "stop_rva": "0x328d3e",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "CreateItemCapacityGuard",
+      "input": 9999,
+      "accepted": true,
+      "stop_rva": "0x328d3e",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "CreateItemCapacityGuard",
+      "input": 10000,
+      "accepted": true,
+      "stop_rva": "0x328d3e",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "CreateItemCapacityGuard",
+      "input": 65535,
+      "accepted": true,
+      "stop_rva": "0x328d3e",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "CreateItemCapacityGuard",
+      "input": 65536,
+      "accepted": false,
+      "stop_rva": "0x328ea9",
+      "item_unchanged_on_reject": true
+    },
+    {
+      "test": "CreateItemCapacityGuard",
+      "input": -1,
+      "accepted": false,
+      "stop_rva": "0x328ea9",
+      "item_unchanged_on_reject": true
+    },
+    {
+      "test": "AddItemOptionalOverrideCapacityGuard",
+      "input": 0,
+      "accepted": true,
+      "stop_rva": "0x329271",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "AddItemOptionalOverrideCapacityGuard",
+      "input": 1,
+      "accepted": true,
+      "stop_rva": "0x329271",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "AddItemOptionalOverrideCapacityGuard",
+      "input": 255,
+      "accepted": true,
+      "stop_rva": "0x329271",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "AddItemOptionalOverrideCapacityGuard",
+      "input": 256,
+      "accepted": true,
+      "stop_rva": "0x329271",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "AddItemOptionalOverrideCapacityGuard",
+      "input": 9999,
+      "accepted": true,
+      "stop_rva": "0x329271",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "AddItemOptionalOverrideCapacityGuard",
+      "input": 10000,
+      "accepted": true,
+      "stop_rva": "0x329271",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "AddItemOptionalOverrideCapacityGuard",
+      "input": 65535,
+      "accepted": true,
+      "stop_rva": "0x329271",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "AddItemOptionalOverrideCapacityGuard",
+      "input": 65536,
+      "accepted": false,
+      "stop_rva": "0x32924f",
+      "item_unchanged_on_reject": true
+    },
+    {
+      "test": "AddItemOptionalOverrideCapacityGuard",
+      "input": -1,
+      "accepted": false,
+      "stop_rva": "0x32924f",
+      "item_unchanged_on_reject": true
+    },
+    {
+      "test": "AddSellItemCapacityGuard",
+      "input": 0,
+      "accepted": false,
+      "stop_rva": "0x32a5a2",
+      "item_unchanged_on_reject": true
+    },
+    {
+      "test": "AddSellItemCapacityGuard",
+      "input": 1,
+      "accepted": true,
+      "stop_rva": "0x32a5b8",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "AddSellItemCapacityGuard",
+      "input": 255,
+      "accepted": true,
+      "stop_rva": "0x32a5b8",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "AddSellItemCapacityGuard",
+      "input": 256,
+      "accepted": true,
+      "stop_rva": "0x32a5b8",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "AddSellItemCapacityGuard",
+      "input": 9999,
+      "accepted": true,
+      "stop_rva": "0x32a5b8",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "AddSellItemCapacityGuard",
+      "input": 10000,
+      "accepted": true,
+      "stop_rva": "0x32a5b8",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "AddSellItemCapacityGuard",
+      "input": 65535,
+      "accepted": true,
+      "stop_rva": "0x32a5b8",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "AddSellItemCapacityGuard",
+      "input": 65536,
+      "accepted": false,
+      "stop_rva": "0x32a5a2",
+      "item_unchanged_on_reject": true
+    },
+    {
+      "test": "AddSellItemCapacityGuard",
+      "input": -1,
+      "accepted": false,
+      "stop_rva": "0x32a5a2",
+      "item_unchanged_on_reject": true
+    },
+    {
+      "test": "CreateDropBoxCapacityGuard",
+      "input": 0,
+      "accepted": false,
+      "stop_rva": "0x33561c",
+      "item_unchanged_on_reject": true
+    },
+    {
+      "test": "CreateDropBoxCapacityGuard",
+      "input": 1,
+      "accepted": true,
+      "stop_rva": "0x3352dc",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "CreateDropBoxCapacityGuard",
+      "input": 255,
+      "accepted": true,
+      "stop_rva": "0x3352dc",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "CreateDropBoxCapacityGuard",
+      "input": 256,
+      "accepted": true,
+      "stop_rva": "0x3352dc",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "CreateDropBoxCapacityGuard",
+      "input": 9999,
+      "accepted": true,
+      "stop_rva": "0x3352dc",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "CreateDropBoxCapacityGuard",
+      "input": 10000,
+      "accepted": true,
+      "stop_rva": "0x3352dc",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "CreateDropBoxCapacityGuard",
+      "input": 65535,
+      "accepted": true,
+      "stop_rva": "0x3352dc",
+      "item_unchanged_on_reject": false
+    },
+    {
+      "test": "CreateDropBoxCapacityGuard",
+      "input": 65536,
+      "accepted": false,
+      "stop_rva": "0x33561c",
+      "item_unchanged_on_reject": true
+    },
+    {
+      "test": "CreateDropBoxCapacityGuard",
+      "input": -1,
+      "accepted": false,
+      "stop_rva": "0x33561c",
+      "item_unchanged_on_reject": true
+    }
+  ],
+  "limitations": [
+    "tests stop at verified original success/failure continuation",
+    "mock singleton getter for CreateItem; no real allocation or world drop"
+  ]
+}

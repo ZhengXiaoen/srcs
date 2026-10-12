@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "installed_date": "2026-10-12",
+  "stack_limit": 9999,
+  "capacity": 65535,
+  "original_file_backup": "D:\\SRCS-item-stack-9999-20261012\\original-files",
+  "original_database_backup": "D:\\SRCS-item-stack-9999-20261012\\original-db",
+  "files": [
+    {
+      "path": "Server/S1001/x64/LogicServerCQ64_R.exe",
+      "sha256": "d3aafe43859f02a96b61fcf46201aa1ba5305e125ae5f7948ff850ca1aedf6b0",
+      "original_sha256": "349df27401b8ebca1ba4bf4012f85c4a3424bfd26215c6e091c6048d334631e2"
+    },
+    {
+      "path": "Server/common/x64/DBServer64_R.exe",
+      "sha256": "7813eefbf93493cff115bf2e7229f5d01005540d0a388b219358c18040dd3079",
+      "original_sha256": "65b3af8ffd7eec48f3e2f97d29d9212f383d2c42ac09923007bec7cab60bfaff"
+    },
+    {
+      "path": "Server/S1001/data/config/item/StdItems - 副本.txt",
+      "sha256": "caf31c6fc758574b2e84c46072b7d53a5f7909cedb7a061696d7990915a973df",
+      "original_sha256": "846f7e134b2c8f4b15519bd5919c7080844b3ef9c0bdf18695593966057c7cbc"
+    },
+    {
+      "path": "Server/S1001/data/config/item/StdItems.txt",
+      "sha256": "4bdd59e5d408e55bc891c9376d34ea86b0d059a2c6e69704a53006b5339fadb9",
+      "original_sha256": "a87b90c421b8ba8787b398872effa79d65163a36b7605dd247a6831a31e92463"
+    },
+    {
+      "path": "Server/S1001/data/config/item/stdItemForClient/StdItems1.txt",
+      "sha256": "0c9498ba0fdc6a7aa76b6a0250927939d03a53c067e7b62d08db17137a396285",
+      "original_sha256": "012c57d8f4d249ae96cf0931cc375ac34347a43733f2f6a0b169d9ed265b0b76"
+    },
+    {
+      "path": "Server/S1001/data/config/item/stdItemForClient/StdItems2.txt",
+      "sha256": "41801e75e23772aff1418d2cd144189e46b669f2c7fcdbc2b8ce2c6cd7c6664a",
+      "original_sha256": "70ccb36c491ec248df0cf13b2a5094db442e6a168aca88a07655316e5220b192"
+    },
+    {
+      "path": "Server/S1001/data/config/item/stdItemForClient/StdItems3.txt",
+      "sha256": "f9e18c81b0cf48022fd90c76c8cd28458438df60fd6d2c69ec90c4dc64738cd9",
+      "original_sha256": "1de5cfdda2fff885526261d54cc93d7fa0e2651cc8bcd307d4f5be5b1341efe1"
+    },
+    {
+      "path": "Server/S1001/data/config/item/stdItemForClient/StdItems4.txt",
+      "sha256": "8905ddc63fd20040b54a4c73510bcb96a920184aa2526ff97b5d28a924f8f347",
+      "original_sha256": "265ebd29ebf25e254ed252bdc96636731a034e092af93392d4f6102add4b6899"
+    },
+    {
+      "path": "web/GameFrame.swf",
+      "sha256": "49bfa1311a981f06897e7d7ba962f972225ba91b96da4ec258959a5a2974fb8c",
+      "original_sha256": "6226c471fb93fd231cca330303a20a71cb5436646732f65c09d6f1de9f2611f8"
+    },
+    {
+      "path": "web/v2/lang/zh-cn/stditems.cbp",
+      "sha256": "a175f266574ab99cc31094eefe4db7fe8ec25d15dc850ebca4793c45e28c9fcb",
+      "original_sha256": "bfd774f8530c2d4fb67a67b90c2eb55f1ef94e81edaa06b63cd406cc6bce8adb"
+    },
+    {
+      "path": "web/v2/lang/zh-cn/stditems1.cbp",
+      "sha256": "11fb8d1920ffb91f80f45eddce14376448e6f4cf622eb4c4de2d2b7de50818bf",
+      "original_sha256": "4e6820f135f0de09dfa43691c4452a95d0a098d04f027f229b0aa79f66418047"
+    },
+    {
+      "path": "web/v2/lang/zh-cn/stditems2.cbp",
+      "sha256": "041f25d220b73f19f12749cefaeff393f9f200578fee89eac15521a3adc53306",
+      "original_sha256": "2dd6aa86035fa8bc5101da0ecb0a244e9b84d55dde23864d956552b8f506b80c"
+    },
+    {
+      "path": "web/v2/lang/zh-cn/stditems3.cbp",
+      "sha256": "c3d3067aff2e18eb7b6542594fd3b7c743c1ca05b3c4337cbbace8a771fa69b8",
+      "original_sha256": "89b658b7a3945e0b81fe230bc65ada162aa89959a270ed11c7fc74f5cb0de0a7"
+    },
+    {
+      "path": "web/v2/lang/zh-cn/stditems4.cbp",
+      "sha256": "a73756e7d171fff07e1cdb3f0363057c8fb471ef3bbe28bfe52c3b6bcfc747c8",
+      "original_sha256": "e175241626a28b53db65104d4f15d7023aa87f42a2a3e5445da1a2fde1c054e2"
+    },
+    {
+      "path": "web/v2/lang/zh-cn/zh-cn.dat",
+      "sha256": "f1cff3c4280f209d21099b27d7482ff7dc11ab6dbfa538154f5b88bf449550b3",
+      "original_sha256": "b51128669efd58368e413765a2b8d2a00a5b4ddcace4ce823475ea5030457dca"
+    }
+  ],
+  "verification": {
+    "machine_code_cases": 304,
+    "fragment_vectors": 4628,
+    "db_vectors": 216,
+    "client_values": 65536,
+    "unwind_boundaries": 2151,
+    "isolated_logic_startup": "passed",
+    "recovered_database_preflight": "passed",
+    "gameplay_save_relogin": "not_performed"
+  }
+}

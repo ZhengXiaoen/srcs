@@ -1,0 +1,12 @@
+{
+  "date": "2026-10-12",
+  "source_database_unchanged": true,
+  "verified_database_files": 1169,
+  "recovered_copy_records": 722,
+  "unexpected_initsmith_high_or_negative": 0,
+  "logic_startup": "passed",
+  "global_function_compile": "passed",
+  "windows_unwind_boundaries": 2151,
+  "existing_config_warnings": "SwingEquipment warnings also reproduced with original binary",
+  "real_gameplay_save_relogin": "not_performed"
+}

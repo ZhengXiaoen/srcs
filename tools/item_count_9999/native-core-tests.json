@@ -1,0 +1,461 @@
+{
+  "status": "passed",
+  "binary": "D:\\SRCS-item-stack-9999-20261012\\fixed-candidate\\Server\\S1001\\x64\\LogicServerCQ64_R.exe",
+  "sha256": "d3aafe43859f02a96b61fcf46201aa1ba5305e125ae5f7948ff850ca1aedf6b0",
+  "case_count": 52,
+  "tests": [
+    {
+      "test": "SplitItem",
+      "input": [
+        256,
+        1
+      ],
+      "remaining": 255,
+      "new": 1
+    },
+    {
+      "test": "SplitItem",
+      "input": [
+        256,
+        255
+      ],
+      "remaining": 1,
+      "new": 255
+    },
+    {
+      "test": "SplitItem",
+      "input": [
+        9999,
+        255
+      ],
+      "remaining": 9744,
+      "new": 255
+    },
+    {
+      "test": "SplitItem",
+      "input": [
+        9999,
+        256
+      ],
+      "remaining": 9743,
+      "new": 256
+    },
+    {
+      "test": "SplitItem",
+      "input": [
+        9999,
+        5000
+      ],
+      "remaining": 4999,
+      "new": 5000
+    },
+    {
+      "test": "SplitItem",
+      "input": [
+        65535,
+        9999
+      ],
+      "remaining": 55536,
+      "new": 9999
+    },
+    {
+      "test": "SplitItem",
+      "input": [
+        65535,
+        255
+      ],
+      "remaining": 65280,
+      "new": 255
+    },
+    {
+      "test": "DeleteItem",
+      "input": [
+        256,
+        1
+      ],
+      "removed": 1,
+      "remaining": 255
+    },
+    {
+      "test": "DeleteItem",
+      "input": [
+        9999,
+        255
+      ],
+      "removed": 255,
+      "remaining": 9744
+    },
+    {
+      "test": "DeleteItem",
+      "input": [
+        9999,
+        256
+      ],
+      "removed": 256,
+      "remaining": 9743
+    },
+    {
+      "test": "DeleteItem",
+      "input": [
+        65535,
+        9999
+      ],
+      "removed": 9999,
+      "remaining": 55536
+    },
+    {
+      "test": "DeleteItem",
+      "input": [
+        9999,
+        9999
+      ],
+      "removed": 9999,
+      "remaining": 0
+    },
+    {
+      "test": "DeleteItem",
+      "input": [
+        256,
+        9999
+      ],
+      "removed": 256,
+      "remaining": 0
+    },
+    {
+      "test": "DeleteItem",
+      "input": [
+        65535,
+        65535
+      ],
+      "removed": 65535,
+      "remaining": 0
+    },
+    {
+      "test": "MergeItem",
+      "input": [
+        1,
+        255
+      ],
+      "transferred": 1,
+      "target": 256,
+      "source_active": false
+    },
+    {
+      "test": "MergeItem",
+      "input": [
+        255,
+        256
+      ],
+      "transferred": 255,
+      "target": 511,
+      "source_active": false
+    },
+    {
+      "test": "MergeItem",
+      "input": [
+        256,
+        255
+      ],
+      "transferred": 256,
+      "target": 511,
+      "source_active": false
+    },
+    {
+      "test": "MergeItem",
+      "input": [
+        9999,
+        9998
+      ],
+      "transferred": 1,
+      "target": 9999,
+      "source_active": true
+    },
+    {
+      "test": "MergeItem",
+      "input": [
+        9999,
+        0
+      ],
+      "transferred": 9999,
+      "target": 9999,
+      "source_active": false
+    },
+    {
+      "test": "MergeItem",
+      "input": [
+        65535,
+        255
+      ],
+      "transferred": 9744,
+      "target": 9999,
+      "source_active": true
+    },
+    {
+      "test": "MergeItem",
+      "input": [
+        256,
+        9999
+      ],
+      "transferred": 0,
+      "target": 9999,
+      "source_active": true
+    },
+    {
+      "test": "GetCanOverlapCountEx",
+      "target": 0,
+      "room": 9999
+    },
+    {
+      "test": "GetCanOverlapCountEx",
+      "target": 1,
+      "room": 9998
+    },
+    {
+      "test": "GetCanOverlapCountEx",
+      "target": 255,
+      "room": 9744
+    },
+    {
+      "test": "GetCanOverlapCountEx",
+      "target": 256,
+      "room": 9743
+    },
+    {
+      "test": "GetCanOverlapCountEx",
+      "target": 9998,
+      "room": 1
+    },
+    {
+      "test": "GetCanOverlapCountEx",
+      "target": 9999,
+      "room": 0
+    },
+    {
+      "test": "GetCanOverlapCountEx",
+      "target": 65535,
+      "room": 0
+    },
+    {
+      "test": "AddUserItemInsertionPolicy",
+      "observations": [
+        {
+          "input": 255,
+          "return": 255,
+          "inserted_counts": [
+            255
+          ]
+        },
+        {
+          "input": 256,
+          "return": 256,
+          "inserted_counts": [
+            256
+          ]
+        },
+        {
+          "input": 9999,
+          "return": 9999,
+          "inserted_counts": [
+            9999
+          ]
+        },
+        {
+          "input": 10000,
+          "return": 10000,
+          "inserted_counts": [
+            9999,
+            1
+          ]
+        },
+        {
+          "input": 65535,
+          "return": 65535,
+          "inserted_counts": [
+            9999,
+            9999,
+            9999,
+            9999,
+            9999,
+            9999,
+            5541
+          ]
+        }
+      ],
+      "enforces9999": true
+    },
+    {
+      "test": "AddItemPaging",
+      "total": 256,
+      "free_grids": 1,
+      "added": 256,
+      "inserted_counts": [
+        256
+      ]
+    },
+    {
+      "test": "AddItemPaging",
+      "total": 9999,
+      "free_grids": 1,
+      "added": 9999,
+      "inserted_counts": [
+        9999
+      ]
+    },
+    {
+      "test": "AddItemPaging",
+      "total": 10000,
+      "free_grids": 2,
+      "added": 10000,
+      "inserted_counts": [
+        9999,
+        1
+      ]
+    },
+    {
+      "test": "AddItemPaging",
+      "total": 65535,
+      "free_grids": 7,
+      "added": 65535,
+      "inserted_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        5541
+      ]
+    },
+    {
+      "test": "AddItemPaging",
+      "total": 65535,
+      "free_grids": 6,
+      "added": 59994,
+      "inserted_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9999
+      ]
+    },
+    {
+      "test": "AddItemPaging",
+      "total": 65535,
+      "free_grids": 1,
+      "added": 9999,
+      "inserted_counts": [
+        9999
+      ]
+    },
+    {
+      "test": "AddItemPaging",
+      "total": 65535,
+      "free_grids": 0,
+      "added": 0,
+      "inserted_counts": []
+    },
+    {
+      "test": "GuildExitFlagThreeSites",
+      "count": 0,
+      "initial_exit": 0,
+      "exit_read": 0,
+      "exit_written": 1,
+      "item_metadata_preserved": true
+    },
+    {
+      "test": "GuildExitFlagThreeSites",
+      "count": 0,
+      "initial_exit": 1,
+      "exit_read": 1,
+      "exit_written": 1,
+      "item_metadata_preserved": true
+    },
+    {
+      "test": "GuildExitFlagThreeSites",
+      "count": 1,
+      "initial_exit": 0,
+      "exit_read": 0,
+      "exit_written": 1,
+      "item_metadata_preserved": true
+    },
+    {
+      "test": "GuildExitFlagThreeSites",
+      "count": 1,
+      "initial_exit": 1,
+      "exit_read": 1,
+      "exit_written": 1,
+      "item_metadata_preserved": true
+    },
+    {
+      "test": "GuildExitFlagThreeSites",
+      "count": 255,
+      "initial_exit": 0,
+      "exit_read": 0,
+      "exit_written": 1,
+      "item_metadata_preserved": true
+    },
+    {
+      "test": "GuildExitFlagThreeSites",
+      "count": 255,
+      "initial_exit": 1,
+      "exit_read": 1,
+      "exit_written": 1,
+      "item_metadata_preserved": true
+    },
+    {
+      "test": "GuildExitFlagThreeSites",
+      "count": 256,
+      "initial_exit": 0,
+      "exit_read": 0,
+      "exit_written": 1,
+      "item_metadata_preserved": true
+    },
+    {
+      "test": "GuildExitFlagThreeSites",
+      "count": 256,
+      "initial_exit": 1,
+      "exit_read": 1,
+      "exit_written": 1,
+      "item_metadata_preserved": true
+    },
+    {
+      "test": "GuildExitFlagThreeSites",
+      "count": 9999,
+      "initial_exit": 0,
+      "exit_read": 0,
+      "exit_written": 1,
+      "item_metadata_preserved": true
+    },
+    {
+      "test": "GuildExitFlagThreeSites",
+      "count": 9999,
+      "initial_exit": 1,
+      "exit_read": 1,
+      "exit_written": 1,
+      "item_metadata_preserved": true
+    },
+    {
+      "test": "GuildExitFlagThreeSites",
+      "count": 65535,
+      "initial_exit": 0,
+      "exit_read": 0,
+      "exit_written": 1,
+      "item_metadata_preserved": true
+    },
+    {
+      "test": "GuildExitFlagThreeSites",
+      "count": 65535,
+      "initial_exit": 1,
+      "exit_read": 1,
+      "exit_written": 1,
+      "item_metadata_preserved": true
+    }
+  ],
+  "execution": "Unicorn candidate code with mocked IO; no Windows service started",
+  "limitations": [
+    "Guild check executes replacement blocks, not the whole withdrawal transaction",
+    "No actual save/relogin test"
+  ]
+}

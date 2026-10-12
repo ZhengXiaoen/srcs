@@ -686,6 +686,35 @@ function Install-LogicServerPatch {
 
 function Install-MountStackPatch {
     param($Paths)
+    # The count expansion already contains the mount/warrior patches. Verify
+    # its entire Logic/DB/client file set before bypassing their old installers.
+    $countManifestPath = [IO.Path]::Combine($Paths.Root, 'tools', 'item_count_9999_installed.json')
+    if ([IO.File]::Exists($countManifestPath)) {
+        $countManifest = [IO.File]::ReadAllText($countManifestPath, [Text.Encoding]::UTF8) | ConvertFrom-Json
+        if ($countManifest.schema -ne 1 -or @($countManifest.files).Count -ne 15) {
+            throw '物品数量补丁的文件清单无效，未启动服务器。'
+        }
+        $seenCountFiles = @()
+        foreach ($entry in $countManifest.files) {
+            $relative = [string]$entry.path
+            if ([IO.Path]::IsPathRooted($relative) -or $relative -match '(^|[\\/])\.\.([\\/]|$)' -or
+                $seenCountFiles -contains $relative) {
+                throw '物品数量补丁的文件路径无效，未启动服务器。'
+            }
+            $seenCountFiles += $relative
+            $file = [IO.Path]::Combine($Paths.Root, $relative)
+            if (-not [IO.File]::Exists($file) -or
+                (Get-ConfigHash ([IO.File]::ReadAllBytes($file))) -ne [string]$entry.sha256) {
+                throw "物品数量补丁文件不匹配：$relative，请恢复配套文件后再启动。"
+            }
+        }
+        foreach ($required in @('Server/S1001/x64/LogicServerCQ64_R.exe', 'Server/common/x64/DBServer64_R.exe', 'web/GameFrame.swf')) {
+            if ($seenCountFiles -notcontains $required) {
+                throw "物品数量补丁缺少配套程序：$required，未启动服务器。"
+            }
+        }
+        return
+    }
     $directory = [IO.Path]::Combine($Paths.Root, 'Server', 'S1001', 'x64')
     $acceptedTargets = @()
     foreach ($packageName in @('jingji-mount-consumption.patch.json', 'jingji-mount-yuanbao.patch.json', 'warrior-defense-rate.patch.json', 'warrior-survival-rate.patch.json', 'warrior-attack-rate.patch.json')) {

@@ -1,0 +1,351 @@
+{
+  "target": "D:\\SRCS\\Server\\S1001\\x64\\LogicServerCQ64_R.exe",
+  "sha256": "175c95cd1113c16de69d66455355cbfdd38286226a4b9a24c9f5e415af5608a6",
+  "tail_direct_nonstack_byte_entries": [
+    {
+      "rva": "0x41ca1",
+      "function_rva": "0x41a70",
+      "function": "??0CUserItem@@QEAA@AEBU0@@Z",
+      "original": "movzx ecx, byte ptr [rcx + 0x80]",
+      "bytes": "0fb68980000000",
+      "kind": "copy-excluded",
+      "note": "CUserItem tail copies, retain copy; count-specific write-one must separately clear high byte",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "rcx",
+      "displacement": "0x80",
+      "value_register": "ecx"
+    },
+    {
+      "rva": "0x41ca8",
+      "function_rva": "0x41a70",
+      "function": "??0CUserItem@@QEAA@AEBU0@@Z",
+      "original": "mov byte ptr [rax + 0x80], cl",
+      "bytes": "888880000000",
+      "kind": "copy-excluded",
+      "note": "CUserItem tail copies, retain copy; count-specific write-one must separately clear high byte",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "rax",
+      "displacement": "0x80",
+      "value_register": "cl"
+    },
+    {
+      "rva": "0x60a56",
+      "function_rva": "0x609b0",
+      "function": "unknown",
+      "original": "mov byte ptr [rax + 0x80], 0x14",
+      "bytes": "c6808000000014",
+      "kind": "nonitem",
+      "note": "CSkillSubSystem.m_ShuangLieHuoCountdown+0x80, PDB layout uint8 field. rcx/rax are this, not item",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "rax",
+      "displacement": "0x80"
+    },
+    {
+      "rva": "0x1c8127",
+      "function_rva": "0x1c7c80",
+      "function": "?GetItemFromGuildDepot@CGuildSystem@@IEAAXAEAVCDataPacketReader@@@Z",
+      "original": "mov byte ptr [rax + 0x80], 1",
+      "bytes": "c6808000000001",
+      "kind": "tail-conflict",
+      "note": "tagGuildDepotItem embedded CUserItem tail used incorrectly as exit marker. Replace with dword nExitFlag at item-4",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "rax",
+      "displacement": "0x80"
+    },
+    {
+      "rva": "0x27c243",
+      "function_rva": "0x27c1c0",
+      "function": "unknown",
+      "original": "movzx eax, byte ptr [rax + 0x80]",
+      "bytes": "0fb68080000000",
+      "kind": "nonitem",
+      "note": "CUserItemAllocator.m_nSpId lowbyte+0x80, paired with m_nServerIndex+0x78 and serial+0x70",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "rax",
+      "displacement": "0x80",
+      "value_register": "eax"
+    },
+    {
+      "rva": "0x38bc0a",
+      "function_rva": "0x38b240",
+      "function": "unknown",
+      "original": "mov byte ptr [rax + 0x80], 0x14",
+      "bytes": "c6808000000014",
+      "kind": "nonitem",
+      "note": "CSkillSubSystem.m_ShuangLieHuoCountdown+0x80, PDB layout uint8 field. rcx/rax are this, not item",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "rax",
+      "displacement": "0x80"
+    },
+    {
+      "rva": "0x38bc84",
+      "function_rva": "0x38b240",
+      "function": "unknown",
+      "original": "mov byte ptr [rax + 0x80], 0x14",
+      "bytes": "c6808000000014",
+      "kind": "nonitem",
+      "note": "CSkillSubSystem.m_ShuangLieHuoCountdown+0x80, PDB layout uint8 field. rcx/rax are this, not item",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "rax",
+      "displacement": "0x80"
+    },
+    {
+      "rva": "0x38bda5",
+      "function_rva": "0x38b240",
+      "function": "unknown",
+      "original": "mov byte ptr [rax + 0x80], 0x14",
+      "bytes": "c6808000000014",
+      "kind": "nonitem",
+      "note": "CSkillSubSystem.m_ShuangLieHuoCountdown+0x80, PDB layout uint8 field. rcx/rax are this, not item",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "rax",
+      "displacement": "0x80"
+    },
+    {
+      "rva": "0x39010a",
+      "function_rva": "0x3900c0",
+      "function": "unknown",
+      "original": "movzx eax, byte ptr [rax + 0x80]",
+      "bytes": "0fb68080000000",
+      "kind": "nonitem",
+      "note": "CSkillSubSystem.m_ShuangLieHuoCountdown+0x80, PDB layout uint8 field. rcx/rax are this, not item",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "rax",
+      "displacement": "0x80",
+      "value_register": "eax"
+    },
+    {
+      "rva": "0x39011d",
+      "function_rva": "0x3900c0",
+      "function": "unknown",
+      "original": "movzx eax, byte ptr [rax + 0x80]",
+      "bytes": "0fb68080000000",
+      "kind": "nonitem",
+      "note": "CSkillSubSystem.m_ShuangLieHuoCountdown+0x80, PDB layout uint8 field. rcx/rax are this, not item",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "rax",
+      "displacement": "0x80",
+      "value_register": "eax"
+    },
+    {
+      "rva": "0x39012e",
+      "function_rva": "0x3900c0",
+      "function": "unknown",
+      "original": "mov byte ptr [rcx + 0x80], al",
+      "bytes": "888180000000",
+      "kind": "nonitem",
+      "note": "CSkillSubSystem.m_ShuangLieHuoCountdown+0x80, PDB layout uint8 field. rcx/rax are this, not item",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "rcx",
+      "displacement": "0x80",
+      "value_register": "al"
+    },
+    {
+      "rva": "0x39013c",
+      "function_rva": "0x3900c0",
+      "function": "unknown",
+      "original": "movzx eax, byte ptr [rax + 0x80]",
+      "bytes": "0fb68080000000",
+      "kind": "nonitem",
+      "note": "CSkillSubSystem.m_ShuangLieHuoCountdown+0x80, PDB layout uint8 field. rcx/rax are this, not item",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "rax",
+      "displacement": "0x80",
+      "value_register": "eax"
+    },
+    {
+      "rva": "0x390262",
+      "function_rva": "0x3900c0",
+      "function": "unknown",
+      "original": "movzx eax, byte ptr [rax + 0x80]",
+      "bytes": "0fb68080000000",
+      "kind": "nonitem",
+      "note": "CSkillSubSystem.m_ShuangLieHuoCountdown+0x80, PDB layout uint8 field. rcx/rax are this, not item",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "rax",
+      "displacement": "0x80",
+      "value_register": "eax"
+    },
+    {
+      "rva": "0x390273",
+      "function_rva": "0x3900c0",
+      "function": "unknown",
+      "original": "mov byte ptr [rcx + 0x80], al",
+      "bytes": "888180000000",
+      "kind": "nonitem",
+      "note": "CSkillSubSystem.m_ShuangLieHuoCountdown+0x80, PDB layout uint8 field. rcx/rax are this, not item",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "rcx",
+      "displacement": "0x80",
+      "value_register": "al"
+    },
+    {
+      "rva": "0x390281",
+      "function_rva": "0x3900c0",
+      "function": "unknown",
+      "original": "movzx eax, byte ptr [rax + 0x80]",
+      "bytes": "0fb68080000000",
+      "kind": "nonitem",
+      "note": "CSkillSubSystem.m_ShuangLieHuoCountdown+0x80, PDB layout uint8 field. rcx/rax are this, not item",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "rax",
+      "displacement": "0x80",
+      "value_register": "eax"
+    },
+    {
+      "rva": "0x390298",
+      "function_rva": "0x3900c0",
+      "function": "unknown",
+      "original": "mov byte ptr [rax + 0x80], 0x14",
+      "bytes": "c6808000000014",
+      "kind": "nonitem",
+      "note": "CSkillSubSystem.m_ShuangLieHuoCountdown+0x80, PDB layout uint8 field. rcx/rax are this, not item",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "rax",
+      "displacement": "0x80"
+    },
+    {
+      "rva": "0x390320",
+      "function_rva": "0x3900c0",
+      "function": "unknown",
+      "original": "movzx eax, byte ptr [rax + 0x80]",
+      "bytes": "0fb68080000000",
+      "kind": "nonitem",
+      "note": "CSkillSubSystem.m_ShuangLieHuoCountdown+0x80, PDB layout uint8 field. rcx/rax are this, not item",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "rax",
+      "displacement": "0x80",
+      "value_register": "eax"
+    },
+    {
+      "rva": "0x3903ad",
+      "function_rva": "0x3900c0",
+      "function": "unknown",
+      "original": "mov byte ptr [rax + 0x80], 0x14",
+      "bytes": "c6808000000014",
+      "kind": "nonitem",
+      "note": "CSkillSubSystem.m_ShuangLieHuoCountdown+0x80, PDB layout uint8 field. rcx/rax are this, not item",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "rax",
+      "displacement": "0x80"
+    },
+    {
+      "rva": "0x391cde",
+      "function_rva": "0x390d30",
+      "function": "?UseSkill@CSkillSubSystem@@QEAA_J_J00_N011@Z",
+      "original": "mov byte ptr [rax + 0x80], 0x14",
+      "bytes": "c6808000000014",
+      "kind": "nonitem",
+      "note": "CSkillSubSystem.m_ShuangLieHuoCountdown+0x80, PDB layout uint8 field. rcx/rax are this, not item",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "rax",
+      "displacement": "0x80"
+    },
+    {
+      "rva": "0x391fd7",
+      "function_rva": "0x390d30",
+      "function": "?UseSkill@CSkillSubSystem@@QEAA_J_J00_N011@Z",
+      "original": "mov byte ptr [rax + 0x80], 0x14",
+      "bytes": "c6808000000014",
+      "kind": "nonitem",
+      "note": "CSkillSubSystem.m_ShuangLieHuoCountdown+0x80, PDB layout uint8 field. rcx/rax are this, not item",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "rax",
+      "displacement": "0x80"
+    },
+    {
+      "rva": "0x51e0e8",
+      "function_rva": "0x51e000",
+      "function": "existing .mtstack split-one mount helper",
+      "original": "mov dl, byte ptr [r10 + 0x80]",
+      "bytes": "418a9280000000",
+      "kind": "copy-excluded",
+      "note": "CUserItem tail copies, retain copy; count-specific write-one must separately clear high byte",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "r10",
+      "displacement": "0x80",
+      "value_register": "dl"
+    },
+    {
+      "rva": "0x51e0ef",
+      "function_rva": "0x51e000",
+      "function": "existing .mtstack split-one mount helper",
+      "original": "mov byte ptr [rax + 0x80], dl",
+      "bytes": "889080000000",
+      "kind": "copy-excluded",
+      "note": "CUserItem tail copies, retain copy; count-specific write-one must separately clear high byte",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "base_register": "rax",
+      "displacement": "0x80",
+      "value_register": "dl"
+    }
+  ],
+  "guild_exit_patches": [
+    {
+      "rva": "0x1c7d84",
+      "function_rva": "0x1c7c80",
+      "function": "?GetItemFromGuildDepot@CGuildSystem@@IEAAXAEAVCDataPacketReader@@@Z",
+      "original": "lea rax, [rax + rcx + 0x10]",
+      "bytes": "488d440810",
+      "kind": "stash-item-base",
+      "note": "same item pointer stored in otherwise unused existing stack slot before copy constructor",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "replacement_asm": "lea rax, [rax + rcx + 0x10]; mov qword ptr [rsp + 0x190], rax",
+      "base_register": "rax",
+      "displacement": "0x10"
+    },
+    {
+      "rva": "0x1c7d96",
+      "function_rva": "0x1c7c80",
+      "function": "?GetItemFromGuildDepot@CGuildSystem@@IEAAXAEAVCDataPacketReader@@@Z",
+      "original": "movzx eax, byte ptr [rsp + 0xd0]",
+      "bytes": "0fb68424d0000000",
+      "kind": "exit-read",
+      "note": "read tagGuildDepotItem.nExitFlag from original record; original reads local copied CUserItem.tail +0xd0",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "replacement_asm": "mov rax, qword ptr [rsp + 0x190]; mov eax, dword ptr [rax - 4]",
+      "base_register": "rsp",
+      "displacement": "0xd0",
+      "value_register": "eax"
+    },
+    {
+      "rva": "0x1c8127",
+      "function_rva": "0x1c7c80",
+      "function": "?GetItemFromGuildDepot@CGuildSystem@@IEAAXAEAVCDataPacketReader@@@Z",
+      "original": "mov byte ptr [rax + 0x80], 1",
+      "bytes": "c6808000000001",
+      "kind": "exit-write",
+      "note": "set normalized nExitFlag after successful AddUserItem; preserve count high byte",
+      "evidence_type": "PE disassembly + old-version PDB structure/symbol mapping; static only",
+      "replacement_asm": "mov dword ptr [rax - 4], 1",
+      "base_register": "rax",
+      "displacement": "0x80"
+    }
+  ],
+  "guild_exit_consumers": [
+    {
+      "rva": "0x7a697",
+      "field": "tagGuildDepotItem.nExitFlag dword+0xc"
+    },
+    {
+      "rva": "0x7b643",
+      "field": "tagGuildDepotItem.nExitFlag dword+0xc"
+    },
+    {
+      "rva": "0x7c045",
+      "field": "tagGuildDepotItem.nExitFlag dword+0xc"
+    },
+    {
+      "rva": "0x1c83e0",
+      "field": "tagGuildDepotItem.nExitFlag dword+0xc"
+    }
+  ],
+  "guild_copy_order": "GetItemFromGuildDepot first copies source embedded CUserItem into stack+0x50 (129bytes), then allocates/clones item and AddUserItem; old source-tail exit marker written only after AddUserItem. After replacement, original tail count stays intact and nExitFlag persists normalized.",
+  "historical_migration": "DB did not persist tail marker in old format. For existing live process, prepatch in-memory guild records may containtail=1 with exitFlag=0; only install with cold server restart. A test must verify guild storage retrieval, save, reload and duplicate prevention.",
+  "limits": [
+    "All explicit nonstack byte+0x80 candidates in runtime-function scan classified",
+    "Alias access item tail using e.g. tagGuildDepotItem+0x90 or stack+0xd0 is not captured by direct offsetscan; discovered guild clone check included",
+    "No running-target test",
+    "No DB schema/data inspection in this agent scope"
+  ]
+}

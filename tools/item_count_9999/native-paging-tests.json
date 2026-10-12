@@ -1,0 +1,2007 @@
+{
+  "binary": "D:\\SRCS-item-stack-9999-20261012\\fixed-candidate\\Server\\S1001\\x64\\LogicServerCQ64_R.exe",
+  "sha256": "d3aafe43859f02a96b61fcf46201aa1ba5305e125ae5f7948ff850ca1aedf6b0",
+  "execution": "real candidate x64 code under Unicorn; no Windows service started",
+  "case_count": 111,
+  "tests": [
+    {
+      "test": "AddUserItemPaging",
+      "total": 10000,
+      "existing": [],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "accepted": 0,
+      "active_counts": [],
+      "original_owned_by_caller": true,
+      "caller_remaining": 10000,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 10000,
+      "existing": [],
+      "free_grids": 1,
+      "allocation_fail_after": null,
+      "accepted": 9999,
+      "active_counts": [
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 1,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 10000,
+      "existing": [],
+      "free_grids": 2,
+      "allocation_fail_after": null,
+      "accepted": 10000,
+      "active_counts": [
+        9999,
+        1
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 65535,
+      "existing": [],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "accepted": 0,
+      "active_counts": [],
+      "original_owned_by_caller": true,
+      "caller_remaining": 65535,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 65535,
+      "existing": [],
+      "free_grids": 1,
+      "allocation_fail_after": null,
+      "accepted": 9999,
+      "active_counts": [
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 55536,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 65535,
+      "existing": [],
+      "free_grids": 6,
+      "allocation_fail_after": null,
+      "accepted": 59994,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 5541,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 65535,
+      "existing": [],
+      "free_grids": 7,
+      "allocation_fail_after": null,
+      "accepted": 65535,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        5541
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 65535,
+      "existing": [
+        9998
+      ],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "accepted": 1,
+      "active_counts": [
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 65534,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 65535,
+      "existing": [
+        255
+      ],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "accepted": 9744,
+      "active_counts": [
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 55791,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 10000,
+      "existing": [
+        9998
+      ],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "accepted": 1,
+      "active_counts": [
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 9999,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 65535,
+      "existing": [
+        1,
+        255,
+        256,
+        9998
+      ],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "accepted": 29486,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 36049,
+      "destroyed_clone_count": 3,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 65535,
+      "existing": [
+        1,
+        255,
+        256,
+        9998
+      ],
+      "free_grids": 1,
+      "allocation_fail_after": null,
+      "accepted": 39485,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 26050,
+      "destroyed_clone_count": 3,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 10000,
+      "existing": [
+        1
+      ],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "accepted": 9998,
+      "active_counts": [
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 2,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 10000,
+      "existing": [
+        1
+      ],
+      "free_grids": 1,
+      "allocation_fail_after": null,
+      "accepted": 10000,
+      "active_counts": [
+        9999,
+        2
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 65535,
+      "existing": [
+        9999
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": null,
+      "accepted": 65535,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        5541
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 65535,
+      "existing": [
+        9999
+      ],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "accepted": 0,
+      "active_counts": [
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 65535,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 10000,
+      "existing": [
+        1,
+        1
+      ],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "accepted": 10000,
+      "active_counts": [
+        3,
+        9999
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 2,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 10000,
+      "existing": [
+        1,
+        1
+      ],
+      "free_grids": 1,
+      "allocation_fail_after": null,
+      "accepted": 10000,
+      "active_counts": [
+        3,
+        9999
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 2,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 65535,
+      "existing": [],
+      "free_grids": 7,
+      "allocation_fail_after": 0,
+      "accepted": 0,
+      "active_counts": [],
+      "original_owned_by_caller": true,
+      "caller_remaining": 65535,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 65535,
+      "existing": [],
+      "free_grids": 7,
+      "allocation_fail_after": 1,
+      "accepted": 9999,
+      "active_counts": [
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 55536,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 65535,
+      "existing": [],
+      "free_grids": 7,
+      "allocation_fail_after": 3,
+      "accepted": 29997,
+      "active_counts": [
+        9999,
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 35538,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 65535,
+      "existing": [
+        1
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": 1,
+      "accepted": 9999,
+      "active_counts": [
+        9999,
+        1
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 55536,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 65535,
+      "existing": [
+        9998
+      ],
+      "free_grids": 0,
+      "allocation_fail_after": 1,
+      "accepted": 1,
+      "active_counts": [
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 65534,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 10000,
+      "existing": [],
+      "free_grids": 2,
+      "allocation_fail_after": 0,
+      "accepted": 0,
+      "active_counts": [],
+      "original_owned_by_caller": true,
+      "caller_remaining": 10000,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 60544,
+      "existing": [
+        8426,
+        8554,
+        9011
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": null,
+      "accepted": 60544,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        6543
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 13077,
+      "existing": [
+        8929,
+        4572,
+        6567,
+        674
+      ],
+      "free_grids": 2,
+      "allocation_fail_after": null,
+      "accepted": 13077,
+      "active_counts": [
+        8929,
+        4892,
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 2,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 47473,
+      "existing": [],
+      "free_grids": 6,
+      "allocation_fail_after": null,
+      "accepted": 47473,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        7477
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 15856,
+      "existing": [],
+      "free_grids": 3,
+      "allocation_fail_after": null,
+      "accepted": 15856,
+      "active_counts": [
+        9999,
+        5857
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 22029,
+      "existing": [
+        1599,
+        4123,
+        641
+      ],
+      "free_grids": 4,
+      "allocation_fail_after": null,
+      "accepted": 22029,
+      "active_counts": [
+        8394,
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 3,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 33568,
+      "existing": [
+        6124,
+        7620,
+        4862
+      ],
+      "free_grids": 5,
+      "allocation_fail_after": null,
+      "accepted": 33568,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        2179
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 49994,
+      "existing": [
+        8499
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": null,
+      "accepted": 49994,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        8498
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 37614,
+      "existing": [],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "accepted": 0,
+      "active_counts": [],
+      "original_owned_by_caller": true,
+      "caller_remaining": 37614,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 32210,
+      "existing": [
+        6808,
+        8994,
+        9875,
+        3404
+      ],
+      "free_grids": 6,
+      "allocation_fail_after": null,
+      "accepted": 32210,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        1297
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 21505,
+      "existing": [],
+      "free_grids": 4,
+      "allocation_fail_after": null,
+      "accepted": 21505,
+      "active_counts": [
+        9999,
+        9999,
+        1507
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 46915,
+      "existing": [
+        7030,
+        7414
+      ],
+      "free_grids": 2,
+      "allocation_fail_after": null,
+      "accepted": 25552,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 21363,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 29297,
+      "existing": [
+        1103
+      ],
+      "free_grids": 6,
+      "allocation_fail_after": null,
+      "accepted": 29297,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        403
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 18292,
+      "existing": [
+        716
+      ],
+      "free_grids": 6,
+      "allocation_fail_after": null,
+      "accepted": 18292,
+      "active_counts": [
+        9999,
+        9009
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 45210,
+      "existing": [
+        6212,
+        5643
+      ],
+      "free_grids": 5,
+      "allocation_fail_after": null,
+      "accepted": 45210,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        7070
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 29484,
+      "existing": [
+        1710,
+        252,
+        741,
+        5533
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": null,
+      "accepted": 29484,
+      "active_counts": [
+        7723,
+        9999,
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 3,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 44328,
+      "existing": [
+        2842,
+        9873,
+        7810
+      ],
+      "free_grids": 2,
+      "allocation_fail_after": null,
+      "accepted": 29470,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 14858,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 47440,
+      "existing": [],
+      "free_grids": 4,
+      "allocation_fail_after": null,
+      "accepted": 39996,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 7444,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 36522,
+      "existing": [
+        6807,
+        6703
+      ],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "accepted": 6488,
+      "active_counts": [
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 30034,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 8173,
+      "existing": [
+        405,
+        5603,
+        7836,
+        6414
+      ],
+      "free_grids": 2,
+      "allocation_fail_after": null,
+      "accepted": 8173,
+      "active_counts": [
+        405,
+        8028,
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 14322,
+      "existing": [
+        4218,
+        1437,
+        3607
+      ],
+      "free_grids": 4,
+      "allocation_fail_after": null,
+      "accepted": 14322,
+      "active_counts": [
+        4218,
+        9367,
+        9999
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 2,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 33768,
+      "existing": [
+        7894,
+        5727,
+        54,
+        8729
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": null,
+      "accepted": 33768,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        6177
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 2,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 47133,
+      "existing": [
+        6032,
+        8033,
+        5845,
+        6920
+      ],
+      "free_grids": 4,
+      "allocation_fail_after": null,
+      "accepted": 47133,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        3970
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 39814,
+      "existing": [],
+      "free_grids": 2,
+      "allocation_fail_after": null,
+      "accepted": 19998,
+      "active_counts": [
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 19816,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 20082,
+      "existing": [
+        3726
+      ],
+      "free_grids": 3,
+      "allocation_fail_after": null,
+      "accepted": 20082,
+      "active_counts": [
+        9999,
+        9999,
+        3810
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 33707,
+      "existing": [],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "accepted": 0,
+      "active_counts": [],
+      "original_owned_by_caller": true,
+      "caller_remaining": 33707,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 46401,
+      "existing": [
+        2363,
+        6806
+      ],
+      "free_grids": 3,
+      "allocation_fail_after": null,
+      "accepted": 40826,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 5575,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 22071,
+      "existing": [
+        8962
+      ],
+      "free_grids": 5,
+      "allocation_fail_after": null,
+      "accepted": 22071,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        1036
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 4893,
+      "existing": [],
+      "free_grids": 1,
+      "allocation_fail_after": null,
+      "accepted": 4893,
+      "active_counts": [
+        4893
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 10358,
+      "existing": [
+        5873
+      ],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "accepted": 4126,
+      "active_counts": [
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 6232,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 63795,
+      "existing": [
+        4911
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": null,
+      "accepted": 63795,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        8712
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 17954,
+      "existing": [
+        1002,
+        7437
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": null,
+      "accepted": 17954,
+      "active_counts": [
+        9999,
+        9999,
+        6395
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 28569,
+      "existing": [
+        484,
+        9883,
+        3673,
+        3790
+      ],
+      "free_grids": 2,
+      "allocation_fail_after": null,
+      "accepted": 28569,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        6403
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 2,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 65080,
+      "existing": [
+        5927
+      ],
+      "free_grids": 1,
+      "allocation_fail_after": null,
+      "accepted": 14071,
+      "active_counts": [
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 51009,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 45327,
+      "existing": [
+        414,
+        3288,
+        733
+      ],
+      "free_grids": 3,
+      "allocation_fail_after": null,
+      "accepted": 45327,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9766
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 3,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 42798,
+      "existing": [],
+      "free_grids": 4,
+      "allocation_fail_after": null,
+      "accepted": 39996,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 2802,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 13346,
+      "existing": [
+        4537
+      ],
+      "free_grids": 3,
+      "allocation_fail_after": null,
+      "accepted": 13346,
+      "active_counts": [
+        9999,
+        7884
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 50749,
+      "existing": [
+        8321,
+        7117
+      ],
+      "free_grids": 1,
+      "allocation_fail_after": null,
+      "accepted": 14559,
+      "active_counts": [
+        9999,
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 36190,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 49264,
+      "existing": [
+        7849
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": null,
+      "accepted": 49264,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        7118
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 49392,
+      "existing": [
+        2720
+      ],
+      "free_grids": 4,
+      "allocation_fail_after": null,
+      "accepted": 47275,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 2117,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 30161,
+      "existing": [],
+      "free_grids": 7,
+      "allocation_fail_after": null,
+      "accepted": 30161,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        164
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 37969,
+      "existing": [],
+      "free_grids": 5,
+      "allocation_fail_after": null,
+      "accepted": 37969,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        7972
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 14666,
+      "existing": [],
+      "free_grids": 4,
+      "allocation_fail_after": null,
+      "accepted": 14666,
+      "active_counts": [
+        9999,
+        4667
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 25582,
+      "existing": [
+        5747,
+        3995,
+        5475,
+        1389
+      ],
+      "free_grids": 7,
+      "allocation_fail_after": null,
+      "accepted": 25582,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        2192
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 2,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 15937,
+      "existing": [
+        5557,
+        3162,
+        9497,
+        82
+      ],
+      "free_grids": 4,
+      "allocation_fail_after": null,
+      "accepted": 15937,
+      "active_counts": [
+        5557,
+        8680,
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 2,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 4916,
+      "existing": [
+        1945,
+        4849
+      ],
+      "free_grids": 2,
+      "allocation_fail_after": null,
+      "accepted": 4916,
+      "active_counts": [
+        1945,
+        9765
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 26654,
+      "existing": [
+        2969
+      ],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "accepted": 7030,
+      "active_counts": [
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 19624,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 61440,
+      "existing": [
+        9122,
+        1892
+      ],
+      "free_grids": 3,
+      "allocation_fail_after": null,
+      "accepted": 38981,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 22459,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 48335,
+      "existing": [
+        5242,
+        2589,
+        8347,
+        1011
+      ],
+      "free_grids": 1,
+      "allocation_fail_after": null,
+      "accepted": 32806,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 15529,
+      "destroyed_clone_count": 3,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 34763,
+      "existing": [
+        6960,
+        5139,
+        7513
+      ],
+      "free_grids": 4,
+      "allocation_fail_after": null,
+      "accepted": 34763,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        4380
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 55391,
+      "existing": [
+        9049,
+        5244
+      ],
+      "free_grids": 6,
+      "allocation_fail_after": null,
+      "accepted": 55391,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9690
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 42147,
+      "existing": [],
+      "free_grids": 5,
+      "allocation_fail_after": null,
+      "accepted": 42147,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        2151
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 53652,
+      "existing": [
+        7279
+      ],
+      "free_grids": 5,
+      "allocation_fail_after": null,
+      "accepted": 52715,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 937,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 7183,
+      "existing": [
+        4463,
+        9122
+      ],
+      "free_grids": 1,
+      "allocation_fail_after": null,
+      "accepted": 7183,
+      "active_counts": [
+        9999,
+        9999,
+        770
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 0,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 15916,
+      "existing": [
+        1299,
+        8,
+        3664
+      ],
+      "free_grids": 6,
+      "allocation_fail_after": null,
+      "accepted": 15916,
+      "active_counts": [
+        1299,
+        9589,
+        9999
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 2,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 37154,
+      "existing": [
+        7261,
+        9599,
+        5325
+      ],
+      "free_grids": 5,
+      "allocation_fail_after": null,
+      "accepted": 37154,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        9344
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 44058,
+      "existing": [
+        3922,
+        2472
+      ],
+      "free_grids": 4,
+      "allocation_fail_after": null,
+      "accepted": 44058,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        457
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 10285,
+      "existing": [
+        3452,
+        7043,
+        3444
+      ],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "accepted": 10285,
+      "active_counts": [
+        4226,
+        9999,
+        9999
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 2,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 40756,
+      "existing": [],
+      "free_grids": 1,
+      "allocation_fail_after": null,
+      "accepted": 9999,
+      "active_counts": [
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 30757,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 42815,
+      "existing": [
+        8901,
+        2176
+      ],
+      "free_grids": 6,
+      "allocation_fail_after": null,
+      "accepted": 42815,
+      "active_counts": [
+        9999,
+        9999,
+        9999,
+        9999,
+        9999,
+        3897
+      ],
+      "original_owned_by_caller": false,
+      "caller_remaining": null,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "AddUserItemPaging",
+      "total": 54189,
+      "existing": [
+        4478
+      ],
+      "free_grids": 0,
+      "allocation_fail_after": null,
+      "accepted": 5521,
+      "active_counts": [
+        9999
+      ],
+      "original_owned_by_caller": true,
+      "caller_remaining": 48668,
+      "destroyed_clone_count": 1,
+      "new_guids_unique": true,
+      "metadata_preserved": true,
+      "no_use_after_destroy": true
+    },
+    {
+      "test": "SplitItemGuard",
+      "total": 65535,
+      "split": 10000,
+      "accepted": 0,
+      "remaining": 65535
+    },
+    {
+      "test": "SplitItemGuard",
+      "total": 65535,
+      "split": 50000,
+      "accepted": 0,
+      "remaining": 65535
+    },
+    {
+      "test": "SplitItemGuard",
+      "total": 65535,
+      "split": 65534,
+      "accepted": 0,
+      "remaining": 65535
+    },
+    {
+      "test": "SplitItemGuard",
+      "total": 9999,
+      "split": 10000,
+      "accepted": 0,
+      "remaining": 9999
+    },
+    {
+      "test": "SplitItemGuard",
+      "total": 9999,
+      "split": 0,
+      "accepted": 0,
+      "remaining": 9999
+    },
+    {
+      "test": "SplitItemGuard",
+      "total": 9999,
+      "split": 65536,
+      "accepted": 0,
+      "remaining": 9999
+    },
+    {
+      "test": "SplitItemGuard",
+      "total": 9999,
+      "split": -1,
+      "accepted": 0,
+      "remaining": 9999
+    },
+    {
+      "test": "SplitItemGuard",
+      "total": 65535,
+      "split": 9999,
+      "accepted": 1,
+      "remaining": 55536
+    },
+    {
+      "test": "SplitItemGuard",
+      "total": 9999,
+      "split": 256,
+      "accepted": 1,
+      "remaining": 9743
+    },
+    {
+      "test": "BagCountSetterGuard",
+      "requested": 0,
+      "accepted": true,
+      "count": 0
+    },
+    {
+      "test": "LuaCountSetterGuard",
+      "requested": 0,
+      "accepted": true,
+      "count": 0
+    },
+    {
+      "test": "BagCountSetterGuard",
+      "requested": 1,
+      "accepted": true,
+      "count": 1
+    },
+    {
+      "test": "LuaCountSetterGuard",
+      "requested": 1,
+      "accepted": true,
+      "count": 1
+    },
+    {
+      "test": "BagCountSetterGuard",
+      "requested": 255,
+      "accepted": true,
+      "count": 255
+    },
+    {
+      "test": "LuaCountSetterGuard",
+      "requested": 255,
+      "accepted": true,
+      "count": 255
+    },
+    {
+      "test": "BagCountSetterGuard",
+      "requested": 256,
+      "accepted": true,
+      "count": 256
+    },
+    {
+      "test": "LuaCountSetterGuard",
+      "requested": 256,
+      "accepted": true,
+      "count": 256
+    },
+    {
+      "test": "BagCountSetterGuard",
+      "requested": 9999,
+      "accepted": true,
+      "count": 9999
+    },
+    {
+      "test": "LuaCountSetterGuard",
+      "requested": 9999,
+      "accepted": true,
+      "count": 9999
+    },
+    {
+      "test": "BagCountSetterGuard",
+      "requested": 10000,
+      "accepted": false,
+      "count": 7777
+    },
+    {
+      "test": "LuaCountSetterGuard",
+      "requested": 10000,
+      "accepted": false,
+      "count": 7777
+    },
+    {
+      "test": "BagCountSetterGuard",
+      "requested": 65535,
+      "accepted": false,
+      "count": 7777
+    },
+    {
+      "test": "LuaCountSetterGuard",
+      "requested": 65535,
+      "accepted": false,
+      "count": 7777
+    },
+    {
+      "test": "BagCountSetterGuard",
+      "requested": 65536,
+      "accepted": false,
+      "count": 7777
+    },
+    {
+      "test": "LuaCountSetterGuard",
+      "requested": 65536,
+      "accepted": false,
+      "count": 7777
+    },
+    {
+      "test": "BagCountSetterGuard",
+      "requested": -1,
+      "accepted": false,
+      "count": 7777
+    },
+    {
+      "test": "LuaCountSetterGuard",
+      "requested": -1,
+      "accepted": false,
+      "count": 7777
+    }
+  ],
+  "mocks": [
+    "allocator with fresh GUIDs and controlled allocation failure",
+    "containers and free grid counts",
+    "provider, memcpy, strength compatibility helper, notifications and IO"
+  ],
+  "limitations": [
+    "no DB/client transaction, actual save or relogin test",
+    "allocation failure covered in paging helper only; AddItem original allocation failure not modeled",
+    "direct setters execute guard and write blocks, not whole functions"
+  ]
+}

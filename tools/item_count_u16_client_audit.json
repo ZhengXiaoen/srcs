@@ -1,0 +1,914 @@
+{
+  "source_swf_sha256": "e36673328f5324a57e038a3887757d3b38e048182de81a856c90497c702bd70c",
+  "evidence_type": "Fresh FFDec decompile from current SWF; static only",
+  "findings": [
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\control\\controler\\StorageCC.as",
+      "line": 209,
+      "function": "doItemCountChange",
+      "source": "var _loc4_:int = int(param1.readUnsignedByte());",
+      "classification": "stack_count_u8",
+      "meaning": "仓库增量数量",
+      "required_action": "已在候选改u16；服务器ChangeCount发送两字节"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\control\\controler\\ShopCC.as",
+      "line": 366,
+      "function": "doAuctionItemInfoBack",
+      "source": "GlobalData.shopDataMgr.shopAuctionInfo.itemCount = param1.readByte();",
+      "classification": "item_quantity_i8",
+      "meaning": "拍卖物品数量",
+      "required_action": "已实现候选双方u16：当前native RVA0x6da9f BYTE→WORD + RVA0x6daab WORD writer；client method14702 readUnsignedShort"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\control\\controler\\ShopCC.as",
+      "line": 437,
+      "function": "doSellListBack",
+      "source": "_loc5_.count = param1.readByte();",
+      "classification": "item_quantity_i8",
+      "meaning": "冒险商店货物数量/剩余数量",
+      "required_action": "保留原协议，当前仅传固定配置奖励/未使用输入数量；详见retained_fixed_reward_protocols"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\control\\controler\\ShopCC.as",
+      "line": 167,
+      "function": "sendAdventureBuyItem",
+      "source": "_loc4_.writeByte(param3);",
+      "classification": "buy_quantity_u8",
+      "meaning": "冒险商店购买数量，调用点buyItemCallBack传入参数",
+      "required_action": "保留原协议，当前仅传固定配置奖励/未使用输入数量；详见retained_fixed_reward_protocols"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\control\\controler\\MiscCC.as",
+      "line": 6002,
+      "function": "doInitBox",
+      "source": "_loc4_.count = param1.readByte();",
+      "classification": "award_quantity_i8",
+      "meaning": "天关宝盒免费奖励及后续奖励数量",
+      "required_action": "保留原协议，当前仅传固定配置奖励/未使用输入数量；详见retained_fixed_reward_protocols"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\control\\controler\\MiscCC.as",
+      "line": 6010,
+      "function": "doInitBox",
+      "source": "_loc4_.count = param1.readByte();",
+      "classification": "award_quantity_i8",
+      "meaning": "天关宝盒免费奖励及后续奖励数量",
+      "required_action": "保留原协议，当前仅传固定配置奖励/未使用输入数量；详见retained_fixed_reward_protocols"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\control\\controler\\BagCC.as",
+      "line": 377,
+      "function": "doItemCountChange",
+      "source": "var _loc3_:int = int(param1.readUnsignedShort());",
+      "classification": "stack_count_u16",
+      "meaning": "背包增量数量",
+      "required_action": "容量足够；服务器不得内部截断"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\control\\controler\\BagCC.as",
+      "line": 208,
+      "function": "sendSplitItem",
+      "source": "_loc3_.writeShort(param2);",
+      "classification": "split_quantity_u16",
+      "meaning": "拆分数量",
+      "required_action": "容量足够；服务器内部byte变量须修复"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\control\\controler\\BagCC.as",
+      "line": 222,
+      "function": "sendUseItem",
+      "source": "_loc6_.writeInt(param4);",
+      "classification": "use_quantity_i32",
+      "meaning": "批量使用数量",
+      "required_action": "容量足够；服务器内部byte变量须修复"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\Logic\\LogicManager.as",
+      "line": 1990,
+      "function": "doSpecialEntityAppear",
+      "source": "var _loc5_:int = int(param1.readUnsignedShort());",
+      "classification": "ground_quantity_u16",
+      "meaning": "地面物品数量",
+      "required_action": "容量足够；服务端发包必须取组合16位数量"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\Logic\\LogicManager.as",
+      "line": 2588,
+      "function": "catchAddActorEffect",
+      "source": "var _loc5_:int = int(param1.readUnsignedShort());",
+      "classification": "ground_quantity_u16",
+      "meaning": "地面物品数量",
+      "required_action": "容量足够；服务端发包必须取组合16位数量"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\Logic\\LogicManager.as",
+      "line": 2709,
+      "function": "catchAddSceneEffect",
+      "source": "var _loc5_:int = int(param1.readUnsignedShort());",
+      "classification": "ground_quantity_u16",
+      "meaning": "地面物品数量",
+      "required_action": "容量足够；服务端发包必须取组合16位数量"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\Logic\\LogicManager.as",
+      "line": 2922,
+      "function": "doCreateDropPacket",
+      "source": "var _loc5_:int = int(param1.readUnsignedShort());",
+      "classification": "ground_quantity_u16",
+      "meaning": "地面物品数量",
+      "required_action": "容量足够；服务端发包必须取组合16位数量"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\common\\OnlineRewardsMgr.as",
+      "line": 81,
+      "function": "initNextRewardData",
+      "source": "_loc3_.count = param1.readUnsignedShort();",
+      "classification": "award_quantity_u16",
+      "meaning": "在线奖励道具数量",
+      "required_action": "容量足够"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\control\\controler\\MailCC.as",
+      "line": 111,
+      "function": "addNewEmail",
+      "source": "pItemData.count = flag & 0xFFFF;",
+      "classification": "award_quantity_u16",
+      "meaning": "邮件旧二进制flag的低16位道具数量",
+      "required_action": "容量足够；另有字符串数量扩展"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\control\\controler\\MailCC.as",
+      "line": 133,
+      "function": "addNewEmail",
+      "source": "pItemData.count = int(split_item[1].toString());",
+      "classification": "award_quantity_text_i32",
+      "meaning": "邮件扩展字符串道具数量",
+      "required_action": "容量足够"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\control\\controler\\ShopCC.as",
+      "line": 298,
+      "function": "doBagItemBack",
+      "source": "_loc5_[\"count\"] = param1.readInt();",
+      "classification": "item_quantity_i32",
+      "meaning": "商城背包区域初始数量",
+      "required_action": "容量足够"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\control\\controler\\ShopCC.as",
+      "line": 313,
+      "function": "doBagItemCountChange",
+      "source": "var _loc3_:int = param1.readInt();",
+      "classification": "non_specific_i32",
+      "meaning": "商城读数，各函数语义需具体区分",
+      "required_action": "包含doBagItemCountChange的数量；其后的readUnsignedByte是区域索引"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\control\\controler\\ShopCC.as",
+      "line": 327,
+      "function": "doCostRankChange",
+      "source": "var _loc3_:int = param1.readInt();",
+      "classification": "non_specific_i32",
+      "meaning": "商城读数，各函数语义需具体区分",
+      "required_action": "包含doBagItemCountChange的数量；其后的readUnsignedByte是区域索引"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\control\\controler\\ShopCC.as",
+      "line": 343,
+      "function": "doGetCostAwards",
+      "source": "var _loc3_:int = param1.readInt();",
+      "classification": "non_specific_i32",
+      "meaning": "商城读数，各函数语义需具体区分",
+      "required_action": "包含doBagItemCountChange的数量；其后的readUnsignedByte是区域索引"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\common\\Data\\market\\user\\MarketItem.as",
+      "line": 20,
+      "function": "MarketItem",
+      "source": "this.userItem = new UserItem(param1);",
+      "classification": "shared_useritem",
+      "meaning": "摆摊浏览完整物品结构",
+      "required_action": "候选UserItem高位读取覆盖；服务器必须保留高位且金额计算按16位"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\control\\controler\\GuildCC.as",
+      "line": 1388,
+      "function": "doStoreItemListBack",
+      "source": "_loc5_ = new UserItem(param1);",
+      "classification": "shared_useritem",
+      "meaning": "行会仓库完整物品结构",
+      "required_action": "候选UserItem高位读取覆盖；服务器持久化/复制须保留高位"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\view\\game\\deal\\DealDialog.as",
+      "line": 144,
+      "function": "HandleServerMsg",
+      "source": "this.m_Target.addItem(new UserItem(param2));",
+      "classification": "shared_useritem",
+      "meaning": "交易另一方完整物品结构",
+      "required_action": "候选UserItem高位读取覆盖；服务器交换/删物品须取16位"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\control\\controler\\GuildCC.as",
+      "line": 1666,
+      "function": "doSabukInfoBack",
+      "source": "_loc5_.wealCount = param1.readUnsignedByte();",
+      "classification": "not_stack_quantity",
+      "meaning": "沙巴克官职福利次数，后接roleId/job/sex",
+      "required_action": "次数限制独立；禁止盲目扩展全部count名称"
+    },
+    {
+      "path": "C:\\Users\\Bellator\\AppData\\Local\\Temp\\rea-count-client-20261012\\scripts\\control\\controler\\GuildCC.as",
+      "line": 1766,
+      "function": "doSbkOccupyBack",
+      "source": "GlobalData.guildDataMgr.sbkOccupy.number = param1.readByte();",
+      "classification": "not_stack_quantity",
+      "meaning": "占城/成员数等统计",
+      "required_action": "非物品堆叠字段，不随本次扩容修改"
+    }
+  ],
+  "remaining_unknowns": [
+    "通用129字节物品结构发送、复制、日志、DB保存所有服务器路径仍需组合16位语义审核",
+    "未穷尽所有节日/任务二级subcmd的无字段名局部变量readByte；包中的条目数/状态/索引不应盲目扩宽",
+    "现有129字节存档btReserve高位历史值是否全零仍需迁移检查",
+    "服务端发包协议改变后旧客户端不能直接共存，需要统一升级或版本区分"
+  ],
+  "retained_fixed_reward_protocols": [
+    {
+      "protocol": "Adventure shop listing (12,13)",
+      "client": "ShopCC.doSellListBack readByte count",
+      "status": "retained_u8_fixed_configuration",
+      "reason": "The field carries configured per-purchase reward count, not total count of a stored CUserItem. Current item table is empty; commented examples use count=1.",
+      "evidence": [
+        {
+          "path": "D:\\SRCS\\Server\\S1001\\data\\functions\\Activity\\Meet\\RandNpcShop_Main.lua",
+          "sha256": "e11841ad2bece88f27337a88266274977e372055fec853aeea54df15fa6e36d9",
+          "lines": [
+            25,
+            28
+          ],
+          "meaning": "Listing sends v.count from RandNpcShopItem"
+        },
+        {
+          "path": "D:\\SRCS\\Server\\S1001\\data\\functions\\Activity\\Meet\\RandNpcShopCommon.lua",
+          "sha256": "17e07675b0b402d1f937245cfbce13bed7666d13178fee8c18e7725c138de26e",
+          "lines": [
+            131,
+            138,
+            151
+          ],
+          "meaning": "Purchase ignores input count and awards itemCfg.count"
+        },
+        {
+          "path": "D:\\SRCS\\Server\\S1001\\data\\config\\item\\RandNpcShop.lua",
+          "sha256": "5a9ec3fab552f9a19230c0339070ecb2ca9fe5b56f804d42bf99a06dcad73d94",
+          "lines": [
+            4,
+            5,
+            28
+          ],
+          "meaning": "No active merchandise entries; examples count=1"
+        }
+      ],
+      "future_requirement": "If configured count exceeds 127, widen Lua listing writer and paired client reader together"
+    },
+    {
+      "protocol": "Adventure purchase request",
+      "client": "ShopCC.sendAdventureBuyItem writeByte param3",
+      "status": "retained_u8_unused_input",
+      "reason": "UI buys exactly one configured offer; Lua handler ignores request count. The native CGameStoreBuySystem.BuyNpcShopItem transfers this BYTE to script event 60.",
+      "native": {
+        "current_rva": "0x3a0090",
+        "byte_reader_call": "0x3a00ec",
+        "script_byte_argument_call": "0x3a0147"
+      },
+      "future_requirement": "Any change to per-offer purchase multiplicity must update native request reader, script argument conversion, client and award logic"
+    },
+    {
+      "protocol": "Random box initial rewards (139,250)",
+      "client": "MiscCC.doInitBox readByte count twice",
+      "status": "retained_u8_fixed_configuration",
+      "reason": "Both fields describe configured single reward quantities. One free award has count=1; eight random options have count=1..8. Changes to dup do not change reward quantities.",
+      "configured_counts": [
+        1,
+        8,
+        7,
+        6,
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "evidence": [
+        {
+          "path": "D:\\SRCS\\Server\\S1001\\data\\functions\\ItemFunc\\RandomBoxItem.lua",
+          "sha256": "3592098174973c083b0bf033bd5c0ab2cf4c7b303c127fe3daed8481e12c807e",
+          "lines": [
+            33,
+            40,
+            111,
+            121
+          ],
+          "meaning": "BYTE writers use configuration and award logic uses the same configured count"
+        },
+        {
+          "path": "D:\\SRCS\\Server\\S1001\\data\\config\\item\\RandomBoxCfg.lua",
+          "sha256": "b9ad748b0d12ed45fceb37224b3a9e2c52b76f1f775293e2d1e5a7dfbe392fc8",
+          "lines": [
+            17,
+            32,
+            39
+          ],
+          "meaning": "Actual reward quantities 1..8"
+        }
+      ],
+      "future_requirement": "If a reward count exceeds 127, widen both Lua writeByte calls and corresponding client reads to unsigned WORD"
+    }
+  ],
+  "auction_static_flow": {
+    "script_entry": "System.setAuction current RVA0x333710 writes WORD to ItemOPParam+6",
+    "initialize": "SetAuction RVA0x6d6d0 reads WORD at input+6 and copies full36-byte structure to mgr+0x8c",
+    "item_id": "mgr+0x8e",
+    "item_count": "mgr+0x92",
+    "candidate_sender": "SendAuctionItemData RVA0x6da30; quantity read and packet writer become WORD",
+    "save": "SaveAuctionData current RVA0x6de10 writes88-byte span mgr+0x58, containing full ItemOPParam",
+    "load": "LoadAuctionData current RVA0x6e010 reads same88-byte span",
+    "winner": "OnAuctionOver current RVA0x6d860 passes mgr+0x8c to CActor.AddItemMsg RVA0x23df90",
+    "message": "AddItemMsg copies36-byte ItemOPParam; CDataPacket operator<< at0x251e00 writes36 bytes",
+    "readback": "CDataPacketReader operator>> at0x251e60 reads36 bytes",
+    "guarantee_limit": "Static only; Actor delivery into container depends on root native item-count expansion"
+  },
+  "additional_scope_check": {
+    "result": "No additional active whole-stack BYTE request found within decompiled BagCC/StorageCC/MarketCC/GuildCC/deal UI",
+    "checked_requests": {
+      "MarketCC.sendBuyItem": "seller name + item series, buys whole stored stack",
+      "StorageCC": "BYTE fields are page/action/currency selectors; moves stored item by series",
+      "GuildCC.sendRequestShopByScore": "item ID INT + count INT"
+    },
+    "uncalled_legacy_methods": [
+      {
+        "method": "MiscCC.sendExpItem",
+        "line": 5700,
+        "field": "BYTE param2 after item series"
+      },
+      {
+        "method": "CliffordCC.sendSuperExpItem",
+        "line": 3729,
+        "field": "BYTE param2 after item series"
+      },
+      {
+        "method": "GuildCC.sendExchangeShop",
+        "line": 1074,
+        "field": "BYTE param2 after item series"
+      }
+    ],
+    "legacy_limit": "Zero references to these methods in all freshly decompiled scripts; field semantics remain unknown. Dynamic calls outside the inspected scripts are not excluded.",
+    "retained_statistics": "Other named readByte count matches are draw modes/award attempts/member and escort statistics/list lengths, not stored stack quantities"
+  },
+  "verification": {
+    "evidence_type": "Unicorn controlled offline replay with packet API stubs plus complete ABC parsing",
+    "target_executed": false,
+    "native_boundaries": [
+      {
+        "count": 0,
+        "writes": [
+          [
+            1,
+            12
+          ],
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            5363
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            3600
+          ]
+        ],
+        "wire_hex": "0c09f3140000020301100e0000"
+      },
+      {
+        "count": 1,
+        "writes": [
+          [
+            1,
+            12
+          ],
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            5363
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            3600
+          ]
+        ],
+        "wire_hex": "0c09f3140100020301100e0000"
+      },
+      {
+        "count": 127,
+        "writes": [
+          [
+            1,
+            12
+          ],
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            5363
+          ],
+          [
+            2,
+            127
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            3600
+          ]
+        ],
+        "wire_hex": "0c09f3147f00020301100e0000"
+      },
+      {
+        "count": 128,
+        "writes": [
+          [
+            1,
+            12
+          ],
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            5363
+          ],
+          [
+            2,
+            128
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            3600
+          ]
+        ],
+        "wire_hex": "0c09f3148000020301100e0000"
+      },
+      {
+        "count": 200,
+        "writes": [
+          [
+            1,
+            12
+          ],
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            5363
+          ],
+          [
+            2,
+            200
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            3600
+          ]
+        ],
+        "wire_hex": "0c09f314c800020301100e0000"
+      },
+      {
+        "count": 249,
+        "writes": [
+          [
+            1,
+            12
+          ],
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            5363
+          ],
+          [
+            2,
+            249
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            3600
+          ]
+        ],
+        "wire_hex": "0c09f314f900020301100e0000"
+      },
+      {
+        "count": 255,
+        "writes": [
+          [
+            1,
+            12
+          ],
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            5363
+          ],
+          [
+            2,
+            255
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            3600
+          ]
+        ],
+        "wire_hex": "0c09f314ff00020301100e0000"
+      },
+      {
+        "count": 256,
+        "writes": [
+          [
+            1,
+            12
+          ],
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            5363
+          ],
+          [
+            2,
+            256
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            3600
+          ]
+        ],
+        "wire_hex": "0c09f3140001020301100e0000"
+      },
+      {
+        "count": 9998,
+        "writes": [
+          [
+            1,
+            12
+          ],
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            5363
+          ],
+          [
+            2,
+            9998
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            3600
+          ]
+        ],
+        "wire_hex": "0c09f3140e27020301100e0000"
+      },
+      {
+        "count": 9999,
+        "writes": [
+          [
+            1,
+            12
+          ],
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            5363
+          ],
+          [
+            2,
+            9999
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            3600
+          ]
+        ],
+        "wire_hex": "0c09f3140f27020301100e0000"
+      },
+      {
+        "count": 10000,
+        "writes": [
+          [
+            1,
+            12
+          ],
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            5363
+          ],
+          [
+            2,
+            10000
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            3600
+          ]
+        ],
+        "wire_hex": "0c09f3141027020301100e0000"
+      },
+      {
+        "count": 32767,
+        "writes": [
+          [
+            1,
+            12
+          ],
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            5363
+          ],
+          [
+            2,
+            32767
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            3600
+          ]
+        ],
+        "wire_hex": "0c09f314ff7f020301100e0000"
+      },
+      {
+        "count": 32768,
+        "writes": [
+          [
+            1,
+            12
+          ],
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            5363
+          ],
+          [
+            2,
+            32768
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            3600
+          ]
+        ],
+        "wire_hex": "0c09f3140080020301100e0000"
+      },
+      {
+        "count": 65535,
+        "writes": [
+          [
+            1,
+            12
+          ],
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            5363
+          ],
+          [
+            2,
+            65535
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            3600
+          ]
+        ],
+        "wire_hex": "0c09f314ffff020301100e0000"
+      }
+    ],
+    "native_replay_cases": 14,
+    "avm2_high_byte_values": 65536,
+    "avm2_stack_balanced": true,
+    "client_candidate_sha256": "5d737a912295b693130a8053e397df37ae38133a3e88951a984e462eb5575bc6",
+    "native_candidate_sha256": "d6f3566606715d8d56ea45d224ad97c26b70c5c2e005fc95c624140e078b9289",
+    "limitation": "API calls are modeled; actual network, server startup, storage and gameplay have not been tested"
+  }
+}

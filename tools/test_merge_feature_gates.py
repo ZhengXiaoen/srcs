@@ -13,7 +13,7 @@ from patch_drop_pickup_retry import abc_section, instructions
 from patch_guild_quest_config import read_cbp, read_pack
 from test_activity_reminders import execute, config_value
 
-BASELINE='5b0d26a'
+BASELINE='ece39dd017c1441df357049a4fe4c0ff5402c9eb'
 FUNCTIONS=ROOT/'Server/S1001/data/functions'
 
 
@@ -90,7 +90,7 @@ class ClientTests(unittest.TestCase):
         self.run_method(6166,obj,globals_,stop=stop)
         return obj,globals_
 
-    def test_forge_ornament_entry_for_all_open_days_levels_and_circles(self):
+    def test_forge_has_no_ornament_tab_for_all_open_days_levels_and_circles(self):
         for day in (1,6,7,8,30):
             for circle in (0,3,5):
                 for level in (1,80):
@@ -98,21 +98,21 @@ class ClientTests(unittest.TestCase):
                         obj,globals_=self.catalog(day,circle,level)
                         classes=obj['m_pageClass'];captions=obj['m_pageCaptions']
                         entries=[entry['class'] for entry in classes]
-                        self.assertEqual(entries.count('EquipBoostOrnamentPage'),1)
-                        self.assertEqual(entries[-1],'EquipBoostOrnamentPage')
-                        self.assertEqual(captions[0],
-                                         "<textformat leading='7'>饰<BR>品</textformat>")
+                        self.assertNotIn('EquipBoostOrnamentPage',entries)
+                        self.assertFalse(any('饰' in text for text in captions))
                         expected=['EquipBoostStrengthenPage2','EquipBoostCombinPage']
                         if day>=7:expected.append('EquipSlotNestPage')
                         if day>=8:expected.append('NoteSoulPage')
                         if level>=80:expected.append('EquipBoostZhuLingPage')
                         if circle>=3:expected.append('EquipBoostWuXingPage')
                         if circle>=5:expected.append('EquipBoostFuHunPage')
-                        expected.append('EquipBoostOrnamentPage')
                         self.assertEqual(entries,expected)
+                        self.assertEqual(len(captions),len(entries))
                         obj['m_navBar']={'buttonCount':len(classes)}
                         self.run_method(6173,obj,globals_,(10000,))
-                        self.assertEqual(obj['selectedIndex'],entries.index('EquipBoostOrnamentPage'))
+                        expected_index=entries.index('EquipBoostZhuLingPage') if level>=80 else 0
+                        self.assertEqual(obj['selectedIndex'],expected_index)
+                        self.assertEqual(obj['m_navBar']['selectedIndex'],expected_index)
 
     def test_ordinary_navigation_indices_are_preserved(self):
         obj,globals_=self.catalog(1,0,1);obj['m_navBar']={'buttonCount':10}
@@ -130,7 +130,8 @@ class ClientTests(unittest.TestCase):
         for mid,(s,n,limits) in bodies.items():
             ns,nn,nl=self.bodies[mid]
             if limits!=nl or old[s:s+n]!=self.abc[ns:ns+nn]:changed.add(mid)
-        self.assertEqual(changed,METHODS | {24442})
+        self.assertEqual(changed,{6166,6173})
+        self.assertEqual(patch_main(source),CLIENT.read_bytes())
         self.assertEqual(patch_main(CLIENT.read_bytes()),CLIENT.read_bytes())
         self.assertEqual(patch_module(MODULE.read_bytes()),MODULE.read_bytes())
 

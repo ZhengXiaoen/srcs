@@ -1,8 +1,9 @@
-"""Open permanent accessory features and reuse the shipped ornament page.
+"""Open permanent accessory features through the shipped treasure window.
 
-The forge page already lives in BaoWu.swf. Merge its code library into the main
+The ornament page already lives in BaoWu.swf. Merge its code library into the main
 client without copying or changing any artwork or item/reward configuration.
-Existing methods, names and resources are checked before changing six gates.
+Keep ornaments in BaoWu, remove the duplicate forge tab, and preserve the
+forge's special soul-injection navigation link.
 """
 from __future__ import annotations
 
@@ -15,6 +16,7 @@ import zlib
 
 from patch_activity_entries import q
 from patch_activity_reminders import relocate
+from patch_auto_medicine_frequency import Block
 from patch_appearance_upgrade import extend_pools, inspect_abc
 from patch_bag_client import ABCReader, encode_u30
 from patch_drop_pickup_retry import abc_section, instructions as basic_instructions
@@ -120,7 +122,7 @@ def patch_main(source, java=None, ffdec=None):
     for index, name in {1507:'GlobalData', 1561:'GlobalFunc', 5298:'combineDay',
                         31840:'sectionOpenDays', 43315:'push', 7870:'m_mark',
                         7868:'m_pageCaptions', 7869:'m_pageClass', 43280:'indexOf',
-                        43682:'unshift'}.items():
+                        43682:'unshift', 19740:'EquipBoostZhuLingPage'}.items():
         if names[index] != name:
             raise ValueError(f'Unexpected symbol {index}: {names[index]}')
     for mid in sorted(METHODS):
@@ -128,28 +130,40 @@ def patch_main(source, java=None, ffdec=None):
         code = abc[start:start+size]
         edits = []
         if mid == 6166:
-            # CustomNavigateBar creates buttons from the last page to the first.
-            # Captions are kept in reverse class order so a button's caption
-            # matches the page selected by its (forward) navigation index.
+            # BaoWu already provides ornaments. Remove both the duplicate
+            # caption and page class, including their page-count increment.
             entry = (b'\xd0' + q(0x66, 7868) + q(0x2c, strings[TITLE]) + q(0x4f, 43682, 1)
                      + b'\xd0' + q(0x66, 7869) + q(0x60, ornament) + q(0x4f, 43315, 1)
                      + b'\xc2\x01')
             legacy = entry.replace(q(0x4f, 43682, 1), q(0x4f, 43315, 1), 1)
-            if entry not in code:
-                if code.count(legacy) == 1:
-                    pos = code.index(legacy)
-                    edits.append((pos, pos + len(legacy), entry))
-                elif size != 549 or code[405:408] != b'\x24\x00\xd7':
-                    raise ValueError('Unexpected forge page catalog')
-                else:
-                    # The branch that skips FuHun also passes this insertion.
-                    edits.append((408,408,entry))
+            matches = [value for value in (entry, legacy) if value in code]
+            if matches:
+                if len(matches) != 1 or code.count(matches[0]) != 1:
+                    raise ValueError('Unexpected duplicate ornament tab')
+                pos = code.index(matches[0])
+                edits.append((pos, pos + len(matches[0]), b''))
+            elif size != 549 or code[405:408] != b'\x24\x00\xd7':
+                raise ValueError('Unexpected forge page catalog')
         elif mid == 6173:
+            # @@showWin,5,10000 is the server's "我也要注灵" link.
+            # Resolve the visible page index; low-level roles fall back to
+            # the first page rather than retaining an invalid index of -1.
+            block = Block()
+            block.emit(b'\xd0' + q(0x66,7869) + q(0x60,19740)
+                       + q(0x46,43280,1) + b'\x73\xd5\xd1\x24\x00')
+            block.branch(0x18, 'ready')
+            block.emit(b'\x24\x00\xd5')
+            block.label('ready')
+            target, _ = block.finish()
             if any(o.opcode == 0x66 and o.operands == (5298,) for o in instructions(code)):
                 if size != 112 or code[10:19] != bytes.fromhex('60990c66b22924010f'):
                     raise ValueError('Unexpected legacy forge navigation')
-                target = b'\xd0' + q(0x66,7869) + q(0x60,ornament) + q(0x46,43280,1) + b'\x73\xd5'
                 edits.append((10,74,target))
+            elif code[10:10 + len(target)] != target:
+                old = b'\xd0' + q(0x66,7869) + q(0x60,ornament) + q(0x46,43280,1) + b'\x73\xd5'
+                if code[10:25] != old:
+                    raise ValueError('Unexpected forge special navigation')
+                edits.append((10,25,target))
         else:
             # Preserve every original short-circuit expression and branch offset.
             # Only its merge predicate becomes true (entry) or false (exclusion).
@@ -211,7 +225,7 @@ def main():
         if args.check:
             if source!=updated:raise ValueError(f'{path.name} still has merge gates')
         elif updated!=source:path.write_bytes(updated)
-    print('Permanent ornament entries open; unrelated methods and resources preserved.')
+    print('Ornaments remain in BaoWu; duplicate forge tab removed; resources preserved.')
 
 
 if __name__=='__main__':main()

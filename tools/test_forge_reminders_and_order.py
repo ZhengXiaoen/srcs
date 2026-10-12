@@ -12,7 +12,7 @@ from test_activity_reminders import execute
 import test_merge_feature_gates as feature_tests
 
 
-BASELINE = 'b5c4d0625ce4ca86a5a088dfe8ee1076fe356893'
+BASELINE = 'ece39dd017c1441df357049a4fe4c0ff5402c9eb'
 
 
 class ForgeTests(unittest.TestCase):
@@ -39,13 +39,13 @@ class ForgeTests(unittest.TestCase):
         self.assertLessEqual(maximum, limits[0])
         return result
 
-    def test_every_visible_button_opens_its_named_page_and_ornament_is_last(self):
+    def test_every_visible_button_opens_its_named_page_without_ornaments(self):
         fixture = feature_tests.ClientTests()
         titles = dict(zip(('EquipBoostStrengthenPage2', 'EquipBoostCombinPage',
                            'EquipSlotNestPage', 'NoteSoulPage',
                            'EquipBoostZhuLingPage', 'EquipBoostWuXingPage',
-                           'EquipBoostFuHunPage', 'EquipBoostOrnamentPage'),
-                          ('强化', '合成', '镶嵌', '注魂', '注灵', '五行', '附魂', '饰品')))
+                           'EquipBoostFuHunPage'),
+                          ('强化', '合成', '镶嵌', '注魂', '注灵', '五行', '附魂')))
         for day, circle, level in product((1, 6, 7, 8, 30), (0, 3, 5), (1, 80)):
             with self.subTest(day=day, circle=circle, level=level):
                 obj, globals_ = fixture.catalog(day, circle, level)
@@ -85,10 +85,55 @@ class ForgeTests(unittest.TestCase):
                                     if name == 'getChildAt' else None)
                     self.assertEqual([page['class'] for page in pages if page['visible']],
                                      [entries[index]])
-                self.assertEqual(nav['children'][-1]['caption'], TITLE)
+                self.assertLessEqual(len(nav['children']), 7)
+                self.assertNotIn(TITLE, [b['caption'] for b in nav['children']])
                 obj['m_navBar'] = nav
                 fixture.run_method(6173, obj, globals_, (10000,))
-                self.assertEqual(obj['selectedIndex'], len(entries) - 1)
+                expected_index = entries.index('EquipBoostZhuLingPage') if level >= 80 else 0
+                self.assertEqual(obj['selectedIndex'], expected_index)
+
+    def test_seven_forge_buttons_fit_inside_the_window(self):
+        buttons = [{} for _ in range(7)]
+        nav = {}
+
+        def invoke(target, name, values):
+            if name == 'getChildAt': return buttons[values[0]]
+            if name == 'setSize':
+                target['width'], target['height'] = values
+
+        self.run_method(18240, nav, globals_={
+            'buttonCount': len(buttons), 'm_nDirection': 1,
+            'NavigateBarDirection': {'NBD_HORIZONTAL': 0, 'NBD_VERTICAL': 1},
+            'm_nLeftSpace': 0, 'm_nTopSpace': 0, 'm_nRightSpace': 0,
+            'm_nBottomSpace': 0, 'm_nButtonSpace': -10,
+            '_owners': {'getChildAt': nav, 'setSize': nav},
+        }, invoke=invoke)
+        # createUI positions the bar at m_nTopSpace (40) + 7. The original
+        # seven 70px buttons have a 60px step and fit in the 510px window.
+        self.assertLessEqual(47 + max(b['y'] + b['height'] for b in buttons), 510)
+
+    def test_treasure_keeps_its_ornament_page_for_all_open_conditions(self):
+        method = self.classes['BaoWuWin']['instance']['checkTitle'][0]
+        for day, circle in product((1, 3, 4, 30), (0, 3, 5)):
+            with self.subTest(day=day, circle=circle):
+                pages = [{'class': name} for name in (
+                    'TreasureSysPage', 'DouLiPage', 'JunGuPage',
+                    'EquipBoostOrnamentPage', 'GuardDragonPage', 'MentalPage', 'FatePage')]
+                sheets = {'numChildren': 0, 'pages': []}
+                obj = {'pages': pages, '_sheets': sheets,
+                       '_tipsIconArr': [{}, {}, {}, {}]}
+
+                def invoke(target, name, values):
+                    if name == 'addPage':
+                        target['pages'].append(values[0])
+                        target['numChildren'] += 1
+
+                self.run_method(method, obj, globals_={
+                    'GlobalFunc': {'sectionOpenDays': day},
+                    'GlobalData': {'role': {'actorCircle': circle}},
+                }, invoke=invoke)
+                self.assertEqual([p['class'] for p in sheets['pages']].count(
+                    'EquipBoostOrnamentPage'), 1)
 
     def test_entry_clears_stale_marks_without_querying_synthesis(self):
         for can_combine, old_mark in product((False, True), repeat=2):
@@ -152,18 +197,15 @@ class ForgeTests(unittest.TestCase):
         new_data, (new_tag, _, na, nb) = abc_section(CLIENT.read_bytes())
         self.assertEqual(old_data[8:tag], new_data[8:new_tag])
         self.assertEqual(old_data[b:], new_data[nb:])
-        self.assertEqual(len(old_abc), len(self.abc))
         self.assertEqual(names, self.names)
         self.assertEqual(classes, self.classes)
-        allowed = set()
         changed = set()
         for mid, (s, n, limits) in bodies.items():
-            self.assertEqual((s, n, limits), self.bodies[mid])
-            if old_abc[s:s + n] != self.abc[s:s + n]:
+            ns, nn, nl = self.bodies[mid]
+            self.assertEqual(limits, nl)
+            if old_abc[s:s + n] != self.abc[ns:ns + nn]:
                 changed.add(mid)
-                allowed.update(range(s, s + n))
-        self.assertEqual(changed, {6166, 24442})
-        self.assertTrue(all(i in allowed for i, (a, b) in enumerate(zip(old_abc, self.abc)) if a != b))
+        self.assertEqual(changed, {6166, 6173})
         self.assertEqual(patch_reminders(patch_main(source)), CLIENT.read_bytes())
         self.assertEqual(patch_main(CLIENT.read_bytes()), CLIENT.read_bytes())
         self.assertEqual(patch_reminders(CLIENT.read_bytes()), CLIENT.read_bytes())
@@ -171,7 +213,8 @@ class ForgeTests(unittest.TestCase):
         # remain byte-identical, including all their helper methods.
         for name, (mid, _) in classes['EquipBoostCombinPage']['instance'].items():
             s, n, _ = bodies[mid]
-            self.assertEqual(old_abc[s:s + n], self.abc[s:s + n], name)
+            ns, nn, _ = self.bodies[mid]
+            self.assertEqual(old_abc[s:s + n], self.abc[ns:ns + nn], name)
 
 
 if __name__ == '__main__':

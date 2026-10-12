@@ -195,8 +195,67 @@ class RechargeRemindersTests(unittest.TestCase):
                                      {"GlobalFunc": {"sectionOpenDays": day},
                                       "GameData": {"everydayRechargeCfgProvider": {"config": self.config}},
                                       "GlobalData": {"everydayRechargeStatus": statuses}})
-            self.assertLessEqual(len(state["_list"]["items"]), 6)
-            self.assertTrue(all(t["index"] < 6 for t in state["_list"]["items"]))
+            self.assertEqual([t["index"] for t in state["_list"]["items"]], list(range(6)),
+                             (day, statuses))
+
+    def test_daily_claim_keeps_rows_on_refresh_reopen_and_reset(self):
+        for day in (0, 1, 6, 7, 8, 9, 30, 1000):
+            with self.subTest(day=day):
+                statuses = [1] * 7
+                globals_ = {"GlobalFunc": {"sectionOpenDays": day},
+                            "GameData": {"everydayRechargeCfgProvider": {"config": self.config}},
+                            "GlobalData": {"everydayRechargeStatus": statuses}}
+                state = {"_list": {"items": []}}
+                # Also cover a later tier being the first claimed reward.
+                for tier in (1, 0, 2, 3, 4, 5, 6):
+                    statuses[tier] = 2
+                    state, _ = self.run_body("EverydayRechargeWin2", "updateList", state, globals_)
+                    self.assertEqual([t["index"] for t in state["_list"]["items"]], list(range(6)))
+                    reopened, _ = self.run_body("EverydayRechargeWin2", "updateList",
+                                               {"_list": {"items": []}}, globals_)
+                    self.assertEqual(reopened["_list"]["items"], state["_list"]["items"])
+                statuses[:] = [0] * 7
+                state, _ = self.run_body("EverydayRechargeWin2", "updateList", state, globals_)
+                self.assertEqual([t["index"] for t in state["_list"]["items"]], list(range(6)))
+
+    def test_claimed_daily_rows_show_claimed_marker_and_reward_icons(self):
+        from test_activity_reminders import execute as execute_ui
+        from test_fixed_daily_recharge import cbp_values
+
+        names, traits, bodies = inspect_abc(self.abc, "EverydayListItemRender")
+        start, size, limits = bodies[traits["dataChangeHandler"][0]]
+        _, root = read_cbp((ROOT / "web/v2/lang/zh-cn/EveryDayPayGiftCfg.cbp").read_bytes())
+        for tier, config in enumerate(root.children[0].children[:6]):
+            row = {"index": tier, **cbp_values(config)}
+            row["award"] = list(row["award"].values())
+            for status in range(3):
+                with self.subTest(tier=tier, status=status):
+                    state = {"_data": row, "visible": True,
+                             **{key: {} for key in ("_image_1", "_loaderbasebutton_8",
+                                                     "_loaderbasebutton_9", "_mdpmovie_1",
+                                                     "_label_3", "_label_4")},
+                             "_customgrid_0": {"items": [], "dataCount": 0},
+                             "_customgrid_1": {"items": []}}
+
+                    def invoke(obj, name, values):
+                        if name == "makeUserItemFromAward": return values[0]
+                        if name == "clear": obj["items"].clear(); return
+                        if name == "setData":
+                            obj["items"].append(values[1]); obj["dataCount"] = len(obj["items"]); return
+                        if name in ("start", "stop"): obj["running"] = name == "start"; return
+                        raise ValueError(name)
+
+                    globals_ = {"GlobalData": {"everydayRechargeStatus": [status] * 7,
+                                               "itemDataMgr": {"curPayGold": row["needPayMoney"]}},
+                                "_owners": {"mouseEnabled": state, "mouseChildren": state}}
+                    _, maximum = execute_ui(self.abc[start:start + size], names, self.strings,
+                                            {0: state, 1: None}, globals_, invoke)
+                    self.assertLessEqual(maximum, limits[0])
+                    self.assertTrue(state["visible"])
+                    self.assertEqual(state["_image_1"]["visible"], status == 2)
+                    self.assertEqual(state["_loaderbasebutton_8"]["visible"], status == 1)
+                    self.assertEqual(state["_loaderbasebutton_9"]["visible"], status == 0)
+                    self.assertEqual(state["_customgrid_0"]["items"], row["award"][:7])
 
     def test_jingji_dot_matches_each_reward_day_all_claim_states(self):
         for days, bits in product(product(range(6), repeat=2), product(range(2), repeat=6)):

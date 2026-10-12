@@ -1,9 +1,9 @@
-"""Ignore the hidden daily 2-million tier and align Jingji dots with reward days.
+"""Keep claimed daily rows, ignore the hidden tier and align Jingji reward dots.
 
 Patch only three existing client method bodies. Daily rewards keep their six
-visible tiers; all server/config rewards and unrelated packaged resources stay
-byte-identical. The Jingji day check uses the reward index, as its claim button
-and the server already do.
+visible tiers, including claimed rows after day seven; all server/config rewards
+and unrelated packaged resources stay byte-identical. The Jingji day check uses
+the reward index, as its claim button and the server already do.
 """
 from __future__ import annotations
 
@@ -47,6 +47,31 @@ def replace_expression(code, old, new):
     return relocate(code, [(start, start + len(old), new)])
 
 
+def keep_claimed_daily_rows(code):
+    # The legacy day-eight filter skips the first claimed reward encountered.
+    # Retain the list-size guard and the config/index assignment around it.
+    skip = bytes.fromhex(
+        "60e30b66f3f301620966b6dc022402141c00006205c02a7363052401ab"
+        "2a1205000029d12408b01204000010350000")
+    after = bytes.fromhex("d3620966b6dc0212110000d3620966b6dc02620961b7dc021004000010150000")
+    ops = instructions(code)
+    matches = [op.start for op in ops if code[op.start:op.start + len(skip)] == skip]
+    guard = bytes.fromhex("09d066c74266aa1d62040f040000")
+    guards = [i for i, op in enumerate(ops)
+              if code[op.start:op.start + len(guard)] == guard]
+    if len(guards) != 1:
+        raise ValueError("Unexpected daily list-size guard")
+    jump = ops[guards[0] + 6]
+    if jump.opcode != 0x10 or jump.branches[0][1] != len(code) - 1:
+        raise ValueError("Unexpected daily list break target")
+    start = jump.end
+    if not matches and code[start:start + len(after)] == after:
+        return code, lambda p: p
+    if matches != [start] or code[start + len(skip):start + len(skip) + len(after)] != after:
+        raise ValueError("Unexpected claimed daily row filter")
+    return relocate(code, [(start, start + len(skip), b"")])
+
+
 def patch_abc(source):
     names, _, original_bodies = inspect_abc(source, TARGETS[0][0])
     for name, index in Q.items():
@@ -66,8 +91,7 @@ def patch_abc(source):
                 q(0x60, Q["GameData"]) + q(0x66, Q["everydayRechargeCfgProvider"]) + q(0x66, Q["total"]),
             )
         elif cls == "EverydayRechargeWin2":
-            # Keep the existing list size and ordering; never show index six
-            # after earlier rewards have been claimed and skipped.
+            # Keep six rows and their protocol indexes in every claim state.
             values = (b"\xd3" + q(0x66, Q["length"]),)
         else:
             values = ()
@@ -76,6 +100,10 @@ def patch_abc(source):
                                                  b"\xd3\x24\x01\xa0\x62\x04")
         for value in values:
             updated, next_moved = replace_expression(updated, value, bounded(value))
+            previous = moved
+            moved = lambda p, a=previous, b=next_moved: b(a(p))
+        if cls == "EverydayRechargeWin2":
+            updated, next_moved = keep_claimed_daily_rows(updated)
             previous = moved
             moved = lambda p, a=previous, b=next_moved: b(a(p))
         if updated == code:
@@ -135,7 +163,7 @@ def main():
             raise ValueError("Client recharge reminders need updating")
     elif updated != source:
         CLIENT.write_bytes(updated)
-    print("Verified six visible daily tiers, Jingji reward-day dots and unchanged unrelated client resources.")
+    print("Verified six persistent daily rows, Jingji reward-day dots and unchanged unrelated client resources.")
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-"""Backpack binding and native reinsertion checks; no live server is touched."""
+"""Backpack binding and direct stack consolidation; no live server is touched."""
 import argparse
 import hashlib
 import re
@@ -19,7 +19,7 @@ CODE = SOURCE[SOURCE.index('LocalDT.GetBagSortItemAttributes ='):SOURCE.index('-
 
 SETUP = '''
 LocalDT = {}; bag = {}; warehouse = {}; equipped = {}; removed = {}; additions = {}; changes = {}
-failRemoval = false; dealing = false
+failRemoval = false; failWrite = false; dealing = false
 Actor = {isDealing=function() return dealing end}
 Item = {ipItemCount=1, ipItemStrong=2, ipItemBind=4, ipItemStaticPropStart=44, ipItemDupCount=68}
 Item.getBagItemCount = function() return #bag end
@@ -34,29 +34,29 @@ Item.getItemProperty = function(_, item, prop)
  return item.attrs[prop] or 0, item.extra[prop] or 0
 end
 Item.setItemProperty = function(_, item, prop, value)
- assert(prop==4 and not item.destroyed); item.bind=value; changes[#changes+1]=item.guid; return true
+ assert(not item.destroyed)
+ if prop==4 then item.bind=value; changes[#changes+1]=item.guid
+ elseif prop==1 then
+  if failWrite then return false end
+  item.count=value
+ else error('unexpected property') end
+ return true
 end
 Item.getItemPropertyById = function(id) return id==999 and 1 or 9999 end
 Item.GetItemRuneAttr = function(_, item, index) return item.runes[index] or 0, item.runeValues[index] or 0 end
 Item.getFuHunInfo = function(item, kind) return item.fuhun[kind] or 0 end
 Item.removeItem = function(_, item, count, _, _, destroy)
- assert(destroy==false and item.count==count and not item.destroyed)
+ assert(destroy==true and item.count>=count and not item.destroyed)
  for _, stack in ipairs(bag) do assert(stack.bind%8~=0, 'merge started before all items were bound') end
  if failRemoval then return 0 end
- for i, candidate in ipairs(bag) do if candidate==item then table.remove(bag,i); break end end
- item.count=0; removed[#removed+1]=item.guid; return count
-end
-Item.addItem = function(_, item, _, _, count)
- assert(not item.destroyed); additions[#additions+1]=item.guid; item.count=count
- for _, target in ipairs(bag) do
-  if target.id==item.id and target.bind%8==item.bind%8 then
-   local take=math.min(9999-target.count, item.count)
-   target.count=target.count+take; item.count=item.count-take
-  end
+ item.count=item.count-count; removed[#removed+1]=item.guid
+ if item.count==0 then
+  for i, candidate in ipairs(bag) do if candidate==item then table.remove(bag,i); break end end
+  item.destroyed=true
  end
- if item.count==0 then item.destroyed=true else table.insert(bag,item) end
  return count
 end
+Item.addItem = function() error('sort must not reinsert an item') end
 '''
 
 
@@ -86,7 +86,7 @@ class BagSortTests(unittest.TestCase):
         lua.execute('''local sum=0; for _,item in ipairs(bag) do
          assert(item.bind==1 and item.count<=9999); if item.id==100 then sum=sum+item.count end end
          assert(sum==10510 and #bag==3); assert(warehouse[1].bind==0 and equipped[1].bind==0)
-         assert(#removed==3 and #changes==3)''')
+         assert(#removed==2 and #changes==3)''')
 
     def test_native_compatible_binding_flags_merge_for_all_stackable_ids(self):
         from patch_box_stacking import server_items, stack_limit
@@ -138,7 +138,7 @@ class BagSortTests(unittest.TestCase):
         self.assertEqual(len(lua.globals().bag),2)
         self.assertEqual(len(lua.globals().removed),0)
 
-    def test_each_readable_attribute_difference_blocks_id(self):
+    def test_each_attribute_difference_preserved_while_equal_pair_merges(self):
         for field, indices in [('attrs',range(2,44)), ('extra',range(2,44)),
                                ('runes',range(5)), ('runeValues',range(5)), ('fuhun',[1,2])]:
             for index in indices:
@@ -149,10 +149,11 @@ class BagSortTests(unittest.TestCase):
                     self.add(lua,1,255)
                     item = self.add(lua,2,256)
                     item[field][index]=7
+                    if field=='runeValues': item.runes[index]=1
                     self.add(lua,3,1)
                     lua.globals().BindAndSortBag(42)
-                    self.assertEqual(len(lua.globals().bag),3)
-                    self.assertEqual(len(lua.globals().removed),0)
+                    self.assertEqual(len(lua.globals().bag),2)
+                    self.assertEqual(len(lua.globals().removed),1)
                     self.assertEqual(item[field][index],7)
 
     def test_equal_equipment_attributes_and_fuhun_can_merge(self):
@@ -175,11 +176,41 @@ class BagSortTests(unittest.TestCase):
         self.assertEqual(len(lua.globals().removed),0)
         self.assertEqual(len(lua.globals().bag),5)
 
-    def test_failed_removal_does_not_insert(self):
+    def test_failed_removal_rolls_back_target_count(self):
         lua=self.runtime();self.add(lua,1,255);self.add(lua,2,256)
         lua.execute('failRemoval=true');lua.globals().BindAndSortBag(42)
         self.assertEqual(len(lua.globals().additions),0)
         self.assertEqual([lua.globals().bag[i].count for i in (1,2)],[255,256])
+
+    def test_inactive_rune_nan_does_not_block_merge(self):
+        lua=self.runtime()
+        for guid,bind in [(1,0),(2,1)]:
+            item=self.add(lua,guid,bind=bind)
+            for index in range(5): item.runeValues[index]=float('nan')
+        lua.globals().BindAndSortBag(42)
+        self.assertEqual(len(lua.globals().bag),1)
+        self.assertEqual(lua.globals().bag[1].count,2)
+
+    def test_matching_expiry_and_tao_strength_merge_without_reinsertion(self):
+        lua=self.runtime()
+        for guid,bind in [(1,0),(2,1)]:
+            item=self.add(lua,guid,count=256,bind=bind)
+            item.attrs[23]=123456;item.attrs[41]=7
+        lua.globals().BindAndSortBag(42)
+        self.assertEqual(len(lua.globals().bag),1)
+        self.assertEqual(lua.globals().bag[1].count,512)
+
+    def test_target_write_failure_never_removes_source(self):
+        lua=self.runtime();self.add(lua,1,255);self.add(lua,2,256)
+        lua.execute('failWrite=true');lua.globals().BindAndSortBag(42)
+        self.assertEqual(len(lua.globals().removed),0)
+        self.assertEqual([lua.globals().bag[i].count for i in (1,2)],[255,256])
+
+    def test_respects_actual_stack_limit_and_retains_remainder(self):
+        lua=self.runtime();lua.execute('Item.getItemPropertyById=function() return 10 end')
+        for guid,count in [(1,8),(2,7),(3,6)]: self.add(lua,guid,count)
+        lua.globals().BindAndSortBag(42)
+        self.assertEqual([lua.globals().bag[i].count for i in (1,2,3)],[10,10,1])
 
     def test_sources_compile_and_entry_is_whitelisted(self):
         lua=self.runtime()
@@ -189,25 +220,44 @@ class BagSortTests(unittest.TestCase):
         whitelist=(ROOT/'Server/S1001/data/functions/GlobalNpcFunctions.lua').read_text('gbk')
         self.assertRegex(whitelist,r'\bBindAndSortBag\s*=\s*1')
 
-    def test_lua_sort_with_real_native_item_properties_and_insertion(self):
+    def native_runtime(self, source_count=1, target_count=1, expiry=0, tao=0, inactive_nan=False):
         from test_item_count_u16_native import Machine, BASE, HEAP, unpack
         class NativeMachine(Machine):
             def hook(self,u,addr,size,data):
                 if addr-BASE==0xd9a0: self.ret(0);return
                 if addr-BASE==0x2e670: self.ret(self.container);return
+                if addr-BASE in (0x2e5f0,0x297eb0): self.ret(0);return
+                if addr-BASE==0x28fff0:
+                    from unicorn.x86_const import UC_X86_REG_R8, UC_X86_REG_R9
+                    self.u.mem_write(self.u.reg_read(UC_X86_REG_R8),(1).to_bytes(4,'little'))
+                    self.u.mem_write(self.u.reg_read(UC_X86_REG_R9),bytes(4))
+                    self.ret(1);return
+                if addr-BASE in (0x288300,0x28f570,0x3c5894,0x2b0810,0x3c8c18,0x3fdc0): self.ret(0);return
                 super().hook(u,addr,size,data)
-        machine=NativeMachine(ROOT/'Server/S1001/x64/LogicServerCQ64_R.exe')
-        machine.extra_allowed=[(0x329220,0x329377),(0x328660,0x328b3e),
+        binary=ROOT/'Server/S1001/x64/LogicServerCQ64_R.exe'
+        from patch_item_add_optional_count import TARGET_HASH
+        self.assertEqual(hashlib.sha256(binary.read_bytes()).hexdigest(),TARGET_HASH,
+                         'Engine changed: audit REA addresses before running')
+        machine=NativeMachine(binary)
+        machine.extra_allowed=[(0x3281b0,0x32822f),(0x287500,0x288248),(0x329220,0x329377),(0x328660,0x328b3e),
             (0x3298b0,0x329d40),(0x286bc0,0x286c20),(0x2eed0,0x2ef00),
             (0x18ed80,0x18ee00),(0x196aa0,0x196b80),(0x3285b0,0x328651),
             (0x1b3710,0x1b3746),(0x32b420,0x32b475),(0x32b4d0,0x32b503)]
+        from test_item_count_u16_native import STOP, p64
+        machine.u.mem_write(BASE+0x3f7550,p64(STOP+0x100))
         actor=HEAP+0x8000;out=HEAP+0x9000
         machine.u.mem_write(machine.std+0x30,bytes([106]))
-        for guid,flags in [(1,0),(2,9)]:
+        for guid,flags,count in [(1,0,source_count),(2,9,target_count)]:
             ptr=machine.add(1,guid,flags)
             data=bytearray(129);data[:8]=guid.to_bytes(8,'little')
             data[8:10]=(7160).to_bytes(2,'little');data[0x2e]=flags
-            machine.u.mem_write(ptr,bytes(data));machine.setcount(ptr,1)
+            data[0x19:0x1d]=expiry.to_bytes(4,'little');data[0x62]=tao
+            if inactive_nan:
+                for index in range(5): data[0x68+index*5:0x6c+index*5]=bytes.fromhex('0000c07f')
+            machine.u.mem_write(ptr,bytes(data));machine.setcount(ptr,count)
+        machine.u.mem_write(machine.container+0x31,bytes([1]))
+        machine.u.mem_write(machine.container+0x38,p64(actor))
+        machine.u.mem_write(machine.container+0x48,p64(actor))
         lua=self.runtime();item=lua.globals().Item
         item.getBagItemCount=lambda _:len(machine.items)
         item.getItemPtrByIndex=lambda _,i:list(machine.items.values())[i]
@@ -218,7 +268,7 @@ class BagSortTests(unittest.TestCase):
             return (value if value<0x80000000 else value-0x100000000),unpack(machine.read(out,4))
         item.getItemProperty=property_value
         item.getItemPropertyById=lambda id,prop:machine.run(0x3298b0,id,prop)
-        item.setItemProperty=lambda _,ptr,prop,val:machine.u.mem_write(ptr+0x2e,bytes([val]))
+        item.setItemProperty=lambda _,ptr,prop,val: bool(machine.run(0x3281b0,actor,ptr,prop,val)&255)
         def rune_value(_,ptr,index,*unused):
             import struct
             kind=machine.run(0x3285b0,actor,ptr,index,out)
@@ -227,11 +277,39 @@ class BagSortTests(unittest.TestCase):
         item.getFuHunInfo=lambda ptr,kind:machine.run(0x32b420,ptr,kind)
         item.removeItem=lambda _,ptr,count,log,id,destroy:machine.run(0x3292e0,actor,ptr,count,0,id,int(destroy))
         item.addItem=lambda _,ptr,log,id,count:machine.run(0x329220,actor,ptr,0,id,count,0)
-        lua.globals().BindAndSortBag(actor)
-        self.assertEqual(len(machine.items),1)
-        ptr=next(iter(machine.items.values()))
-        self.assertEqual(machine.count(ptr),2)
-        self.assertEqual(machine.read(ptr+0x2e,1),bytes([9]))
+        return lua,machine,actor
+
+    def test_lua_sort_with_real_native_properties_setter_and_removal(self):
+        for counts in [(1,1),(255,256),(256,9999),(9999,1)]:
+            for expiry,tao,nan in [(0,0,False),(123456,0,False),(0,7,False),(123456,7,True)]:
+                with self.subTest(counts=counts,expiry=expiry,tao=tao,nan=nan):
+                    lua,machine,actor=self.native_runtime(*counts,expiry,tao,nan)
+                    before={guid:machine.read(p,129) for guid,p in machine.items.items()}
+                    lua.globals().BindAndSortBag(actor)
+                    total=sum(counts)
+                    self.assertEqual(len(machine.items),(total+9998)//9999)
+                    self.assertEqual(sum(machine.count(p) for p in machine.items.values()),total)
+                    for p in machine.items.values():
+                        self.assertLessEqual(machine.count(p),9999)
+                        self.assertEqual(int.from_bytes(machine.read(p+0x19,4),'little'),expiry)
+                        self.assertEqual(machine.read(p+0x62,1),bytes([tao]))
+                        from test_item_count_u16_native import unchanged,unpack
+                        unchanged(before[unpack(machine.read(p,8))],machine.read(p,129),skip=(0x2d,0x2e,0x80))
+                    lua.globals().BindAndSortBag(actor)
+                    self.assertEqual(sum(machine.count(p) for p in machine.items.values()),total)
+
+    def test_previous_sort_reproduces_two_slots_with_real_native_engine(self):
+        import subprocess
+        source=subprocess.check_output(['git','show','35cfeb1:Server/S1001/data/functions/player.lua'],cwd=ROOT).decode('utf-8-sig')
+        legacy=source[source.index('LocalDT.GetBagSortItemAttributes ='):source.index('-- 清除旧神戒')]
+        for expiry,tao,nan in [(123456,0,False),(0,7,False),(0,0,True)]:
+            with self.subTest(expiry=expiry,tao=tao,nan=nan):
+                lua,machine,actor=self.native_runtime(expiry=expiry,tao=tao,inactive_nan=nan)
+                lua.execute(legacy)
+                lua.globals().BindAndSortBag(actor)
+                self.assertEqual(len(machine.items),2)
+                self.assertEqual(sum(machine.count(p) for p in machine.items.values()),2)
+                self.assertTrue(all(machine.read(p+0x2e,1)[0]%8==1 for p in machine.items.values()))
 
     def test_real_native_remove_and_reinsert(self):
         from test_item_count_u16_native import Machine, unchanged, BASE, HEAP

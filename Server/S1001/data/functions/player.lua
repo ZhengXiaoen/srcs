@@ -111,7 +111,8 @@ LocalDT.GetBagSortItemAttributes = function(sysarg, itemPtr)
 	for index = 0, 4 do
 		local kind, value = Item.GetItemRuneAttr(sysarg, itemPtr, index, 0)
 		values[#values + 1] = kind or 0
-		values[#values + 1] = value or 0
+		-- 空符文槽的浮点载荷无效，历史数据可能为 NaN（与自身也不相等）。
+		values[#values + 1] = kind ~= nil and kind ~= 0 and (value or 0) or 0
 	end
 	values[#values + 1] = Item.getFuHunInfo(itemPtr, 1)
 	values[#values + 1] = Item.getFuHunInfo(itemPtr, 2)
@@ -135,21 +136,17 @@ LocalDT.FindBagSortItemByGuid = function(sysarg, guid)
 	end
 end
 
--- 整理确认后先绑定整个背包，再按引擎原有规则合并同类可堆叠物品。
--- 按 GUID 快照重新取指针，避免合并后背包重排或物品释放导致漏处理。
+-- 整理确认后先绑定整个背包，再直接在属性相同的堆叠之间转移数量。
+-- 不移出再加入：原生 addItem 的临时参数未复制到期时间、道士强化等字段。
 function BindAndSortBag(sysarg)
 	if sysarg == nil then return end
 	if Actor.isDealing(sysarg) then return "null" end
 	local itemGuids = {}
-	local itemCounts = {}
-	local itemAttributes = {}
-	local incompatibleIds = {}
+	local targets = {}
 	for index = 0, Item.getBagItemCount(sysarg) - 1 do
 		local itemPtr = Item.getItemPtrByIndex(sysarg, index)
 		if itemPtr then
-			local itemId = Item.getItemId(itemPtr)
 			itemGuids[#itemGuids + 1] = Item.getItemGuidStr(itemPtr)
-			itemCounts[itemId] = (itemCounts[itemId] or 0) + 1
 			local bindFlags = Item.getItemProperty(sysarg, itemPtr, Item.ipItemBind, 0)
 			if bindFlags % 8 == 0 then
 				Item.setItemProperty(sysarg, itemPtr, Item.ipItemBind, bindFlags + 1)
@@ -160,26 +157,35 @@ function BindAndSortBag(sysarg)
 		local itemPtr = LocalDT.FindBagSortItemByGuid(sysarg, itemGuids[i])
 		if itemPtr then
 			local itemId = Item.getItemId(itemPtr)
-			if itemCounts[itemId] > 1 and Item.getItemPropertyById(itemId, Item.ipItemDupCount) > 1 then
-				local attributes = LocalDT.GetBagSortItemAttributes(sysarg, itemPtr)
-				if itemAttributes[itemId] == nil then
-					itemAttributes[itemId] = attributes
-				elseif not LocalDT.AreBagSortItemAttributesEqual(itemAttributes[itemId], attributes) then
-					incompatibleIds[itemId] = true
-				end
-			end
-		end
-	end
-	for i = 1, #itemGuids do
-		local itemPtr = LocalDT.FindBagSortItemByGuid(sysarg, itemGuids[i])
-		if itemPtr then
-			local itemId = Item.getItemId(itemPtr)
+			local limit = math.min(9999, Item.getItemPropertyById(itemId, Item.ipItemDupCount))
 			local count = Item.getItemProperty(sysarg, itemPtr, Item.ipItemCount, 0)
-			if itemAttributes[itemId] ~= nil and not incompatibleIds[itemId] and count > 0 and count <= 9999 then
-				-- false 保留移出的原物品指针，重新加入时恢复数量和全部原属性。
-				-- 先腾出一格且数量不超过单格上限，原生插入保留未合并的余量。
-				if Item.removeItem(sysarg, itemPtr, count, "背包整理", 39, false) == count then
-					Item.addItem(sysarg, itemPtr, "背包整理", 39, count)
+			if limit > 1 and count > 0 and count <= limit then
+				local attributes = LocalDT.GetBagSortItemAttributes(sysarg, itemPtr)
+				local sameIdTargets = targets[itemId] or {}
+				targets[itemId] = sameIdTargets
+				for j = 1, #sameIdTargets do
+					local target = sameIdTargets[j]
+					if LocalDT.AreBagSortItemAttributesEqual(target.attributes, attributes) then
+						local targetPtr = LocalDT.FindBagSortItemByGuid(sysarg, target.guid)
+						if targetPtr then
+							local targetCount = Item.getItemProperty(sysarg, targetPtr, Item.ipItemCount, 0)
+							local transfer = math.min(count, limit - targetCount)
+							if transfer > 0 then
+								-- 先确认目标数量能写入，再扣源栈；扣除失败时恢复实际数量。
+								if Item.setItemProperty(sysarg, targetPtr, Item.ipItemCount, targetCount + transfer) then
+									local removed = Item.removeItem(sysarg, itemPtr, transfer, "背包整理", 39, true)
+									if removed ~= transfer then
+										Item.setItemProperty(sysarg, targetPtr, Item.ipItemCount, targetCount + removed)
+									end
+									count = count - removed
+								end
+							end
+						end
+					end
+					if count == 0 then break end
+				end
+				if count > 0 then
+					sameIdTargets[#sameIdTargets + 1] = {guid = itemGuids[i], attributes = attributes}
 				end
 			end
 		end

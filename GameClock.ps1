@@ -650,6 +650,16 @@ function Install-LogicServerPatch {
         $sourceHash = ([BitConverter]::ToString($sha.ComputeHash($source))).Replace('-', '').ToLowerInvariant()
         if ($sourceHash -eq $package.targetSha256 -or
             ($AcceptedTargetHashes -contains $sourceHash)) { return }
+        if ($sourceHash -ne $package.sourceSha256 -and $package.PSObject.Properties['upgrades']) {
+            $upgrades = @($package.upgrades | Where-Object {
+                $_.sourceSha256 -eq $sourceHash -and $_.sourceLength -eq $source.Length
+            })
+            if ($upgrades.Count -eq 1 -and
+                $upgrades[0].targetSha256 -eq $package.targetSha256 -and
+                $upgrades[0].targetLength -eq $package.targetLength) {
+                $package = $upgrades[0]
+            }
+        }
         if ($sourceHash -ne $package.sourceSha256 -or $source.Length -ne $package.sourceLength) {
             throw "逻辑服版本与 $PatchName 补丁不匹配，未修改程序。"
         }
@@ -717,6 +727,9 @@ function Install-MountStackPatch {
         if ([IO.File]::Exists($equipmentPackagePath)) {
             $equipmentPackage = [IO.File]::ReadAllText($equipmentPackagePath, [Text.Encoding]::UTF8) | ConvertFrom-Json
             $equipmentTargets += $equipmentPackage.targetSha256
+            if ($equipmentPackage.PSObject.Properties['upgrades']) {
+                $equipmentTargets += @($equipmentPackage.upgrades | ForEach-Object { $_.sourceSha256 })
+            }
         }
         Install-LogicServerPatch $Paths 'gear-stack.patch.json' '坐骑装备堆叠穿戴' $equipmentTargets
         Install-LogicServerPatch $Paths 'equipment-stack.patch.json' '全部装备堆叠'

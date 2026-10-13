@@ -18,7 +18,7 @@ if options.deps: sys.path.insert(0,str(options.deps))
 from test_item_count_u16_native import (
     Machine, BASE, HEAP, STOP, unpack, p64, unchanged,
     UC_X86_REG_RCX,UC_X86_REG_RDX,UC_X86_REG_R8,UC_X86_REG_R9,UC_X86_REG_RSP)
-from patch_all_equipment_native import ROOT, SERVER, SOURCE_HASH, HOOKS, patch, restore
+from patch_all_equipment_native import ROOT, SERVER, SOURCE_HASH, LEGACY_HASHES, HOOKS, patch, restore, equipment_package
 
 BINARY = options.binary or SERVER
 PACKAGE = options.package or ROOT/'Server/S1001/x64/equipment-stack.patch.json'
@@ -126,7 +126,91 @@ class WearMachine(EquipmentMachine):
         return self.run(0x283a30,self.equipment,self.actor,self.guid,int(self.hero),0)&255
 
 
+class TreasureMachine(EquipmentMachine):
+    """Execute AddItemToStore, with actor/config/notification IO mocked."""
+    def __init__(self,kind=106):
+        super().__init__(kind)
+        self.store=HEAP+0x9000
+        self.u.mem_write(self.store+8,p64(HEAP+0x8500))
+        self.u.mem_write(self.store+0x18,self.read(self.container,0x90))
+        self.container=self.store+0x18
+        self.extra_allowed += [(0x18d2f0,0x18d423)]
+        self.added=[]
+
+    def hook(self,u,address,size,data):
+        if address-BASE in (0x21000,0x1ee30,0x16d9f0):
+            self.ret();return
+        if address-BASE==0x2a63f0:
+            self.added.append((u.reg_read(UC_X86_REG_RCX),
+                               self.read(u.reg_read(UC_X86_REG_RDX),36)))
+        super().hook(u,address,size,data)
+
+    def reward(self,count,bind=1):
+        self.run(0x18d2f0,self.store,1000,count,0,0,bind,1,HEAP+0x9500,0)
+
+
 class NativeEquipmentTests(unittest.TestCase):
+    def reward(self,m,count,bind=1,item_id=1000):
+        op=HEAP+0x7000;payload=bytearray(36)
+        payload[2:4]=struct.pack('<H',item_id);payload[4]=bind
+        payload[6:8]=struct.pack('<H',count);m.u.mem_write(op,bytes(payload))
+        return m.run(0x2a63f0,m.container,op,0,0,0)
+
+    def test_non_equipment_templates_merge_and_keep_original_strength_check(self):
+        for kind in (0,93,101,102,103,106,107,114,116,119,131,200,206,255):
+            with self.subTest(kind=kind):
+                m=EquipmentMachine(kind);a=m.plain(80,1)
+                op=HEAP+0x7000;payload=bytearray(36)
+                payload[2:4]=struct.pack('<H',1000);payload[4]=1
+                m.u.mem_write(op,bytes(payload));before=m.read(a,129)
+                self.assertEqual(9919,m.run(0x2a8c40,m.container,op,a))
+                self.assertEqual(before,m.read(a,129))
+                m.u.mem_write(a+0xc,b'\x01')
+                self.assertEqual(0,m.run(0x2a8c40,m.container,op,a))
+
+    def test_xianli_repeated_eighty_rewards_merge_and_split_at_9999(self):
+        for item_id in (7151,7152,7153):
+            m=EquipmentMachine(102)
+            for n in range(1,126):
+                self.assertEqual(80,self.reward(m,80,item_id=item_id))
+                counts=[m.count(p) for p in m.items.values()]
+                self.assertEqual(80*n,sum(counts))
+                self.assertEqual((80*n+9998)//9999,len(counts))
+                self.assertTrue(all(c<=9999 for c in counts))
+                for p in m.items.values():
+                    self.assertEqual(item_id,unpack(m.read(p+8,2)))
+            self.assertEqual([9999,1],counts)
+
+    def test_material_rewards_merge_in_full_bag_and_separate_binding(self):
+        for kind in (102,106):
+            m=EquipmentMachine(kind);a=m.plain(80,1);m.freegrids=0
+            self.assertEqual(80,self.reward(m,80));self.assertEqual(160,m.count(a))
+            self.assertEqual(0,self.reward(m,80,bind=0));self.assertEqual(160,m.count(a))
+            m.setcount(a,9990)
+            self.assertEqual(9,self.reward(m,80));self.assertEqual(9999,m.count(a))
+            self.assertEqual(0,self.reward(m,80));self.assertEqual(9999,m.count(a))
+            m.freegrids=1
+            self.assertEqual(80,self.reward(m,80,bind=0))
+            self.assertEqual(80,self.reward(m,80,bind=0))
+            self.assertEqual([9999,160],[m.count(p) for p in m.items.values()])
+
+    def test_treasure_entry_merges_repeated_rewards_and_preserves_count_limits(self):
+        for kind in (102,106):
+            m=TreasureMachine(kind)
+            for n in range(1,5):
+                m.reward(80)
+                self.assertEqual([80*n],[m.count(p) for p in m.items.values()])
+                container,param=m.added[-1]
+                self.assertEqual(m.container,container)
+                self.assertEqual(80,unpack(param[6:8]))
+            m.setcount(next(iter(m.items.values())),9990)
+            m.reward(80)
+            self.assertEqual([9999,71],[m.count(p) for p in m.items.values()])
+            m.freegrids=0;m.reward(80)
+            self.assertEqual([9999,151],[m.count(p) for p in m.items.values()])
+            m.reward(80,bind=0)
+            self.assertEqual([9999,151],[m.count(p) for p in m.items.values()])
+
     def test_explicit_overlap_uses_every_real_dynamic_property_and_keeps_payloads(self):
         # Each field affects one actual getter, rather than a simulated attribute map.
         offsets=[0xa,0xb,0xc,*range(0x11,0x19),*range(0x1d,0x2d),0x2f,
@@ -289,6 +373,23 @@ class NativeEquipmentTests(unittest.TestCase):
             self.assertEqual(before,source[e['offset']:e['offset']+len(before)])
             replay[e['offset']:e['offset']+len(after)]=after
         self.assertEqual(result,replay)
+        for upgrade in p.get('upgrades',[]):
+            legacy=bytearray(result[:upgrade['sourceLength']])
+            for edit in upgrade['edits']:
+                before=base64.b64decode(edit['before'])
+                legacy[edit['offset']:edit['offset']+len(before)]=before
+            self.assertIn(hashlib.sha256(legacy).hexdigest(),LEGACY_HASHES)
+            self.assertEqual(source,restore(bytes(legacy)))
+            self.assertEqual(result,patch(bytes(legacy)))
+            upgraded=bytearray(legacy+b'\0'*(upgrade['targetLength']-len(legacy)))
+            for edit in upgrade['edits']:
+                before,after=(base64.b64decode(edit[k]) for k in ('before','after'))
+                self.assertEqual(before,legacy[edit['offset']:edit['offset']+len(before)])
+                upgraded[edit['offset']:edit['offset']+len(after)]=after
+            self.assertEqual(result,upgraded)
+        self.assertEqual(p,equipment_package(result,result,p))
+        corrupt=bytearray(result);corrupt[-1]^=1
+        with self.assertRaises(ValueError):patch(bytes(corrupt))
         from pefile import PE
         old,new=PE(data=source),PE(data=result)
         for section in old.sections[:-1]:

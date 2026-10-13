@@ -19,6 +19,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 SERVER = ROOT / 'Server/S1001/x64/LogicServerCQ64_R.exe'
 SOURCE_HASH = '75056b342d771238fd95a66f01c2181c3e56a2b89e17c2cc99dd6ccd73a53935'
+LEGACY_HASHES = {'8b9c988a2691ceee1b7d9eda714050d30aec7bcb6aded8b849460e45cfa6db76'}
 MARKER = b'ALLEQUIPSTACK1\0\0\0'
 BASE = 0x140000000
 HOOKS = {0x2a8bd4: bytes.fromhex('e8f7010000'),
@@ -152,10 +153,15 @@ def overlap(rva, shared, template=False):
         jnz done
     '''
     if template:
+        # The type loaded into EAX is not a comparison result. Non-equipment
+        # templates must return the equality already established above.
         code += '''
             mov r8,[rsp+0x48]
             movzx eax,byte ptr [r8+0x30]
-        ''' + equipment_test('eax', 'prepare', 'done') + '''
+        ''' + equipment_test('eax', 'prepare', 'equal') + '''
+            equal:
+            xor eax,eax
+            jmp done
             prepare:
             lea r10,[rsp+0x80]
             xor eax,eax
@@ -605,9 +611,10 @@ def patch(source):
     import pefile
     if hashlib.sha256(source).hexdigest() != SOURCE_HASH:
         original = restore(source)
-        if patch(original) != source:
+        result = patch(original)
+        if result != source and hashlib.sha256(source).hexdigest() not in LEGACY_HASHES:
             raise ValueError('Installed equipment patch differs from its complete rebuild')
-        return source
+        return result
     pe = pefile.PE(data=source)
     section = pe.sections[-1]
     if not section.Characteristics & 0x20000000 or section.PointerToRawData+section.SizeOfRawData != len(source):
@@ -670,6 +677,40 @@ def patch(source):
     return result
 
 
+def equipment_package(source, result, previous=None):
+    import base64
+    from patch_gear_stack_native import install_package
+    original = source if hashlib.sha256(source).hexdigest()==SOURCE_HASH else restore(source)
+    package = install_package(original,result)
+    upgrades = {}
+    if previous:
+        for candidate in [previous, *previous.get('upgrades', [])]:
+            if candidate['sourceSha256'] == SOURCE_HASH:
+                replay = bytearray(original+b'\0'*(candidate['targetLength']-len(original)))
+                for edit in candidate['edits']:
+                    after = base64.b64decode(edit['after'])
+                    replay[edit['offset']:edit['offset']+len(after)] = after
+            elif (candidate['sourceSha256'] in LEGACY_HASHES and
+                  candidate['targetSha256'] == hashlib.sha256(result).hexdigest()):
+                replay = bytearray(result[:candidate['sourceLength']])
+                for edit in candidate['edits']:
+                    before = base64.b64decode(edit['before'])
+                    replay[edit['offset']:edit['offset']+len(before)] = before
+            else:
+                continue
+            if hashlib.sha256(replay).hexdigest() in LEGACY_HASHES:
+                if restore(bytes(replay)) != original:
+                    raise ValueError('Legacy equipment patch has a different base')
+                upgrade = install_package(bytes(replay),result)
+                upgrades[upgrade['sourceSha256']] = upgrade
+    if hashlib.sha256(source).hexdigest() in LEGACY_HASHES:
+        upgrade = install_package(source,result)
+        upgrades[upgrade['sourceSha256']] = upgrade
+    if upgrades:
+        package['upgrades'] = list(upgrades.values())
+    return package
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--deps',type=Path)
@@ -685,9 +726,9 @@ if __name__ == '__main__':
     if args.output: args.output.write_bytes(result)
     if args.package:
         import json
-        from patch_gear_stack_native import install_package
-        original = source if hashlib.sha256(source).hexdigest()==SOURCE_HASH else restore(source)
-        args.package.write_text(json.dumps(install_package(original,result),indent=2)+'\n',encoding='utf-8')
+        previous = json.loads(args.package.read_text(encoding='utf-8')) if args.package.exists() else None
+        package = equipment_package(source,result,previous)
+        args.package.write_text(json.dumps(package,indent=2)+'\n',encoding='utf-8')
     if not args.check and not args.output and not args.package:
         raise ValueError('Select --check, --output or --package')
     print('全部装备堆叠补丁核对通过：',hashlib.sha256(result).hexdigest())

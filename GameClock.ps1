@@ -712,6 +712,7 @@ function Install-MountStackPatch {
                 throw "物品数量补丁缺少配套程序：$required，未启动服务器。"
             }
         }
+        Install-LogicServerPatch $Paths 'gear-stack.patch.json' '坐骑装备堆叠穿戴'
         return
     }
     $directory = [IO.Path]::Combine($Paths.Root, 'Server', 'S1001', 'x64')

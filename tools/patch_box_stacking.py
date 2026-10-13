@@ -1,4 +1,4 @@
-"""Enable stacking for boxes, activation items and ride gear in all client copies.
+"""Enable stacking for boxes, activation items and mount/wing gear in all client copies.
 
 Change only dup. Preserve existing stack limits above one, item attributes,
 rewards, localization, and every unrelated language-pack entry.
@@ -25,6 +25,7 @@ LANGUAGE = ROOT / "Server/S1001/data/language/Zh-CN/Item.lua"
 CLIENT_DIR = ROOT / "web/v2/lang/zh-cn"
 PACK = CLIENT_DIR / "zh-cn.dat"
 STACK_LIMIT = 200
+GEAR_STACK_LIMIT = 9999
 BOX_NAME = re.compile(r"礼包|箱|盒")
 MATERIAL_NAME = re.compile(r"^(?:雷神|传世)")
 ITEM_BLOCK = re.compile(rb"(?m)^\{\r?\n  id=(\d+),.*?(?=^\},?\r?$)", re.S)
@@ -72,6 +73,17 @@ def appearance_groups() -> dict[str, set[int]]:
     return groups
 
 
+def wing_equipment_ids() -> set[int]:
+    source = (ITEM_DIR / "SwingEquip.lua").read_bytes()
+    source = re.sub(rb"--[^\r\n]*", b"", source)
+    section = source.split(b"SwingEquipment", 1)[1]
+    rows = re.findall(rb"\bid\s*=\s*\{([^}]+)\}", section)
+    result = {int(value) for row in rows for value in re.findall(rb"\d+", row)}
+    if len(rows) != 4 or len(result) != 20:
+        raise ValueError("Missing or unexpected wing equipment configuration")
+    return result
+
+
 def targets(source: bytes) -> tuple[dict[int, int], dict[int, str]]:
     all_names = {int(item): name for item, name in re.findall(
         r'\bn(\d+)="([^"\r\n]*)"', LANGUAGE.read_text(encoding="utf-8-sig"))}
@@ -89,12 +101,14 @@ def targets(source: bytes) -> tuple[dict[int, int], dict[int, str]]:
             raise ValueError("Localized and server material names differ")
     names.update(materials)
     groups = appearance_groups()
+    groups["wing_gear"] = wing_equipment_ids()
     for group, ids in groups.items():
         for item in ids:
             if item not in items or item not in all_names:
                 raise ValueError(f"Missing {group} item {item}")
             kind = int(re.search(rb"(?m)^  type=(\d+),", items[item])[1])
-            allowed = (122, 123, 124, 125) if group == "ride_gear" else (102, 106)
+            allowed = {"ride_gear": (122, 123, 124, 125),
+                       "wing_gear": (126, 127, 128, 129)}.get(group, (102, 106))
             if kind not in allowed:
                 raise ValueError(f"Unexpected {group} item type for {item}")
             names[item] = all_names[item]
@@ -102,13 +116,14 @@ def targets(source: bytes) -> tuple[dict[int, int], dict[int, str]]:
     for item in names:
         block = items[item]
         kind = re.search(rb"(?m)^  type=(\d+),", block)
-        allowed = (122, 123, 124, 125) if item in groups["ride_gear"] else (102, 106)
+        gear = item in groups["ride_gear"] or item in groups["wing_gear"]
+        allowed = tuple(range(122, 130)) if gear else (102, 106)
         if kind is None or int(kind[1]) not in allowed:
             raise ValueError(f"Item {item} is not a functional/reward item")
         limit = stack_limit(block)
         if limit < 1:
             raise ValueError(f"Invalid stack limit for item {item}")
-        limits[item] = STACK_LIMIT if limit == 1 else limit
+        limits[item] = GEAR_STACK_LIMIT if gear else (STACK_LIMIT if limit == 1 else limit)
     return limits, names
 
 
@@ -217,7 +232,7 @@ def main():
     else:
         for path, output in outputs.items():
             path.write_bytes(output)
-    print(f"Verified {len(limits)} box/activation/ride items; existing stackable limits preserved.")
+    print(f"Verified {len(limits)} box/activation/mount/wing items; existing stackable limits preserved.")
     print(f"Updated {len(outputs)} files; {changes[SERVER.relative_to(ROOT).as_posix()]} "
           "server items newly stackable.")
     for path, count in changes.items():

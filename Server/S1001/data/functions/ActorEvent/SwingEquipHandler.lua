@@ -411,6 +411,7 @@ end
 
 --穿上
 function TakeOnSwingEquipment(sysarg,packet)
+	if Actor.isDealing(sysarg) then return end
 
 	local swingId = Actor.getUIntProperty(sysarg, PROP_ACTOR_SWINGID)	
 	if swingId <= 0 then	
@@ -481,7 +482,7 @@ function TakeOnSwingEquipment(sysarg,packet)
 	--print("swingzhaohuanqiangdu="..zhaohuanqiangdu)
 	
 	--把穿上的物品扣除了
-	if Actor.removeItemByPtr(sysarg,itemPer,1,true,"翅膀装备穿上",LogIds.swingequiptakeon)==0 then 
+	if Actor.removeItemByPtr(sysarg,itemPer,1,true,"翅膀装备穿上",LogIds.swingequiptakeon) ~= 1 then
 		Actor.sendTipmsg(sysarg,"穿戴失败",ttFlyTip)
 		return 
 	end
@@ -510,6 +511,7 @@ end
 
 --脱下
 function TakeOffSwingEquipment(sysarg,index)
+	if Actor.isDealing(sysarg) then return false end
 	index = tonumber(index)
 	--翅膀要先激活
 	local swingId = Actor.getUIntProperty(sysarg, PROP_ACTOR_SWINGID)	
@@ -548,23 +550,16 @@ function TakeOffSwingEquipment(sysarg,index)
 		SwingTaoStrongPoints=0
 	end
 	
-	--记录一个道士宝宝强化点
-	local nNewItem = Item.createItem(cfg[index].id[nowlevel],1,0,0,0)
-	if (nNewItem==nil) then 
+	-- 先按完整属性发放一件；合并后不再访问可能已释放的临时物品。
+	if Actor.addItem(sysarg,cfg[index].id[nowlevel],0,0,1,0,0,
+		"翅膀装备脱下",LogIds.swingequiptakeoff,-1,0,-1,1,6) ~= 1 then
 		Actor.sendTipmsg(sysarg,"脱下失败",ttFlyTip)
 		return false
 	end
-	
 	mySwingEquipment = System.setIntByte(mySwingEquipment, index - 1,0)
-		
 	Actor.setUIntProperty(sysarg, PROP_ACTOR_SWINGEQUITMNET,mySwingEquipment)
-	
-	local zhaoHuanQiangDu = 6
-	var.SwingTaoStrongPoints = System.setIntByte(var.SwingTaoStrongPoints, index - 1,0)
+	var.SwingTaoStrongPoints = System.setIntByte(SwingTaoStrongPoints, index - 1,0)
 		
-	Item.addItem(sysarg,nNewItem,"翅膀装备脱下",LogIds.swingequiptakeoff)
-	Item.setItemProperty(sysarg,nNewItem,Item.ipTaoStrong,zhaoHuanQiangDu)
-
 	Actor.collectOperate(sysarg, 0) -- 重新计算角色属性
 	GetSwingEquipmentInfo(sysarg)
 	--print("swing2 take on success")

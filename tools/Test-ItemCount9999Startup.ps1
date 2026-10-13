@@ -11,7 +11,8 @@ $testRoot = Join-Path ([IO.Path]::GetTempPath()) ('SRCS-CountStartup-' + [guid]:
 $testRoot = [IO.Path]::GetFullPath($testRoot)
 $paths = [pscustomobject]@{ Root = $testRoot }
 $relativePaths = @('Server/S1001/x64/LogicServerCQ64_R.exe', 'Server/common/x64/DBServer64_R.exe', 'web/GameFrame.swf')
-$relativePaths += @(1..12 | ForEach-Object { "web/config$_.cbp" })
+$relativePaths += @('Server/S1001/data/config/item/StdItems.txt', 'web/v2/lang/zh-cn/zh-cn.dat')
+$relativePaths += @(1..10 | ForEach-Object { "web/config$_.cbp" })
 $manifestPath = Join-Path $testRoot 'tools/item_count_9999_installed.json'
 try {
     New-Item -ItemType Directory -Path (Split-Path $manifestPath -Parent) -Force | Out-Null
@@ -31,11 +32,10 @@ try {
     Remove-Item -LiteralPath $client
     Assert-CountStartupThrows { Install-MountStackPatch $paths } '缺少客户端文件应拒绝启动'
     [IO.File]::WriteAllBytes($client, $savedClient)
-    $logic = Join-Path $testRoot $files[0].path
-    $savedLogic = [IO.File]::ReadAllBytes($logic)
-    [IO.File]::WriteAllBytes($logic, [byte[]](0, 1))
-    Assert-CountStartupThrows { Install-MountStackPatch $paths } '服务器程序哈希不匹配应拒绝启动'
-    [IO.File]::WriteAllBytes($logic, $savedLogic)
+    foreach ($entry in $files) {
+        [IO.File]::WriteAllBytes((Join-Path $testRoot $entry.path), [byte[]](0, 1))
+    }
+    Install-MountStackPatch $paths
     $originalPath = $files[0].path
     $files[0].path = $files[1].path
     [IO.File]::WriteAllText($manifestPath, ($manifest | ConvertTo-Json -Depth 8), [Text.Encoding]::UTF8)
@@ -47,7 +47,7 @@ try {
     [IO.File]::WriteAllText($manifestPath, ($manifest | ConvertTo-Json -Depth 8), [Text.Encoding]::UTF8)
     Remove-Item -LiteralPath (Join-Path $testRoot 'Server/common/x64/DBServer64_R.exe')
     Assert-CountStartupThrows { Install-MountStackPatch $paths } '缺少数据库程序应拒绝启动'
-    Write-Host '物品数量补丁启动校验：客户端更新放行、文件缺失、服务器哈希、重复路径及越界路径检查通过。'
+    Write-Host '物品数量补丁启动校验：程序、配置及资源更新放行，文件缺失、重复路径及越界路径检查通过。'
 } finally {
     $temporaryRoot = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\') + '\'
     if (-not $testRoot.StartsWith($temporaryRoot, [StringComparison]::OrdinalIgnoreCase) -or

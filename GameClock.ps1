@@ -687,7 +687,7 @@ function Install-LogicServerPatch {
 function Install-MountStackPatch {
     param($Paths)
     # The count expansion already contains the mount/warrior patches. Verify
-    # its entire Logic/DB/client file set before bypassing their old installers.
+    # Logic/DB/config files; client SWFs may be updated independently.
     $countManifestPath = [IO.Path]::Combine($Paths.Root, 'tools', 'item_count_9999_installed.json')
     if ([IO.File]::Exists($countManifestPath)) {
         $countManifest = [IO.File]::ReadAllText($countManifestPath, [Text.Encoding]::UTF8) | ConvertFrom-Json
@@ -704,7 +704,8 @@ function Install-MountStackPatch {
             $seenCountFiles += $relative
             $file = [IO.Path]::Combine($Paths.Root, $relative)
             if (-not [IO.File]::Exists($file) -or
-                (Get-ConfigHash ([IO.File]::ReadAllBytes($file))) -ne [string]$entry.sha256) {
+                ([IO.Path]::GetExtension($relative) -ne '.swf' -and
+                 (Get-ConfigHash ([IO.File]::ReadAllBytes($file))) -ne [string]$entry.sha256)) {
                 throw "物品数量补丁文件不匹配：$relative，请恢复配套文件后再启动。"
             }
         }

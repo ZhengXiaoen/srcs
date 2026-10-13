@@ -27,8 +27,15 @@ try {
     $client = Join-Path $testRoot 'web/GameFrame.swf'
     $savedClient = [IO.File]::ReadAllBytes($client)
     [IO.File]::WriteAllBytes($client, [byte[]](0, 1))
-    Assert-CountStartupThrows { Install-MountStackPatch $paths } '新旧客户端混用应拒绝启动'
+    Install-MountStackPatch $paths
+    Remove-Item -LiteralPath $client
+    Assert-CountStartupThrows { Install-MountStackPatch $paths } '缺少客户端文件应拒绝启动'
     [IO.File]::WriteAllBytes($client, $savedClient)
+    $logic = Join-Path $testRoot $files[0].path
+    $savedLogic = [IO.File]::ReadAllBytes($logic)
+    [IO.File]::WriteAllBytes($logic, [byte[]](0, 1))
+    Assert-CountStartupThrows { Install-MountStackPatch $paths } '服务器程序哈希不匹配应拒绝启动'
+    [IO.File]::WriteAllBytes($logic, $savedLogic)
     $originalPath = $files[0].path
     $files[0].path = $files[1].path
     [IO.File]::WriteAllText($manifestPath, ($manifest | ConvertTo-Json -Depth 8), [Text.Encoding]::UTF8)
@@ -40,7 +47,7 @@ try {
     [IO.File]::WriteAllText($manifestPath, ($manifest | ConvertTo-Json -Depth 8), [Text.Encoding]::UTF8)
     Remove-Item -LiteralPath (Join-Path $testRoot 'Server/common/x64/DBServer64_R.exe')
     Assert-CountStartupThrows { Install-MountStackPatch $paths } '缺少数据库程序应拒绝启动'
-    Write-Host '物品数量补丁启动校验：配套文件、混用、重复路径、越界路径及缺失程序检查通过。'
+    Write-Host '物品数量补丁启动校验：客户端更新放行、文件缺失、服务器哈希、重复路径及越界路径检查通过。'
 } finally {
     $temporaryRoot = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\') + '\'
     if (-not $testRoot.StartsWith($temporaryRoot, [StringComparison]::OrdinalIgnoreCase) -or

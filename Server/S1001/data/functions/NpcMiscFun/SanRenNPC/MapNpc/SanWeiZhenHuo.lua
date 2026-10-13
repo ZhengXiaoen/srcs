@@ -425,19 +425,27 @@ t.OnDragonEquipComposeListEx = function(sysarg)
         
         str = str.."	<"..cfg[i].name.."/@OnDragonEquipComposeList,"..i..">\\"
      end
-	 str = str .."			<返回主页/@main> "
+	 str = str .."			<返回主页/@main>        <一键合成/@OnDragonEquipComposeAll>"
      return str
 end
 t.OnDragonEquipComposeList = function(sysarg,nIndex)
     nIndex = tonumber(nIndex)
+    if not nIndex or nIndex%1 ~= 0 or nIndex < 1 or nIndex > #EquipDragonCfg.Compose then return end
     local cfg = EquipDragonCfg.Compose[nIndex].list
     local str= "\\	<(c0xFF00c0ff)龍之道具来源:寻宝产出、材料合成>\\\\"
     for i=1,#cfg do
         str = str..Item.getItemLinkMsg(cfg[i].itemid).." * "..cfg[i].count.." = "..Item.getItemLinkMsg(cfg[i].destid).."   	<合成/@OnDragonEquipCompose,"..nIndex..","..i..">\\"
 
     end
-	str = str.."			\\			<返回上一页/@OnDragonEquipComposeListEx>"
+	str = str.."			\\			<返回上一页/@OnDragonEquipComposeListEx>        <一键合成/@OnDragonEquipComposeAll,"..nIndex..">"
     return str
+end
+t.OnDragonEquipComposeAll = function(sysarg,nIndex)
+    local recipes,selected = LocalDT.GetMakeRecipes(EquipDragonCfg.Compose,nIndex)
+    if not recipes then return end
+    LocalDT.MakeRecipesAll(sysarg,recipes,LogIds.longzuhanghecheng,"龙装合成")
+    if selected then return t.OnDragonEquipComposeList(sysarg,selected) end
+    return t.OnDragonEquipComposeListEx(sysarg)
 end
 t.OnDragonEquipCompose = function(sysarg,nIndex,i)
     nIndex = tonumber(nIndex)

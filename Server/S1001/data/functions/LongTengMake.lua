@@ -192,7 +192,7 @@ function LongTengMakeInit(sysarg)
 	for i = 1,#LongTengMakeCfg do
        str =str .."\\                      <"..LongTengMakeCfg[i].name.."/@LongTengMakeMkaeList,"..i..">\\"
     end
-    return str
+    return str .."\\\\                      <一键合成/@LongTengMakeAll>"
 end
 
 function LongTengMakeMkaeList(sysarg,index)
@@ -216,7 +216,7 @@ function LongTengMakeMkaeList(sysarg,index)
     return str
 end
 
--- 龙腾装备不堆叠，扣除材料释放格子后发放成品；失败时按原绑定状态返还。
+-- 扣除材料后发放成品；失败时按原绑定状态返还。
 LocalDT.LongTengMakeOne = function(sysarg,cfg)
     if Actor.getItemCount(sysarg,cfg.itemid) < cfg.count then
         Actor.sendTipmsg(sysarg,"材料不足,无法合成!",ttFlyTip)
@@ -256,12 +256,11 @@ function LongTengMakeMkae(sysarg,index,i)
 end
 
 function LongTengMakeAll(sysarg,index)
-    index = tonumber(index)
-    local cfg = LongTengMakeCfg[index]
-    if not cfg then return end
+    local recipes,selected = LocalDT.GetMakeRecipes(LongTengMakeCfg,index)
+    if not recipes then return end
     local total = 0
     local stopped = false
-    for _,recipe in ipairs(cfg.list) do
+    for _,recipe in ipairs(recipes) do
         local made = 0
         local count = math.floor(Actor.getItemCount(sysarg,recipe.itemid)/recipe.count)
         for n = 1,count do
@@ -282,7 +281,8 @@ function LongTengMakeAll(sysarg,index)
     elseif not stopped then
         Actor.sendTipmsg(sysarg,"材料不足,无法合成!",ttFlyTip)
     end
-    return LongTengMakeMkaeList(sysarg,index)
+    if selected then return LongTengMakeMkaeList(sysarg,selected) end
+    return LongTengMakeInit(sysarg)
 end
 
 

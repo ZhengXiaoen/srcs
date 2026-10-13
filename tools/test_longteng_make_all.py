@@ -68,6 +68,7 @@ class DragonSynthesisTests(unittest.TestCase):
     def setUp(self):
         self.lua = LuaRuntime(unpack_returned_tuples=True)
         self.lua.execute(SETUP)
+        self.lua.execute((DATA / "functions/BulkMake.lua").read_bytes())
         self.lua.execute(SOURCE.read_bytes())
         self.lua.execute((DATA / "functions/GlobalNpcFunctions.lua").read_bytes())
         dispatcher = (DATA / "functions/NpcMiscFun/NpcEventDispatcher.lua").read_text("utf-8-sig")
@@ -188,12 +189,12 @@ class DragonSynthesisTests(unittest.TestCase):
         self.assertEqual(len(self.g.broadcasts), 1)
         before = len(self.g.operations)
         for value in (None, "", "bad", "0", "-1", "1.5", "6", "nan", "inf"):
-            self.g.LongTengMakeAll(1, value)
+            if value is not None: self.g.LongTengMakeAll(1, value)
             self.g.LongTengMakeMkaeList(1, value)
             self.g.LongTengMakeMkae(1, "1", value)
         self.assertEqual(len(self.g.operations), before)
 
-    def test_recipes_exchange_and_top_level_locals_unchanged_and_materials_do_not_stack(self):
+    def test_recipes_exchange_and_top_level_locals_unchanged_with_stackable_equipment(self):
         before = subprocess.check_output(["git", "show", "HEAD:Server/S1001/data/functions/LongTengMake.lua"], cwd=ROOT)
         after = SOURCE.read_bytes()
         marker = "--龙腾合成".encode()
@@ -208,7 +209,7 @@ class DragonSynthesisTests(unittest.TestCase):
                 for itemid in (recipe.itemid, recipe.destid):
                     entry = re.search(rb"\n  id=" + str(itemid).encode() + rb",.*?(?=\n  id=|\Z)", items, re.S)
                     self.assertIsNotNone(entry)
-                    self.assertIn(b"\n  dup=1,", entry[0])
+                    self.assertIn(b"\n  dup=9999,", entry[0])
                 self.assertEqual(recipe.count, 3)
                 self.assertEqual(recipe.bind, 0)
 

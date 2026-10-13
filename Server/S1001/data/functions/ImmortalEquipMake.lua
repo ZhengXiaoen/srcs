@@ -12,7 +12,7 @@ function ImmortalEquipMakeInit(sysarg)
 	for i = 1,#cfg do
        str =str .."\\                      <"..cfg[i].name.."/@ImmortalEquipMakeMkaeList,"..i..">\\"
     end
-    return str
+    return str .."\\\\                      <一键合成/@ImmortalEquipMakeAll>"
 end
 
 function ImmortalEquipMakeMkaeList(sysarg,index)
@@ -68,9 +68,9 @@ function ImmortalEquipMakeMkae(sysarg,index,i)
 end
 
 function ImmortalEquipMakeAll(sysarg,index)
-    index = tonumber(index)
-    local cfg = ImmortalSystemConfig.ExChange[index]
-    if not cfg then return end
-    LocalDT.MakeRecipesAll(sysarg,cfg.list,LogIds.xianzhuanghecheng,"仙装合成",false,LocalDT.ImmortalMakeOne)
-    return ImmortalEquipMakeMkaeList(sysarg,index)
+    local recipes,selected = LocalDT.GetMakeRecipes(ImmortalSystemConfig.ExChange,index)
+    if not recipes then return end
+    LocalDT.MakeRecipesAll(sysarg,recipes,LogIds.xianzhuanghecheng,"仙装合成",false,LocalDT.ImmortalMakeOne)
+    if selected then return ImmortalEquipMakeMkaeList(sysarg,selected) end
+    return ImmortalEquipMakeInit(sysarg)
 end

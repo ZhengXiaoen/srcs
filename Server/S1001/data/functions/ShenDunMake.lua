@@ -63,7 +63,7 @@ function ShenDunMakeInit(sysarg)
 	for i = 1,#ShenDunMakeCfg do
        str =str .."\\                      <"..ShenDunMakeCfg[i].name.."/@ShenDunMakeMkaeList,"..i..">\\"
     end
-    return str
+    return str .."\\\\                      <一键合成/@ShenDunMakeAll>"
 end
 
 function ShenDunMakeMkaeList(sysarg,index)
@@ -110,11 +110,11 @@ end
 
 
 function ShenDunMakeAll(sysarg,index)
-    index = tonumber(index)
-    local cfg = ShenDunMakeCfg[index]
-    if not cfg then return end
-    LocalDT.MakeRecipesAll(sysarg,cfg.list,LogIds.shendunMake,"神盾合成")
-    return ShenDunMakeMkaeList(sysarg,index)
+    local recipes,selected = LocalDT.GetMakeRecipes(ShenDunMakeCfg,index)
+    if not recipes then return end
+    LocalDT.MakeRecipesAll(sysarg,recipes,LogIds.shendunMake,"神盾合成")
+    if selected then return ShenDunMakeMkaeList(sysarg,selected) end
+    return ShenDunMakeInit(sysarg)
 end
 
 ----龙腾男女互换

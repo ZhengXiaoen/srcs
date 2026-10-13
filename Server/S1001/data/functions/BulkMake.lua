@@ -1,4 +1,24 @@
 -- 合成页共用批量处理，沿用各自配方与绑定规则。
+-- 外层按配置顺序合成全部类别，细分页只选取当前类别，不改写原配方。
+LocalDT.GetMakeRecipes = function(groups,index,bind)
+    if index ~= nil then
+        index = tonumber(index)
+        if not index or index%1 ~= 0 or index < 1 or index > #groups then return end
+    end
+    local recipes = {}
+    for group=index or 1,index or #groups do
+        for _,recipe in ipairs(groups[group].list) do
+            if bind ~= nil then
+                recipes[#recipes+1] = {itemid=recipe.itemid,count=recipe.count,destid=recipe.destid,
+                    bind=bind,needmoney=recipe.needmoney}
+            else
+                recipes[#recipes+1] = recipe
+            end
+        end
+    end
+    return recipes,index
+end
+
 LocalDT.MakeRecipeBatch = function(sysarg,recipe,logId,logStr,requested,preserveBind)
     local cfg = {itemid=recipe.itemid,count=recipe.count or 3,exchangeid=recipe.destid,
         exchangecount=1,exchangebind=recipe.bind or 0,action="合成"}

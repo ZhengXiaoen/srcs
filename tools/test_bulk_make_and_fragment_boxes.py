@@ -17,7 +17,8 @@ class BulkMakeTests(unittest.TestCase):
         self.lua.execute(setup)
         self.lua.execute('''
 LogIds={shendunMake=1,warrionequipmake=2,xianzhuanghecheng=3,exHeChengZhuangBei=4,
- duihuansanguoshizhuanghun=5,duihuanzhizhuntulong=6,duihuanshizhuanghun=7}
+ duihuansanguoshizhuanghun=5,duihuanzhizhuntulong=6,duihuanshizhuanghun=7,
+ longtengMake=2796,longzuhanghecheng=2703}
 mtBindCoin=0;mtCoin=1;wallet={[0]=0,[1]=0};failCharge=false;partialCharge=false
 Actor.getMoneyCount=function(_,kind) return wallet[kind] end
 Actor.checkConsume=function(_,kind,id,count) assert(kind==5 and id==0);return wallet[0]+wallet[1]>=count end
@@ -48,12 +49,16 @@ end
             "config/WarriorEquipMakeCfg.lua", "config/ImmortalSystemConfig.lua",
             "functions/ShenDunMake.lua", "functions/AppearanceMake.lua",
             "functions/WarriorEquipMake.lua", "functions/ImmortalEquipMake.lua",
+            "functions/LongTengMake.lua", "config/equipSynthesis/EquipDragonCfg.lua",
+            "functions/NpcMiscFun/SanRenNPC/MapNpc/SanWeiZhenHuo.lua",
             "functions/GlobalNpcFunctions.lua",
             "functions/NpcMiscFun/SanRenNPC/MapNpc/GaoJiDuanZaoShi.lua",
         ):
             self.lua.execute((DATA / path).read_bytes().removeprefix(b"\xef\xbb\xbf"))
         self.g = self.lua.globals()
         self.g.npc = self.g.GetNpcWanShiTong()
+        self.g.dragon = self.g.GetNpcSanWeiZhenHuo()
+        self.lua.execute("NpcCommonFunc={};NpcDialog={[1]=GetNpcSanWeiZhenHuo()}")
         for cfg in self.g.ImmortalSystemConfig.ExChange.values():
             for recipe in cfg.list.values():
                 self.g.limits[recipe.itemid] = 1
@@ -63,6 +68,110 @@ end
 
     def click(self, name, *args):
         return self.g.OnNpcEvent(1, 0, name, *map(str, args))
+
+    def outer_systems(self):
+        return (
+            ("ShenDunMakeAll", self.g.ShenDunMakeCfg, "ShenDunMakeInit", 0, 0),
+            ("WarriorEquipMakeAll", self.g.WarriorEquipMakeCfg, "WarriorEquipMakeInit", 1, 0),
+            ("ImmortalEquipMakeAll", self.g.ImmortalSystemConfig.ExChange, "ImmortalEquipMakeInit", 1, 0),
+            ("LongTengMakeAll", self.g.LongTengMakeCfg, "LongTengMakeInit", 0, 0),
+            ("OnDragonEquipComposeAll", self.g.EquipDragonCfg.Compose, "OnDragonEquipComposeListEx", 0, 1),
+        )
+
+    def dispatch_make(self, name, npc_id, *args):
+        return self.g.OnNpcEvent(1, npc_id, name, *map(str, args))
+
+    def test_outer_buttons_dispatch_all_categories_and_chain_in_config_order(self):
+        for name in ("ShenDunMakeAll", "WarriorEquipMakeAll", "ImmortalEquipMakeAll",
+                     "LongTengMakeAll", "OnDragonEquipComposeAll"):
+            with self.subTest(name=name):
+                self.setUp()
+                _, groups, home, bind, npc_id = next(s for s in self.outer_systems() if s[0] == name)
+                owner = self.g.dragon if npc_id else self.g
+                self.assertIn(f"<一键合成/@{name}>", owner[home](1))
+                recipes = [recipe for group in groups.values() for recipe in group.list.values()]
+                expected = {}
+                for cfg in recipes:
+                    count = cfg.count*2+1
+                    self.g.put(cfg.itemid, 0, count)
+                    expected[cfg.itemid] = count
+                self.g.put(489, 2, 3)
+                total, cost = 0, 0
+                for cfg in recipes:
+                    times = expected.get(cfg.itemid, 0)//cfg.count
+                    expected[cfg.itemid] -= times*cfg.count
+                    expected[cfg.destid] = expected.get(cfg.destid, 0)+times
+                    total += times
+                    cost += times*(cfg.needmoney or 0)
+                self.g.wallet[0], self.g.wallet[1] = 0, 1000000000
+                page = self.dispatch_make(name, npc_id)
+                self.assertIn(f"<一键合成/@{name}>", page)
+                for itemid, count in expected.items():
+                    self.assertEqual(self.g.quantity(itemid), count, (name, itemid))
+                for cfg in groups[len(groups)].list.values():
+                    self.assertEqual(self.g.quantity(cfg.destid, bind), expected[cfg.destid])
+                self.assertEqual(self.g.quantity(489), 5)
+                self.assertEqual(self.g.wallet[1], 1000000000-cost)
+                self.assertEqual(len(self.g.tips), 1)
+                self.assertIn(f"共合成{total}件", self.g.tips[1])
+                operation_count = len(self.g.operations)
+                self.dispatch_make(name, npc_id)
+                self.assertEqual(len(self.g.operations), operation_count)
+
+    def test_dragon_category_buttons_only_consume_selected_recipes(self):
+        for index in range(1, 5):
+            with self.subTest(index=index):
+                self.setUp()
+                groups = self.g.EquipDragonCfg.Compose
+                expected = {}
+                for group in groups.values():
+                    for cfg in group.list.values():
+                        self.g.put(cfg.itemid, 0, 7)
+                        expected[cfg.itemid] = 7
+                for cfg in groups[index].list.values():
+                    expected[cfg.itemid] -= 6
+                    expected[cfg.destid] = expected.get(cfg.destid, 0)+2
+                page = self.dispatch_make("OnDragonEquipComposeAll", 1, index)
+                self.assertIn(f"<一键合成/@OnDragonEquipComposeAll,{index}>", page)
+                self.assertEqual(page.count("<合成/@OnDragonEquipCompose,"), 9)
+                for itemid, count in expected.items():
+                    self.assertEqual(self.g.quantity(itemid), count, itemid)
+
+    def test_outer_failures_refund_current_recipe_and_do_not_touch_later_categories(self):
+        names = [s[0] for s in self.outer_systems()]
+        for name in names:
+            for flag in ("award", "remove", "space"):
+                with self.subTest(name=name, flag=flag):
+                    self.setUp()
+                    _, groups, _, _, npc_id = next(s for s in self.outer_systems() if s[0] == name)
+                    first = groups[1].list[1]
+                    later = groups[len(groups)].list[len(groups[len(groups)].list)]
+                    self.g.put(first.itemid, 1, first.count*2)
+                    self.g.put(later.itemid, 0, later.count*2)
+                    self.g.wallet[0], self.g.wallet[1] = 50000, 10000000
+                    if flag == "award":
+                        self.g.failAdd[first.destid] = 0
+                    elif flag == "remove":
+                        self.g.failRemove[first.itemid] = 1
+                    else:
+                        self.g.put(first.itemid, 0, first.count*2+1)
+                        self.g.capacity = self.g.slots()
+                    self.dispatch_make(name, npc_id)
+                    self.assertEqual((self.g.quantity(first.itemid, 1), self.g.quantity(first.itemid, 0)),
+                                     (0, first.count*2+1) if flag == "space" else (1, first.count*2))
+                    self.assertEqual(self.g.quantity(later.itemid), later.count*2)
+                    self.assertEqual(self.g.quantity(first.destid), 0)
+                    self.assertEqual((self.g.wallet[0], self.g.wallet[1]), (50000, 10000000))
+                    self.assertFalse(any("一键合成成功" in tip for tip in self.g.tips.values()))
+
+    def test_outer_invalid_indices_leave_available_materials_untouched(self):
+        for name, groups, _, _, npc_id in self.outer_systems():
+            cfg = groups[1].list[1]
+            self.g.put(cfg.itemid, 2, cfg.count*5)
+            for index in ("", "bad", "0", "-1", "1.5", "9999", "nan", "inf"):
+                self.dispatch_make(name, npc_id, index)
+            self.assertEqual(self.g.quantity(cfg.itemid), 2+cfg.count*5)
+        self.assertEqual(len(self.g.operations), 0)
 
     def test_all_enabled_synthesis_pages_have_registered_buttons(self):
         for name, cfgs in (("ShenDun", self.g.ShenDunMakeCfg),

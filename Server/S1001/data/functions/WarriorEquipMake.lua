@@ -5,7 +5,7 @@ function WarriorEquipMakeInit(sysarg)
     for i = 1,#WarriorEquipMakeCfg do
        str =str .."\\                      <"..WarriorEquipMakeCfg[i].name.."/@WarriorEquipMakeMkaeList,"..i..">\\"
     end
-    return str
+    return str .."\\\\                      <一键合成/@WarriorEquipMakeAll>"
 end
 
 
@@ -44,13 +44,9 @@ function WarriorEquipMakeMkae(sysarg,index,i)
 end
 
 function WarriorEquipMakeAll(sysarg,index)
-    index = tonumber(index)
-    local cfg = WarriorEquipMakeCfg[index]
-    if not cfg then return end
-    local recipes = {}
-    for _,recipe in ipairs(cfg.list) do
-        recipes[#recipes+1] = {itemid=recipe.itemid,count=recipe.count,destid=recipe.destid,bind=1}
-    end
+    local recipes,selected = LocalDT.GetMakeRecipes(WarriorEquipMakeCfg,index,1)
+    if not recipes then return end
     LocalDT.MakeRecipesAll(sysarg,recipes,LogIds.warrionequipmake,"战装合成")
-    return WarriorEquipMakeMkaeList(sysarg,index)
+    if selected then return WarriorEquipMakeMkaeList(sysarg,selected) end
+    return WarriorEquipMakeInit(sysarg)
 end

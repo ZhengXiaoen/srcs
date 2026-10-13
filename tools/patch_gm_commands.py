@@ -2,6 +2,7 @@
 
 Append one class, its script initializer and methods. Preserve original ABC
 records and SWF assets except the GM window and broken GM listener cleanup.
+GM chat sends omit display timestamps so they cannot become script arguments.
 """
 from pathlib import Path
 import argparse
@@ -136,7 +137,42 @@ def repair_installed_page(original):
         edits.append((old['record_start'], old['end'], body))
     for start, end, value in sorted(edits, reverse=True):
         result[start:end] = value
-    return bytes(result)
+    return repair_gm_chat_timestamp(bytes(result))
+
+
+def repair_gm_chat_timestamp(source):
+    """Keep chat metadata out of commands consumed by the native GM parser."""
+    names, catalog, _ = inspect_abc(source)
+    full = inspect_abc_full(source)
+    mid = catalog['ChatCC']['static']['sendChatMessage'][0]
+    old = full['bodies'][mid]
+    code = old['code']
+    ops = instructions(code)
+    strings = pools(source)['strings'][3]
+    marker = next(i for i, op in enumerate(ops)
+                  if op.opcode == 0x2c and strings[op.operands[0]] == '<ST>')
+    start = ops[marker-1].start
+    end = next(op.end for op in ops[marker:] if op.opcode == 0xd6)
+    if ops[marker-1].opcode != 0xd2:
+        raise ValueError('Unexpected chat timestamp receiver')
+    at = next(op for op in ops if op.opcode == 0x2c and strings[op.operands[0]] == '@')
+    index_of = next(op for op in ops if op.opcode == 0x46
+                    and names[op.operands[0]] == 'indexOf')
+    guard = b'\xd2'+code[at.start:at.end]+code[index_of.start:index_of.end]+integer(0)
+    # Skip an already installed guard when reproducing or checking the patch.
+    if code[:start].endswith(guard+b'\x13'+struct.pack('<i',end-start)[:3]):
+        return source
+    if old['exceptions'] or old['body_traits'] != b'\0':
+        raise ValueError('Unexpected chat transport body traits')
+    block = Block()
+    block.emit(guard)
+    block.branch(0x13, 'command')
+    block.emit(code[start:end])
+    block.label('command')
+    patched, _ = relocate(code, [(start, end, block.finish()[0])])
+    instructions(patched)
+    body = u(mid, *old['limits'], len(patched))+patched+b'\0\0'
+    return source[:old['record_start']]+body+source[old['end']:]
 
 
 def patch_abc(original):
@@ -340,7 +376,7 @@ def patch_abc(original):
     for a,b,value in sorted(edits):restore.append((a+shift,a+shift+len(value),source[a:b]));shift+=len(value)-(b-a)
     for a,b,value in reversed(restore):restored[a:b]=value
     if bytes(restored)!=source:raise ValueError('Unrelated ABC records changed')
-    return result
+    return repair_gm_chat_timestamp(result)
 
 
 def patch_swf(source):

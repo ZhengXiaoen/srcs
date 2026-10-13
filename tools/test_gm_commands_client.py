@@ -197,6 +197,7 @@ class CommandClientTests(unittest.TestCase):
         old=inspect_abc_full(before)['bodies']
         current=inspect_abc_full(self.abc)['bodies']
         changed={catalog[CLASS]['instance'][name][0] for name in ['initEvent','removeEvent','gmClick']}
+        transport=catalog['ChatCC']['static']['sendChatMessage'][0]
         for mid,body in old.items():
             if mid in changed:
                 self.assertNotEqual(body['code'],current[mid]['code'])
@@ -206,6 +207,11 @@ class CommandClientTests(unittest.TestCase):
                 for op in ops:
                     for _,target,_ in op.branches:
                         if target<op.start:self.assertEqual(0x09,by[target].opcode)
+            elif mid==transport:
+                from patch_gm_commands import repair_gm_chat_timestamp
+                fixed=inspect_abc_full(repair_gm_chat_timestamp(before))['bodies'][mid]
+                self.assertEqual(fixed['code'],current[mid]['code'])
+                self.assertEqual(body['limits'],current[mid]['limits'])
             else:
                 self.assertEqual(before[body['record_start']:body['end']],
                                  self.abc[current[mid]['record_start']:current[mid]['end']],mid)

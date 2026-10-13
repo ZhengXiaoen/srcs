@@ -130,10 +130,10 @@ def public_class(abc):
                 if value and value[0]==7 and table['strings'][3][value[2]]==CLASS)
 
 
-def run_fixture(executable, source, gm_level=9):
+def run_fixture(executable, source, gm_level=9, fixture_builder=build_fixture):
     with tempfile.TemporaryDirectory(prefix='gm-open-') as folder:
         root=Path(folder)
-        swf=root/'gm.swf';swf.write_bytes(build_fixture(source,gm_level))
+        swf=root/'gm.swf';swf.write_bytes(fixture_builder(source,gm_level))
         log_path=root/'runtime.log'
         args=[executable,'--storage','memory','--tcp-connections','deny',
               '--filesystem-access-mode','allow','--open-url-mode','deny',

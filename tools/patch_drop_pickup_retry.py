@@ -42,6 +42,12 @@ paths. Ordinary paths and explicit cancellation retain their original behavior.
 Reset the nearest selector's category result for each drop. Position corrections
 can re-enable a ground-image model with type -2; it must not inherit an earlier
 material's enabled category and displace the actual pickup model.
+Continue a completed auto-fight pickup after the client's existing 100 ms
+pickup-chain delay, outside the arrival event that clears the old path. Recheck
+auto-fight and movement state before the callback so stopping cancels the chain.
+Recover auto-fight if an obstructed pickup destination fails to rebuild its path.
+Keep the stationary fallback on its default 500 ms cadence without skipping
+every other scan when the previous pickup landed exactly on a boundary.
 Relocate existing branches, switches and exception offsets rather than
 recompiling the Flash application.
 """
@@ -548,7 +554,7 @@ def patch_failed_pickup_movement(source):
     return result
 
 
-def idle_pickup_code(nearby=True):
+def idle_pickup_code(nearby=True, inclusive=True):
     """Check the current tile and nearby combat drops with existing filters."""
     def q(opcode, name, *args):
         return (bytes([opcode]) + encode_u30(IDLE_NAMES[name])
@@ -580,7 +586,7 @@ def idle_pickup_code(nearby=True):
     block.extend(q(0x5D, "getTimer") + q(0x46, "getTimer", 0) + b"\x73\xd6")
     # Preserve the 500 ms player-wide gate shared with movement and auto-fight.
     guard(b"\xd2\xd0" + q(0x66, "m_autoPickLastTime")
-          + b"\xa1\x25\xf4\x03\xaf")  # elapsed > 500
+          + b"\xa1\x25\xf4\x03" + (b"\xb0" if inclusive else b"\xaf"))
     block.extend(b"\xd3\xd0" + q(0x66, "currentX")
                  + b"\xd0" + q(0x66, "currentY") + b"\x26"
                  + q(0x46, "getDropPacketByXY", 3)
@@ -628,8 +634,10 @@ def patch_idle_pickup(source):
         if limits != (4, 4, 13, 14):
             raise ValueError("Unexpected stationary pickup method limits")
         return source
-    _, legacy = idle_pickup_code(nearby=False)
-    if code[2:2 + len(cadence)] == cadence and code.count(legacy) == 1:
+    legacy_blocks = [idle_pickup_code(nearby=n, inclusive=i)[1]
+                     for n, i in ((True, False), (False, False), (False, True))]
+    legacy = next((value for value in legacy_blocks if code.count(value) == 1), None)
+    if code[2:2 + len(cadence)] == cadence and legacy is not None:
         if limits != (4, 4, 13, 14):
             raise ValueError("Unexpected legacy stationary pickup limits")
         hook = code.index(legacy)
@@ -693,6 +701,146 @@ def patch_idle_pickup(source):
     return result
 
 
+def replace_method(source, class_name, method_name, changed, limits=None):
+    """Replace one inspected method, preserving all surrounding ABC bytes."""
+    _, traits, bodies = inspect_abc(source, class_name)
+    method = traits[method_name][0]
+    start, length, old_limits = bodies[method]
+    instructions(changed)
+    reader = ABCReader(source)
+    reader.pos = start + length
+    if reader.u30() != 0 or reader.u30() != 0:
+        raise ValueError(f"Unexpected {class_name}.{method_name} exceptions or traits")
+    length_start = start - len(encode_u30(length))
+    marker = encode_u30(method) + b"".join(encode_u30(x) for x in old_limits)
+    header_start = length_start - len(marker)
+    if source[header_start:length_start] != marker:
+        raise ValueError("Unexpected pickup method header")
+    replacement = (encode_u30(method)
+                   + b"".join(encode_u30(x) for x in (limits or old_limits))
+                   + encode_u30(len(changed)) + changed + b"\0\0")
+    result = source[:header_start] + replacement + source[reader.pos:]
+    inspect_abc(result, class_name)
+    if (result[:header_start] + source[header_start:reader.pos]
+            + result[header_start + len(replacement):]) != source:
+        raise ValueError("Unrelated pickup method bytes changed")
+    return result
+
+
+def patch_pickup_chain(source):
+    """Continue after arrival cleanup, using the existing 100 ms pickup delay."""
+    names, traits, bodies = inspect_abc(source, "GameLogic")
+    expected = {2834: "LocalPlayer", 32899: "mainActor", 2995: "startAutoFight",
+                2996: "stopAutoFight", 3009: "leaveForNearestItemForAutoFight",
+                43371: "setTimeout", 37297: "PE_ACT_FIGHT_AND_PICKUP"}
+    if any(names[q] != name for q, name in expected.items()):
+        raise ValueError("Unexpected pickup arrival properties")
+    start, length, limits = bodies[traits["onPathTargetArrived"][0]]
+    code = source[start:start + length]
+    actor = b"\x60" + encode_u30(2834) + b"\x66" + encode_u30(32899)
+    old = actor + b"\x4f" + encode_u30(2996) + b"\0" + actor + b"\x4f" + encode_u30(2995) + b"\0"
+    follow = (b"\x5d" + encode_u30(43371) + actor + b"\x66" + encode_u30(3009)
+              + b"\x24\x64\x4f" + encode_u30(43371) + b"\x02")
+    if code.count(old) != 1:
+        raise ValueError("Unexpected auto-fight pickup arrival case")
+    pos = code.index(old) + len(old)
+    if code[pos:pos + len(follow)] == follow:
+        return source
+    if code[pos] != 0x10:
+        raise ValueError("Unexpected pickup arrival exit")
+    changed, _ = relocate(code, [(pos, pos, follow)])
+    return replace_method(source, "GameLogic", "onPathTargetArrived", changed)
+
+
+def patch_pickup_callback_guards(source):
+    """A delayed callback must not resume canceled fights or replace new paths."""
+    names, traits, bodies = inspect_abc(source, "LocalPlayer")
+    start, length, limits = bodies[traits["leaveForNearestItemForAutoFight"][0]]
+    code = source[start:start + length]
+    block = bytearray()
+    exits = []
+
+    def guard(value, opcode=0x12):
+        block.extend(value + bytes([opcode]))
+        exits.append(len(block))
+        block.extend(b"\0\0\0")
+
+    def prop(name):
+        q = IDLE_NAMES[name]
+        if names[q] != name:
+            raise ValueError("Unexpected pickup callback state")
+        return b"\xd0\x66" + encode_u30(q)
+
+    guard(b"\x60" + encode_u30(IDLE_NAMES["AutoPick"]))
+    guard(prop("autoFighting"))
+    for name in ("m_boUnderPath", "moving", "died", "jumping", "isDivineSwording",
+                 "stalling", "practice", "fastBattling"):
+        guard(prop(name), 0x11)
+    guard(b"\x60" + encode_u30(IDLE_NAMES["GameMap"])
+          + b"\x66" + encode_u30(IDLE_NAMES["defaultMap"]))
+    guard(b"\x60" + encode_u30(IDLE_NAMES["GameMap"])
+          + b"\x66" + encode_u30(IDLE_NAMES["defaultMap"])
+          + b"\x66" + encode_u30(IDLE_NAMES["loadingMap"]), 0x11)
+    guard(b"\x60" + encode_u30(IDLE_NAMES["LogicManager"])
+          + b"\x66" + encode_u30(IDLE_NAMES["defaultManager"]))
+    for field in exits:
+        block[field:field + 3] = encode_s24(70 + len(block) - field - 6)
+    if code[2:2 + len(block)] == block:
+        return source
+    if code[:2] != b"\xd0\x30" or len(code) != 70 or limits != (6, 2, 13, 14):
+        raise ValueError("Unexpected pickup callback method")
+    changed, _ = relocate(code, [(2, 2, b"\x02" * len(block))])
+    changed = bytearray(changed)
+    changed[2:2 + len(block)] = block
+    return replace_method(source, "LocalPlayer", "leaveForNearestItemForAutoFight", changed)
+
+
+def patch_failed_pickup_rebuild(source):
+    """Resume only auto-pickup paths when rebuilding an obstructed path fails."""
+    names, traits, bodies = inspect_abc(source, "LocalPlayer")
+    start, length, limits = bodies[traits["targetLocationArrived"][0]]
+    code = source[start:start + length]
+    expected = {2855: "m_PathLocation", 13946: "ArrivedAction", 6158: "action",
+                11024: "PathEndActionType", 37297: "PE_ACT_FIGHT_AND_PICKUP",
+                3008: "leaveFor", 3011: "abortPath", 2995: "startAutoFight"}
+    if any(names[q] != name for q, name in expected.items()):
+        raise ValueError("Unexpected pickup rebuild properties")
+    call = next(op for op in instructions(code)
+                if op.opcode in (0x46, 0x4F) and op.operands == (3008, 4))
+    if call.opcode == 0x46 and limits == (5, 2, 13, 14):
+        return source
+    if limits != (5, 1, 13, 14) or code[call.end] != 0x47:
+        raise ValueError("Unexpected pickup rebuild method")
+    capture = bytearray(b"\xd0\x66" + encode_u30(2855) + b"\x66" + encode_u30(13946)
+                        + b"\xd5\xd1\x12\0\0\0\xd1\x66" + encode_u30(6158)
+                        + b"\x60" + encode_u30(11024) + b"\x66" + encode_u30(37297)
+                        + b"\xab\xd5\x10\0\0\0\x27\xd5")
+    empty = len(capture) - 2
+    no_action = 9
+    done = len(capture) - 6
+    capture[no_action + 1:no_action + 4] = encode_s24(empty - no_action - 4)
+    capture[done + 1:done + 4] = encode_s24(len(capture) - done - 4)
+    # Insert before the original four arguments are evaluated; leaveFor aborts
+    # and may clear ArrivedAction even when it returns false.
+    receiver = 15
+    if code[receiver:call.start].count(b"\xd0") != 5:
+        raise ValueError("Unexpected pickup rebuild argument block")
+    recovery = bytearray(b"\x11\0\0\0\xd1\x12\0\0\0\xd0\x4f"
+                         + encode_u30(3011) + b"\0\xd0\x4f" + encode_u30(2995) + b"\0")
+    for branch in (0, 5):
+        recovery[branch + 1:branch + 4] = encode_s24(len(recovery) - branch - 4)
+    neutral = bytearray(code)
+    neutral[call.start] = 0x46
+    changed, moved = relocate(neutral, [(receiver, receiver, b"\x02" * len(capture)),
+                                       (call.end, call.end, b"\x02" * len(recovery))])
+    changed = bytearray(changed)
+    changed[receiver:receiver + len(capture)] = capture
+    p = moved(call.end) - len(recovery)
+    changed[p:p + len(recovery)] = recovery
+    return replace_method(source, "LocalPlayer", "targetLocationArrived", changed,
+                          (5, 2, 13, 14))
+
+
 def abc_section(source):
     data = swf_data(source)
     pos = 8 + (5 + (data[8] >> 3) * 4 + 7) // 8 + 4
@@ -726,6 +874,9 @@ def patch_swf(source):
     abc = patch_nearest_category_state(abc)
     abc = patch_failed_pickup_movement(abc)
     abc = patch_idle_pickup(abc)
+    abc = patch_pickup_chain(abc)
+    abc = patch_pickup_callback_guards(abc)
+    abc = patch_failed_pickup_rebuild(abc)
     if abc == data[start:end]:
         return source
     result = (data[:tag + 2] + struct.pack("<I", start - payload + len(abc))
@@ -749,7 +900,7 @@ def main():
             raise ValueError("Pickup retry patch is missing")
     elif source != result:
         CLIENT.write_bytes(result)
-    print("Verified pickup selection, path-failure recovery, movement, combat and stationary retries; unrelated client bytes preserved")
+    print("Verified pickup selection, 100 ms continuation, path/rebuild recovery and default stationary cadence; unrelated client bytes preserved")
 
 
 if __name__ == "__main__":

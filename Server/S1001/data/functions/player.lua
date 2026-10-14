@@ -1,4 +1,5 @@
-﻿--#include "data\functions\SpecialQuest.lua" once
+﻿--#include "data\config\help\SystemConfig.lua" once
+--#include "data\functions\SpecialQuest.lua" once
 --#include "data\config\activityconfig\QiBingDuoBao.lua" once
 --#include "data\functions\TimerFunc.lua" once
 --#include "data\functions\MobMonsterTips.lua" once
@@ -7446,6 +7447,7 @@ end
 LocalDT.GmCommandConfig = {
     gmAbsorbBosses = { kind = "none" },
     killAll = { kind = "none" },
+    gmPickupAll = { kind = "pickup" },
     whatday = { kind = "none" },
     ckmapid = { kind = "none" },
     qlck2 = { kind = "none" },
@@ -7566,6 +7568,9 @@ function gmCommand(sysarg, command, value, value2)
             value = LocalDT.GmReadNumber(sysarg, command, value)
             if value == nil then return end
         end
+    elseif config.kind == "pickup" then
+        value = LocalDT.GmPickupProfile(sysarg, value)
+        if not value then return end
     elseif config.kind == "suite" then
         if value == nil or value == "" then value = config.default end
         if type(value) ~= "string" and type(value) ~= "number" then
@@ -7635,5 +7640,125 @@ function gmAbsorbBosses(sysarg)
         Actor.sendTipmsg(sysarg, string.format("已聚拢 %d 只 Boss，%d 只周围无可用位置", moved, failed), ttFlyTip)
     else
         Actor.sendTipmsg(sysarg, string.format("已聚拢 %d 只 Boss", moved), ttFlyTip)
+    end
+end
+
+
+-- 与客户端自动拾取一致：22 类选择档次和开关，0～15 为档次，16 位为拾取开关。
+LocalDT.GmPickupProfile = function(sysarg, value)
+    if type(value) == "string" and #value <= 65 and value:match("^[0-9,]+$") then
+        local result, tokens = {}, {}
+        for token in value:gmatch("[^,]+") do
+            local number = tonumber(token)
+            if not number or number > 31 then break end
+            result[#result + 1] = number
+            tokens[#tokens + 1] = token
+        end
+        if #result == 22 and table.concat(tokens, ",") == value then return result end
+    end
+    Actor.sendTipmsg(sysarg, "拾取设置参数不正确，请重新打开 GM 面板", ttFlyTip)
+    return nil
+end
+
+LocalDT.GmPickupSelected = function(profile, itemId, moneyType)
+    if moneyType >= 0 then
+        local setting = profile[moneyType + 1]
+        return setting ~= nil and setting >= 16
+    end
+    if moneyType ~= -1 then return false end
+    -- 配置存在交叉范围；必须按原顺序匹配第一个当前选中档次的分类。
+    for _, config in ipairs(SystemConfig) do
+        local setting = profile[config.type]
+        if setting and config.itemtype == 0 then
+            local index = setting % 16 + 1
+            if #config.options == 1 then index = 1 end
+            for _, range in ipairs(config.idRange[index] or {}) do
+                if range[1] and range[2] and itemId >= range[1] and itemId <= range[2] then
+                    return setting >= 16
+                end
+            end
+        end
+    end
+    return false
+end
+
+LocalDT.GmPickupFinish = function(sysarg, state, interrupted)
+    local var = Actor.getDyanmicVar(sysarg)
+    if var.gmPickup ~= state then return end
+    var.gmPickup = nil
+    Actor.unregScriptCallback(sysarg, "GmPickupTick")
+    Actor.sendTipmsg(sysarg, string.format(interrupted and "拾取已停止，已拾取 %d 处掉落"
+        or "拾取完成，已拾取 %d 处掉落", state.picked), ttFlyTip)
+end
+
+-- 每次最多收取 50 个快照；原生入口在读取指针前重新核对实体身份和场景。
+function GmPickupTick(sysarg)
+    if not sysarg or Actor.getEntityType(sysarg) ~= 0 then return end
+    local var = Actor.getDyanmicVar(sysarg)
+    local state = var.gmPickup
+    if not state then return end
+    if (Actor.getGMLevel(sysarg) or 0) <= 0 or Actor.isDeath(sysarg)
+        or Actor.getScenePtr(sysarg) ~= state.scene then
+        LocalDT.GmPickupFinish(sysarg, state, true)
+        return
+    end
+    for i = 1, 50 do
+        local drop = state.drops[state.next]
+        if not drop then
+            LocalDT.GmPickupFinish(sysarg, state, false)
+            return
+        end
+        state.next = state.next + 1
+        if Actor.gmDropPickup(sysarg, drop.ptr, drop.recog) then state.picked = state.picked + 1 end
+        if Actor.isDeath(sysarg) or Actor.getScenePtr(sysarg) ~= state.scene then
+            LocalDT.GmPickupFinish(sysarg, state, true)
+            return
+        end
+    end
+    if not state.drops[state.next] then LocalDT.GmPickupFinish(sysarg, state, false) end
+end
+
+function gmPickupAll(sysarg, profile)
+    if not LocalDT.GmRequire(sysarg) then return end
+    -- 统一入口已经解析，直接调用时同样校验所有参数。
+    if type(profile) ~= "table" or #profile ~= 22 then
+        profile = LocalDT.GmPickupProfile(sysarg, profile)
+        if not profile then return end
+    end
+    for i = 1, 22 do
+        if type(profile[i]) ~= "number" or profile[i] < 0 or profile[i] > 31
+            or profile[i] ~= math.floor(profile[i]) then return end
+    end
+    if Actor.isDeath(sysarg) then
+        Actor.sendTipmsg(sysarg, "请复活后再拾取", ttFlyTip)
+        return
+    end
+    if type(Actor.gmDropPickup) ~= "function" then
+        Actor.sendTipmsg(sysarg, "当前服务器尚未加载 GM 拾取功能", ttFlyTip)
+        return
+    end
+    local var = Actor.getDyanmicVar(sysarg)
+    if var.gmPickup then return end
+    local scene = Actor.getScenePtr(sysarg)
+    if not scene then return end
+    local handle = Actor.getSceneHandle(sysarg)
+    local width, height = Fuben.getSceenWidth(handle), Fuben.getScenHeight(handle)
+    if not width or not height or width <= 0 or height <= 0 then return end
+    local state = { scene = scene, drops = {}, next = 1, picked = 0 }
+    local seen = {}
+    -- 元数据查询阶段不执行拾取回调，先保存整张场景的身份快照。
+    for _, ptr in ipairs(LuaHelp.getNearEntityListFromRange(scene, 0, 0, width, height, 3) or {}) do
+        local itemId, moneyType, recog = Actor.gmDropPickup(sysarg, ptr, 0)
+        if type(recog) == "number" and recog > 0 and not seen[recog] then
+            seen[recog] = true
+            if LocalDT.GmPickupSelected(profile, itemId, moneyType) then
+                state.drops[#state.drops + 1] = { ptr = ptr, recog = recog }
+            end
+        end
+    end
+    var.gmPickup = state
+    GmPickupTick(sysarg)
+    if var.gmPickup == state then
+        Actor.regScriptCallback(sysarg, sysarg, 100, 100, -1, "GmPickupTick")
     end
 end

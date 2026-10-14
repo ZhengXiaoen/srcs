@@ -4,7 +4,8 @@ import unittest
 
 from patch_appearance_upgrade import inspect_abc, pools
 from patch_drop_pickup_retry import abc_section, instructions
-from patch_gm_commands import CLIENT, COMMAND, LABEL, Q, patch_swf, KILL_COMMAND, KILL_LABEL
+from patch_gm_commands import (CLIENT, COMMAND, LABEL, Q, patch_swf, KILL_COMMAND,
+                               KILL_LABEL, PICKUP_LABEL, PICKUP_COMMAND_PREFIX)
 from patch_guild_quest_config import read_cbp
 
 
@@ -21,6 +22,10 @@ class GMVM:
         self.page = {}
         self.commands = []
         self.listeners = []
+        self.pickup_indices = {i: i % 16 for i in range(1, 23)}
+        self.pickup_enabled = {i: i % 2 == 1 for i in range(1, 23)}
+        self.pickup_reads = []
+        self.globals['GlobalData']['systemConfigDataMgr'] = {}
 
     def run(self, name, argument=None, start_at=0):
         method = self.catalog["CustomerServiceWin"]["instance"][name][0]
@@ -78,18 +83,26 @@ class GMVM:
                 elif name == "move": target["x"], target["y"] = values
                 elif name == "addChild": self.page.setdefault("children", []).extend(values)
                 elif name == "doChatMessage": self.commands.extend(values)
+                elif name == "getPickUpSelectIndexByType":
+                    self.pickup_reads.append((name, tuple(values)))
+                    result = self.pickup_indices[values[0]]
+                elif name == "getPickUpSelectByType":
+                    self.pickup_reads.append((name, tuple(values)))
+                    assert values[1] == 0
+                    result = self.pickup_enabled[values[0]]
+                elif name == "join": result = values[0].join(map(str, target))
                 else: raise AssertionError(f"Unexpected call: {name}")
                 if kind == 0x46: stack.append(result)
             elif kind == 0xc2: local[args[0]] += 1
             elif kind == 0xa0:
                 right, left = stack.pop(), stack.pop()
                 stack.append(left + right)
-            elif kind in (0x10, 0x11, 0x12, 0x15, 0x1a):
+            elif kind in (0x10, 0x11, 0x12, 0x15, 0x17, 0x1a):
                 if kind == 0x10: take = True
                 elif kind in (0x11, 0x12): take = bool(stack.pop()) == (kind == 0x11)
                 else:
                     right, left = stack.pop(), stack.pop()
-                    take = left < right if kind == 0x15 else left is not right
+                    take = left < right if kind == 0x15 else left > right if kind == 0x17 else left is not right
                 if take: pos = op.branches[0][1]
             elif kind == 0x1b:
                 index = stack.pop()
@@ -127,7 +140,7 @@ class GMClientTests(unittest.TestCase):
     def test_layout_next_to_show_title_and_no_overlap(self):
         vm = self.vm()
         buttons = vm.page["_stateBtnList"]
-        self.assertEqual(8, len(buttons))
+        self.assertEqual(9, len(buttons))
         title, pull = buttons[4], buttons[6]
         self.assertEqual("显示头衔", title["caption"])
         self.assertEqual(LABEL, pull["caption"])
@@ -140,15 +153,37 @@ class GMClientTests(unittest.TestCase):
         self.assertEqual(KILL_LABEL, kill["caption"])
         self.assertEqual((324, 78), (kill["x"], kill["y"]))
         self.assertGreaterEqual(kill["y"], pull["y"] + pull["height"])
+        pickup = buttons[8]
+        self.assertEqual(PICKUP_LABEL, pickup['caption'])
+        self.assertEqual((324, 106), (pickup['x'], pickup['y']))
+        self.assertGreaterEqual(pickup['y'], kill['y'] + kill['height'])
+        self.assertLessEqual(pickup['y'] + pickup['height'], 143)
+        # Actual four-tab skin is 272 pixels wide at x=17, ending before x=324.
+        self.assertGreaterEqual(pickup['x'], 17 + 272)
 
     def test_one_click_one_command_and_existing_commands(self):
         vm = self.vm()
         expected = ["@sethide GM测试角色 1", "@sethide GM测试角色 0",
-                    "@superman 0", "@superman 1", "@setgm 1", "@setgm 0", COMMAND, KILL_COMMAND]
+                    "@superman 0", "@superman 1", "@setgm 1", "@setgm 0", COMMAND, KILL_COMMAND,
+                    PICKUP_COMMAND_PREFIX + ','.join(str(vm.pickup_indices[i] +
+                    (16 if vm.pickup_enabled[i] else 0)) for i in range(1, 23)) + '"']
         for button, command in zip(vm.page["_stateBtnList"], expected):
             vm.commands.clear()
             vm.run("onBtnClick", {"target": button, "currentTarget": button})
             self.assertEqual([command], vm.commands)
+
+    def test_pickup_uses_all_current_indices_and_only_automatic_toggle(self):
+        vm = self.vm()
+        button = vm.page['_stateBtnList'][8]
+        for enabled in (False, True):
+            vm.pickup_reads.clear(); vm.commands.clear()
+            vm.pickup_indices = {i: 15 if enabled else 0 for i in range(1, 23)}
+            vm.pickup_enabled = {i: enabled for i in range(1, 23)}
+            vm.run('onBtnClick', {'target': {}, 'currentTarget': button})
+            self.assertEqual([PICKUP_COMMAND_PREFIX + ','.join([str(31 if enabled else 0)] * 22) + '"'], vm.commands)
+            self.assertEqual([(name, (i,) if name == 'getPickUpSelectIndexByType' else (i, 0))
+                              for i in range(1, 23)
+                              for name in ('getPickUpSelectIndexByType', 'getPickUpSelectByType')], vm.pickup_reads)
 
     def test_listener_lifecycle_still_covers_all_state_buttons(self):
         vm = self.vm()

@@ -7,6 +7,7 @@ It never logs in or sends GM commands. Socket connections are denied.
 """
 from pathlib import Path
 import os
+import re
 import struct
 import subprocess
 import tempfile
@@ -17,7 +18,7 @@ import zlib
 from patch_activity_entries import q
 from patch_appearance_upgrade import extend_pools, inspect_abc, pools
 from patch_drop_pickup_retry import abc_section, instructions
-from patch_gm_commands import CLASS, CLIENT, integer, u
+from patch_gm_commands import CLASS, CLIENT, PICKUP_LABEL, integer, u
 from patch_guild_quest_config import read_cbp
 from patch_item_count_u16_client import inspect_abc_full
 
@@ -32,7 +33,7 @@ Q = {'Loader':3246, 'URLRequest':48, 'Event':2, 'MouseEvent':5,
      'contentLoaderInfo':43590, 'currentTarget':43310, 'COMPLETE':42611,
      'addEventListener':13671, 'dispatchEvent':13673, 'load':1966,
      'addChild':1868, 'removeChild':1869, 'userData':1622,
-     '_pageCtrl':5577, '_navBar':5575, 'getPage':15593, 'selectedIndex':6104,
+     '_pageCtrl':5577, '_navBar':5575, '_stateBtnList':5581, 'getPage':15593, 'selectedIndex':6104,
      'index':44065}
 
 
@@ -44,7 +45,7 @@ def build_fixture(source, gm_level=9):
     skin_url = (CLIENT.parent/'v2/commonasset/gameskin.swf').as_uri()
     phases = ['START', 'SKIN_OK', 'WINDOW_OK', 'CATEGORIES_OK', 'REOPEN_OK', 'DONE']
     texts = labels + ['GM_HARNESS_'+phase for phase in phases]
-    texts += ['SimSun', 'GM runtime test', skin_url, 'click']
+    texts += ['SimSun', 'GM runtime test', skin_url, 'click', 'GM_SHORTCUT_LAYOUT', '|']
     abc, strings, added = extend_pools(data[start:end], texts, [('', 'trace')])
     names, catalog, _ = inspect_abc(abc)
     full = inspect_abc_full(abc)
@@ -83,6 +84,13 @@ def build_fixture(source, gm_level=9):
     code+=call(this,'addChild',win)
     control=get(win,'userData')+integer(0)+q(0x66,Q['index'])
     nav=get(win,'userData')+integer(1)+q(0x66,Q['index'])
+    if PICKUP_LABEL in table['strings'][3]:
+        pickup=get(win,'userData')+integer(2)+q(0x66,Q['index'])+integer(8)+q(0x66,Q['index'])
+        layout=q(0x5d,added['trace'])+st('GM_SHORTCUT_LAYOUT')
+        for obj in (nav,pickup):
+            for prop in ('x','y','width','height'):
+                layout+=st('|')+b'\xa0'+obj+q(0x66,public_name(prop))+b'\xa0'
+        code+=layout+q(0x4f,added['trace'],1)
     for tab in range(4 if gm_level>=9 else 2):
         code+=put(nav,'selectedIndex',integer(tab))
     if gm_level>=9:
@@ -116,7 +124,7 @@ def build_fixture(source, gm_level=9):
     replace(win_mid,original[:-len(discarded)]+b'\x47')
     init_mid=catalog['CustomerServiceWin']['instance']['init'][0]
     original=full['bodies'][init_mid]['code']
-    expose=put(this,'userData',get(this,'_pageCtrl')+get(this,'_navBar')+q(0x56,2))
+    expose=put(this,'userData',get(this,'_pageCtrl')+get(this,'_navBar')+get(this,'_stateBtnList')+q(0x56,3))
     replace(init_mid,original[:-1]+expose+b'\x47')
     for a,b,value in sorted(edits,reverse=True):abc=abc[:a]+value+abc[b:]
     output=data[:tag+2]+struct.pack('<I',start-payload+len(abc))+data[payload:start]+abc+data[end:]
@@ -177,6 +185,12 @@ class OpenGMRuntimeTests(unittest.TestCase):
                 for phase in ['WINDOW_OK','CATEGORIES_OK','REOPEN_OK','DONE']:
                     self.assertIn('GM_HARNESS_'+phase,output,output)
                 self.assertNotIn('ERROR ruffle_core::avm2',output,output)
+                layout=re.search(r'GM_SHORTCUT_LAYOUT\|([0-9|.]+)',output)
+                self.assertIsNotNone(layout,output)
+                nx,ny,nw,nh,px,py,pw,ph=map(float,layout[1].split('|'))
+                self.assertEqual((324,106,77,27),(px,py,pw,ph))
+                self.assertTrue(nx+nw<=px or ny+nh<=py or py+ph<=ny,output)
+                self.assertLessEqual(py+ph,143)
                 if gm_level>=9:
                     for category in range(6):
                         self.assertIn('avm_trace: click'+str(category)+'false',output,output)

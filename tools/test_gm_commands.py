@@ -117,11 +117,13 @@ for name,cfg in pairs(LocalDT.GmCommandConfig) do
  assert(type(_G[name])=='function',name)
  local previous=_G[name];local received={}
  _G[name]=function(p,n) assert(p==player);received.value=n;received.called=true end
- gmCommand(player,name)
+ if cfg.kind=='pickup' then gmCommand(player,name,string.rep('16,',21)..'16')
+ else gmCommand(player,name) end
  assert(received.called,name)
  if cfg.kind=='number' and not cfg.optional then
   assert(received.value==(cfg.uiDefault or cfg.default),name)
  elseif cfg.kind=='suite' then assert(received.value==5)
+ elseif cfg.kind=='pickup' then assert(#received.value==22 and received.value[1]==16)
  else assert(received.value==nil) end
  _G[name]=previous
 end

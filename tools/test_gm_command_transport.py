@@ -20,7 +20,7 @@ sys.path.insert(0, str(DEPS))
 from patch_activity_entries import q, relocate
 from patch_appearance_upgrade import extend_pools, inspect_abc, pools
 from patch_drop_pickup_retry import abc_section, instructions
-from patch_gm_commands import ACTIONS, CLIENT, integer, u
+from patch_gm_commands import ACTIONS, CLIENT, PICKUP_LABEL, integer, u
 from patch_item_count_u16_client import inspect_abc_full
 import test_gm_commands as handlers
 from test_gm_open_runtime import build_fixture, run_fixture
@@ -147,10 +147,17 @@ def command_cases():
         if command=='togglebosspay':yield command,'1'
 
 
+def pickup_profiles():
+    yield [0]*22
+    yield [31]*22
+    yield [i%16+(16 if i%2 else 0) for i in range(1,23)]
+
+
 def transport_fixture(source, gm_level=9):
     import zlib
     source=build_fixture(source,gm_level)
     data,(tag,payload,a,b)=abc_section(source)
+    include_pickup=PICKUP_LABEL in pools(data[a:b])['strings'][3]
     texts=['GM_PACKET','|','普通聊天','2026/10/14','GM_TRANSPORT_DONE','click','']
     texts += [value for _,value in command_cases()]
     direct=['@func gmCommand "gmAbsorbBosses"','@func gmCommand "killAll"',
@@ -194,6 +201,17 @@ def transport_fixture(source, gm_level=9):
         clicks+=get(page,'_gmInput')+st(value)+q(0x61,name('text'))
         button=get(page,'_gmButtons')+integer(index)+q(0x66,44065)
         clicks+=call(button,'dispatchEvent',q(0x5d,name('MouseEvent'))+st('click')+q(0x4a,name('MouseEvent'),1))
+    if include_pickup:
+        config=get(q(0x60,name('GlobalData')),'systemConfigDataMgr')
+        clicks+=q(0x60,name('GlobalData'))+q(0x5d,name('SystemConfigDataMgr'))+q(0x4a,name('SystemConfigDataMgr'),0)+q(0x61,name('systemConfigDataMgr'))
+        button=get(b'\xd2','userData')+integer(2)+q(0x66,44065)+integer(8)+q(0x66,44065)
+        for profile in pickup_profiles():
+            for pickup_type,value in enumerate(profile,1):
+                clicks+=call(config,'setPickUpSelectIndexByType',integer(pickup_type),integer(value%16))
+                clicks+=call(config,'setPickUpSelectByType',integer(pickup_type),integer(0),b'\x26' if value>=16 else b'\x27')
+                # The name-display toggle deliberately differs from pickup.
+                clicks+=call(config,'setPickUpSelectByType',integer(pickup_type),integer(1),b'\x27' if value>=16 else b'\x26')
+            clicks+=call(button,'dispatchEvent',q(0x5d,name('MouseEvent'))+st('click')+q(0x4a,name('MouseEvent'),1))
     for command in direct:
         # All send through the same production transport as the buttons.
         clicks+=call(q(0x60,name('ChatCC')),'sendChatMessage',integer(1),st(command))
@@ -240,7 +258,7 @@ class GMTransportTests(unittest.TestCase):
 
     def test_all_lua_buttons_reach_handlers_with_expected_arguments_and_defaults(self):
         expected=list(command_cases())
-        self.assertEqual(len(expected)+5,len(self.packets))
+        self.assertEqual(len(expected)+5+len(list(pickup_profiles())),len(self.packets))
         for (command,value),(text,packet) in zip(expected,self.packets):
             with self.subTest(command=command,value=value):
                 self.assertNotIn('<ST>',text)
@@ -270,6 +288,15 @@ assert(observed.value==expected,command_name)
                 self.assertEqual(len(text.encode()),struct.unpack('<H',packet[-2:])[0])
         for expected,(text,packet) in zip(['gmAbsorbBosses','killAll'],self.packets[-5:-3]):
             self.assertEqual((expected,),NativeGM().receive(packet)[0][1:])
+
+    def test_pickup_button_transports_live_player_configuration_as_one_argument(self):
+        start=len(list(command_cases()))
+        for profile,(text,packet) in zip(pickup_profiles(),self.packets[start:-5]):
+            profile_text=','.join(map(str,profile))
+            self.assertEqual('@func gmCommand "gmPickupAll" "'+profile_text+'" ',text)
+            self.assertNotIn('<ST>',text)
+            self.assertEqual(('gmPickupAll',profile_text),NativeGM().receive(packet)[0][1:])
+            self.assertEqual(len(text.encode()),struct.unpack('<H',packet[-2:])[0])
 
     def test_real_handlers_receive_values_and_extra_arguments_stay_rejected(self):
         assertions={'GmRecharge':"assert(calls.recharge[2]==1000)",

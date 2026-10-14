@@ -21,8 +21,11 @@ CLIENT = Path(__file__).resolve().parents[1] / "web/GameFrame.swf"
 CLASS = "CustomerServiceCommandPage"
 LABEL = "一键聚怪"
 COMMAND = '@func gmCommand "gmAbsorbBosses"'
-KILL_LABEL = "一键杀怪"
+KILL_LABEL = "一键清图"
+KILL_INSTALL_LABEL = "一键杀怪"
 KILL_COMMAND = '@func gmCommand "killAll"'
+PICKUP_LABEL = "一键拾取"
+PICKUP_COMMAND_PREFIX = '@func gmCommand "gmPickupAll" "'
 CATEGORIES = ["常用查询", "角色养成", "材料设置", "装备发放", "地图规则", "数据清理"]
 # label, command, category, parameter mode (0:none, 1:Lua, 2:item, 3:money), tooltip
 ACTIONS = [
@@ -66,7 +69,9 @@ Q = {"Button54":15659,"Label":371,"TextInput0":8984,"Array":22,
      "length":3237,"MouseEvent":5,"CLICK":33809,"addEventListener":13671,
      "removeEventListener":13672,"gmLevel":4202,"GlobalData":1507,"role":11237,
      "RegExp":906,"test":11650,"split":43284,"Number":21,
-     "CustomerServiceBasePage":15600,"_stateBtnList":5581}
+     "CustomerServiceBasePage":15600,"_stateBtnList":5581,
+     "systemConfigDataMgr":31199,"getPickUpSelectIndexByType":5051,
+     "getPickUpSelectByType":5050,"join":44114}
 
 
 def u(*values): return b"".join(encode_u30(x) for x in values)
@@ -137,7 +142,75 @@ def repair_installed_page(original):
         edits.append((old['record_start'], old['end'], body))
     for start, end, value in sorted(edits, reverse=True):
         result[start:end] = value
-    return repair_gm_chat_timestamp(bytes(result))
+    return repair_gm_pickup(repair_gm_chat_timestamp(bytes(result)))
+
+
+def repair_gm_pickup(source):
+    """Add the pickup shortcut with the player's current automatic-pickup rules."""
+    source, strings, _ = extend_pools(source,
+        [KILL_LABEL, PICKUP_LABEL, PICKUP_COMMAND_PREFIX, 'a|gmPickupAll|4|0', ',', '"'], [])
+    names, catalog, _ = inspect_abc(source)
+    full = inspect_abc_full(source)
+    win = catalog['CustomerServiceWin']['instance']
+    for name in ['systemConfigDataMgr', 'getPickUpSelectIndexByType',
+                 'getPickUpSelectByType', 'join']:
+        if names[Q[name]] != name:
+            raise ValueError('Unexpected pickup QName: ' + name)
+    def st(text):return q(0x2c, strings[text])
+    def get(obj,name):return obj+q(0x66,Q[name])
+    def put(obj,name,value):return obj+value+q(0x61,Q[name])
+    def call(obj,name,*args):return obj+b''.join(args)+q(0x4f,Q[name],len(args))
+    def member(index):return get(b'\xd0','_stateBtnList')+integer(index)+q(0x66,Q['index'])
+    edits = []
+    def replace(mid,code,limits):
+        old = full['bodies'][mid]
+        if old['exceptions'] or old['body_traits'] != b'\0':
+            raise ValueError('Unexpected pickup shortcut body traits')
+        instructions(code)
+        edits.append((old['record_start'],old['end'],u(mid,*limits,len(code))+code+b'\0\0'))
+    mid = win['init'][0]
+    old = full['bodies'][mid]
+    code = old['code']
+    ops = instructions(code)
+    pool_strings = pools(source)['strings'][3]
+    if any(op.opcode == 0x2c and pool_strings[op.operands[0]] == PICKUP_LABEL for op in ops):
+        return source
+    rename = [(op.start,op.end,st(KILL_LABEL)) for op in ops
+              if op.opcode == 0x2c and pool_strings[op.operands[0]] == KILL_INSTALL_LABEL]
+    button = q(0x5d,Q['Button54'])+q(0x4a,Q['Button54'],0)+store(11)
+    obj = local(11)
+    button += put(obj,'autoSize',b'\x27')+put(obj,'width',integer(77))+put(obj,'height',integer(27))
+    button += put(obj,'caption',st(PICKUP_LABEL))+put(obj,'name',st('a|gmPickupAll|4|0'))
+    button += put(obj,'toolTip',st(PICKUP_LABEL))+put(obj,'visible',b'\x26')
+    button += call(obj,'move',integer(324),integer(106))+call(b'\xd0','addChild',obj)
+    button += call(get(b'\xd0','_stateBtnList'),'push',obj)
+    code, _ = relocate(code,rename+[(len(code)-1,len(code)-1,button)])
+    replace(mid,code,old['limits'])
+    mid = win['onBtnClick'][0]
+    old = full['bodies'][mid]
+    # Values use the same nibble/index and action-0 toggle as ordinary pickup.
+    # Iterate all 22 types, including disabled ones, so the server receives a
+    # complete snapshot and can preserve the original configuration order.
+    b = Block()
+    b.emit(get(b'\xd1','currentTarget')+member(8));b.branch(0x1a,'normal')
+    b.emit(get(q(0x60,Q['GlobalData']),'systemConfigDataMgr')+store(2))
+    b.emit(q(0x56,0)+store(3)+integer(1)+store(4))
+    b.label('loop');b.emit(local(4)+integer(22));b.branch(0x17,'send')
+    b.emit(local(2)+local(4)+q(0x46,Q['getPickUpSelectIndexByType'],1)+store(5))
+    b.emit(local(2)+local(4)+integer(0)+q(0x46,Q['getPickUpSelectByType'],2));b.branch(0x12,'disabled')
+    b.emit(local(5)+integer(16)+b'\xa0'+store(5))
+    b.label('disabled');b.emit(call(local(3),'push',local(5))+q(0xc2,4));b.branch(0x10,'loop')
+    b.label('send')
+    b.emit(q(0x60,Q['ChatFunc'])+st(PICKUP_COMMAND_PREFIX)+local(3)+st(',')+
+           q(0x46,Q['join'],1)+b'\xa0'+st('"')+b'\xa0'+q(0x4f,Q['doChatMessage'],1)+b'\x47')
+    b.label('normal')
+    code, _ = relocate(old['code'],[(2,2,b.finish()[0])])
+    code = label_backward_branches(code)
+    limits = list(old['limits']);limits[0]=max(limits[0],4);limits[1]=max(limits[1],6)
+    replace(mid,code,limits)
+    result = bytearray(source)
+    for start,end,value in sorted(edits,reverse=True):result[start:end]=value
+    return bytes(result)
 
 
 def repair_gm_chat_timestamp(source):
@@ -177,7 +250,7 @@ def repair_gm_chat_timestamp(source):
 
 def patch_abc(original):
     if CLASS in pools(original)["strings"][3]: return repair_installed_page(original)
-    texts=[CLASS,LABEL,COMMAND,KILL_LABEL,KILL_COMMAND,"a|killAll|4|0","GM命令","参数", "留空使用默认值",
+    texts=[CLASS,LABEL,COMMAND,KILL_INSTALL_LABEL,KILL_COMMAND,"a|killAll|4|0","GM命令","参数", "留空使用默认值",
            "请输入有效物品名","金额格式或范围错误","参数格式错误",
            "|",""," ",'"',' "',"1000",'@func gmCommand "',"c","^[0-9]{1,10}$(?![\\s\\S])", '^[^\\s@;|"\\\\]{1,64}$(?![\\s\\S])',
            '^[^\\s@;|"\\\\]{0,64}$(?![\\s\\S])',"1000000000"]
@@ -328,7 +401,7 @@ def patch_abc(original):
     b.emit(call(b'\xd0'+q(0x66,5577),'addChild',local(10)))
     b.emit(local(10)+integer(-5)+q(0x61,1656));b.label('normal');insert=b.finish()[0]
     labelop=next(o for o in instructions(code) if o.opcode==0x2c and pools(source)['strings'][3][o.operands[0]]=='一键吸附')
-    extra=button(KILL_LABEL,324,78,77,'a|killAll|4|0',KILL_LABEL,index=11,parent=b'\xd0')
+    extra=button(KILL_INSTALL_LABEL,324,78,77,'a|killAll|4|0',KILL_INSTALL_LABEL,index=11,parent=b'\xd0')
     extra+=call(get('_stateBtnList'),'push',local(11))
     patched,_=relocate(code,[(295,296,insert+b'\xd0'),(labelop.start,labelop.end,st(LABEL)),(size-1,size-1,extra)])
     change(win['init'][0],patched)
@@ -376,7 +449,7 @@ def patch_abc(original):
     for a,b,value in sorted(edits):restore.append((a+shift,a+shift+len(value),source[a:b]));shift+=len(value)-(b-a)
     for a,b,value in reversed(restore):restored[a:b]=value
     if bytes(restored)!=source:raise ValueError('Unrelated ABC records changed')
-    return repair_gm_chat_timestamp(result)
+    return repair_gm_pickup(repair_gm_chat_timestamp(result))
 
 
 def patch_swf(source):
@@ -401,6 +474,7 @@ def update_tutorial(source):
         '@func addjunhunping 50000 （给背包的军魂瓶充满）':'@func addjunhunping 50000 （设置背包军魂瓶值，不超过瓶容量）',
         '@func GiveTotal 起源':'@func GiveTotal "起源"',
         '@func setbossrate 1.5':'@func setbossrate "1.5"',
+        '其下为一键杀怪。':'其下为一键清图和一键拾取，拾取沿用当前玩家的拾取设置。',
     }
     lines=text.splitlines(keepends=True)
     result=[]
@@ -413,7 +487,7 @@ def update_tutorial(source):
         eol='\r\n' if '\r\n' in text else '\n'
         text=text.rstrip('\r\n')+eol*2+eol.join([
             '教程命令已加入 GM 面板的“GM命令”页，按常用查询、角色养成、材料设置、装备发放、地图规则、数据清理分类。',
-            '填写参数后点击对应功能；留空使用按钮提示的默认值。显示头衔右侧为一键聚怪，其下为一键杀怪。',
+            '填写参数后点击对应功能；留空使用按钮提示的默认值。显示头衔右侧为一键聚怪，其下为一键清图和一键拾取，拾取沿用当前玩家的拾取设置。',
             '命令行统一入口示例：@func gmCommand "setlevel" "255"，@func gmCommand "setbossrate" "1.5"，@func gmCommand "GiveTotal" "起源"。',
             ''])
     return (b'\xef\xbb\xbf' if bom else b'')+text.encode('utf-8')

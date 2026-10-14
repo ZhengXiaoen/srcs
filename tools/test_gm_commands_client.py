@@ -201,6 +201,7 @@ class CommandClientTests(unittest.TestCase):
         shortcuts={catalog['CustomerServiceWin']['instance'][name][0] for name in ['init','onBtnClick']}
         from patch_gm_commands import repair_gm_pickup
         pickup_fixed=inspect_abc_full(repair_gm_pickup(before))['bodies']
+        immediate=catalog['ChatBasePanel']['instance']['sendMessageImmedia'][0]
         for mid,body in old.items():
             if mid in changed:
                 self.assertNotEqual(body['code'],current[mid]['code'])
@@ -223,6 +224,11 @@ class CommandClientTests(unittest.TestCase):
                     for op in ops:
                         for _,target,_ in op.branches:
                             if target<op.start:self.assertEqual(0x09,by[target].opcode)
+            elif mid==immediate:
+                from patch_gm_commands import repair_gm_immediate_input
+                fixed=inspect_abc_full(repair_gm_immediate_input(before))['bodies'][mid]
+                self.assertEqual(fixed['code'],current[mid]['code'])
+                self.assertEqual(body['limits'],current[mid]['limits'])
             else:
                 self.assertEqual(before[body['record_start']:body['end']],
                                  self.abc[current[mid]['record_start']:current[mid]['end']],mid)

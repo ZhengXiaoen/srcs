@@ -148,7 +148,45 @@ class Replay:
     def pickup(self):self.arguments[3]=self.recog;return self.run(self.api,HEAP+0xd000)
 
 
+class TimerReplay(Replay):
+    def __init__(self, repeat_interval=5000):
+        super().__init__()
+        self.arguments={1:self.actor,2:0,3:100,4:repeat_interval,5:1}
+        self.timer_name=HEAP+0xf000;self.u.mem_write(self.timer_name,b'GmPickupTick\0')
+        self.scheduled=[]
+
+    def hook(self,u,a,size,data):
+        c,d,e,f=[u.reg_read(r) for r in [UC_X86_REG_RCX,UC_X86_REG_RDX,UC_X86_REG_R8,UC_X86_REG_R9]]
+        sp=u.reg_read(UC_X86_REG_RSP)
+        if any(b<=a<end for b,end in [(0x140356120,0x140356138),(0x140356140,0x140356158),
+                                      (0x1403106e0,0x14031080c),(0x140310820,0x14031098d),
+                                      (0x14025e4c0,0x14025e755),(0x14002eed0,0x14002eedd)]):return
+        if a==0x1403ab670:self.ret(self.arguments[d]);return
+        if a==0x1403ab4c0:self.ret(self.arguments[d]);return
+        if a==0x1403ab520:assert d==6;self.ret(self.timer_name);return
+        if a==0x140378cf0:assert e==7;self.ret();return
+        if a==0x1403c5582:self.ret(len(self.text(c)));return
+        if a==0x1401f69f0:self.put(c,'I',789);self.ret(c);return
+        if a==0x14004f060:self.ret(HEAP+0xe000);return
+        if a==0x14025faa0:self.ret(c);return
+        if a==0x14005fb10:
+            interval=self.get(sp+0x28,'I');repeats=self.get(sp+0x30,'i');name=self.text(self.get(sp+0x38,'Q'))
+            self.scheduled.append((d,e,f,interval,repeats,name))
+            self.put(c+4,'I',d);self.put(c+8,'I',f);self.put(c+0x10,'I',repeats);self.ret();return
+        if a==0x140293130:assert c==self.actor+0x198;self.ret(HEAP+0xd800);return
+        super().hook(u,a,size,data)
+
+
 class NativePickupTests(unittest.TestCase):
+    def test_callback_api_is_noop_and_real_timer_registers_one_shot(self):
+        r=TimerReplay();r.run(0x140356120,HEAP+0xd000)
+        self.assertEqual(r.scheduled,[]);self.assertEqual(r.pushed,[1])
+        r=TimerReplay();r.run(0x140356140,HEAP+0xd000)
+        self.assertEqual(r.scheduled,[(789,0,100,5000,1,'GmPickupTick')])
+        self.assertEqual(r.pushed,[789]);self.assertEqual(r.get(HEAP+0xe018,'Q'),1100)
+        r=TimerReplay(repeat_interval=100);r.run(0x140356140,HEAP+0xd000)
+        self.assertEqual(r.scheduled[0][3],5000)  # real factory clamps repeat intervals
+
     def test_metadata_and_existing_registration(self):
         r=Replay();r.run(r.api,HEAP+0xd000);self.assertEqual(r.pushed,[85,-1,123]);self.assertTrue(r.present)
         r.put(HEAP+0xf000,'11s',b'getEntity\0\0');r.run(r.reg,HEAP+0xd000,HEAP+0xf000,0x14034ece0)

@@ -142,7 +142,38 @@ def repair_installed_page(original):
         edits.append((old['record_start'], old['end'], body))
     for start, end, value in sorted(edits, reverse=True):
         result[start:end] = value
-    return repair_gm_pickup(repair_gm_chat_timestamp(bytes(result)))
+    return repair_gm_immediate_input(repair_gm_pickup(repair_gm_chat_timestamp(bytes(result))))
+
+
+def repair_gm_immediate_input(source):
+    """Keep the chat input draft out of externally supplied GM commands."""
+    names, catalog, _ = inspect_abc(source)
+    full = inspect_abc_full(source)
+    mid = catalog['ChatBasePanel']['instance']['sendMessageImmedia'][0]
+    old = full['bodies'][mid]
+    code = old['code']
+    ops = instructions(code)
+    strings = pools(source)['strings'][3]
+    def prop(name):
+        return next(op.operands[0] for op in ops if op.opcode in (0x66,0x61)
+                    and names[op.operands[0]] == name)
+    chat = full['bodies'][catalog['ChatCC']['static']['sendChatMessage'][0]]['code']
+    index_of = next(op.operands[0] for op in instructions(chat)
+                    if op.opcode == 0x46 and names[op.operands[0]] == 'indexOf')
+    b = Block()
+    b.emit(b'\xd1'+q(0x66,prop('message'))+q(0x2c,strings.index('@'))+
+           q(0x46,index_of,1)+integer(0));b.branch(0x14,'normal')
+    b.emit(b'\xd0'+q(0x66,prop('_chatInput'))+q(0x2c,strings.index(''))+
+           q(0x61,prop('text')))
+    b.label('normal')
+    guard = b.finish()[0]
+    if code[2:].startswith(guard):return source
+    if old['exceptions'] or old['body_traits'] != b'\0':
+        raise ValueError('Unexpected immediate-chat body traits')
+    code, _ = relocate(code,[(2,2,guard)])
+    instructions(code)
+    body = u(mid,*old['limits'],len(code))+code+b'\0\0'
+    return source[:old['record_start']]+body+source[old['end']:]
 
 
 def repair_gm_pickup(source):
@@ -449,7 +480,7 @@ def patch_abc(original):
     for a,b,value in sorted(edits):restore.append((a+shift,a+shift+len(value),source[a:b]));shift+=len(value)-(b-a)
     for a,b,value in reversed(restore):restored[a:b]=value
     if bytes(restored)!=source:raise ValueError('Unrelated ABC records changed')
-    return repair_gm_pickup(repair_gm_chat_timestamp(result))
+    return repair_gm_immediate_input(repair_gm_pickup(repair_gm_chat_timestamp(result)))
 
 
 def patch_swf(source):

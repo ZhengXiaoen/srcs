@@ -153,13 +153,18 @@ def pickup_profiles():
     yield [i%16+(16 if i%2 else 0) for i in range(1,23)]
 
 
-def transport_fixture(source, gm_level=9):
+IMMEDIATE_DRAFTS = ['', '聊天草稿', '!', '!!', '!~', '/', '@tracePacketNumSwitch',
+                    '带"引号"的草稿', '重复点击', '重复点击', 'x'*200]
+
+
+def transport_fixture(source, gm_level=9, immediate_only=False):
     import zlib
     source=build_fixture(source,gm_level)
     data,(tag,payload,a,b)=abc_section(source)
     include_pickup=PICKUP_LABEL in pools(data[a:b])['strings'][3]
     texts=['GM_PACKET','|','普通聊天','2026/10/14','GM_TRANSPORT_DONE','click','']
     texts += [value for _,value in command_cases()]
+    texts += IMMEDIATE_DRAFTS + ['普通即时消息', '保留草稿']
     direct=['@func gmCommand "gmAbsorbBosses"','@func gmCommand "killAll"',
             '@func gmCommand "setlevel" "100" extra','@func gmCommand "killAll" 1','普通聊天']
     texts += direct
@@ -171,13 +176,30 @@ def transport_fixture(source, gm_level=9):
     def get(obj,value):return obj+q(0x66,name(value))
     def call(obj,value,*args):return obj+b''.join(args)+q(0x4f,name(value),len(args))
     edits=[]
-    def replace(mid,code,stack=10):
+    def replace(mid,code,stack=10,locals_=None):
         old=full['bodies'][mid];limits=list(old['limits']);limits[0]=max(stack,limits[0])
+        if locals_ is not None:limits[1]=max(limits[1],locals_)
         assert not old['exceptions'] and old['body_traits']==b'\0'
         edits.append((old['record_start'],old['end'],u(mid,*limits,len(code))+code+b'\0\0'))
-    # Bridge the immediate-chat event to its real sender at the event boundary.
-    replace(cat['ChatFunc']['static']['doChatMessage'][0],
-            b'\xd0\x30'+call(q(0x60,name('ChatCC')),'sendChatMessage',b'\xd2',b'\xd1')+b'\x47')
+    def construct(value):return q(0x5d,name(value))+q(0x4a,name(value),0)
+    base=cat['ChatBasePanel']['instance']
+    base_ops=instructions(full['bodies'][base['sendMessage'][0]]['code'])
+    def protected(value):
+        return next(op.operands[0] for op in base_ops if op.opcode==0x66 and names[op.operands[0]]==value)
+    input_slot=protected('_chatInput');channel_slot=protected('_currentChannel')
+    # Abbreviate UI construction and channel drawing only. Keep the actual
+    # ChatFunc -> ChatEvent -> ChatPanel -> immediate/sendMessage -> ChatCC path,
+    # including input checks, GM checks, secret detection and packet writes.
+    ctor=b'\xd0\x30\xd0\x49\0\xd0'+construct('TextInput')+q(0x61,input_slot)
+    ctor+=b'\xd0'+st('')+q(0x61,protected('_inputTip'))+b'\xd0'+integer(1)+q(0x61,channel_slot)+b'\x47'
+    replace(cat['ChatBasePanel']['constructor'],ctor)
+    replace(cat['ChatCommonPanel']['constructor'],b'\xd0\x30\xd0\x49\0\x47')
+    handler=cat['ChatPanel']['instance']['sendMessageImmediaHandler']
+    left_slot=next(op.operands[0] for op in instructions(full['bodies'][handler[0]]['code'])
+                   if op.opcode==0x66 and names[op.operands[0]]=='_leftChat')
+    replace(cat['ChatPanel']['constructor'],b'\xd0\x30\xd0\x49\0\xd0'+construct('ChatCommonPanel')+q(0x61,left_slot)+b'\x47')
+    replace(base['setSendChannel'][0],b'\xd0\x30\xd0\xd1'+q(0x61,channel_slot)+b'\x47')
+    replace(base['onWordCountChange'][0],b'\xd0\x30\x47')
     # Deterministic time dependency; actual CustomByteArray writes are retained.
     replace(cat['DateTimeUtils']['static']['toDateTimeString'][0],b'\xd0\x30'+st('2026/10/14')+b'\x48')
     replace(cat['GlobalFunc']['static']['getCurrentServerDate'][0],
@@ -196,7 +218,13 @@ def transport_fixture(source, gm_level=9):
     page=b'\xd3'
     language=get(q(0x60,name('LangManager')),'Lang')
     clicks=language+b''.join(st('') for _ in range(27))+q(0x56,27)+q(0x61,name('chat'))
-    for command,value in command_cases():
+    clicks+=q(0x60,name('GlobalData'))+construct('ChatMessageMgr')+q(0x61,name('chatDataMgr'))
+    clicks+=construct('ChatPanel')+q(0x63,4)
+    clicks+=q(0x60,name('DataEventDispatcher'))+get(q(0x60,name('ChatEvent')),'CHAT_SEND_MESSAGE_IMMEDIA')
+    clicks+=q(0x62,4)+q(0x66,handler[1])+q(0x4f,name('addEventListener'),2)
+    chat_panel=q(0x62,4)+q(0x66,left_slot)
+    chat_input=chat_panel+q(0x66,input_slot)
+    for command,value in ([] if immediate_only else command_cases()):
         index=next(i for i,action in enumerate(ACTIONS) if action[1]==command)
         clicks+=get(page,'_gmInput')+st(value)+q(0x61,name('text'))
         button=get(page,'_gmButtons')+integer(index)+q(0x66,44065)
@@ -205,29 +233,38 @@ def transport_fixture(source, gm_level=9):
         config=get(q(0x60,name('GlobalData')),'systemConfigDataMgr')
         clicks+=q(0x60,name('GlobalData'))+q(0x5d,name('SystemConfigDataMgr'))+q(0x4a,name('SystemConfigDataMgr'),0)+q(0x61,name('systemConfigDataMgr'))
         button=get(b'\xd2','userData')+integer(2)+q(0x66,44065)+integer(8)+q(0x66,44065)
-        for profile in pickup_profiles():
+        for profile in ([([31]*22)] if immediate_only else pickup_profiles()):
             for pickup_type,value in enumerate(profile,1):
                 clicks+=call(config,'setPickUpSelectIndexByType',integer(pickup_type),integer(value%16))
                 clicks+=call(config,'setPickUpSelectByType',integer(pickup_type),integer(0),b'\x26' if value>=16 else b'\x27')
                 # The name-display toggle deliberately differs from pickup.
                 clicks+=call(config,'setPickUpSelectByType',integer(pickup_type),integer(1),b'\x27' if value>=16 else b'\x26')
-            clicks+=call(button,'dispatchEvent',q(0x5d,name('MouseEvent'))+st('click')+q(0x4a,name('MouseEvent'),1))
-    for command in direct:
+            for draft in (IMMEDIATE_DRAFTS if immediate_only else ['']):
+                clicks+=chat_panel+integer(1)+q(0x61,channel_slot)
+                clicks+=chat_input+st(draft)+q(0x61,name('text'))
+                clicks+=call(button,'dispatchEvent',q(0x5d,name('MouseEvent'))+st('click')+q(0x4a,name('MouseEvent'),1))
+    if immediate_only:
+        clicks+=chat_panel+integer(1)+q(0x61,channel_slot)+chat_input+st('保留草稿')+q(0x61,name('text'))
+        clicks+=call(q(0x60,name('ChatFunc')),'doChatMessage',st('普通即时消息'))
+    for command in ([] if immediate_only else direct):
         # All send through the same production transport as the buttons.
         clicks+=call(q(0x60,name('ChatCC')),'sendChatMessage',integer(1),st(command))
     clicks+=q(0x5d,added['trace'])+st('GM_TRANSPORT_DONE')+q(0x4f,added['trace'],1)
     # Before DONE, the real command page is in local3 and initialized.
     point=next(op.start for op in instructions(code) if op.opcode==0x5d and
                code[op.start:op.start+20].find(q(0x2c,pool['strings'][3].index('GM_HARNESS_CATEGORIES_OK')))>=0)
-    code,_=relocate(code,[(point,point,clicks)]);replace(mid,code,30)
+    code,_=relocate(code,[(point,point,clicks)]);replace(mid,code,30,5)
     for start,end,value in sorted(edits,reverse=True):abc=abc[:start]+value+abc[end:]
     output=data[:tag+2]+struct.pack('<I',a-payload+len(abc))+data[payload:a]+abc+data[b:]
     output=output[:4]+struct.pack('<I',len(output))+output[8:]
     return output[:8]+zlib.compress(output[8:],9)
 
 
-def runtime_packets(source):
-    output=run_fixture(os.environ['GM_RUFFLE_EXE'],source,fixture_builder=transport_fixture)
+def immediate_fixture(source,gm_level=9):return transport_fixture(source,gm_level,True)
+
+
+def runtime_packets(source,fixture_builder=transport_fixture):
+    output=run_fixture(os.environ['GM_RUFFLE_EXE'],source,fixture_builder=fixture_builder)
     if 'GM_TRANSPORT_DONE' not in output or 'ERROR ruffle_core::avm2' in output:
         raise AssertionError(output)
     packets=[]
@@ -297,6 +334,28 @@ assert(observed.value==expected,command_name)
             self.assertNotIn('<ST>',text)
             self.assertEqual(('gmPickupAll',profile_text),NativeGM().receive(packet)[0][1:])
             self.assertEqual(len(text.encode()),struct.unpack('<H',packet[-2:])[0])
+
+    def test_real_immediate_event_path_excludes_gm_drafts_and_preserves_normal_chat(self):
+        packets=runtime_packets(CLIENT.read_bytes(),immediate_fixture)
+        self.assertEqual(len(IMMEDIATE_DRAFTS)+1,len(packets))
+        profile=','.join(['31']*22)
+        expected='@func gmCommand "gmPickupAll" "'+profile+'" '
+        for draft,(text,packet) in zip(IMMEDIATE_DRAFTS,packets[:-1]):
+            with self.subTest(draft=draft):
+                self.assertEqual(expected,text)
+                self.assertEqual(('gmPickupAll',profile),NativeGM().receive(packet)[0][1:])
+        self.assertEqual('普通即时消息保留草稿<ST>2026/10/14</ST>',packets[-1][0])
+
+    def test_previous_immediate_event_path_reproduces_draft_append_and_swallowed_commands(self):
+        previous=subprocess.check_output(['git','show','ed8fc33:web/GameFrame.swf'],cwd=CLIENT.parent.parent)
+        packets=runtime_packets(previous,immediate_fixture)
+        expected='@func gmCommand "gmPickupAll" "'+','.join(['31']*22)+'"'
+        texts=[text for text,_ in packets]
+        self.assertLess(len(texts),len(IMMEDIATE_DRAFTS)+1)
+        self.assertIn(expected+'聊天草稿 ',texts)
+        self.assertIn(expected+'重复点击 ',texts)
+        self.assertEqual(2,texts.count(expected+'重复点击 '))
+        self.assertIn('普通即时消息保留草稿<ST>2026/10/14</ST>',texts)
 
     def test_real_handlers_receive_values_and_extra_arguments_stay_rejected(self):
         assertions={'GmRecharge':"assert(calls.recharge[2]==1000)",

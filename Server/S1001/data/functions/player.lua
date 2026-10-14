@@ -7686,9 +7686,18 @@ LocalDT.GmPickupFinish = function(sysarg, state, interrupted)
     local var = Actor.getDyanmicVar(sysarg)
     if var.gmPickup ~= state then return end
     var.gmPickup = nil
-    Actor.unregScriptCallback(sysarg, "GmPickupTick")
+    if state.timer then Actor.unregScriptCallback(sysarg, "GmPickupTick") end
     Actor.sendTipmsg(sysarg, string.format(interrupted and "拾取已停止，已拾取 %d 处掉落"
         or "拾取完成，已拾取 %d 处掉落", state.picked), ttFlyTip)
+end
+
+-- 实体脚本定时器的重复间隔至少 5 秒；每批使用延迟 100 毫秒的单次任务。
+LocalDT.GmPickupSchedule = function(sysarg, state)
+    state.timer = Actor.regScriptTimer(sysarg, 0, 100, 5000, 1, "GmPickupTick")
+    if type(state.timer) ~= "number" or state.timer <= 0 then
+        state.timer = nil
+        LocalDT.GmPickupFinish(sysarg, state, true)
+    end
 end
 
 -- 每次最多收取 50 个快照；原生入口在读取指针前重新核对实体身份和场景。
@@ -7697,6 +7706,7 @@ function GmPickupTick(sysarg)
     local var = Actor.getDyanmicVar(sysarg)
     local state = var.gmPickup
     if not state then return end
+    state.timer = nil
     if (Actor.getGMLevel(sysarg) or 0) <= 0 or Actor.isDeath(sysarg)
         or Actor.getScenePtr(sysarg) ~= state.scene then
         LocalDT.GmPickupFinish(sysarg, state, true)
@@ -7715,7 +7725,11 @@ function GmPickupTick(sysarg)
             return
         end
     end
-    if not state.drops[state.next] then LocalDT.GmPickupFinish(sysarg, state, false) end
+    if not state.drops[state.next] then
+        LocalDT.GmPickupFinish(sysarg, state, false)
+    else
+        LocalDT.GmPickupSchedule(sysarg, state)
+    end
 end
 
 function gmPickupAll(sysarg, profile)
@@ -7738,13 +7752,26 @@ function gmPickupAll(sysarg, profile)
         return
     end
     local var = Actor.getDyanmicVar(sysarg)
-    if var.gmPickup then return end
+    if var.gmPickup then
+        if var.gmPickup.version == 1 then
+            Actor.sendTipmsg(sysarg, "正在拾取，请稍候", ttFlyTip)
+            return
+        end
+        -- 清除旧空定时接口留下的任务，脚本重载后可直接重新拾取。
+        LocalDT.GmPickupFinish(sysarg, var.gmPickup, true)
+    end
     local scene = Actor.getScenePtr(sysarg)
-    if not scene then return end
+    if not scene then
+        Actor.sendTipmsg(sysarg, "当前地图不可拾取", ttFlyTip)
+        return
+    end
     local handle = Actor.getSceneHandle(sysarg)
     local width, height = Fuben.getSceenWidth(handle), Fuben.getScenHeight(handle)
-    if not width or not height or width <= 0 or height <= 0 then return end
-    local state = { scene = scene, drops = {}, next = 1, picked = 0 }
+    if not width or not height or width <= 0 or height <= 0 then
+        Actor.sendTipmsg(sysarg, "无法获取当前地图范围", ttFlyTip)
+        return
+    end
+    local state = { version = 1, scene = scene, drops = {}, next = 1, picked = 0 }
     local seen = {}
     -- 元数据查询阶段不执行拾取回调，先保存整张场景的身份快照。
     for _, ptr in ipairs(LuaHelp.getNearEntityListFromRange(scene, 0, 0, width, height, 3) or {}) do
@@ -7757,8 +7784,6 @@ function gmPickupAll(sysarg, profile)
         end
     end
     var.gmPickup = state
+    if #state.drops > 50 then Actor.sendTipmsg(sysarg, "正在拾取当前地图掉落", ttFlyTip) end
     GmPickupTick(sysarg)
-    if var.gmPickup == state then
-        Actor.regScriptCallback(sysarg, sysarg, 100, 100, -1, "GmPickupTick")
-    end
 end

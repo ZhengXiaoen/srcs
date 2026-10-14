@@ -20,9 +20,10 @@ Actor={
  isDeath=function(p) return p.dead end,getScenePtr=function(p) return p.scene end,
  getSceneHandle=function(p) return 321 end,getDyanmicVar=function(p) return var end,
  sendTipmsg=function(p,t) table.insert(messages,t) end,
- regScriptCallback=function(p,obj,delay,interval,repeats,name)
-  assert(p==player and obj==player and delay==100 and interval==100 and repeats==-1 and name=='GmPickupTick')
-  timers[name]=true
+ regScriptCallback=function() error("current server callback API is a no-op") end,
+ regScriptTimer=function(p,obj,delay,interval,repeats,name)
+  assert(p==player and obj==0 and delay==100 and interval==5000 and repeats==1 and name=='GmPickupTick')
+  timers[name]=true;return 123
  end,
  unregScriptCallback=function(p,name) timers[name]=nil end,
  gmDropPickup=function(p,drop,recog)
@@ -44,6 +45,9 @@ LuaHelp={getNearEntityListFromRange=function(s,x,y,w,h,t)
  assert(s==scene and x==0 and y==0 and w==1000 and h==800 and t==3)
  enums=enums+1;return drops
 end}
+function tick()
+ timers.GmPickupTick=nil;GmPickupTick(player)
+end
 function drop(id,options)
  local d={id=id or 85,money=-1,recog=#drops+1,scene=scene,x=999,y=777}
  for k,v in pairs(options or {}) do d[k]=v end
@@ -111,16 +115,43 @@ for i=1,121 do drop() end
 gmCommand(player,'gmPickupAll',all)
 assert(#picked==50 and var.gmPickup.next==51 and timers.GmPickupTick)
 gmCommand(player,'gmPickupAll',all);assert(enums==1 and #picked==50)
-GmPickupTick(player);assert(#picked==100 and var.gmPickup.next==101)
-GmPickupTick(player);assert(#picked==121 and var.gmPickup==nil and not timers.GmPickupTick)
-GmPickupTick(player);assert(#picked==121)
+tick();assert(#picked==100 and var.gmPickup.next==101)
+tick();assert(#picked==121 and var.gmPickup==nil and not timers.GmPickupTick)
+tick();assert(#picked==121)
+''')
+
+    def test_stalled_legacy_job_can_restart_after_script_reload(self):
+        self.check('''
+for i=1,121 do drop() end
+var.gmPickup={scene=scene,drops={},next=51,picked=0}
+gmCommand(player,'gmPickupAll',all)
+assert(#picked==50 and var.gmPickup.version==1 and var.gmPickup.timer==123)
+tick();tick();assert(#picked==121 and var.gmPickup==nil)
+''')
+
+    def test_failed_timer_registration_clears_job_and_reports_stop(self):
+        self.check('''
+for i=1,51 do drop() end
+Actor.regScriptTimer=function() return 0 end
+gmCommand(player,'gmPickupAll',all)
+assert(#picked==50 and var.gmPickup==nil and not timers.GmPickupTick)
+assert(string.find(messages[#messages],'已停止'))
+''')
+
+    def test_invalid_map_reports_failure_instead_of_silent_return(self):
+        self.check('''
+player.scene=nil;gmCommand(player,'gmPickupAll',all)
+assert(string.find(messages[#messages],'当前地图'))
+player.scene=scene;Fuben.getSceenWidth=function() return 0 end
+gmCommand(player,'gmPickupAll',all)
+assert(string.find(messages[#messages],'地图范围') and enums==0)
 ''')
 
     def test_scene_change_death_and_permission_loss_cancel_pending_batches(self):
         for change in ['player.scene=otherScene','player.dead=true','player.gm=0']:
             self.setUp()
             self.check('for i=1,101 do drop() end;gmCommand(player,"gmPickupAll",all)')
-            self.check(change+';GmPickupTick(player);assert(#picked==50 and var.gmPickup==nil and not timers.GmPickupTick)')
+            self.check(change+';tick();assert(#picked==50 and var.gmPickup==nil and not timers.GmPickupTick)')
         self.setUp()
         self.check('''
 a=drop();a.onPickup=function() player.scene=otherScene end;drop()

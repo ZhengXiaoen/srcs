@@ -1,8 +1,10 @@
-# Track core server Lua, game clock scripts, and the patched Flash client.
+# Track maintained server scripts, launchers, patch tools, and client resources.
 /*
 !/.gitignore
 !/.gitattributes
 !/AGENTS.md
+!/README.md
+!/0.一键打开所有修改的文件.bat
 !/GameClock.ps1
 !/GameClock.Tests.ps1
 !/Clean-TestData.ps1
@@ -25,15 +27,27 @@
 
 /web/*
 !/web/GameFrame.swf
+!/web/LoadGame.html
+!/web/api.php
 
 /tools/*
-!/tools/patch_bag_client.py
-!/tools/patch_top_icons.py
+!/tools/*.py
+!/tools/*.ps1
+!/tools/*.as
 
 /Server/*
 !/Server/S1001/
+!/Server/common/
+/Server/common/*
+!/Server/common/x64/
+/Server/common/x64/*
+!/Server/common/x64/DBServer64_R.exe
 /Server/S1001/*
 !/Server/S1001/data/
+!/Server/S1001/x64/
+/Server/S1001/x64/*
+!/Server/S1001/x64/LogicServerCQ64_R.exe
+!/Server/S1001/x64/*.patch.json
 /Server/S1001/data/*
 !/Server/S1001/data/*.lua
 !/Server/S1001/data/VSPDef.txt

@@ -1,7 +1,7 @@
 """Verify the GM command against Lua 5.1 without touching the running server.
 
 Run with --lua-path tools/fixtures/pickup-test-deps when lupa is not installed.
-Native API rationale and REA evidence are in gm_absorb_bosses_evidence.md.
+The GM command implementation is in Server/S1001/data/functions/player.lua.
 """
 import argparse
 from pathlib import Path

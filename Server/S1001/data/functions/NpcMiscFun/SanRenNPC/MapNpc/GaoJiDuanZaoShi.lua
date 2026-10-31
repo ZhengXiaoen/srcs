@@ -538,11 +538,37 @@ t.duihuanye = function(sysarg)
     return e .. "<(idecoLine#330)>\\  <返回上一页/@main>\\"
 end
 
+t.exchangeFragmentBox = function(sysarg,cgf,logid)
+    local recipe = {itemid=cgf[1],count=cgf[3],exchangeid=cgf[2],exchangecount=1,exchangebind=cgf[5] or 1}
+    local total = 0
+    local stopped = false
+    while Actor.getItemCount(sysarg,recipe.itemid) >= recipe.count do
+        local times,success = LocalDT.EquipExchangeBatch(sysarg,recipe,logid,cgf[4] or "兑换时装魂")
+        if not success then
+            stopped = true
+            break
+        end
+        total = total+times
+    end
+    if total > 0 then
+        Actor.sendTipmsg(sysarg,string.format("兑换成功，共获得%s×%d！",Item.getItemLinkMsg(recipe.exchangeid),total),ttFlyTip)
+    elseif not stopped then
+        Actor.sendTipmsg(sysarg,"背包里面的"..Item.getItemName(recipe.itemid).."不足"..recipe.count..",操作失败",ttFlyTip)
+    end
+    return t.main(sysarg)
+end
+
 t.suihuanAllFunc =function(sysarg,index)
 	index =tonumber(index)
-	if index<1 and index>#t.duihuanAll then 
+	if not index or index%1 ~= 0 or index<1 or index>#t.duihuanAll then
 		return 
 	end
+
+    if index==1 or index==2 or index==12 or index==13 then
+        local logid = index==1 and LogIds.duihuansanguoshizhuanghun or
+            (index==2 and LogIds.duihuanzhizhuntulong or 1)
+        return t.exchangeFragmentBox(sysarg,t.duihuanAll[index],logid)
+    end
 	
 	local cgf =nil
 	if index ==1 then 
@@ -606,7 +632,7 @@ t.onduihuanshizhuang =function(sysarg)
 	--  ]]
 	--  return e
 	local nRandamPos = math.random(#t.ShiZhuangDuiHuan)
-	t.doshizhuangduihuan(sysarg,nRandamPos)
+	return t.doshizhuangduihuan(sysarg,nRandamPos)
 end
 
 
@@ -614,25 +640,8 @@ end
 t.doshizhuangduihuan =function(sysarg,index)
 	index =tonumber(index)
 	local cgf = t.ShiZhuangDuiHuan[index]
-	
-	--判断是否够材料
-	if Actor.getItemCount(sysarg,cgf[1]) < cgf[3] then 
-		Actor.sendTipmsg(sysarg,"背包里面的"..Item.getItemName(cgf[1]).."不足"..cgf[3]..",操作失败",ttFlyTip)
-		return 
-	end
-	
-	--判断背包空间
-	local bagIdxs = Item.getBagEmptyGridCount(sysarg)
-	if bagIdxs <= 0 then
-		Actor.sendTipmsg(sysarg, "背包空间不足",ttFlyTip)
-		return 
-	end
-	
-	--扣除材料
-	if Actor.removeItem(sysarg,cgf[1],cgf[3],-1,-1,-1,"兑换时装魂",LogIds.duihuanshizhuanghun) == cgf[3] then
-		Actor.addItem(sysarg, cgf[2], 0, 0, 1,1,0,"兑换时装魂",LogIds.duihuanshizhuanghun)
-	end
-
+    if not cgf then return end
+    return t.exchangeFragmentBox(sysarg,cgf,LogIds.duihuanshizhuanghun)
 end
 
 --女娲石兑换

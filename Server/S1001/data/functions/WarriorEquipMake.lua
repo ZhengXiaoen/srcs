@@ -11,22 +11,20 @@ end
 
 function WarriorEquipMakeMkaeList(sysarg,index)
     index = tonumber(index)
-    if index <= 0 or index > #WarriorEquipMakeCfg then return end
+    if not index or index%1 ~= 0 or index <= 0 or index > #WarriorEquipMakeCfg then return end
     
     local str = "\\ <(c0xFFb6946c)3个相同的远古残片可合成1个高1阶的远古残片：>\\<(idecoLine#350)> \\"
     
     local cfg = WarriorEquipMakeCfg[index]
     
     for i = 1,#cfg.list do
-        print(cfg.list[i].itemid)
         local s = string.format("   %s <(c0xFFb6946c)*> <(c0xFF00ff00)%d> <(c0xFFb6946c)=> %s   <合成/@WarriorEquipMakeMkae,%d,%d>\\",Item.getItemLinkMsg(cfg.list[i].itemid),cfg.list[i].count,Item.getItemLinkMsg(cfg.list[i].destid),index,i)
-        print(s)
         str= str..s
         
         
 
     end
-        str = str .."\\\\			<返回主页/@WarriorEquipMakeInit> "
+        str = str .."\\\\			<返回主页/@WarriorEquipMakeInit>        <一键合成/@WarriorEquipMakeAll,"..index.."> "
     return str
 end
 
@@ -43,4 +41,16 @@ function WarriorEquipMakeMkae(sysarg,index,i)
     Actor.removeItem(sysarg,cfg.itemid,cfg.count,-1,-1,-1,"战装合成",LogIds.warrionequipmake)
     Actor.addItem(sysarg,cfg.destid,0,0,1,1,0,"战装合成",LogIds.warrionequipmake)
      Actor.sendTipmsg(sysarg,"合成成功!",ttFlyTip)
+end
+
+function WarriorEquipMakeAll(sysarg,index)
+    index = tonumber(index)
+    local cfg = WarriorEquipMakeCfg[index]
+    if not cfg then return end
+    local recipes = {}
+    for _,recipe in ipairs(cfg.list) do
+        recipes[#recipes+1] = {itemid=recipe.itemid,count=recipe.count,destid=recipe.destid,bind=1}
+    end
+    LocalDT.MakeRecipesAll(sysarg,recipes,LogIds.warrionequipmake,"战装合成")
+    return WarriorEquipMakeMkaeList(sysarg,index)
 end

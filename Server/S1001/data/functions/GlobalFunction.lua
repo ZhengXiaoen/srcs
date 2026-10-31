@@ -56,6 +56,7 @@ local LocalDT = {}
 --#include "data\functions\ZodiacRecovery.lua" once
 --#include "data\functions\TreasureRecovery.lua" once 
 --#include "data\functions\ActorEvent\DestoryGuildItem.lua" once --销毁行会物品
+--#include "data\functions\BulkMake.lua" once
 --#include "data\functions\WarriorEquipMake.lua" once
 --#include "data\functions\GuildFubenBossFunc.lua" once --行会boss
 --#include "data\functions\LongTengMake.lua" once --龙腾合成

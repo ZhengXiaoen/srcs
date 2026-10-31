@@ -102,7 +102,7 @@ class AppearanceUpgradeTests(unittest.TestCase):
             self.assertNotIn('<合成/',home)
             self.assertNotIn('上一页',home)
             self.assertNotIn('下一页',home)
-            self.assertEqual(5+len(starts),home.count('\\'))
+            self.assertEqual(7+len(starts),home.count('\\'))
             for page in range(1,(len(starts)+3)//4+1):
                 category=lua.globals().AppearanceMakeCategory(1,group,page)
                 self.assertEqual(home,category)

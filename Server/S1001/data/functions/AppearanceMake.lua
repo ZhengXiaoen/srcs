@@ -64,7 +64,7 @@ function AppearanceMakeCategory(sysarg,group,page)
         str = str .. "\\                      <" .. Item.getItemName(cfg.starts[series])
             .. "合成/@AppearanceMakeList," .. group .. "," .. series .. ">"
     end
-    return str
+    return str .. "\\\\                      <一键合成/@AppearanceMakeAll," .. group .. ">"
 end
 
 function AppearanceMakeList(sysarg,group,series)
@@ -81,7 +81,25 @@ function AppearanceMakeList(sysarg,group,series)
         str = str .. string.format("   %s <(c0xFFb6946c)*> <(c0xFF00ff00)3> <(c0xFFb6946c)= >%s   <合成/@AppearanceMake,%d,%d>\\",
             Item.getItemLinkMsg(recipe.itemid), Item.getItemLinkMsg(recipe.destid),group,index)
     end
-    return str .. "\\\\\t\t\t<返回主页/@AppearanceMakeCategory," .. group .. "> "
+    return str .. "\\\\\t\t\t<返回主页/@AppearanceMakeCategory," .. group .. ">        <一键合成/@AppearanceMakeAll," .. group .. "," .. series .. "> "
+end
+
+function AppearanceMakeAll(sysarg,group,series)
+    group = tonumber(group)
+    local cfg = LocalDT.AppearanceMakeGroups[group]
+    if not cfg then return end
+    local recipes = LocalDT.AppearanceMakeRecipes(group)
+    if series ~= nil then
+        series = tonumber(series)
+        if not series or series%1 ~= 0 or series < 1 or series > #cfg.starts then return end
+        local selected = {}
+        for index=(series-1)*3+1,series*3 do
+            selected[#selected+1] = recipes[index]
+        end
+        recipes = selected
+    end
+    LocalDT.MakeRecipesAll(sysarg,recipes,LogIds.exHeChengZhuangBei,"外观合成",true)
+    return AppearanceMakeList(sysarg,group,series)
 end
 
 function AppearanceMake(sysarg,group,index)

@@ -18,7 +18,7 @@ end
 function ImmortalEquipMakeMkaeList(sysarg,index)
     index = tonumber(index)
     local cfg = ImmortalSystemConfig.ExChange
-    if index <= 0 or index > #cfg then return end
+    if not index or index%1 ~= 0 or index <= 0 or index > #cfg then return end
     
     local str = "\\ <(c0xFFb6946c)2个相同的仙装装备可合成1个高级仙装装备：>\\<(idecoLine#350)> \\"
     
@@ -34,7 +34,7 @@ function ImmortalEquipMakeMkaeList(sysarg,index)
         
 
     end
-        str = str .."\\\\			<返回主页/@ImmortalEquipMakeInit> "
+        str = str .."\\\\			<返回主页/@ImmortalEquipMakeInit>        <一键合成/@ImmortalEquipMakeAll,"..index.."> "
     return str
 end
 
@@ -67,5 +67,10 @@ function ImmortalEquipMakeMkae(sysarg,index,i)
 	System.broadcastTipmsg(string.format("恭喜<(n%s)>玩家合成%s,战力暴涨！<我也要合成/@@showWin,200>",Actor.getName(sysarg),Item.getItemLinkMsg(cfg.destid)),   ttChatWindow)
 end
 
-
-
+function ImmortalEquipMakeAll(sysarg,index)
+    index = tonumber(index)
+    local cfg = ImmortalSystemConfig.ExChange[index]
+    if not cfg then return end
+    LocalDT.MakeRecipesAll(sysarg,cfg.list,LogIds.xianzhuanghecheng,"仙装合成",false,LocalDT.ImmortalMakeOne)
+    return ImmortalEquipMakeMkaeList(sysarg,index)
+end

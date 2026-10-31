@@ -31,7 +31,9 @@ LocalDT.EquipExchangeBagFits = function(sysarg,cfg,times,available)
 end
 
 LocalDT.EquipExchangeBatch = function(sysarg,cfg,logId,logStr,requested)
-    local available = Actor.getItemCount(sysarg,cfg.itemid)
+    local action = cfg.action or "兑换"
+    local available = cfg.inputbind ~= nil and Actor.getItemCount(sysarg,cfg.itemid,-1,-1,cfg.inputbind)
+        or Actor.getItemCount(sysarg,cfg.itemid)
     local times = math.min(math.floor(available/cfg.count),requested or math.huge,
         math.floor(65535/cfg.count),math.floor(65535/cfg.exchangecount))
     if times < 1 then return 0,false end
@@ -52,7 +54,18 @@ LocalDT.EquipExchangeBatch = function(sysarg,cfg,logId,logStr,requested)
         end
     end
     local bound = Actor.getItemCount(sysarg,cfg.itemid,-1,-1,1)
-    local removed = Actor.removeItem(sysarg,cfg.itemid,times*cfg.count,-1,-1,-1,logStr,logId)
+    local removed = 0
+    if cfg.boundfirst then
+        local takeBound = math.min(bound,times*cfg.count)
+        if takeBound > 0 then
+            removed = Actor.removeItem(sysarg,cfg.itemid,takeBound,-1,-1,1,logStr,logId)
+        end
+        if removed == takeBound and times*cfg.count > takeBound then
+            removed = removed+Actor.removeItem(sysarg,cfg.itemid,times*cfg.count-takeBound,-1,-1,0,logStr,logId)
+        end
+    else
+        removed = Actor.removeItem(sysarg,cfg.itemid,times*cfg.count,-1,-1,cfg.inputbind or -1,logStr,logId)
+    end
     local given = 0
     if removed == times*cfg.count then
         given = Actor.addItem(sysarg,cfg.exchangeid,0,0,times*cfg.exchangecount,cfg.exchangebind,0,logStr,logId)
@@ -60,7 +73,7 @@ LocalDT.EquipExchangeBatch = function(sysarg,cfg,logId,logStr,requested)
     end
     -- 发放失败时撤回已发部分，再按材料原绑定状态返还，避免重复奖励。
     if given > 0 and Actor.removeItem(sysarg,cfg.exchangeid,given,-1,-1,cfg.exchangebind,logStr.."撤回",logId) ~= given then
-        Actor.sendTipmsg(sysarg,"兑换失败，奖励撤回异常，请联系管理员。",ttFlyTip)
+        Actor.sendTipmsg(sysarg,action.."失败，奖励撤回异常，请联系管理员。",ttFlyTip)
         return 0,false
     end
     local returned = 0
@@ -74,9 +87,9 @@ LocalDT.EquipExchangeBatch = function(sysarg,cfg,logId,logStr,requested)
         end
     end
     if returned == removed then
-        Actor.sendTipmsg(sysarg,"兑换失败，已返还扣除的材料。",ttFlyTip)
+        Actor.sendTipmsg(sysarg,action.."失败，已返还扣除的材料。",ttFlyTip)
     else
-        Actor.sendTipmsg(sysarg,"兑换失败，材料返还异常，请联系管理员。",ttFlyTip)
+        Actor.sendTipmsg(sysarg,action.."失败，材料返还异常，请联系管理员。",ttFlyTip)
     end
     return 0,false
 end

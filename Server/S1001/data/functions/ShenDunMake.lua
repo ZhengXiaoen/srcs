@@ -68,7 +68,7 @@ end
 
 function ShenDunMakeMkaeList(sysarg,index)
     index = tonumber(index)
-    if index <= 0 or index > #ShenDunMakeCfg then return end
+    if not index or index%1 ~= 0 or index <= 0 or index > #ShenDunMakeCfg then return end
     
     local str = "\\ <(c0xFFb6946c)3个相同的神盾可合成1个高级神盾：>\\<(idecoLine#350)> \\"
     
@@ -83,7 +83,7 @@ function ShenDunMakeMkaeList(sysarg,index)
         
 
     end
-        str = str .."\\\\			<返回主页/@ShenDunMakeInit> "
+        str = str .."\\\\			<返回主页/@ShenDunMakeInit>        <一键合成/@ShenDunMakeAll,"..index.."> "
     return str
 end
 
@@ -107,6 +107,15 @@ function ShenDunMakeMkae(sysarg,index,i)
 end
 
 
+
+
+function ShenDunMakeAll(sysarg,index)
+    index = tonumber(index)
+    local cfg = ShenDunMakeCfg[index]
+    if not cfg then return end
+    LocalDT.MakeRecipesAll(sysarg,cfg.list,LogIds.shendunMake,"神盾合成")
+    return ShenDunMakeMkaeList(sysarg,index)
+end
 
 ----龙腾男女互换
 --function LongTengChangeInit(sysarg)

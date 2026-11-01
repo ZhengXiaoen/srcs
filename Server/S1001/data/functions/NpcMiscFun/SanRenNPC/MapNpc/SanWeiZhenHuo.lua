@@ -480,6 +480,9 @@ t.OnDragonEquipFuseList = function(sysarg,nIndex,nType)
     
     end 
 	str = str .."\\\\			<返回主页/@main> "
+    if nType == 2 then
+        str = str.."       <一键拆分/@OnDragonEquipSplitAll>"
+    end
     return str
 end
 
@@ -2275,6 +2278,186 @@ t.onDragonEquipFuseExExEx = function(sysarg,nId,nId2,nPro,nLevel,_nItemIndex,_n,
    -- Actor.collectOperate(sysarg,0)
 end
 
+LocalDT.DragonEquipSplitAttributesEqual = function(sysarg,first,second)
+    for prop = Item.ipItemStrong,Item.ipItemStaticPropStart-1 do
+        local value,extra = Item.getItemProperty(sysarg,first,prop,0)
+        local other,otherExtra = Item.getItemProperty(sysarg,second,prop,0)
+        if value ~= other or extra ~= otherExtra then return false end
+    end
+    return Item.getFuHunInfo(first,1) == Item.getFuHunInfo(second,1)
+        and Item.getFuHunInfo(first,2) == Item.getFuHunInfo(second,2)
+        and Item.getItemLeftTime(first) == Item.getItemLeftTime(second)
+end
+
+-- 只拆堆叠中的一件时，复制全部动态属性，原栈保留其余融合装备。
+LocalDT.PrepareDragonEquipSplitItem = function(sysarg,source)
+    local ptr = Item.createItem(Item.getItemId(source),1,
+        Item.getItemProperty(sysarg,source,Item.ipItemStrong,0),
+        Item.getItemProperty(sysarg,source,Item.ipItemQuality,0),
+        (Item.getItemProperty(sysarg,source,Item.ipItemBind,0)))
+    if not ptr then return end
+    for prop = Item.ipItemStrong,Item.ipItemStaticPropStart-1 do
+        local value,extra = Item.getItemProperty(sysarg,source,prop,0)
+        if prop == Item.ipDragonEquipLevel then value = 0 end
+        local other = Item.getItemProperty(sysarg,ptr,prop,0)
+        if value ~= other then Item.setItemProperty(sysarg,ptr,prop,value) end
+        local copied,copiedExtra = Item.getItemProperty(sysarg,ptr,prop,0)
+        if copied ~= value or copiedExtra ~= extra then
+            Item.releaseItemPtr(ptr)
+            return
+        end
+    end
+    for kind = 1,2 do
+        local value = Item.getFuHunInfo(source,kind)
+        if Item.getFuHunInfo(ptr,kind) ~= value then Item.setFuHunInfo(sysarg,ptr,kind,value) end
+        if Item.getFuHunInfo(ptr,kind) ~= value then Item.releaseItemPtr(ptr);return end
+    end
+    if Item.getItemLeftTime(source) ~= Item.getItemLeftTime(ptr) then
+        Item.releaseItemPtr(ptr)
+        return
+    end
+    return ptr
+end
+
+-- 单件与批量共用扣费、返还规则；能付清整栈时一次拆完，否则逐件拆分。
+LocalDT.SplitDragonEquipOne = function(sysarg,pItemPtr,cfg,requested)
+    local before = Actor.getMoneyCount(sysarg,mtYuanbao)
+    if before < cfg.money then return 0,"元宝不足" end
+    local count = Item.getItemProperty(sysarg,pItemPtr,Item.ipItemCount,0)
+    if count < 1 then return 0,"装备数量异常",true end
+    local amount = 1
+    local empty = Item.getBagEmptyGridCount(sysarg)
+    if not requested and before >= count*cfg.money
+        and Item.getAddItemNeedGridCount(sysarg,cfg.id2,count,0,0,0) <= empty then
+        amount = count
+    end
+    local prepared
+    local needGrid = Item.getAddItemNeedGridCount(sysarg,cfg.id2,amount,0,0,0)
+    if amount < count then
+        prepared = LocalDT.PrepareDragonEquipSplitItem(sysarg,pItemPtr)
+        if not prepared then return 0,"装备属性复制失败",true end
+        local normalGrid = 1
+        local limit = Item.getItemPropertyById(cfg.id,Item.ipItemDupCount)
+        for i = 1,Item.getBagItemCount(sysarg) do
+            local target = Item.getBagItemBySortID(sysarg,i)
+            if target and Item.getFuHunInfo(prepared,1) == 0 and Item.getFuHunInfo(prepared,2) == 0
+                and Item.getItemId(target) == cfg.id
+                and Item.getItemProperty(sysarg,target,Item.ipItemCount,0) < limit
+                and LocalDT.DragonEquipSplitAttributesEqual(sysarg,prepared,target) then
+                normalGrid = 0
+                break
+            end
+        end
+        needGrid = needGrid+normalGrid
+    end
+    if needGrid > empty then
+        if prepared then Item.releaseItemPtr(prepared) end
+        return 0,"包裹空间不足"
+    end
+    local charged = Actor.changeMoney(sysarg,mtYuanbao,-cfg.money*amount,LogIds.DragonEquipSplit,"龍装拆分")
+    local paid = before-Actor.getMoneyCount(sysarg,mtYuanbao)
+    local level = Item.getItemProperty(sysarg,pItemPtr,Item.ipDragonEquipLevel)
+    local reason = "元宝扣除失败"
+    local given = 0
+    if charged ~= false and paid == cfg.money*amount then
+        reason = "融合状态更新失败"
+        local prop = prepared and Item.ipItemCount or Item.ipDragonEquipLevel
+        local value = prepared and count-amount or 0
+        if Item.setItemProperty(sysarg,pItemPtr,prop,value) ~= false
+            and Item.getItemProperty(sysarg,pItemPtr,prop,0) == value then
+            reason = "龍之道具返还失败"
+            given = Actor.addItem(sysarg,cfg.id2,0,0,amount,0,0,"龍装拆分",LogIds.DragonEquipSplit)
+            if given == amount then
+                local name = Item.GetItemNameEx(prepared or pItemPtr)
+                if not prepared or Item.addItem(sysarg,prepared,"龍装拆分",LogIds.DragonEquipSplit,1) == 1 then
+                    -- addItem 成功后临时指针可能被合并释放，只记录仍在背包的原栈。
+                    Item.SendItemLog(sysarg,pItemPtr,"龙装拆分",LogIds.DragonEquipSplit)
+                    return amount,nil,nil,name
+                end
+                reason = "原装备返还失败"
+            end
+        end
+    end
+    if prepared then Item.releaseItemPtr(prepared) end
+    if Item.getItemProperty(sysarg,pItemPtr,Item.ipItemCount,0) ~= count then
+        Item.setItemProperty(sysarg,pItemPtr,Item.ipItemCount,count)
+    end
+    if Item.getItemProperty(sysarg,pItemPtr,Item.ipDragonEquipLevel) ~= level then
+        Item.setItemProperty(sysarg,pItemPtr,Item.ipDragonEquipLevel,level)
+    end
+    if given > 0 and Actor.removeItem(sysarg,cfg.id2,given,-1,-1,0,"龍装拆分撤回",LogIds.DragonEquipSplit) ~= given then
+        return 0,"龍之道具撤回异常，请联系管理员",true
+    end
+    if paid > 0 then
+        Actor.changeMoney(sysarg,mtYuanbao,paid,LogIds.DragonEquipSplit,"龍装拆分返还")
+    end
+    if Item.getItemProperty(sysarg,pItemPtr,Item.ipItemCount,0) ~= count
+        or Item.getItemProperty(sysarg,pItemPtr,Item.ipDragonEquipLevel) ~= level
+        or Actor.getMoneyCount(sysarg,mtYuanbao) ~= before then
+        reason = reason.."，恢复异常，请联系管理员"
+    end
+    return 0,reason,true
+end
+
+t.OnDragonEquipSplitAll = function(sysarg)
+    if Actor.isDealing(sysarg) then return "null" end
+    -- 费用和返还道具均取服务器配置，按融合等级、原装备和王/帝状态匹配。
+    local recipes = {}
+    for level,parts in ipairs(EquipDragonCfg.Fuse) do
+        for _,part in ipairs(parts) do
+            for _,group in ipairs(part.Item) do
+                for _,cfg in ipairs(group.List) do
+                    recipes[level..":"..cfg.id..":"..cfg.pro] = cfg
+                end
+            end
+        end
+    end
+    -- 发放道具可能改变背包排序，先保存本次点击时的融合装备。
+    local items = {}
+    local available = 0
+    for i = 1,Item.getBagItemCount(sysarg) do
+        local ptr = Item.getBagItemBySortID(sysarg,i)
+        if ptr then
+            local level = Item.getItemProperty(sysarg,ptr,Item.ipDragonEquipLevel)
+            if level > 0 then
+                local super = Item.getItemProperty(sysarg,ptr,Item.ipItemSuperAttrLevel)
+                local pro = super == 0 and 0 or (super%2 == 1 and 1 or 2)
+                local id = Item.getItemProperty(sysarg,ptr,Item.ipItemID)
+                available = available+Item.getItemProperty(sysarg,ptr,Item.ipItemCount,0)
+                items[#items+1] = {ptr=ptr,cfg=recipes[level..":"..id..":"..pro]}
+            end
+        end
+    end
+    local total,spent = 0,0
+    local reasons = {}
+    local failed
+    for _,item in ipairs(items) do
+        if item.cfg then
+            while Item.getItemProperty(sysarg,item.ptr,Item.ipDragonEquipLevel) > 0 do
+                local amount,reason,stop = LocalDT.SplitDragonEquipOne(sysarg,item.ptr,item.cfg)
+                if amount > 0 then
+                    total = total+amount
+                    spent = spent+amount*item.cfg.money
+                else
+                    if stop then failed = reason else reasons[reason] = true end
+                    break
+                end
+            end
+            if failed then break end
+        else
+            reasons["拆分配置缺失"] = true
+        end
+    end
+    local str = string.format("一键拆分：已拆分%d个，剩余%d个融合龍装，消耗%d元宝。",total,available-total,spent)
+    if #items == 0 then str = str.."背包中没有融合龍装。" end
+    if failed then str = str..failed.."，已停止拆分。" end
+    if reasons["元宝不足"] then str = str.."元宝不足，未能拆分的龍装已保留。" end
+    if reasons["包裹空间不足"] then str = str.."包裹空间不足，未能拆分的龍装已保留。" end
+    if reasons["拆分配置缺失"] then str = str.."部分龍装没有对应拆分配置，已保留。" end
+    Actor.sendTipmsg(sysarg,str,ttFlyTip)
+    return t.OnDragonEquipFuseList(sysarg,1,2)
+end
+
 t.onDragonEquipSplitExExEx =  function(sysarg,nId,nId2,nPro,nLevel,nMoney,_nItemIndex, _n, _i)
 	--------- xsp
 	_nItemIndex = tonumber(_nItemIndex)
@@ -2297,7 +2480,7 @@ t.onDragonEquipSplitExExEx =  function(sysarg,nId,nId2,nPro,nLevel,nMoney,_nItem
     nPro = _itemcfg.pro --tonumber(nPro)
     nMoney = _itemcfg.money --tonumber(nMoney)
     
-    if Item.getBagEmptyGridCount(sysarg) <= 0 then
+    if Item.getAddItemNeedGridCount(sysarg,nId2,1,0,0,0) > Item.getBagEmptyGridCount(sysarg) then
         Actor.sendTipmsg(sysarg,"包裹空间不足一格，无法拆分！",ttFlyTip);
         return
     end
@@ -2336,15 +2519,12 @@ t.onDragonEquipSplitExExEx =  function(sysarg,nId,nId2,nPro,nLevel,nMoney,_nItem
         Actor.sendTipmsg(sysarg,"材料不足,无法拆分！",ttFlyTip);
         return
     end
-    --扣元宝
-    Actor.changeMoney(sysarg,mtYuanbao,-nMoney,LogIds.DragonEquipSplit,"龍装拆分")
-    local nLevel = Item.getItemProperty(sysarg,pItemPtr,Item.ipDragonEquipLevel)
-    local nActorId = Actor.getIntProperty(sysarg,PROP_ENTITY_ID)
-   -- System.sendCommonLog(LogIds.DragonEquipSplit,nActorId,Actor.getName(sysarg),Item.getItemProperty(sysarg,pItemPtr,Item.ipItemID),nLevel,0,"","龙装拆分",tonumber(Item.getItemGuid(pItemPtr)),"","","","",Item.GetItemNameEx(pItemPtr))
-    Item.setItemProperty(sysarg,pItemPtr,Item.ipDragonEquipLevel,0)
-    Item.SendItemLog(sysarg,pItemPtr,"龙装拆分",LogIds.DragonEquipSplit)
-    Actor.addItem(sysarg,nId2,0,0,1,0,0,"龍装拆分",LogIds.DragonEquipSplit)
-    local str ="拆分成功,获得:"..Item.GetItemNameEx(pItemPtr).."+"..Item.getItemName(nId2)
+    local amount,reason,_,name = LocalDT.SplitDragonEquipOne(sysarg,pItemPtr,_itemcfg,1)
+    if amount <= 0 then
+        Actor.sendTipmsg(sysarg,reason.."，无法拆分！",ttFlyTip)
+        return
+    end
+    local str ="拆分成功,获得:"..name.."+"..Item.getItemName(nId2)
     Actor.sendTipmsg(sysarg,str,ttFlyTip);
    
 end

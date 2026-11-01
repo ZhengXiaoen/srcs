@@ -1030,9 +1030,9 @@ t.onshipinghecheng =function(sysarg,i,j)
 		--Actor.addItem(sysarg, addItemId, 0, 0, 1, 0, 0, "饰品合成", 2670);
 		local nNewItem = Item.createItem(addItemId,1,0,0,0,0);
 		if nNewItem ~= nil then 
-			Item.addItem(sysarg,nNewItem,"饰品合成",2670);
 			local zhaoHuanQiangDu = 6;
 			Item.setItemProperty(sysarg,nNewItem,Item.ipTaoStrong,zhaoHuanQiangDu);
+			Item.addItem(sysarg,nNewItem,"饰品合成",2670);
 		end
 		
 	end

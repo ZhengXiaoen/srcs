@@ -113,9 +113,8 @@ function handleUpLegendEquip(sysarg,nType,nPos)
     else
         szLog = "升级:"..nLevel
     end
-    Item.addItem(sysarg,pItem,szLog,LogIds.legenduplevel,1)
+    LocalDT.AddAndEquipPreparedItem(sysarg, pItem, szLog, LogIds.legenduplevel, 0,location, 1)
     
-    Item.equipItem(sysarg,pItem,0,location)
    
     Actor.sendTipmsg(sysarg,"升级成功!",ttFlyTip)
 

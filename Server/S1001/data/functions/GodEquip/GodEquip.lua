@@ -56,8 +56,7 @@ MiscsImplement.HandleGodEquipUp =  function( sysarg, msgid, packet )
          Actor.sendTipmsg(sysarg, "神装合成失败,err code  222!!", ttFlyTip)
          return
     end
-    Item.addItem(sysarg,pItem,"神装合成",LogIds.godequichange)
-    Item.equipItem(sysarg,pItem,0,nLocation)
+    LocalDT.AddAndEquipPreparedItem(sysarg, pItem, "神装合成", LogIds.godequichange, 0,nLocation)
     local pack= DataPack.allocPacket(sysarg,139,198)
     DataPack.flush(pack)
     Actor.sendTipmsg(sysarg, "神装合成成功!!", ttFlyTip)
@@ -134,8 +133,7 @@ MiscsImplement.GodEquipChange =  function( sysarg, msgid, packet )
          Actor.sendTipmsg(sysarg, "神装兑换失败,err code  222!!", ttFlyTip)
          return
     end
-    Item.addItem(sysarg,pItem,"神装兑换",LogIds.godequichange)
-    Item.equipItem(sysarg,pItem,0,nLocation)
+    LocalDT.AddAndEquipPreparedItem(sysarg, pItem, "神装兑换", LogIds.godequichange, 0,nLocation)
     local pack= DataPack.allocPacket(sysarg,139,199)
     DataPack.flush(pack)
     Actor.sendTipmsg(sysarg, "神装兑换成功!!", ttFlyTip)

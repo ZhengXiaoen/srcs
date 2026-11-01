@@ -453,18 +453,17 @@ function EquipForging(sysarg,nType)
 		return
 	end	
 
-	local addCount = Item.addItem(sysarg,newEquip_ptr,"锻造"..equipNames[nType],GameLog.cEquipStove)
+	Item.setItemProperty(sysarg,newEquip_ptr,Item.ipItemStrongLimit,nStrongLimit)
+	Item.setItemProperty(sysarg,newEquip_ptr,Item.ipItemAppraisal,nBlood)
+    Item.setItemProperty(sysarg,newEquip_ptr,Item.ipItemInsureTimes,nGuardLevel)
+	local addCount = LocalDT.AddAndEquipPreparedItem(sysarg,newEquip_ptr,"锻造"..equipNames[nType],GameLog.cEquipStove, 0, -1)
 	if addCount < nextLevelCfg.award.count then
 		local emsg = string.format("error, EquipForging2 actorId=%d,strong=%d,strongLimit=%d,blood=%d,nextItemId=%d,addCount=%d", Actor.getIntProperty(sysarg,PROP_ENTITY_ID),nStrong,nStrongLimit,nBlood,nextItemId,addCount)
 		--print(emsg)
 		return
 	end
 	
-	-- 需要先放背包或装备栏中才能设置属性
-	Item.setItemProperty(sysarg,newEquip_ptr,Item.ipItemStrongLimit,nStrongLimit)
-	Item.setItemProperty(sysarg,newEquip_ptr,Item.ipItemAppraisal,nBlood)
-    Item.setItemProperty(sysarg,newEquip_ptr,Item.ipItemInsureTimes,nGuardLevel)
-	Item.equipItem(sysarg, newEquip_ptr, 0, -1)	
+
 	Actor.sendTipmsg(sysarg, string.format(Lang.ScriptTips.zf124, equipNames[nType], Item.getItemName(nextItemId)), ttFlyTip)
 	
 	local name=Actor.getName(sysarg)
@@ -670,8 +669,12 @@ function MiscExWarEquipUpLev(sysarg,msgid,packet)
             System.trace("warequip create item error!"..Actor.getIntProperty(sysarg,PROP_ENTITY_ID))
             return
         end
-        Item.addItem(sysarg,equip_ptr,"战装激活",LogIds.WarEquipActive,1)
-        Item.equipItem(sysarg,equip_ptr,0,nEquipPos)
+        m = System.setIntByte(0,0,stage)
+        m = System.setIntByte(m,1,star)
+        Item.setItemProperty(sysarg,equip_ptr,Item.ipItemInsureTimes,m)
+        LocalDT.AddAndEquipPreparedItem(sysarg, equip_ptr, "战装激活", LogIds.WarEquipActive, 0, nEquipPos, 1)
+        equip_ptr = Item.getEquipByPos(sysarg,nEquipPos)
+        if not equip_ptr then return end
         strEx = "激活"
     else --替换装备id
         local nAuxRetValue = 0
@@ -743,8 +746,7 @@ function changeXunZang(sysarg,name)
 			return
 		end	
 		
-		Item.addItem(pActor,newEquip_ptr,"GM替换",0,1)
-		Item.equipItem(pActor, newEquip_ptr, 0, -1)	
+		LocalDT.AddAndEquipPreparedItem(pActor, newEquip_ptr, "GM替换", 0, 0, -1, 1)
 		
 		Actor.sendTipmsg(sysarg, "替换成功", ttFlyTip);
 	else 

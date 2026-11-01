@@ -147,6 +147,7 @@ end
 
 -- 穿戴战灵装备
 function TakeOnSpiritFighterEquip(sysarg, packet)
+	if Actor.isDealing(sysarg) then return end
 	local fighterLevel = Actor.getSpiritFighterLevel(sysarg)
 	if fighterLevel == 0 then return end
 	
@@ -208,6 +209,7 @@ end
 
 -- 脱下战灵装备
 function TakeOffSpiritFighterEquip(sysarg, packet)
+	if Actor.isDealing(sysarg) then return end
 	local fighterLevel = Actor.getSpiritFighterLevel(sysarg)
 	if fighterLevel == 0 then return end
 	
@@ -220,31 +222,23 @@ function TakeOffSpiritFighterEquip(sysarg, packet)
 		return
 	end
 	
-	if Item.getBagEmptyGridCount(sysarg) <= 0 then 
-        Actor.sendTipmsg(sysarg,"包裹空间不足！",ttFlyTip)
-        return
-    end  
-    
-    if not Actor.setSpiritFighterEquip(sysarg, slot, 0, 0, 0) then
-    	return
-    end
-    
-    Actor.collectOperate(sysarg, 0) -- 0:重新计算属性
-    
     local itemId = 7057 + slot
     local equipPtr = Item.createItem(itemId,1,0,0,isBind)
     if equipPtr == nil then
-    	Actor.setSpiritFighterEquip(sysarg, slot, level, isBind, exp)
         Actor.sendTipmsg(sysarg, "脱下战灵装备失败！", ttFlyTip)
         return
-    end        
-    
-    local comment = string.format("%d,%d,%d,%d", slot, level, isBind, exp)
-    Item.addItem(sysarg, equipPtr, comment, LogIds.SFighterTakeOffEquip)
-    
-    -- 要放入背包才能修改属性
+    end
+    -- 返回装备的成长属性必须在发放前完成，合并后不再访问临时指针。
     Item.setItemProperty(sysarg, equipPtr, Item.ipHeroDamageRate, level)
     Item.setItemProperty(sysarg, equipPtr, Item.ipRealInjury, exp)
+    if not Actor.setSpiritFighterEquip(sysarg, slot, 0, 0, 0) then return end
+    local comment = string.format("%d,%d,%d,%d", slot, level, isBind, exp)
+    if Item.addItem(sysarg, equipPtr, comment, LogIds.SFighterTakeOffEquip) ~= 1 then
+        Actor.setSpiritFighterEquip(sysarg, slot, level, isBind, exp)
+        Actor.sendTipmsg(sysarg, "脱下战灵装备失败！", ttFlyTip)
+        return
+    end
+    Actor.collectOperate(sysarg, 0) -- 0:重新计算属性
     
     -- 下发给前端
 	local netPack = DataPack.allocPacket(sysarg, 74, 6)

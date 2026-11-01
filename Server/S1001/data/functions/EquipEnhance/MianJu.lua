@@ -107,10 +107,9 @@ function MianJuLevelUp (sysarg)
 		return
 	end	
 	
-	local addCount = Item.addItem(sysarg,newEquip_ptr,"斗笠升级",LogIds.ShenJiMianJu)
+	local addCount = LocalDT.AddAndEquipPreparedItem(sysarg, newEquip_ptr, "斗笠升级", LogIds.ShenJiMianJu,  0, -1)
 	if addCount < 1 then return end
 	
-	Item.equipItem(sysarg, newEquip_ptr, 0, -1)	
 	
 	if nextItemCfg[3] > 0 then
 		var.MianJinZhi = MianJinZhi - nextItemCfg[3]

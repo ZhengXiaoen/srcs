@@ -674,8 +674,8 @@ t.DoRongLian =function(sysarg,i,index,n)
 			end
 			local nNewItem = Item.createItem(toItemId,1,0,0,0,0)
 			if nNewItem ~= nil then 
-				Item.addItem(sysarg,nNewItem,"熔炼获得",LogIds.ronglian)
 				Item.setItemProperty(sysarg,nNewItem,Item.ipTaoStrong,zhaoHuanQiangDu)
+				Item.addItem(sysarg,nNewItem,"熔炼获得",LogIds.ronglian)
 			end
 		elseif index ==2 then 	--练出王
 			
@@ -684,8 +684,8 @@ t.DoRongLian =function(sysarg,i,index,n)
 			end
 			local nNewItem = Item.createItem(toItemId,1,0,0,0,0,t.data[t.getDataIndexById(sysarg,toItemId)][2])
 			if nNewItem ~= nil then 
-				Item.addItem(sysarg,nNewItem,"熔炼获得",LogIds.ronglian)
 				Item.setItemProperty(sysarg,nNewItem,Item.ipTaoStrong,zhaoHuanQiangDu)
+				Item.addItem(sysarg,nNewItem,"熔炼获得",LogIds.ronglian)
 			end
 		end
 		
@@ -1108,8 +1108,8 @@ t.onItemLvUp_only = function(sysarg,a,c)  --c代表是王，还是帝的合成
 	end
 	local nNewItem = Item.createItem(add_nitem,1,0,0,0,0,proIdx);
 	if nNewItem ~= nil then 
-		Item.addItem(sysarg,nNewItem,strlog,LogIds.sanweizhenhuoJinJie);
 		Item.setItemProperty(sysarg,nNewItem,Item.ipTaoStrong,zhaoHuanQiangDu);
+		Item.addItem(sysarg,nNewItem,strlog,LogIds.sanweizhenhuoJinJie);
 	end
 
 	local NpcName = Actor.getTalkNpcName(sysarg);
@@ -1275,8 +1275,8 @@ t.onDzwdZ_only = function(sysarg,a,c)  --c代表是王，还是帝的合成
 			end
 		end
 		
-		Item.addItem(sysarg,nNewItem,strlog2,LogIds.sanweizhenhuoHeCheng)
 		Item.setItemProperty(sysarg,nNewItem,Item.ipTaoStrong,zhaoHuanQiangDu)
+		Item.addItem(sysarg,nNewItem,strlog2,LogIds.sanweizhenhuoHeCheng)
 	end
 
 	local NpcName = Actor.getTalkNpcName(sysarg);

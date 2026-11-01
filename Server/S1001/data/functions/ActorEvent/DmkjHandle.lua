@@ -985,7 +985,6 @@ DmkjOpFuncList[DmkjOpId.enExChangeItem] = function (sysarg,args)
 	local award = config.award[1]
 	
 	local nNewItem = Item.createItem(award.id,award.count,nStrong,0,award.bind)
-	Item.addItem(sysarg,nNewItem,"enExChangeItem",997)
     local nItemType = Item.getItemProperty(sysarg,nNewItem,Item.ipItemType)
   
     --除了功能物品之外都可以继承属性
@@ -1001,6 +1000,7 @@ DmkjOpFuncList[DmkjOpId.enExChangeItem] = function (sysarg,args)
     end
    
 	
+	Item.addItem(sysarg,nNewItem,"enExChangeItem",997)
 	--Actor.addItem(sysarg,award.id,0,nStrong,award.count,award.bind,0,"enExChangeItem",997,-1,nBlood,nStrongLimit)
 	Actor.sendTipmsg(sysarg,string.format(Lang.ScriptTips.zf168,Item.getItemName(config.award[1].id)),ttScreenCenterBigNotice)
 	

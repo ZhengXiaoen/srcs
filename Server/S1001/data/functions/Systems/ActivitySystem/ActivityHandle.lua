@@ -442,7 +442,6 @@ function ExchangeEquip( sysarg, packet, msgid )
 				--创建新装备
 				local newItemPtr = Item.createItem(nNewItemId, 1, nStrong, nQuality);
 				if newItemPtr then
-					Item.addItem(sysarg, newItemPtr, Lang.LogTips.l00070, 93)
 					if initSmith > 0 then
 						Item.setItemProperty( sysarg, newItemPtr, Item.ipItemSpecSmith, initSmith)
 					end
@@ -452,6 +451,7 @@ function ExchangeEquip( sysarg, packet, msgid )
 					if nLuck > 0 then
 						Item.setItemProperty( sysarg, newItemPtr, Item.ipItemLuck, nLuck)
 					end
+					Item.addItem(sysarg, newItemPtr, Lang.LogTips.l00070, 93)
 					svar.changeEquipCount = svar.changeEquipCount+1
 				end
 			end --end if

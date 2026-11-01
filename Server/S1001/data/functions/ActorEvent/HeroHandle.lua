@@ -354,10 +354,10 @@ HeroOpFuncList[4] = function (sysarg,args)
 	end
 
 	local nNewItem = Item.createItem(award.id,award.count,nStrong,0,award.bind,0)
-	Item.addItem(sysarg,nNewItem,"合成面板锻造",53)
 	Item.setItemProperty(sysarg, nNewItem, Item.ipItemStrongLimit, nStrongLimit)
 	Item.setItemProperty(sysarg, nNewItem, Item.ipItemAppraisal, nBlood)
 	Item.setItemProperty(sysarg, nNewItem, Item.ipItemSuperAttrLevel, nSuperLevel)
+	Item.addItem(sysarg,nNewItem,"合成面板锻造",53)
 
 	Actor.sendTipmsg( sysarg,Lang.ScriptTips.zf650,ttFlyTip)
 	if config.notice == false then return false end

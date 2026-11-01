@@ -766,9 +766,7 @@ function OnGetStoryFbItem( sysarg )
 			return
 		end
 		local newItemPtr = 	Item.createItem(itemTab.id, itemTab.count, itemTab.strong, itemTab.quality, itemTab.bind)
-		if Item.addItem(sysarg,newItemPtr, "renown buy item", 63,1) then
-			Item.equipItem(sysarg, newItemPtr)
-		end
+		LocalDT.AddAndEquipPreparedItem(sysarg, newItemPtr, "renown buy item", 63, 0, -1, 1)
 	end
 end
 

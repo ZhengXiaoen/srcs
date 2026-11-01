@@ -86,10 +86,10 @@ function LightEquip(sysarg,args)
 	end
 	
 	local newItem = Item.createItem(curCfg.awardIds[equipIndex],1,nStrong,0,0,0)
-	Item.addItem(sysarg,newItem,"神装合成",GameLog.CGodEquipCreate)
 	Item.setItemProperty(sysarg, newItem, Item.ipItemStrongLimit, nStrongLimit)
 	Item.setItemProperty(sysarg, newItem, Item.ipItemAppraisal, nBlood)
 	Item.setItemProperty(sysarg, newItem, Item.ipItemSuperAttrLevel, nSuperLevel)
+	Item.addItem(sysarg,newItem,"神装合成",GameLog.CGodEquipCreate)
 	
 	SendEquipOptResult(sysarg, itemGuid, itEquipLight, 0)
 	local itemName = Item.getItemName(curCfg.awardIds[equipIndex]);
@@ -198,10 +198,10 @@ function ResolvingLightEquip(sysarg,args)
 	Awards.Give(sysarg,curCfg.material,GameLog.CGodEquipCreate,"神装分解材料")
 
 	local nNewItem = Item.createItem(curCfg.awardIds[equipIndex],1,nStrong,0,nBind,0)
-	Item.addItem(sysarg,nNewItem,"神装分解",GameLog.CGodEquipCreate)
 	Item.setItemProperty(sysarg, nNewItem, Item.ipItemStrongLimit, nStrongLimit)
 	Item.setItemProperty(sysarg, nNewItem, Item.ipItemAppraisal, nBlood)
 	Item.setItemProperty(sysarg, nNewItem, Item.ipItemSuperAttrLevel, nSuperLevel)
+	Item.addItem(sysarg,nNewItem,"神装分解",GameLog.CGodEquipCreate)
 	
 	SendEquipOptResult(sysarg, itemGuid, itEquipGod, 0)
 

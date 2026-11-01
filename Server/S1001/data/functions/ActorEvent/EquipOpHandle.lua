@@ -70,7 +70,6 @@ function DoEquipSynthesis(sysarg, synthesisItemCfg, isTooltip)
 	end
 		
 	local award = synthesisItemCfg.award	
-	local dupCount = Item.getItemPropertyById(award.id, Item.ipItemDupCount) -- 叠加数
 	
 	local bind = 0;
 	local nStrong = 0
@@ -127,14 +126,10 @@ function DoEquipSynthesis(sysarg, synthesisItemCfg, isTooltip)
 	end	
 	
 	local nNewItem = Item.createItem(award.id, award.count, nStrong, 0, bind, 0);
+	Item.setItemProperty(sysarg, nNewItem, Item.ipItemStrongLimit, nStrongLimit)
+	Item.setItemProperty(sysarg, nNewItem, Item.ipItemAppraisal, nBlood)
+	Item.setItemProperty(sysarg, nNewItem, Item.ipItemSuperAttrLevel, nSuperLevel)
 	Item.addItem(sysarg, nNewItem, "合成面板锻造", 53)
-	
-	-- 不允许叠加的物品才能设置
-	if dupCount == 1 then
-		Item.setItemProperty(sysarg, nNewItem, Item.ipItemStrongLimit, nStrongLimit)
-		Item.setItemProperty(sysarg, nNewItem, Item.ipItemAppraisal, nBlood)
-		Item.setItemProperty(sysarg, nNewItem, Item.ipItemSuperAttrLevel, nSuperLevel)
-	end
 
 	Actor.triggerAchieveEvent(sysarg, 105, 1)
 

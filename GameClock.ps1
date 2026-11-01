@@ -712,7 +712,14 @@ function Install-MountStackPatch {
                 throw "物品数量补丁缺少配套程序：$required，未启动服务器。"
             }
         }
-        Install-LogicServerPatch $Paths 'gear-stack.patch.json' '坐骑装备堆叠穿戴'
+        $equipmentPackagePath = [IO.Path]::Combine($Paths.Root, 'Server', 'S1001', 'x64', 'equipment-stack.patch.json')
+        $equipmentTargets = @()
+        if ([IO.File]::Exists($equipmentPackagePath)) {
+            $equipmentPackage = [IO.File]::ReadAllText($equipmentPackagePath, [Text.Encoding]::UTF8) | ConvertFrom-Json
+            $equipmentTargets += $equipmentPackage.targetSha256
+        }
+        Install-LogicServerPatch $Paths 'gear-stack.patch.json' '坐骑装备堆叠穿戴' $equipmentTargets
+        Install-LogicServerPatch $Paths 'equipment-stack.patch.json' '全部装备堆叠'
         return
     }
     $directory = [IO.Path]::Combine($Paths.Root, 'Server', 'S1001', 'x64')

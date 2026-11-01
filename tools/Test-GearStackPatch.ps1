@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 . (Join-Path (Split-Path $PSScriptRoot -Parent) 'GameClock.ps1')
 
 # Exercise the real startup hook against a private copy, without clock changes.
@@ -24,6 +24,19 @@ try {
     Copy-Item -LiteralPath (Join-Path $projectRoot 'Server/S1001/x64/gear-stack.patch.json') -Destination $packagePath
     $package = [IO.File]::ReadAllText($packagePath) | ConvertFrom-Json
     $source = [IO.File]::ReadAllBytes((Join-Path $projectRoot 'Server/S1001/x64/LogicServerCQ64_R.exe'))
+    $allPackagePath = Join-Path $projectRoot 'Server/S1001/x64/equipment-stack.patch.json'
+    if (Test-Path -LiteralPath $allPackagePath) {
+        $allPackage = [IO.File]::ReadAllText($allPackagePath) | ConvertFrom-Json
+        if ((Get-ConfigHash $source) -eq $allPackage.targetSha256) {
+            $previous = New-Object byte[] ([int]$allPackage.sourceLength)
+            [Array]::Copy($source, $previous, $previous.Length)
+            foreach ($edit in $allPackage.edits) {
+                $before = [Convert]::FromBase64String($edit.before)
+                [Array]::Copy($before, 0, $previous, [int]$edit.offset, $before.Length)
+            }
+            $source = $previous
+        }
+    }
     if ((Get-ConfigHash $source) -eq $package.targetSha256) {
         $original = New-Object byte[] ([int]$package.sourceLength)
         [Array]::Copy($source, $original, $original.Length)
@@ -63,6 +76,16 @@ try {
     [IO.File]::WriteAllText($packagePath, ($package | ConvertTo-Json -Depth 10), [Text.Encoding]::UTF8)
     Assert-GearPatchThrows { Install-MountStackPatch $paths } '错误结果哈希应拒绝安装'
     Assert-GearPatch ((Get-GearPatchHash $exePath) -eq $package.sourceSha256) '错误补丁修改了程序'
+    if (Test-Path -LiteralPath $allPackagePath) {
+        Copy-Item -LiteralPath (Join-Path $projectRoot 'Server/S1001/x64/gear-stack.patch.json') -Destination $packagePath
+        Copy-Item -LiteralPath $allPackagePath -Destination (Join-Path $directory 'equipment-stack.patch.json')
+        [IO.File]::WriteAllBytes($exePath, $source)
+        Install-MountStackPatch $paths
+        Assert-GearPatch ((Get-GearPatchHash $exePath) -eq $allPackage.targetSha256) '两层装备补丁安装结果不匹配'
+        Assert-GearPatch ((Get-GearPatchHash ($exePath + '.before-equipment-stack.bak')) -eq $allPackage.sourceSha256) '全部装备补丁备份不匹配'
+        Install-MountStackPatch $paths
+        Assert-GearPatch ((Get-GearPatchHash $exePath) -eq $allPackage.targetSha256) '两层装备补丁重复安装改变程序'
+    }
     Write-Host '装备堆叠补丁：启动安装、备份、重复安装、运行保护、版本及结果校验全部通过。'
 } finally {
     $temporaryRoot = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\') + '\'

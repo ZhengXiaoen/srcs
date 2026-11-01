@@ -215,15 +215,11 @@ function EquipUpGrade(sysarg, args)
 	end
 	local newItemPtr = Item.createItem(newItemId, 1, nItemStrong, nQuality)
 	if newItemPtr then
-		Item.addItem(sysarg, newItemPtr, Lang.LogTips.l00070, 93)
 		if initSmith > 0 then
 			Item.setItemProperty( sysarg, newItemPtr, Item.ipItemSpecSmith, initSmith)
 		end
 		if nInsure > 0 then
 			Item.setItemProperty( sysarg, newItemPtr, Item.ipItemHole3Item, nInsure)
-		end
-		if not isItemInBag then
-			Item.equipItem(sysarg, newItemPtr, heroId)
 		end
 		if initSmith == 0 then
 			Item.initEquipBaseAttr(sysarg, newItemPtr, bawEquipUpgrade)
@@ -240,6 +236,11 @@ function EquipUpGrade(sysarg, args)
 			Item.setItemProperty( sysarg, newItemPtr, Item.ipItemLuck, nLuck)
 		end
 		local nNewLevel = Item.getItemProperty(sysarg, newItemPtr, Item.ipItemActorLevel, 0) 
+		if not isItemInBag then
+			LocalDT.AddAndEquipPreparedItem(sysarg, newItemPtr, Lang.LogTips.l00070, 93, heroId)
+		else
+			Item.addItem(sysarg, newItemPtr, Lang.LogTips.l00070, 93)
+		end
 		local nNewName = Item.getItemName(newItemId)
 		local noticeStr = string.format(Lang.ScriptTips.c000079, Actor.getName(sysarg),nLevel, itemName, nNewLevel, nNewName)
 		System.broadcastTipmsg(noticeStr, ttScreenCenter + ttChatWindow)
@@ -549,7 +550,6 @@ function CircleEquipUpgrade(sysarg, args)
 		end
 		local newItemPtr = Item.createItem(newEquipId, 1, nStrong, nQuality)
 		if newItemPtr then
-			Item.addItem(sysarg, newItemPtr, Lang.LogTips.l00070, 93)
 			if initSmith > 0 then
 				Item.setItemProperty( sysarg, newItemPtr, Item.ipItemSpecSmith, initSmith)
 			end
@@ -559,6 +559,7 @@ function CircleEquipUpgrade(sysarg, args)
 			if nLuck > 0 then
 				Item.setItemProperty( sysarg, newItemPtr, Item.ipItemLuck, nLuck)
 			end
+			Item.addItem(sysarg, newItemPtr, Lang.LogTips.l00070, 93)
 			optResult = 0
 		end
 	else

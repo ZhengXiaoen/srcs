@@ -189,7 +189,6 @@ mailOptFuncList[mailType.mailGetAwardItem] = function(sysarg, args)
 		        return false
             end
 
-            Item.addItem(sysarg,pItem,strMsg,GameLog.cMailAwardItem)
             if LocalDT.IsFixedTaoStrongEquipment(arr_award[i].id) or arr_award[i].taostrong > 0 then
                 Item.setItemProperty(sysarg,pItem,Item.ipTaoStrong,LocalDT.IsFixedTaoStrongEquipment(arr_award[i].id) and 6 or arr_award[i].taostrong)
             end
@@ -202,6 +201,7 @@ mailOptFuncList[mailType.mailGetAwardItem] = function(sysarg, args)
 
                 end
             end
+            Item.addItem(sysarg,pItem,strMsg,GameLog.cMailAwardItem)
             --Actor.addItem(sysarg,,0,0,,,0,strMsg,GameLog.cMailAwardItem,-1,0,-1,1,arr_award[i].taostrong)
         end
     end

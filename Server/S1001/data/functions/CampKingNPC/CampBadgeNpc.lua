@@ -96,7 +96,6 @@ function DoExchangeBadge(sysarg)
 	
 	-- 添加一个新的徽记
 	local newItem = Item.createItem(newBadgeItemId, 1, oldItemStrong, CampJHDW[status+1].itemquality, 1);
-	Item.addItem(sysarg, newItem, "exchange badge", 65)
 	for i=1, table.getn(gemProps) do
 		if (gemProps[i].openHole == true) then
 			Item.setItemProperty(sysarg, newItem, gemProps[i].openFlagProp, 1)			
@@ -105,6 +104,7 @@ function DoExchangeBadge(sysarg)
 			end
 		end
 	end	
+	Item.addItem(sysarg, newItem, "exchange badge", 65)
 	Actor.closeNPCDialog(sysarg)
 end
 

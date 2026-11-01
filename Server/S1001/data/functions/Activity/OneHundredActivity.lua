@@ -245,9 +245,9 @@ function HundredKingSuit(sysarg,packet)
 	
 	local award = config.award[1]
 	local nNewItem = Item.createItem(award.id,award.count,nStrong,0,0)
-	Item.addItem(sysarg,nNewItem,"百服活动合成霸者新装备",1029)
 	Item.setItemProperty(sysarg, nNewItem, Item.ipItemStrongLimit, nStrongLimit);
 	Item.setItemProperty(sysarg, nNewItem, Item.ipItemAppraisal, nBlood);
+	Item.addItem(sysarg,nNewItem,"百服活动合成霸者新装备",1029)
 end
 
 function CreateHundredMonster()

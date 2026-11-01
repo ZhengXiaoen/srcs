@@ -381,8 +381,7 @@ function MiscActivateGodDress(sysarg,sysid,packet)
         Actor.sendTipmsg(sysarg,"激活神甲失败,未知错误1！",ttFlyTip)
         return
     end 
-    Item.addItem(sysarg,pUserItem,"激活神甲给予",LogIds.ActivateGodDress)
-    Item.equipItem(sysarg,pUserItem) 
+    LocalDT.AddAndEquipPreparedItem(sysarg, pUserItem, "激活神甲给予", LogIds.ActivateGodDress, 0, -1)
     Actor.sendTipmsg(sysarg,"激活神甲成功！",ttFlyTip)
 end
 

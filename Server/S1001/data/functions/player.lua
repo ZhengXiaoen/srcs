@@ -124,6 +124,14 @@ LocalDT.GetBagSortItemAttributes = function(sysarg, itemPtr)
 	return values
 end
 
+-- 只有这些普通装备类型可附魂；其它装备的同一字段可能用于成长属性。
+LocalDT.HasSpecialEquipmentSoul = function(sysarg, itemPtr)
+	local itemType = Item.getItemProperty(sysarg, itemPtr, Item.ipItemType, 0)
+	if itemType ~= 1 and itemType ~= 2 and itemType ~= 3 and itemType ~= 4 and
+		itemType ~= 6 and itemType ~= 7 and itemType ~= 8 and itemType ~= 9 then return false end
+	return (Item.getFuHunInfo(itemPtr, 1) or 0) ~= 0 or (Item.getFuHunInfo(itemPtr, 2) or 0) ~= 0
+end
+
 LocalDT.AreBagSortItemAttributesEqual = function(first, second)
 	if #first ~= #second then return false end
 	for i = 1, #first do
@@ -164,7 +172,7 @@ function BindAndSortBag(sysarg)
 			local itemId = Item.getItemId(itemPtr)
 			local limit = math.min(9999, Item.getItemPropertyById(itemId, Item.ipItemDupCount))
 			local count = Item.getItemProperty(sysarg, itemPtr, Item.ipItemCount, 0)
-			if limit > 1 and count > 0 and count <= limit then
+			if limit > 1 and count > 0 and count <= limit and not LocalDT.HasSpecialEquipmentSoul(sysarg, itemPtr) then
 				local attributes = LocalDT.GetBagSortItemAttributes(sysarg, itemPtr)
 				local sameIdTargets = targets[itemId] or {}
 				targets[itemId] = sameIdTargets
@@ -196,6 +204,30 @@ function BindAndSortBag(sysarg)
 		end
 	end
 	return "null"
+end
+
+-- 添加后可能已合并并释放临时指针，自动穿戴只能重新查找背包中的活物品。
+LocalDT.AddAndEquipPreparedItem = function(sysarg, itemPtr, comment, logId, replace, slot, amount)
+	if not itemPtr then return 0 end
+	local guid = Item.getItemGuidStr(itemPtr)
+	local itemId = Item.getItemId(itemPtr)
+	local attributes = LocalDT.GetBagSortItemAttributes(sysarg, itemPtr)
+	local expected = amount and amount > 0 and amount or Item.getItemProperty(sysarg, itemPtr, Item.ipItemCount, 0)
+	local added = Item.addItem(sysarg, itemPtr, comment, logId, amount)
+	if not added or added < expected then return added or 0 end
+	local liveItem = LocalDT.FindBagSortItemByGuid(sysarg, guid)
+	if not liveItem then
+		for index = 0, Item.getBagItemCount(sysarg) - 1 do
+			local candidate = Item.getItemPtrByIndex(sysarg, index)
+			if candidate and Item.getItemId(candidate) == itemId and
+				LocalDT.AreBagSortItemAttributesEqual(attributes, LocalDT.GetBagSortItemAttributes(sysarg, candidate)) then
+				liveItem = candidate
+				break
+			end
+		end
+	end
+	if liveItem then Item.equipItem(sysarg, liveItem, replace, slot) end
+	return added
 end
 
 -- 清除旧神戒宝盒误写到可叠加戒指材料上的随机属性。

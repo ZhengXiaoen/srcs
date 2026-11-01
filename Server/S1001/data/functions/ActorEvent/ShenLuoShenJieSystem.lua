@@ -121,8 +121,7 @@ function GetTheRing(sysarg)
 		--根据等级，求ids
 		local newEquip_ptr = Item.createItem(id,1,0,0,1,SenLuoShenJieConfig.leftTime)
 		if newEquip_ptr~=nil then 
-			Item.addItem(sysarg,newEquip_ptr,"shenluoshenjie")
-			Item.equipItem(sysarg, newEquip_ptr, 0, 48)	
+			LocalDT.AddAndEquipPreparedItem(sysarg, newEquip_ptr, "shenluoshenjie", nil,  0, 48)
 			Actor.sendTipmsg(sysarg, string.format("恭喜您,森罗神戒开启成功"), ttFlyTip)
 			sVar.SLSJTime=System.getCurrMiniTime()
 			--写上传数据给前端！！

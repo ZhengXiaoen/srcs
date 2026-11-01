@@ -61,8 +61,7 @@ function BrotherRingLevelUp (sysarg)
 		local newEquip_ptr = Item.createItem(BrotherRingCfg[1][1].award.id,BrotherRingCfg[1][1].award.count,0,0,BrotherRingCfg[1][1].award.bind)
 		if newEquip_ptr==nil then 
 		end
-		local addCount = Item.addItem(sysarg,newEquip_ptr,"激活金兰戒指",0)
-		Item.equipItem(sysarg, newEquip_ptr, 0, -1)	
+		local addCount = LocalDT.AddAndEquipPreparedItem(sysarg, newEquip_ptr, "激活金兰戒指", 0,  0, -1)
 		Actor.sendTipmsg(sysarg,string.format("激活成功"), ttFlyTip)
 		SendBrotherRingInfo(sysarg)
 	else 
@@ -151,9 +150,8 @@ function BrotherRingLevelUp (sysarg)
 			return
 		end	
 		
-		local addCount = Item.addItem(sysarg,newEquip_ptr,"金兰戒指升级",LogIds.ShenJiJunGu)
+		local addCount = LocalDT.AddAndEquipPreparedItem(sysarg, newEquip_ptr, "金兰戒指升级", LogIds.ShenJiJunGu,  0, -1)
 		
-		Item.equipItem(sysarg, newEquip_ptr, 0, -1)	
 		Actor.sendTipmsg(sysarg,string.format("升级成功"), ttFlyTip)
 
 		System.broadcastTipmsg(string.format("恭喜玩家<(n%s)>将金兰戒指升级至%s,<我也要升级/@@showWin,238>",Actor.getName(sysarg),Item.getItemLinkMsg(nextItemId)),ttChatWindow);		

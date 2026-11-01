@@ -353,6 +353,8 @@ t.main = function(sysarg)
 	
 	--e = e .."\\\\	<回收/@HuiShouNew>"
 	
+	-- 一键锻造放在锻造与回收区之间，分别处理王装、帝装。
+    e = e.."\\   <一键锻造王装/@onDzwdZAll,1>       <一键锻造帝装/@onDzwdZAll,2>\\"
 	--回收
 	
 	e = e.."<(idecoLine#350)>"
@@ -1141,168 +1143,217 @@ end
 
 
 
-t.onDzwdZ = function(sysarg,a,b,c)
-	a,b,c = tonumber(a),tonumber(b),tonumber(c);
-	local d = t.data;
-	local e = "\\  <(c0xFFb6946c)请选择需要锻造的装备:> <返  回/@main>\\\\";
-    for i = a,b do
-		local proIdx = d[i][2];
-		local zhaoHuanQiangDu = 6;
-		if d[i][4] == 3 then
-			zhaoHuanQiangDu = 6;
-		end
-		if c == 1 then 
-			e = e .. string.format("  %s  <点击锻造/@onDzwdZ_only,%s,%s|需要材料:#%s x3 + %s绑金或金币>\\\\", "<#c0x00FF00FF#王·"..Item.getItemName(d[i][1]).."/v1,"..d[i][1]..",0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"..proIdx..",0,0,0,0,"..zhaoHuanQiangDu..",0,0,0,0,0>", i,c, Item.getItemName(d[i][1]), d[i][5]);
-		else	
-			e = e .. string.format("  %s  <点击锻造/@onDzwdZ_only,%s,%s|需要材料:#%s x3 + %s绑金或金币>\\\\", "<#c0x00FF00FF#帝·"..Item.getItemName(d[i][1]).."/v1,"..d[i][1]..",0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"..proIdx+1 ..",0,0,0,0,"..zhaoHuanQiangDu..",0,0,0,0,0>", i,c, Item.getItemName(d[i][1]).."·王", d[i][5]);
-		end
-	end
-    return e;
+LocalDT.SanWeiIndexValid = function(value,minimum,maximum)
+    return value and value%1 == 0 and value >= minimum and value <= maximum
 end
 
-t.onDzwdZ_only = function(sysarg,a,c)  --c代表是王，还是帝的合成 
-    if not a then return; end
-	c = tonumber(c)
-    local i = tonumber(a);
-    local d = t.data;
-    local add_nitem = d[i][1];
-	local proIdx = d[i][2];
-    local item_count = 1;
-
-	local haveItemCount = 0
-	local bagCount = Item.getBagItemCount(sysarg)
-	local needItem ={}
-	--print("add_nitem="..add_nitem)
-
-	local del_ngold = d[i][5];
-    local MC = 2;
-    if Actor.getMoneyCount(sysarg,1) >= del_ngold then MC = 1; end
-    if Actor.getMoneyCount(sysarg,0) >= del_ngold then MC = 0; end
-    if MC == 2 then
-        Actor.sendTipmsg(sysarg, string.format("您的绑金或金币不足 <%s>.",del_ngold), 256);
-        return ;
+-- 首页和子类的一键锻造均只处理当前职业、当前可见转数的原有配方。
+LocalDT.GetSanWeiForgeGroups = function(sysarg,c,a,b)
+    local selected = a ~= nil or b ~= nil
+    c,a,b = tonumber(c),tonumber(a),tonumber(b)
+    if not LocalDT.SanWeiIndexValid(c,1,2) then return end
+    local job = Actor.getIntProperty(sysarg,PROP_ACTOR_VOCATION)
+    local circle = Actor.getIntProperty(sysarg,PROP_ACTOR_CIRCLE)
+    if not LocalDT.SanWeiIndexValid(job,1,3) then return end
+    if selected and (not LocalDT.SanWeiIndexValid(a,1,#t.data)
+        or not LocalDT.SanWeiIndexValid(b,a,#t.data)) then return end
+    local groups = {}
+    for _,classes in ipairs(t.classA) do
+        local cfg = classes[job]
+        if (circle >= cfg.zslv-2 or circle >= 8) and (a == nil or (a == cfg.min and b == cfg.max)) then
+            groups[#groups+1] = cfg
+        end
     end
+    if a ~= nil and #groups ~= 1 then return end
+    return groups,c
+end
 
-	for i=1,bagCount do 
-		local itemPrt = Item.getItemPtrByIndex(sysarg,i-1)
-		if itemPrt then 
-            local nValue = 0
-            if Item.getItemProperty(sysarg,itemPrt,Item.ipItemCount,nValue) <= 0 then
-                System.trace("刷装备"..Actor.getName(sysarg))    
-                return
+LocalDT.SanWeiForgeOne = function(sysarg,index,c)
+    local cfg = t.data[index]
+    local inputPro = c == 1 and 0 or cfg[2]
+    local outputPro = cfg[2]+(c == 2 and 1 or 0)
+    local materials,remaining,experience = {},3,0
+    for i = 1,Item.getBagItemCount(sysarg) do
+        local ptr = Item.getBagItemBySortID(sysarg,i)
+        if ptr and Item.getItemId(ptr) == cfg[1]
+            and Item.getItemProperty(sysarg,ptr,Item.ipItemSuperAttrLevel) == inputPro
+            and Item.getItemProperty(sysarg,ptr,Item.ipDragonEquipLevel) == 0 then
+            local take = math.min(remaining,(Item.getItemProperty(sysarg,ptr,Item.ipItemCount,0)))
+            if take > 0 then
+                materials[#materials+1] = {ptr=ptr,count=take}
+                experience = experience+take*(Item.getFuHunInfo(ptr,2)+calFuHunLevelUpUsedExp(sysarg,ptr))
+                remaining = remaining-take
+                if remaining == 0 then break end
             end
-            
-			if c==1 then --王的合成
-				if Item.getItemId(itemPrt) == add_nitem and Item.getItemProperty(sysarg,itemPrt,Item.ipItemSuperAttrLevel)==0 and Item.getItemProperty(sysarg,itemPrt,Item.ipDragonEquipLevel) == 0 then --id一样，并且属性一样（普通）才确认是这件物品
-					haveItemCount = haveItemCount +1
-					table.insert(needItem,itemPrt)
-				end
-			else 
-				if Item.getItemId(itemPrt) == add_nitem and Item.getItemProperty(sysarg,itemPrt,Item.ipItemSuperAttrLevel)==proIdx and Item.getItemProperty(sysarg,itemPrt,Item.ipDragonEquipLevel) == 0 then --id一样，并且属性一样（王）才确认是这件物品
-					haveItemCount = haveItemCount +1
-					table.insert(needItem,itemPrt)
-				end
-			end
-		end
-	end
-	
-    if haveItemCount < 3 then
-		if c==1 then --王的合成
-			Actor.sendTipmsg(sysarg, string.format("您的 <%s> 不足 <%s> ,锻造失败..", Item.getItemName(add_nitem), 3), 256)
-		else 
-			Actor.sendTipmsg(sysarg, string.format("您的 <%s> 不足 <%s> ,锻造失败..", Item.getItemName(add_nitem).."·王", 3), 256)
-		end
-        return ;
+        end
     end
-
-	local strlog = "三昧真火普通"
-	local strlog2 = "三昧真火王"
-	if c~=1 then 
-		strlog = "三昧真火王"
-		strlog2 = "三昧真火帝"
-	end
-	
-	--找出最高的附魂等级和经验
-	local topFuHunLv = 0
-	local topFunHunExp =0
-	for i=1,3 do 
-		local delItemPrt = needItem[i]
-		--local delItemFHlv = Item.getFuHunInfo(delItemPrt,1)
-		--local delItemFHexp = Item.getFuHunInfo(delItemPrt,2)
-		--if delItemFHlv<topFuHunLv then --不做操作
-		--	
-		--elseif delItemFHlv>topFuHunLv then --直接保存
-		--	topFuHunLv = delItemFHlv
-		--	topFunHunExp = delItemFHexp
-		--elseif delItemFHlv==topFuHunLv then --判断经验
-		--	if delItemFHexp>topFuHunLv then 
-		--		topFuHunLv = delItemFHlv
-		--		topFunHunExp = delItemFHexp
-		--	end
-		--end
-		--topFuHunLv = topFuHunLv + delItemFHlv   --全部叠加
-		--topFunHunExp = topFunHunExp + delItemFHexp
-		
-		
-		local delItemFHexp = Item.getFuHunInfo(delItemPrt,2)
-		local delItemUseexp = calFuHunLevelUpUsedExp(sysarg,delItemPrt)
-		topFunHunExp =topFunHunExp + delItemFHexp + delItemUseexp
-	end
-	
-	for i=1,3 do 
-		if Item.removeItem(sysarg,needItem[i],1,strlog,LogIds.sanweizhenhuoHeCheng)~=1 then 
-			System.trace("sanweizhenhuo del fail :"..i.."itemid:"..add_nitem.."actorid:"..Actor.getIntProperty(sysarg,PROP_ENTITY_ID))
-			return 
-		end
-	end
-	if c==2 then 
-		proIdx = proIdx +1
-	end
-	Actor.changeMoney(sysarg, MC, -del_ngold,  LogIds.sanweizhenhuoHeCheng,strlog);
-	local zhaoHuanQiangDu = 6;
-	if d[i][4] == 3 then
-		zhaoHuanQiangDu = 6;
-	end
-	local nNewItem = Item.createItem(add_nitem,1,0,0,0,0,proIdx)
-	if nNewItem ~= nil then 
-	
-		if topFunHunExp>0 then 
-			local cfg = findFuHunConfig(nNewItem)
-			if cfg~=nil then 
-				for i=1,#cfg do 
-					topFunHunExp  = topFunHunExp -cfg[i].lvUpNeedExp
-					if topFunHunExp<0 then 
-						topFunHunExp = topFunHunExp +cfg[i].lvUpNeedExp
-						break
-					end
-					topFuHunLv =  i
-				end
-				
-				Item.setFuHunInfo(sysarg,nNewItem,1,topFuHunLv)
-				Item.setFuHunInfo(sysarg,nNewItem,2,topFunHunExp) 
-				
-				System.sendCommonLog(LogIds.zhuanbeifuhunLvChange,Actor.getIntProperty(sysarg, PROP_ENTITY_ID),Actor.getName(sysarg),0,0, topFuHunLv, "","","王帝合成继承","","",Item.getItemGuidStr(nNewItem),"",Item.getItemName(nNewItem))
-				System.sendCommonLog(LogIds.zhuanbeifuhunExpChange,Actor.getIntProperty(sysarg, PROP_ENTITY_ID),Actor.getName(sysarg),0,0, topFunHunExp, "","","王帝合成继承","","",Item.getItemGuidStr(nNewItem),"",Item.getItemName(nNewItem))
-			end
-		end
-		
-		Item.setItemProperty(sysarg,nNewItem,Item.ipTaoStrong,zhaoHuanQiangDu)
-		Item.addItem(sysarg,nNewItem,strlog2,LogIds.sanweizhenhuoHeCheng)
-	end
-
-	local NpcName = Actor.getTalkNpcName(sysarg);
-	local StrNpcE = string.format("<%s/M沙漠土城:159:116:%s><(x沙漠土城:159:116:%s)>",NpcName,NpcName,NpcName);
-	if c==1 then 
-		System.broadcastTipmsg(string.format("玩家<(n%s)>通过%s锻造出%s.", Actor.getName(sysarg), StrNpcE, "<#c0x00FF00FF#王·"..Item.getItemName(d[i][1]).."/v1,"..d[i][1]..",0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"..proIdx..",0,0,0,0,"..zhaoHuanQiangDu..",0,0,0,0,0>"),128);
-		System.broadcastTipmsg(string.format("玩家<(n%s)>通过%s锻造出%s.", Actor.getName(sysarg), StrNpcE, "王·"..Item.getItemName(add_nitem)),2);
-	else
-		System.broadcastTipmsg(string.format("玩家<(n%s)>通过%s锻造出%s.", Actor.getName(sysarg), StrNpcE, "<#c0x00FF00FF#帝·"..Item.getItemName(d[i][1]).."/v1,"..d[i][1]..",0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"..proIdx ..",0,0,0,0,"..zhaoHuanQiangDu..",0,0,0,0,0>"),128);
-		System.broadcastTipmsg(string.format("玩家<(n%s)>通过%s锻造出%s.", Actor.getName(sysarg), StrNpcE, "帝·"..Item.getItemName(add_nitem)),2);
-	end
-    return;
+    if remaining > 0 then return 0,"材料不足" end
+    -- 原规则要求一次费用由绑金或金币中的一种支付，优先使用足额绑金。
+    local currency
+    if Actor.getMoneyCount(sysarg,0) >= cfg[5] then currency = 0
+    elseif Actor.getMoneyCount(sysarg,1) >= cfg[5] then currency = 1
+    else return 0,"绑金或金币不足" end
+    local result = Item.createItem(cfg[1],1,0,0,0,0,outputPro)
+    if not result then return 0,"装备生成失败" end
+    local soulLevel,soulExp = 0,experience
+    local soulCfg = findFuHunConfig(result)
+    if soulCfg and experience > 0 then
+        for level,row in ipairs(soulCfg) do
+            if soulExp < row.lvUpNeedExp then break end
+            soulExp = soulExp-row.lvUpNeedExp
+            soulLevel = level
+        end
+        Item.setFuHunInfo(sysarg,result,1,soulLevel)
+        Item.setFuHunInfo(sysarg,result,2,soulExp)
+    end
+    Item.setItemProperty(sysarg,result,Item.ipTaoStrong,6)
+    if Item.getItemProperty(sysarg,result,Item.ipTaoStrong,0) ~= 6
+        or Item.getItemProperty(sysarg,result,Item.ipItemSuperAttrLevel,0) ~= outputPro
+        or (soulCfg and experience > 0 and (Item.getFuHunInfo(result,1) ~= soulLevel
+            or Item.getFuHunInfo(result,2) ~= soulExp)) then
+        Item.releaseItemPtr(result)
+        return 0,"装备属性设置失败"
+    end
+    local free = Item.getBagEmptyGridCount(sysarg)
+    for _,material in ipairs(materials) do
+        if material.count == Item.getItemProperty(sysarg,material.ptr,Item.ipItemCount,0) then free = free+1 end
+    end
+    local fits = free > 0
+    if not fits and Item.getFuHunInfo(result,1) == 0 and Item.getFuHunInfo(result,2) == 0 then
+        for i = 1,Item.getBagItemCount(sysarg) do
+            local ptr = Item.getBagItemBySortID(sysarg,i)
+            if ptr and Item.getItemId(ptr) == cfg[1]
+                and Item.getItemProperty(sysarg,ptr,Item.ipItemCount,0) < Item.getItemPropertyById(cfg[1],Item.ipItemDupCount)
+                and LocalDT.DragonEquipSplitAttributesEqual(sysarg,result,ptr) then fits = true;break end
+        end
+    end
+    if not fits then Item.releaseItemPtr(result);return 0,"包裹空间不足" end
+    -- 扣除前备份实际选中的装备，失败时保留原绑定、强化、附魂等属性。
+    for _,material in ipairs(materials) do
+        material.backup = LocalDT.PrepareDragonEquipSplitItem(sysarg,material.ptr)
+        if material.backup then Item.setItemProperty(sysarg,material.backup,Item.ipItemCount,material.count) end
+        if not material.backup or Item.getItemProperty(sysarg,material.backup,Item.ipItemCount,0) ~= material.count then
+            for _,saved in ipairs(materials) do if saved.backup then Item.releaseItemPtr(saved.backup) end end
+            Item.releaseItemPtr(result)
+            return 0,"材料属性备份失败"
+        end
+    end
+    local logStr = c == 1 and "三昧真火普通" or "三昧真火王"
+    local resultStr = c == 1 and "三昧真火王" or "三昧真火帝"
+    local before = Actor.getMoneyCount(sysarg,currency)
+    local charged = Actor.changeMoney(sysarg,currency,-cfg[5],LogIds.sanweizhenhuoHeCheng,logStr)
+    local paid = before-Actor.getMoneyCount(sysarg,currency)
+    local reason = "金币扣除失败"
+    local removed = 0
+    if charged ~= false and paid == cfg[5] then
+        reason = "材料扣除失败"
+        for _,material in ipairs(materials) do
+            material.removed = Item.removeItem(sysarg,material.ptr,material.count,logStr,LogIds.sanweizhenhuoHeCheng)
+            removed = removed+material.removed
+            if material.removed ~= material.count then break end
+        end
+        if removed == 3 then
+            reason = "锻造装备发放失败"
+            local name,guid = Item.GetItemNameEx(result),Item.getItemGuidStr(result)
+            if Item.addItem(sysarg,result,resultStr,LogIds.sanweizhenhuoHeCheng,1) == 1 then
+                for _,material in ipairs(materials) do Item.releaseItemPtr(material.backup) end
+                -- 发放可能合并释放临时物品，继承日志只使用提前保存的信息。
+                if soulCfg and experience > 0 then
+                    System.sendCommonLog(LogIds.zhuanbeifuhunLvChange,Actor.getIntProperty(sysarg,PROP_ENTITY_ID),Actor.getName(sysarg),
+                        0,0,soulLevel,"","","王帝合成继承","","",guid,"",name)
+                    System.sendCommonLog(LogIds.zhuanbeifuhunExpChange,Actor.getIntProperty(sysarg,PROP_ENTITY_ID),Actor.getName(sysarg),
+                        0,0,soulExp,"","","王帝合成继承","","",guid,"",name)
+                end
+                return 1,nil,name
+            end
+        end
+    end
+    Item.releaseItemPtr(result)
+    local restored = true
+    for _,material in ipairs(materials) do
+        if (material.removed or 0) > 0 then
+            Item.setItemProperty(sysarg,material.backup,Item.ipItemCount,material.removed)
+            if Item.addItem(sysarg,material.backup,logStr.."返还",LogIds.sanweizhenhuoHeCheng,material.removed) ~= material.removed then
+                restored = false
+                Item.releaseItemPtr(material.backup)
+            end
+        else
+            Item.releaseItemPtr(material.backup)
+        end
+    end
+    if paid > 0 then Actor.changeMoney(sysarg,currency,paid,LogIds.sanweizhenhuoHeCheng,logStr.."返还") end
+    if not restored or Actor.getMoneyCount(sysarg,currency) ~= before then reason = reason.."，返还异常，请联系管理员" end
+    return 0,reason
 end
 
+t.onDzwdZAll = function(sysarg,c,a,b)
+    if Actor.isDealing(sysarg) then return "null" end
+    local groups,kind = LocalDT.GetSanWeiForgeGroups(sysarg,c,a,b)
+    if not groups then return end
+    local total,stopped = 0
+    for _,group in ipairs(groups) do
+        for index = group.min,group.max do
+            while true do
+                local amount,reason = LocalDT.SanWeiForgeOne(sysarg,index,kind)
+                if amount > 0 then total = total+amount
+                else
+                    if reason ~= "材料不足" then stopped = reason end
+                    break
+                end
+            end
+            if stopped then break end
+        end
+        if stopped then break end
+    end
+    local str = string.format("一键合成：共锻造%d件%s装。",total,kind == 1 and "王" or "帝")
+    if stopped then str = str..stopped.."，已停止锻造。"
+    elseif total == 0 then str = str.."背包中的对应材料不足3件。" end
+    Actor.sendTipmsg(sysarg,str,ttFlyTip)
+    if a ~= nil then return t.onDzwdZ(sysarg,a,b,kind) end
+    return t.main(sysarg)
+end
 
+t.onDzwdZ = function(sysarg,a,b,c)
+    a,b,c = tonumber(a),tonumber(b),tonumber(c)
+    if a == nil or b == nil or not LocalDT.GetSanWeiForgeGroups(sysarg,c,a,b) then return end
+    local e = "\\  <(c0xFFb6946c)请选择需要锻造的装备:> <返  回/@main>\\\\"
+    for index = a,b do
+        local cfg = t.data[index]
+        local pro = cfg[2]+(c == 2 and 1 or 0)
+        local prefix = c == 1 and "王·" or "帝·"
+        local material = Item.getItemName(cfg[1])..(c == 2 and "·王" or "")
+        local itemLink = "<#c0x00FF00FF#"..prefix..Item.getItemName(cfg[1]).."/v1,"..cfg[1]..",0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"..pro..",0,0,0,0,6,0,0,0,0,0>"
+        e = e..string.format("  %s  <点击锻造/@onDzwdZ_only,%d,%d|需要材料:#%s x3 + %d绑金或金币>",itemLink,index,c,material,cfg[5])
+        if index == a+4 then e = e..string.format("      <一键合成/@onDzwdZAll,%d,%d,%d>",c,a,b) end
+        e = e.."\\\\"
+    end
+    return e
+end
+
+t.onDzwdZ_only = function(sysarg,a,c)
+    if Actor.isDealing(sysarg) then return "null" end
+    a,c = tonumber(a),tonumber(c)
+    if not LocalDT.SanWeiIndexValid(a,1,#t.data) then return end
+    local groups,kind = LocalDT.GetSanWeiForgeGroups(sysarg,c)
+    if not groups then return end
+    local allowed = false
+    for _,group in ipairs(groups) do if a >= group.min and a <= group.max then allowed = true;break end end
+    if not allowed then return end
+    local amount,reason,name = LocalDT.SanWeiForgeOne(sysarg,a,kind)
+    if amount == 0 then
+        Actor.sendTipmsg(sysarg,reason.."，锻造失败！",ttFlyTip)
+        return
+    end
+    Actor.sendTipmsg(sysarg,"锻造成功，获得"..name.."。",ttFlyTip)
+    local npcName = Actor.getTalkNpcName(sysarg)
+    local npcLink = string.format("<%s/M沙漠土城:159:116:%s><(x沙漠土城:159:116:%s)>",npcName,npcName,npcName)
+    local cfg = t.data[a]
+    local pro = cfg[2]+(kind == 2 and 1 or 0)
+    local display = (kind == 1 and "王·" or "帝·")..Item.getItemName(cfg[1])
+    local itemLink = "<#c0x00FF00FF#"..display.."/v1,"..cfg[1]..",0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"..pro..",0,0,0,0,6,0,0,0,0,0>"
+    System.broadcastTipmsg(string.format("玩家<(n%s)>通过%s锻造出%s.",Actor.getName(sysarg),npcLink,itemLink),128)
+    System.broadcastTipmsg(string.format("玩家<(n%s)>通过%s锻造出%s.",Actor.getName(sysarg),npcLink,display),2)
+end
 
 t.FenJie = function(sysarg,index)  --index控制王，帝分解
 	index =tonumber(index)
@@ -2054,30 +2105,69 @@ t.OnDragonEquipFuse = function(sysarg,nIndex,nType,nOneIndex)
     return str
 end
 --锻造指定装备道具
-t.onDragonEquipFuseEx = function(sysarg,nIndex,nItemIndex,nType,nOneIndex)
-     nIndex = tonumber(nIndex)
-     nItemIndex = tonumber(nItemIndex)
-     nType = tonumber(nType)
-
-     if nIndex <= 0 or nIndex > #EquipDragonCfg.Fuse then return "wtf!!" end
-     if nItemIndex <= 0 or nItemIndex > #EquipDragonCfg.Fuse[nIndex] then return "wtf111!!" end
-     local cfg = EquipDragonCfg.Fuse[nIndex][nItemIndex].Item
-     local str ="\\<(c0xFFffff00)请选择您要融合的装备部件.如果不满意还可以拆分.>\\\\"
-     for i =1,#cfg do
-        if nType == 1 then
-            str = str..  "  	<"..cfg[i].Name.."/@onDragonEquipFuseExEx,"..nIndex..","..nItemIndex..","..i..","..nType..","..nOneIndex..">";
-        else --拆分
-            str = str..  "  	<"..cfg[i].Name.."/@onDragonEquipSplitExEx,"..nIndex..","..nItemIndex..","..i..","..nType..","..nOneIndex..">";
+-- 由转数、部件和品质定位角色职业的原配方，衣服按角色性别定位。
+LocalDT.GetSanWeiDragonRecipe = function(sysarg,level,part,series,pro)
+    level,part,series,pro = tonumber(level),tonumber(part),tonumber(series),tonumber(pro)
+    if not LocalDT.SanWeiIndexValid(level,1,#EquipDragonCfg.Fuse)
+        or not LocalDT.SanWeiIndexValid(part,1,#EquipDragonCfg.Fuse[level])
+        or not LocalDT.SanWeiIndexValid(series,1,#t.classA)
+        or not LocalDT.SanWeiIndexValid(pro,0,2) then return end
+    local job = Actor.getIntProperty(sysarg,PROP_ACTOR_VOCATION)
+    local sex = Actor.getIntProperty(sysarg,PROP_ACTOR_SEX)
+    if not LocalDT.SanWeiIndexValid(job,1,3) or not LocalDT.SanWeiIndexValid(sex,0,1) then return end
+    local class = t.classA[series][job]
+    local offset = part == 1 and 0 or (part == 2 and 1+sex or part)
+    local id = t.data[class.min+offset][1]
+    for groupIndex,group in ipairs(EquipDragonCfg.Fuse[level][part].Item) do
+        for recipeIndex,cfg in ipairs(group.List) do
+            if cfg.id == id and cfg.pro == pro then return cfg,groupIndex,recipeIndex,class end
         end
-
-        if i % 2 == 0 then str = str.."\\" else str = str.."     " end
-     end
-
-	 str = str.."		\\			<返回上一页/@OnDragonEquipFuse,"..nIndex..","..nType..","..nOneIndex..">"
-	 
-     return str
-	
+    end
 end
+
+t.onDragonEquipFuseEx = function(sysarg,nIndex,nItemIndex,nType,nOneIndex)
+    nIndex,nItemIndex,nType = tonumber(nIndex),tonumber(nItemIndex),tonumber(nType)
+    nOneIndex = tonumber(nOneIndex) or 1
+    if not LocalDT.SanWeiIndexValid(nIndex,1,#EquipDragonCfg.Fuse)
+        or not LocalDT.SanWeiIndexValid(nItemIndex,1,#EquipDragonCfg.Fuse[nIndex])
+        or not LocalDT.SanWeiIndexValid(nType,1,2) then return end
+    local action = nType == 1 and "融合" or "拆分"
+    local str = "\\<(c0xFFffff00)请选择要"..action.."的装备类型。>\\\\"
+    for series = 1,#t.classA do
+        local row = ""
+        local circle
+        for pro = 0,2 do
+            local cfg,_,_,class = LocalDT.GetSanWeiDragonRecipe(sysarg,nIndex,nItemIndex,series,pro)
+            if cfg then
+                circle = class.zslv
+                local suffix = ({"战装","法装","道装"})[Actor.getIntProperty(sysarg,PROP_ACTOR_VOCATION)]
+                local name = string.gsub(class.name,suffix.."$","")
+                local prefix = pro == 0 and "" or (pro == 1 and "王·" or "帝·")
+                local tip = "需要材料:#"..prefix..Item.getItemName(cfg.id).." x1 + "..Item.getItemName(cfg.id2).." x1"
+                if nType == 2 then tip = "拆分消耗:#"..cfg.money.."元宝#返还:"..prefix..Item.getItemName(cfg.id).." + "..Item.getItemName(cfg.id2).." x1" end
+                row = row..string.format("     <#c0xFF15EA40#%s%s/@onDragonEquipByClass,%d,%d,%d,%d,%d,%d|%s>",prefix,name,nIndex,nItemIndex,series,pro,nType,nOneIndex,tip)
+            end
+        end
+        if circle then str = str..string.format("   <(ifragments#16#18)><(c0xFFb6946c)%d转:>%s\\",circle,row) end
+    end
+    str = str..string.format("\\   <返回上一页/@OnDragonEquipFuse,%d,%d,%d>",nIndex,nType,nOneIndex)
+    return str
+end
+
+t.onDragonEquipByClass = function(sysarg,nIndex,nItemIndex,series,pro,nType,nOneIndex)
+    if Actor.isDealing(sysarg) then return "null" end
+    nType,nIndex,nItemIndex = tonumber(nType),tonumber(nIndex),tonumber(nItemIndex)
+    if not LocalDT.SanWeiIndexValid(nType,1,2) then return end
+    local cfg,group,recipe = LocalDT.GetSanWeiDragonRecipe(sysarg,nIndex,nItemIndex,series,pro)
+    if not cfg then return end
+    if nType == 1 then
+        t.onDragonEquipFuseExExEx(sysarg,cfg.id,cfg.id2,cfg.pro,nIndex,nItemIndex,group,recipe)
+    else
+        t.onDragonEquipSplitExExEx(sysarg,cfg.id,cfg.id2,cfg.pro,nIndex,cfg.money,nItemIndex,group,recipe)
+    end
+    return t.onDragonEquipFuseEx(sysarg,nIndex,nItemIndex,nType,nOneIndex)
+end
+
 t.onDragonEquipSplitExEx = function(sysarg,nIndex,nItemIndex,n,nType,nOneIndex)
      nIndex = tonumber(nIndex)
      nItemIndex = tonumber(nItemIndex)
@@ -2172,20 +2262,77 @@ t.onDragonEquipFuseExEx = function(sysarg,nIndex,nItemIndex,n,nType,nOneIndex)
 	 	str = str.."\\			<返回上一页/@onDragonEquipFuseEx,"..nIndex..","..nItemIndex..","..nType..","..nOneIndex..">"
      return str
 end
+-- 融合只扣一件龍之道具，也只融合一件装备；堆叠中的其余装备保留。
+LocalDT.SanWeiDragonFuseOne = function(sysarg,ptr,cfg,level)
+    local count = Item.getItemProperty(sysarg,ptr,Item.ipItemCount,0)
+    if count < 1 then return false,"装备数量异常" end
+    local bound = Actor.getItemCount(sysarg,cfg.id2,-1,-1,1)
+    local bind = bound > 0 and 1 or 0
+    local before = Actor.getItemCount(sysarg,cfg.id2,-1,-1,bind)
+    if before < 1 then return false,"龍之道具不足1个" end
+    local prepared
+    if count > 1 then
+        prepared = LocalDT.PrepareDragonEquipSplitItem(sysarg,ptr)
+        if not prepared then return false,"装备属性复制失败" end
+        Item.setItemProperty(sysarg,prepared,Item.ipDragonEquipLevel,level)
+        if Item.getItemProperty(sysarg,prepared,Item.ipDragonEquipLevel,0) ~= level then
+            Item.releaseItemPtr(prepared)
+            return false,"融合属性设置失败"
+        end
+        local fits = Item.getBagEmptyGridCount(sysarg)+(before == 1 and 1 or 0) > 0
+        if not fits and Item.getFuHunInfo(prepared,1) == 0 and Item.getFuHunInfo(prepared,2) == 0 then
+            for i = 1,Item.getBagItemCount(sysarg) do
+                local target = Item.getBagItemBySortID(sysarg,i)
+                if target and Item.getItemId(target) == cfg.id
+                    and Item.getItemProperty(sysarg,target,Item.ipItemCount,0) < Item.getItemPropertyById(cfg.id,Item.ipItemDupCount)
+                    and LocalDT.DragonEquipSplitAttributesEqual(sysarg,prepared,target) then fits = true;break end
+            end
+        end
+        if not fits then Item.releaseItemPtr(prepared);return false,"包裹空间不足" end
+    end
+    local removed = Actor.removeItem(sysarg,cfg.id2,1,-1,-1,bind,"龍装融合",LogIds.DragonEquipFuse)
+    local taken = before-Actor.getItemCount(sysarg,cfg.id2,-1,-1,bind)
+    local reason = "龍之道具扣除失败"
+    if removed == 1 and taken == 1 then
+        local prop = prepared and Item.ipItemCount or Item.ipDragonEquipLevel
+        local value = prepared and count-1 or level
+        reason = "融合状态更新失败"
+        if Item.setItemProperty(sysarg,ptr,prop,value) ~= false and Item.getItemProperty(sysarg,ptr,prop,0) == value then
+            local name = Item.GetItemNameEx(prepared or ptr)
+            if not prepared or Item.addItem(sysarg,prepared,"龍装融合",LogIds.DragonEquipFuse,1) == 1 then
+                if not prepared then Item.SendItemLog(sysarg,ptr,"龙装融合",LogIds.DragonEquipFuse) end
+                return true,nil,name
+            end
+            reason = "融合装备发放失败"
+        end
+    end
+    if prepared then Item.releaseItemPtr(prepared) end
+    Item.setItemProperty(sysarg,ptr,Item.ipItemCount,count)
+    Item.setItemProperty(sysarg,ptr,Item.ipDragonEquipLevel,0)
+    if taken > 0 and Actor.addItem(sysarg,cfg.id2,0,0,taken,bind,0,"龍装融合返还",LogIds.DragonEquipFuse) ~= taken then
+        reason = reason.."，道具返还异常，请联系管理员"
+    end
+    if Item.getItemProperty(sysarg,ptr,Item.ipItemCount,0) ~= count or Item.getItemProperty(sysarg,ptr,Item.ipDragonEquipLevel,0) ~= 0 then
+        reason = reason.."，装备恢复异常，请联系管理员"
+    end
+    return false,reason
+end
+
 t.onDragonEquipFuseExExEx = function(sysarg,nId,nId2,nPro,nLevel,_nItemIndex,_n,_i)
+    if Actor.isDealing(sysarg) then return "null" end
 	----- xsp
 	local _nIndex = tonumber(nLevel)
 	_nItemIndex = tonumber(_nItemIndex)
 	_n = tonumber(_n)
 	_i = tonumber(_i)
 	
-	if _nIndex <= 0 or _nIndex > #EquipDragonCfg.Fuse then return  end
-     if _nItemIndex <= 0 or _nItemIndex > #EquipDragonCfg.Fuse[_nIndex] then return  end
+	if not LocalDT.SanWeiIndexValid(_nIndex,1,#EquipDragonCfg.Fuse) then return end
+     if not LocalDT.SanWeiIndexValid(_nItemIndex,1,#EquipDragonCfg.Fuse[_nIndex]) then return end
      local _cfg = EquipDragonCfg.Fuse[_nIndex][_nItemIndex].Item
-     if _n <= 0 or _n > #_cfg then return end 
+     if not LocalDT.SanWeiIndexValid(_n,1,#_cfg) then return end
      _cfg = _cfg[_n].List
      
-     if _i <= 0 or _i > #_cfg then return end
+     if not LocalDT.SanWeiIndexValid(_i,1,#_cfg) then return end
      local _itemcfg = _cfg[_i]
      
 	------ xsp
@@ -2254,17 +2401,11 @@ t.onDragonEquipFuseExExEx = function(sysarg,nId,nId2,nPro,nLevel,_nItemIndex,_n,
         Actor.sendTipmsg(sysarg,sTypeName..Item.getItemName(nId).."不足1个,无法融合！",ttFlyTip);
         return
     end
-    Actor.removeItem(sysarg,nId2,1,-1,-1,-1,"龍装融合",LogIds.DragonEquipFuse)
-    local nActorId = Actor.getIntProperty(sysarg,PROP_ENTITY_ID)
-   
-    Item.setItemProperty(sysarg,pItemPtr,Item.ipDragonEquipLevel,nLevel)
-    local nGuild = Item.getItemGuid(pItemPtr)
-  
-    -- System.sendCommonLog(LogIds.DragonEquipFuse,nActorId,Actor.getName(sysarg),Item.getItemProperty(sysarg,pItemPtr,Item.ipItemID),nLevel,0,"","龙装融合",tostring(nGuild),"","","","",Item.GetItemNameEx(pItemPtr))
-    Item.SendItemLog(sysarg,pItemPtr,"龙装融合",LogIds.DragonEquipFuse)
-    Actor.sendTipmsg(sysarg,"融合成功,获得"..Item.GetItemNameEx(pItemPtr)..".",ttFlyTip);
+    local success,reason,name = LocalDT.SanWeiDragonFuseOne(sysarg,pItemPtr,_itemcfg,nLevel)
+    if not success then Actor.sendTipmsg(sysarg,reason.."，无法融合！",ttFlyTip);return end
+    Actor.sendTipmsg(sysarg,"融合成功,获得"..name..".",ttFlyTip);
     local nItemId = Item.getItemProperty(sysarg,pItemPtr,Item.ipItemID)
-    local szLinkMsg = "<#c0x00FF00FF#"..Item.GetItemNameEx(pItemPtr).."/v1,"..nItemId..",0,0,0,0,1,0,0,0,0,0,0,0,0,0,"..nLevel..",0,0,0,0,0,0,0,"..nPro..",0,0,0,0,0,0,0,0,0,0>"
+    local szLinkMsg = "<#c0x00FF00FF#"..name.."/v1,"..nItemId..",0,0,0,0,1,0,0,0,0,0,0,0,0,0,"..nLevel..",0,0,0,0,0,0,0,"..nPro..",0,0,0,0,0,0,0,0,0,0>"
    
     local str = string.format("<(n%s)>玩家将%s融合成%s,我也要融合<(x沙漠土城:172:124:三昧真火炉)> ",Actor.getName(sysarg),Item.getItemLinkMsg(nId),szLinkMsg)
     System.broadcastTipmsg(str,ttChatWindow )

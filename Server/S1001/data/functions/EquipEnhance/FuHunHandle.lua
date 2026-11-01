@@ -128,8 +128,10 @@ LocalDT.FuHunConsume = function(sysarg,zhuItem,cailiaoItem,isBatch)
 	local addExp3 = Item.getFuHunInfo(pcailiaoItemPtr,2)
 	--print("addExp3="..addExp3)
 	
-	--把材料扣除
-	if Actor.removeItemByPtr(sysarg,pcailiaoItemPtr,1,true,"附魂",LogIds.zhuangbeifuhun)==0 then 
+	-- 一键附魂使用整叠材料，经验按实际扣除件数累计。
+	local consumeCount = isBatch and Item.getItemProperty(sysarg,pcailiaoItemPtr,Item.ipItemCount,0) or 1
+	local removedCount = Actor.removeItemByPtr(sysarg,pcailiaoItemPtr,consumeCount,true,"附魂",LogIds.zhuangbeifuhun)
+	if removedCount <= 0 then
 		Actor.sendTipmsg(sysarg,"扣除失败",ttFlyTip)
 		return 
 	end
@@ -138,7 +140,7 @@ LocalDT.FuHunConsume = function(sysarg,zhuItem,cailiaoItem,isBatch)
 	
 	local hasExp0 = Item.getFuHunInfo(pzhuItemPtr,2)
 	--print("hasExp0="..hasExp0)
-	Item.setFuHunInfo(sysarg,pzhuItemPtr,2,hasExp0+addExp1+addExp2+addExp3)
+	Item.setFuHunInfo(sysarg,pzhuItemPtr,2,hasExp0+(addExp1+addExp2+addExp3)*removedCount)
 	--print("all="..(hasExp0+addExp1+addExp2+addExp3))
 	
 	if not isBatch then
@@ -153,7 +155,7 @@ LocalDT.FuHunConsume = function(sysarg,zhuItem,cailiaoItem,isBatch)
 		DataPack.writeByte(pack,1)
 		DataPack.flush(pack)
 	end
-	return true
+	return removedCount
 	
 
 end
@@ -183,8 +185,9 @@ LocalDT.FuHunAll = function(sysarg,packet)
 			Item.getItemProperty(sysarg,materialPtr,Item.ipItemType,0) == mainType and
 			Item.getItemPropertyById(Item.getItemId(materialPtr),Item.ipItemNeedCircle) >= 4 and
 			Item.getItemProperty(sysarg,materialPtr,Item.ipDragonEquipLevel) == 0 then
-			if LocalDT.FuHunConsume(sysarg,zhuItem,Item.getItemGuid(materialPtr),true) then
-				count = count + 1
+			local removedCount = LocalDT.FuHunConsume(sysarg,zhuItem,Item.getItemGuid(materialPtr),true)
+			if removedCount then
+				count = count + removedCount
 			else
 				break
 			end

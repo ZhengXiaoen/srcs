@@ -41,8 +41,8 @@ end
 
 -- 元神升级
 function yuanshen_upgrade(sysarg, packet)
-	if System.getDaysSinceOpenServer() < 14 then
-		Actor.sendTipmsg(sysarg, "元神开服第14天开启", ttFlyTip)
+	if System.getDaysSinceOpenServer() < 8 then
+		Actor.sendTipmsg(sysarg, "元神开服第8天开启", ttFlyTip)
 		return
 	end
 	
@@ -95,8 +95,8 @@ end
 
 -- 元神兑换
 function yuanshen_exchange(sysarg, packet)
-	if System.getDaysSinceOpenServer() < 14 then
-		Actor.sendTipmsg(sysarg, "元神系统开服第14天开启", ttFlyTip)
+	if System.getDaysSinceOpenServer() < 8 then
+		Actor.sendTipmsg(sysarg, "元神系统开服第8天开启", ttFlyTip)
 		return
 	end
 	

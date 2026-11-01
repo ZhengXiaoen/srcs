@@ -18,7 +18,7 @@ SETUP = r'''
 LocalDT = {}; bag = {}; removed = {}; logs = {}; tips = {}; replies = {}
 circle = 5; failures = {}; main = {guid=100,id=100,kind=7,circle=5,job=1,dragon=0,super=0,exp=10,level=0,base=0}
 Item = {ipItemType='kind',ipItemNeedCircle='circle',ipDragonEquipLevel='dragon',
- ipItemSuperAttrLevel='super',ipItemaddFuHunExp='base',ipItemNeedVocation='job',
+ ipItemSuperAttrLevel='super',ipItemaddFuHunExp='base',ipItemNeedVocation='job',ipItemCount='count',
  getEquipPtrByGuid=function(_,guid) if main and main.guid==guid then return main end end,
  getBagItemPtrByGuid=function(_,guid) for _,v in ipairs(bag) do if v.guid==guid then return v end end end,
  getItemPtrByIndex=function(_,index) return bag[index+1] end,
@@ -37,9 +37,14 @@ Actor = {
  getIntProperty=function() return circle end, getName=function() return '测试角色' end,
  sendTipmsg=function(_,message) tips[#tips+1]=message end,
  removeItemByPtr=function(_,ptr,count)
-  assert(count==1)
   if failures[ptr.guid] then return 0 end
-  for i,v in ipairs(bag) do if v==ptr then table.remove(bag,i);removed[#removed+1]=ptr.guid;return 1 end end
+  for i,v in ipairs(bag) do if v==ptr then
+   assert(count>0 and count<=ptr.count)
+   ptr.count=ptr.count-count
+   if ptr.count==0 then table.remove(bag,i) end
+   for _=1,count do removed[#removed+1]=ptr.guid end
+   return count
+  end end
   error('重复扣除材料')
  end,
  collectOperate=function() error('附魂只累加经验，不应自动升级') end,
@@ -153,7 +158,7 @@ class SoulTests(unittest.TestCase):
         return lua
 
     def material(self, lua, guid, **kwargs):
-        data = dict(guid=guid, id=guid, kind=7, circle=5, job=1, dragon=0, super=0, exp=0, level=0, base=20)
+        data = dict(guid=guid, id=guid, kind=7, circle=5, job=1, dragon=0, super=0, exp=0, level=0, base=20, count=1)
         data.update(kwargs)
         lua.globals().bag[len(lua.globals().bag) + 1] = lua.table_from(data)
 
@@ -192,6 +197,53 @@ class SoulTests(unittest.TestCase):
         self.request(lua)
         self.assertEqual([lua.globals().bag[i].guid for i in range(1, 4)], [1, 2, 3])
         self.assertEqual(lua.globals().main.exp, 50)
+
+    def test_all_stacks_account_for_every_piece_and_inherited_experience(self):
+        lua = self.server()
+        self.material(lua, 1, count=9999, super=2, exp=17, level=1)
+        self.material(lua, 2, count=7, super=1, exp=9, level=2)
+        self.material(lua, 3, count=3)
+        self.material(lua, 4, count=12, dragon=1)
+        self.material(lua, 5, count=13, kind=6)
+        expected = lua.eval('''function()
+         local n=main.exp
+         for i=1,3 do local v=bag[i];local mult=v.super==0 and 1 or (v.super%2==1 and 3 or 9)
+          n=n+(v.base*mult+v.exp+calFuHunLevelUpUsedExp(1,v))*v.count end
+         return n end''')()
+        self.request(lua)
+        self.assertEqual(lua.globals().main.exp, expected)
+        self.assertEqual(len(lua.globals().removed), 10009)
+        self.assertEqual(len(lua.globals().logs), 3)
+        self.assertEqual([(lua.globals().bag[i].guid,lua.globals().bag[i].count) for i in (1,2)], [(4,12),(5,13)])
+        self.assertIn('10009件', lua.globals().tips[1])
+        self.request(lua)
+        self.assertEqual(lua.globals().main.exp, expected)
+
+    def test_immortal_equipment_is_rejected_for_all_soul_operations(self):
+        for item_type in range(87,93):
+            for kind in (1,4):
+                lua=self.server();self.material(lua,1,kind=item_type,count=9,circle=10)
+                self.request(lua,kind=kind,material=1)
+                self.assertEqual(len(lua.globals().removed),0)
+                self.assertEqual(lua.globals().main.exp,10)
+            lua=self.server();self.material(lua,1,count=9)
+            lua.execute(f'main.kind={item_type}');self.request(lua)
+            self.assertEqual(len(lua.globals().removed),0)
+
+    def test_single_material_uses_one_piece_from_stack(self):
+        lua=self.server();self.material(lua,1,count=8,super=2,exp=17,level=1)
+        expected=10+180+17+lua.globals().calFuHunLevelUpUsedExp(1,lua.globals().bag[1])
+        self.request(lua,kind=1,material=1)
+        self.assertEqual(lua.globals().main.exp,expected)
+        self.assertEqual(lua.globals().bag[1].count,7)
+        self.assertEqual(len(lua.globals().removed),1)
+
+    def test_failed_stack_deduction_grants_no_experience(self):
+        lua=self.server();self.material(lua,1,count=8);self.material(lua,2,count=9)
+        lua.execute('failures[2]=true');self.request(lua)
+        self.assertEqual(lua.globals().main.exp,10)
+        self.assertEqual(len(lua.globals().removed),0)
+        self.assertEqual([lua.globals().bag[i].count for i in (1,2)],[8,9])
 
     def test_invalid_main_and_actor_consume_nothing(self):
         for change in ("circle=4", "main=nil", "main.circle=4", "main.kind=5", "main.level=25"):
@@ -255,12 +307,17 @@ class SoulTests(unittest.TestCase):
         self.assertEqual(before[end:], after[new_end:])
         _, old_catalog, old_bodies = inspect_abc(old)
         _, new_catalog, new_bodies = inspect_abc(self.abc)
-        self.assertEqual(old_catalog, new_catalog)
-        allowed = {"constructor", "initEvent", "removeEvent", "onUpgrade", "updateData", "clearSelectData", "onUpgradeRes"}
+        # Later features add independent classes and methods to the main client.
+        # Compare this page against its original source; the current patch tests
+        # separately prove that all other installed code and artwork are kept.
+        self.assertEqual(old_catalog['EquipBoostFuHunPage'], new_catalog['EquipBoostFuHunPage'])
+        allowed = {"constructor", "initEvent", "removeEvent", "onUpgrade", "updateData", "clearSelectData", "onUpgradeRes", "getEquips"}
         page = old_catalog["EquipBoostFuHunPage"]
         allowed_ids = {page["constructor"]} | {value[0] for key, value in page["instance"].items() if key in allowed}
         changed = set()
-        for index, (at, size, limits) in old_bodies.items():
+        page_ids = {page['constructor'],page['static_constructor']} | {value[0] for value in page['instance'].values()}
+        for index in page_ids:
+            at, size, limits = old_bodies[index]
             nat, nsize, nlimits = new_bodies[index]
             if old[at:at + size] != self.abc[nat:nat + nsize] or limits != nlimits: changed.add(index)
         self.assertEqual(changed, allowed_ids)

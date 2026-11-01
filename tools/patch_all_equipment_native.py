@@ -19,7 +19,8 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 SERVER = ROOT / 'Server/S1001/x64/LogicServerCQ64_R.exe'
 SOURCE_HASH = '75056b342d771238fd95a66f01c2181c3e56a2b89e17c2cc99dd6ccd73a53935'
-LEGACY_HASHES = {'8b9c988a2691ceee1b7d9eda714050d30aec7bcb6aded8b849460e45cfa6db76'}
+LEGACY_HASHES = {'8b9c988a2691ceee1b7d9eda714050d30aec7bcb6aded8b849460e45cfa6db76',
+                 '57697100cc107f9c8d275fbeaed3be480010c8eb24aafd7fb7c98d6957f82954'}
 MARKER = b'ALLEQUIPSTACK1\0\0\0'
 BASE = 0x140000000
 HOOKS = {0x2a8bd4: bytes.fromhex('e8f7010000'),
@@ -181,11 +182,36 @@ def overlap(rva, shared, template=False):
             mov [r10+0xc],al
             mov al,[r11+0x1d]
             mov [r10+0x35],al
+            mov al,[r11+0x1e]
+            mov [r10+0x34],al
+            movzx eax,byte ptr [r11+0x1f]
+            mov [r10+0x38],eax
+            mov al,[r11+0x20]
+            mov [r10+0x3c],al
             mov al,[r11+0x22]
             mov [r10+0x62],al
             mov rcx,r10
             mov rdx,[rsp+0x48]
             call 0x1402aa9b0
+            mov r11,[rsp+0x50]
+            mov eax,[r11+8]
+            test eax,eax
+            jle attack
+            mov [rsp+0x9d],eax
+            attack:
+            mov eax,[r11+0xc]
+            test eax,eax
+            jle generated
+            mov [rsp+0xa1],eax
+            generated:
+            mov r8,[rsp+0x48]
+            cmp byte ptr [r8+0x44],0
+            je properties_ready
+            mov eax,[r11+0x14]
+            test eax,eax
+            jle properties_ready
+            mov [rsp+0xa9],eax
+            properties_ready:
             mov r10,[rsp+0x40]
             mov eax,[r10+0x19]
             mov [rsp+0x99],eax
@@ -682,32 +708,33 @@ def equipment_package(source, result, previous=None):
     from patch_gear_stack_native import install_package
     original = source if hashlib.sha256(source).hexdigest()==SOURCE_HASH else restore(source)
     package = install_package(original,result)
-    upgrades = {}
+    versions = {}
     if previous:
-        for candidate in [previous, *previous.get('upgrades', [])]:
-            if candidate['sourceSha256'] == SOURCE_HASH:
-                replay = bytearray(original+b'\0'*(candidate['targetLength']-len(original)))
-                for edit in candidate['edits']:
-                    after = base64.b64decode(edit['after'])
-                    replay[edit['offset']:edit['offset']+len(after)] = after
-            elif (candidate['sourceSha256'] in LEGACY_HASHES and
-                  candidate['targetSha256'] == hashlib.sha256(result).hexdigest()):
-                replay = bytearray(result[:candidate['sourceLength']])
-                for edit in candidate['edits']:
-                    before = base64.b64decode(edit['before'])
-                    replay[edit['offset']:edit['offset']+len(before)] = before
-            else:
+        if previous['sourceSha256'] != SOURCE_HASH:
+            raise ValueError('Equipment package has a different base')
+        prior = bytearray(original+b'\0'*(previous['targetLength']-len(original)))
+        for edit in previous['edits']:
+            after = base64.b64decode(edit['after'])
+            prior[edit['offset']:edit['offset']+len(after)] = after
+        prior_hash = hashlib.sha256(prior).hexdigest()
+        if prior_hash != previous['targetSha256'] or restore(bytes(prior)) != original:
+            raise ValueError('Equipment package failed complete reconstruction')
+        if prior_hash in LEGACY_HASHES:
+            versions[prior_hash] = bytes(prior)
+        for candidate in previous.get('upgrades', []):
+            if candidate['sourceSha256'] not in LEGACY_HASHES or candidate['targetSha256'] != prior_hash:
                 continue
-            if hashlib.sha256(replay).hexdigest() in LEGACY_HASHES:
-                if restore(bytes(replay)) != original:
-                    raise ValueError('Legacy equipment patch has a different base')
-                upgrade = install_package(bytes(replay),result)
-                upgrades[upgrade['sourceSha256']] = upgrade
+            replay = bytearray(prior[:candidate['sourceLength']])
+            for edit in candidate['edits']:
+                before = base64.b64decode(edit['before'])
+                replay[edit['offset']:edit['offset']+len(before)] = before
+            if hashlib.sha256(replay).hexdigest() != candidate['sourceSha256'] or restore(bytes(replay)) != original:
+                raise ValueError('Legacy equipment upgrade failed complete reconstruction')
+            versions[candidate['sourceSha256']] = bytes(replay)
     if hashlib.sha256(source).hexdigest() in LEGACY_HASHES:
-        upgrade = install_package(source,result)
-        upgrades[upgrade['sourceSha256']] = upgrade
-    if upgrades:
-        package['upgrades'] = list(upgrades.values())
+        versions[hashlib.sha256(source).hexdigest()] = source
+    if versions:
+        package['upgrades'] = [install_package(version,result) for version in versions.values()]
     return package
 
 

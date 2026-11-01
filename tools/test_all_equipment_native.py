@@ -134,12 +134,25 @@ class TreasureMachine(EquipmentMachine):
         self.u.mem_write(self.store+8,p64(HEAP+0x8500))
         self.u.mem_write(self.store+0x18,self.read(self.container,0x90))
         self.container=self.store+0x18
-        self.extra_allowed += [(0x18d2f0,0x18d423)]
+        self.extra_allowed += [(0x18d2f0,0x18d423),(0x2aa9b0,0x2aad41),
+                               (0x286c20,0x286c70),(0x18ed80,0x18edf0)]
         self.added=[]
+        self.generated=0
 
     def hook(self,u,address,size,data):
-        if address-BASE in (0x21000,0x1ee30,0x16d9f0):
+        if address-BASE in (0x2aa9b0,0x286c20,0x18ed80):
+            return  # Execute the real property constructor and type classifiers.
+        if address-BASE==0x21000:
+            self.ret(self.generated);return
+        if address-BASE in (0x1ee30,0x16d9f0):
             self.ret();return
+        if address-BASE==0xa1060:
+            # The real allocating path clears the reused item before granting it.
+            super().hook(u,address,size,data)
+            from unicorn.x86_const import UC_X86_REG_RAX
+            ptr=u.reg_read(UC_X86_REG_RAX)
+            if ptr:u.mem_write(ptr+8,b'\0'*121)
+            return
         if address-BASE==0x2a63f0:
             self.added.append((u.reg_read(UC_X86_REG_RCX),
                                self.read(u.reg_read(UC_X86_REG_RDX),36)))
@@ -210,6 +223,41 @@ class NativeEquipmentTests(unittest.TestCase):
             self.assertEqual([9999,151],[m.count(p) for p in m.items.values()])
             m.reward(80,bind=0)
             self.assertEqual([9999,151],[m.count(p) for p in m.items.values()])
+
+    def test_treasure_equipment_generated_attributes_merge_only_when_equal(self):
+        for kind in (1,2,3,4,5,6,7,8,9,40,64,122,126,130,201):
+            with self.subTest(kind=kind):
+                m=TreasureMachine(kind);m.generated=0x1234
+                m.u.mem_write(m.std+0x44,b'\x01')
+                m.u.mem_write(m.std+0x38,struct.pack('<H',100))
+                for n in range(1,5):
+                    m.reward(1)
+                    self.assertEqual([n],[m.count(p) for p in m.items.values()])
+                    self.assertEqual(0x1234,unpack(m.read(next(iter(m.items.values()))+0x29,4)))
+                m.generated=0x1235;m.reward(1)
+                self.assertEqual([4,1],[m.count(p) for p in m.items.values()])
+                m.generated=0x1234;m.freegrids=0;m.reward(1)
+                self.assertEqual([5,1],[m.count(p) for p in m.items.values()])
+                m.generated=0x1236;m.reward(1)
+                self.assertEqual([5,1],[m.count(p) for p in m.items.values()])
+        # A special soul remains isolated even from a matching reward template.
+        m=TreasureMachine(1);m.generated=0x1234;m.u.mem_write(m.std+0x44,b'\x01')
+        m.reward(1);a=next(iter(m.items.values()))
+        m.u.mem_write(a+0x25,struct.pack('<I',0x01000064));m.reward(1)
+        self.assertEqual([1,1],[m.count(p) for p in m.items.values()])
+
+    def test_reward_template_preserves_declared_attribute_fields(self):
+        for offset,size in ((8,4),(0xc,4),(0x14,4),(0x1e,1),(0x1f,1),(0x20,1)):
+            m=TreasureMachine(1);m.u.mem_write(m.std+0x44,b'\x01')
+            op=HEAP+0x7000;payload=bytearray(36)
+            payload[2:4]=struct.pack('<H',1000);payload[4]=1;payload[6:8]=struct.pack('<H',2)
+            payload[offset:offset+size]=(7).to_bytes(size,'little');m.u.mem_write(op,bytes(payload))
+            self.assertEqual(2,m.run(0x2a63f0,m.container,op,0,0,0))
+            self.assertEqual(2,m.run(0x2a63f0,m.container,op,0,0,0))
+            self.assertEqual([4],[m.count(p) for p in m.items.values()],offset)
+            payload[offset:offset+size]=(8).to_bytes(size,'little');m.u.mem_write(op,bytes(payload))
+            self.assertEqual(2,m.run(0x2a63f0,m.container,op,0,0,0))
+            self.assertEqual([4,2],[m.count(p) for p in m.items.values()],offset)
 
     def test_explicit_overlap_uses_every_real_dynamic_property_and_keeps_payloads(self):
         # Each field affects one actual getter, rather than a simulated attribute map.

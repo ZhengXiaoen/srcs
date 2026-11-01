@@ -2,7 +2,8 @@
 
 The native wearer accepts the standard equipment range 1..92; dedicated systems
 use spirit items, runes, totems, mount/wing parts, fighter parts and hero gear.
-Types 0, 93/94 (unused placeholders), materials and consumables are excluded.
+Types 0, 93/94 (unused placeholders), materials and consumables are excluded,
+except the dragon fusion items explicitly listed in EquipDragonCfg.dragonIds.
 Per-instance attribute and soul compatibility is enforced by the engine patch,
 not by the shared item definition's dup field.
 """
@@ -44,8 +45,26 @@ def equipment_ids(source: bytes | None = None) -> set[int]:
     return result
 
 
+def dragon_material_ids() -> set[int]:
+    source = (ROOT / 'Server/S1001/data/config/equipSynthesis/EquipDragonCfg.lua').read_bytes()
+    source = re.sub(rb'--[^\r\n]*', b'', source)
+    section = re.search(rb'\bdragonIds\s*=\s*\{(.*?)\n\s*\},', source, re.S)
+    if section is None:
+        raise ValueError('Missing dragon fusion item configuration')
+    rows = re.findall(rb'\{([^{}]+)\}', section[1])
+    groups = [{int(value) for value in re.findall(rb'\d+', row)} for row in rows]
+    ids = set().union(*groups)
+    if len(groups) != 5 or any(len(group) != 9 for group in groups) or len(ids) != 45:
+        raise ValueError('Unexpected dragon fusion item configuration')
+    items = server_items(SERVER.read_bytes())
+    for item in ids:
+        if item not in items or not re.search(rb'(?m)^  type=106,', items[item]):
+            raise ValueError(f'Unexpected dragon fusion item type: {item}')
+    return ids
+
+
 def build_outputs() -> tuple[dict[Path, bytes], Counter, set[int]]:
-    ids = equipment_ids()
+    ids = equipment_ids() | dragon_material_ids()
     limits = dict.fromkeys(ids, STACK_LIMIT)
     outputs, changes = {}, Counter()
     paths = [SERVER, ITEM_DIR / "StdItems - 副本.txt",
@@ -101,7 +120,7 @@ def main():
     else:
         for path, output in outputs.items():
             path.write_bytes(output)
-    print(f"Verified {len(ids)} equipment definitions; stack limit {STACK_LIMIT}.")
+    print(f"Verified {len(ids)} equipment and dragon fusion definitions; stack limit {STACK_LIMIT}.")
     print(f"Updated {len(outputs)} files; "
           f"{changes[SERVER.relative_to(ROOT).as_posix()]} server limits changed.")
     for path, count in changes.items():

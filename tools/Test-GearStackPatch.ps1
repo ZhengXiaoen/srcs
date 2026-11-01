@@ -111,7 +111,8 @@ try {
                 Assert-GearPatch ((Get-GearPatchHash $exePath) -eq $allPackage.targetSha256) '升级重复安装改变程序'
                 [IO.File]::WriteAllBytes($exePath, $legacy)
                 $badPackage = [IO.File]::ReadAllText($allPackagePath) | ConvertFrom-Json
-                $badPackage.upgrades[0].targetSha256 = '0' * 64
+                $badUpgrade = @($badPackage.upgrades | Where-Object { $_.sourceSha256 -eq $upgrade.sourceSha256 })[0]
+                $badUpgrade.targetSha256 = '0' * 64
                 [IO.File]::WriteAllText((Join-Path $directory 'equipment-stack.patch.json'), ($badPackage | ConvertTo-Json -Depth 10), [Text.Encoding]::UTF8)
                 Assert-GearPatchThrows { Install-MountStackPatch $paths } '错误升级目标应拒绝安装'
                 Assert-GearPatch ((Get-GearPatchHash $exePath) -eq $upgrade.sourceSha256) '错误升级修改了旧版程序'

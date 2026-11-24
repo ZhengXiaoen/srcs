@@ -472,41 +472,13 @@ function IsActorCanEnterCrossServer(sysarg, enterCrossType)
 
 		
 	elseif enterCrossType == 1 then -- 远古押镖场景
-		
-        if nHour == 11 and nMin < 30 then
-            bEnter = true
-        end
-        if bEnter == false then
-            if nHour == 17 and nMin < 30 then
-                bEnter = true
-            end
-        end
-         if bEnter == false then
-            if nHour == 21  then
-                bEnter = true
-            end
-        end
-         if bEnter == false then 
-            Actor.sendTipmsg(sysarg,"活动时间未到!",ttFlyTip)
-            return
-         end
 		local var = Actor.getStaticVar(sysarg)
-		
-		if var.ybstate ~= nil and var.ybstate == 1 then
-			Actor.sendTipmsg(sysarg, "正在压镖中，请完成后再进入跨服", ttFlyTip)
+		if var.ybstate == 1 then
+			Actor.sendTipmsg(sysarg, "请先完成当前押镖", ttFlyTip)
 			return false
 		end
-		
-		-- 押镖次数用完也可以进跨服场景
-		if not IsCanCrossYaBiao(sysarg, false) then
-			return false
-		end
-		
-		if System.getDaysSinceOpenServer() <CrossServerConfig.YuanGuYaBiAoOpenDay  and CanPassCrossServer()==false then 
-			Actor.sendTipmsg(sysarg,"开服第"..CrossServerConfig.YuanGuYaBiAoOpenDay.."天开启,尽请期待！", ttFlyTip)
-			return false
-		end
-		
+		-- 入场和押镖共用活动时间及资格检查，入场不扣押镖次数。
+		return IsCanCrossYaBiao(sysarg, false)
     elseif enterCrossType == 2 then --匹配战场
         if nHour >= 12 and nMin >= 30 and nHour <= 13 then
            bEnter = true

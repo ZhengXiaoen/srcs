@@ -2891,7 +2891,8 @@ end
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 function OnMonsterByKilled(monster, sysarg, monId, fubenId, sceneId,fuBenPtr)
-	if Actor.getEntityType(sysarg) ~= 0 then
+	LocalDT.RecordLocalBattlefieldBossDeath(monster, monId)
+	if not sysarg or Actor.getEntityType(sysarg) ~= 0 then
 		return
 	end
 	
@@ -3938,7 +3939,7 @@ function OnMonsterByKilled(monster, sysarg, monId, fubenId, sceneId,fuBenPtr)
 	end
 	
 	-- 远古战场首领及原跨服击杀统计
-	local localCross = LocalDT.LocalCrossScene(sceneId)
+	local localCross = LocalDT.LocalCrossScene(nBossSceneId)
 	if System.isCrossServer() or (localCross and localCross.activity == 0) then
 		--if sceneId >= 403 and sceneId <= 412 and monsterType == 4 then --是boss
 		--之后会加分流地图先屏蔽地图限制
@@ -3961,17 +3962,12 @@ function OnMonsterByKilled(monster, sysarg, monId, fubenId, sceneId,fuBenPtr)
 			end	
 			var.days.FanPaiTime = var.days.FanPaiTime + 1
 	
-			local dVar = System.getDyanmicVar()
-			if dVar.kfBossBeK==nil then 
-				dVar.kfBossBeK={}
-			end
-			dVar.kfBossBeK[monId] = System.getCurrMiniTime()
-			
-			local next_refresh_time = System.getCurrMiniTime() + 3 * 60 --远古战场刷怪
-			if localCross then
-				RefreshCrossBossInfoUIToAllActor(sceneId)
-			else
-				System.YGZC_OnBossDie(sceneId, monId, next_refresh_time, true)
+			if not localCross then
+				local dVar = System.getDyanmicVar()
+				if not dVar.kfBossBeK then dVar.kfBossBeK = {} end
+				local now = System.getCurrMiniTime()
+				dVar.kfBossBeK[monId] = now
+				System.YGZC_OnBossDie(sceneId, monId, now + 3 * 60, true)
 			end
 			
 			--大吉大利活动消耗屠魔点

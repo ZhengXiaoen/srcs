@@ -2,6 +2,7 @@
 --#include "data\config\monster\AdvanceMonsterEquipCfg.lua" once
 --#include "data\config\monster\SRRefreshMonster.lua" once
 --#include "data\functions\BossListInfo\BossEquipmentPreview.lua" once
+--#include "data\functions\Activity\YuanGuZhanChang.lua" once
 function GetBoosListInfoForSceneName(sceneName)
     for i =1,table.getn(BossListInfo) do
         if BossListInfo[i].sceneName == sceneName then
@@ -254,6 +255,7 @@ function ShowRightBossListInfo(sysarg,btype,str)
 	end
 	
     local pack= DataPack.allocPacket(sysarg,139,205)
+    if not pack then return end
     DataPack.writeByte(pack,btype)
     DataPack.writeString(pack,str)
     DataPack.flush(pack)
@@ -567,6 +569,13 @@ function BuildCrossBossInfoUIString(d)
     local sTime = ""
     if d.refreshTime == 0 then
         sTime = "<(c0xFF00CCFF)存活>"
+    elseif d.localBattlefield then
+        local seconds = d.refreshTime - System.getCurrMiniTime()
+        if seconds > 0 then
+            sTime = string.format("<%d分%02d秒后复活>", math.floor(seconds / 60), seconds % 60)
+        else
+            sTime = "<等待复活>"
+        end
     else
     	local syt = d.refreshTime - System.getCurrMiniTime()
     	if syt < 0 then syt = 0 end
@@ -616,17 +625,17 @@ function BuildAllCrossBossInfoUIString(sceneId)
 	local count = 0
 	local bossInfoList
 	if not localCross then bossInfoList = LuaHelp.getAllCrossBossInfoFromSceneId(sceneId) end
-	local killed = localCross and System.getDyanmicVar().kfBossBeK
+	local respawns = localCross and LocalDT.GetLocalBattlefieldBossTimes(sceneId)
 	if bossInfoList ~= nil then
 		count = math.floor(#bossInfoList / 2)
 	end
 	
-	local info = {monid=0,mapid=sceneId,x=0,y=0,refreshTime=0}
+	local info = {monid=0,mapid=sceneId,x=0,y=0,refreshTime=0,localBattlefield=localCross ~= nil}
 	for i, bossId in ipairs(cfg.bossIds) do
 		info.monid = bossId
 		info.x = cfg.points[i][1]
 		info.y = cfg.points[i][2]
-		info.refreshTime = killed and killed[bossId] and killed[bossId] + 3 * 60 or 0
+		info.refreshTime = respawns and respawns[bossId] or 0
 		
 		for j = 1, count do
 			if bossInfoList[j * 2 - 1] == bossId then
@@ -652,11 +661,11 @@ function RefreshCrossBossInfoUIToActor(sysarg)
 end
 
 function RefreshCrossBossInfoUIToAllActor(sceneId)
+	local playerList = LuaHelp.getSceneActorListById(sceneId)
+	if not playerList or #playerList == 0 then return end
+
 	local e = BuildAllCrossBossInfoUIString(sceneId)
 	if e == nil then return end
-	
-	local playerList = LuaHelp.getSceneActorListById(sceneId)	
-	if playerList == nil then return end
 	
 	for i = 1, #playerList do
 		local player = playerList[i]

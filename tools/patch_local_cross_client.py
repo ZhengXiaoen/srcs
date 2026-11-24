@@ -4,7 +4,7 @@ import argparse
 from patch_activity_entries import CLIENT, q, relocate
 from patch_appearance_upgrade import inspect_abc
 from patch_auto_medicine_frequency import Block
-from patch_drop_pickup_retry import abc_section
+from patch_drop_pickup_retry import abc_section, instructions
 from patch_merge_feature_gates import assemble, replace_body
 
 
@@ -71,6 +71,25 @@ def patch_swf(source):
 
     update("ServiceWarCC", "static", "sendSignUp", lambda code: local_command(code, 37056))
     update("ServiceWarCC", "static", "sendReturnBackServer", lambda code: local_command(code, 37057))
+
+    def escort_entry(code):
+        ops = list(instructions(code))
+        call = ops[-2]
+        if (call.opcode != 0x4f or names[call.operands[0]] != "sendSignUp"
+                or ops[-3].opcode != 0x24 or ops[-3].operands != (1,) or ops[-1].opcode != 0x47):
+            raise ValueError("Unexpected escort entry action")
+        flag = next((i for i, op in enumerate(ops) if op.opcode == 0x66
+                     and names[op.operands[0]] == "_timeFlag"), None)
+        if flag is None:
+            return code, lambda offset: offset
+        test, skip = ops[flag + 1:flag + 3]
+        if (ops[flag - 1].opcode != 0xd0 or test.opcode != 0x24 or test.operands != (0,)
+                or skip.opcode != 0x14 or skip.branches[0][1] != ops[-1].start):
+            raise ValueError("Unexpected escort entry time check")
+        # The server checks the current schedule and explains rejected requests.
+        return relocate(code, [(ops[flag - 1].start, skip.end, b"")])
+
+    update("ServiceWarYaSongPage", "instance", "onClickHandler", escort_entry)
 
     def reset_escort_panel(code):
         # Clear the escort panel on return to the main city in the same client session.

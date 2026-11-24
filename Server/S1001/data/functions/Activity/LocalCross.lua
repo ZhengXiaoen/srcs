@@ -53,7 +53,10 @@ LocalDT.LocalCrossExit = function(actor)
 end
 
 LocalDT.HandleLocalCrossRequest = function(actor, _, packet)
-    if not LocalDT.LocalCrossEnabled() then return end
+    if not LocalDT.LocalCrossEnabled() then
+        Actor.sendTipmsg(actor, "本服活动入口当前未开放", ttFlyTip)
+        return
+    end
 
     local activity = DataPack.readByte(packet)
     local current = LocalDT.LocalCrossScene(Actor.getSceneId(actor))
@@ -68,7 +71,19 @@ LocalDT.HandleLocalCrossRequest = function(actor, _, packet)
     end
 
     local groups = LocalDT.LocalCrossGroups[activity]
-    if not groups or current or Actor.hasState(actor, esStateDeath) or Actor.getFubenId(actor) ~= 0 then return end
+    if not groups then return end
+    if current then
+        Actor.sendTipmsg(actor, current.activity == activity and "已在该活动地图" or "请先离开当前活动地图", ttFlyTip)
+        return
+    end
+    if Actor.hasState(actor, esStateDeath) then
+        Actor.sendTipmsg(actor, "请复活后再进入活动地图", ttFlyTip)
+        return
+    end
+    if Actor.getFubenId(actor) > 0 then
+        Actor.sendTipmsg(actor, "请先退出当前副本", ttFlyTip)
+        return
+    end
     if Actor.getIsDartFlag(actor) > 0 then
         Actor.sendTipmsg(actor, "请先结束当前押镖", ttFlyTip)
         return

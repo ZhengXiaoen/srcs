@@ -44,7 +44,7 @@ end
 function IsCanCrossYaBiao(sysarg, isCheckYabiaoCount)
 	if not System.isCrossServer() then -- 在跨服中就不需要判断了
 		if System.getDaysSinceOpenServer() < CrossServerConfig.YuanGuYaBiAoOpenDay and not CanPassCrossServer() then
-			Actor.sendTipmsg(sysarg, "远古押镖活动开服五天后才开启", ttFlyTip)
+			Actor.sendTipmsg(sysarg, "远古押镖开服第"..CrossServerConfig.YuanGuYaBiAoOpenDay.."天开启", ttFlyTip)
 			return false
 		end
 	end
@@ -55,15 +55,19 @@ function IsCanCrossYaBiao(sysarg, isCheckYabiaoCount)
 	end
 	
 	-- 活动已经结束
-	local nIdx = checkActivityTime(StdActivityCfg.KuafuYaSong.tOpenTime.times)
-	if nIdx==0 then 
-		Actor.sendTipmsg(sysarg, "活动时间未到", ttFlyTip)
+	local times = StdActivityCfg.KuafuYaSong.tOpenTime.times
+	if checkActivityTime(times) == 0 then
+		local windows = {}
+		for i, window in ipairs(times) do
+			windows[i] = string.format("%02d:%02d-%02d:%02d", window[1], window[2], window[3], window[4])
+		end
+		Actor.sendTipmsg(sysarg, "远古押镖开放时间为 "..table.concat(windows, "、"), ttFlyTip)
 		return false
 	end
 	
 	local nCircle = Actor.getIntProperty(sysarg, PROP_ACTOR_CIRCLE)
 	if nCircle < 3 then 
-		Actor.sendTipmsg(sysarg, "转身等级不足", ttFlyTip)
+		Actor.sendTipmsg(sysarg, "远古押镖需要达到3转", ttFlyTip)
 		return false
 	end
 	
@@ -93,7 +97,10 @@ function IsCanCrossYaBiao(sysarg, isCheckYabiaoCount)
         end
         cfgidx, needYb = System.getCrossBiaoCheSceneCfgIdxByBattlePower(power)
     end
-    if cfgidx < 0 then return false end
+    if cfgidx < 0 then
+        Actor.sendTipmsg(sysarg, "战力未达到入场要求", ttFlyTip)
+        return false
+    end
 
 	if needYb > 0 and Actor.getMoneyCount(sysarg, mtYuanbao) < needYb then 
 		Actor.sendTipmsg(sysarg, string.format("元宝数额不足%d进入失败", needYb), ttFlyTip)

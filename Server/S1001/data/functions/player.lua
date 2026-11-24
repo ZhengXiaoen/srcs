@@ -1,5 +1,6 @@
 ﻿--#include "data\config\help\SystemConfig.lua" once
 --#include "data\functions\Activity\LocalCross.lua" once
+--#include "data\config\equipSynthesis\EquipWarCfg.lua" once
 --#include "data\functions\SpecialQuest.lua" once
 --#include "data\config\activityconfig\QiBingDuoBao.lua" once
 --#include "data\functions\TimerFunc.lua" once
@@ -416,6 +417,30 @@ LocalDT.CreateSRRefreshMonster = function(scene, ref, monid, randomPosition)
 	return nil
 end
 
+LocalDT.GetWarEquipConfig = function(slot)
+    for _, cfg in ipairs(EquipWarCfg) do
+        for index, position in ipairs(cfg.equipPos) do
+            if position == slot then return cfg, index - 1 end
+        end
+    end
+end
+
+-- 旧版激活可能未保存一阶一星，只补齐首阶装备上缺失的状态。
+LocalDT.RepairWarEquipActivation = function(sysarg, itemPtr, cfg)
+    if not itemPtr or not cfg or Item.getItemProperty(sysarg, itemPtr, Item.ipItemInsureTimes, 0) ~= 0 then
+        return false
+    end
+    local itemId = Item.getItemId(itemPtr)
+    for _, sexItems in ipairs(cfg.upLev[1].destItemId) do
+        for _, firstItemId in ipairs(sexItems) do
+            if itemId == firstItemId then
+                return Item.setItemProperty(sysarg, itemPtr, Item.ipItemInsureTimes, 0x0101)
+            end
+        end
+    end
+    return false
+end
+
 --//登录游戏触发
 function OnPlayerLogin(sysarg, isCrossDay)	
 	do
@@ -434,7 +459,11 @@ function OnPlayerLogin(sysarg, isCrossDay)
 	LocalDT.NormalizeBagEquipmentTaoStrong(sysarg)
 	LocalDT.NormalizeBagWarriorEquipmentRate(sysarg)
 	for slot = 0, itMaxEquipPos do
-		LocalDT.NormalizeEquipmentTaoStrong(sysarg, Item.getEquipByPos(sysarg, slot))
+		local itemPtr = Item.getEquipByPos(sysarg, slot)
+		LocalDT.NormalizeEquipmentTaoStrong(sysarg, itemPtr)
+		if itemPtr and slot >= itWarWeaponPos and slot <= itWarShoesPos then
+			LocalDT.RepairWarEquipActivation(sysarg, itemPtr, LocalDT.GetWarEquipConfig(slot))
+		end
 	end
 	GetSwingEquipmentInfo(sysarg)
 	Actor.collectOperate(sysarg, 0)
@@ -4481,8 +4510,14 @@ end
 
 --//佩戴装备触发(装备ID, 装备数量)
 function OnPlayerDressEquiment(sysarg, equimentId, equimentCount, slotPos)
-	if slotPos ~= nil and LocalDT.NormalizeEquipmentTaoStrong(sysarg, Item.getEquipByPos(sysarg, slotPos)) then
-		Actor.collectOperate(sysarg, 0)
+	if slotPos ~= nil then
+		local itemPtr = Item.getEquipByPos(sysarg, slotPos)
+		local changed = LocalDT.NormalizeEquipmentTaoStrong(sysarg, itemPtr)
+		if slotPos >= itWarWeaponPos and slotPos <= itWarShoesPos and
+			LocalDT.RepairWarEquipActivation(sysarg, itemPtr, LocalDT.GetWarEquipConfig(slotPos)) then
+			changed = true
+		end
+		if changed then Actor.collectOperate(sysarg, 0) end
 	end
 
 	--OnTakeOnEquimentAutoLearnSkill(sysarg, equimentId)

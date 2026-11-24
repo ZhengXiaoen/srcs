@@ -559,26 +559,9 @@ end
 --end
 --战装升级
 function MiscExWarEquipUpLev(sysarg,msgid,packet)
-    local nType = DataPack.readByte(packet)
-  -- local nType = msgid
-   nType = tonumber(nType)
-   local nEquipPos = 0
-    if nType < itWeaponPos or nType > itMaxEquipPos then return end
-    if nType < itWarWeaponPos or nType > itWarShoesPos then
-        return
-    end
-    local cfg = nil
-    for i = 1,#EquipWarCfg do
-        for j = 1,#EquipWarCfg[i].equipPos do
-           if EquipWarCfg[i].equipPos[j] == nType then
-                cfg = EquipWarCfg[i]
-                nEquipPos = j - 1
-                break
-            end
-        end
-        if cfg ~= nil then break end
-    end     
-       
+    local nType = tonumber(DataPack.readByte(packet))
+    if not nType or nType < itWarWeaponPos or nType > itWarShoesPos then return end
+    local cfg, side = LocalDT.GetWarEquipConfig(nType)
     if cfg == nil then
         Actor.sendTipmsg(sysarg,"未找到该位置配置!",ttFlyTip)
         return
@@ -588,19 +571,18 @@ function MiscExWarEquipUpLev(sysarg,msgid,packet)
     local nIndex = 1
     local stage = 0
     local star = 0
-    local m = 0
-    if equip_ptr == nil then 
+    if equip_ptr == nil then
         if Item.getBagEmptyGridCount(sysarg) <= 0 then
             Actor.sendTipmsg(sysarg,"请预留一个包裹格子!",ttFlyTip)
             return
         end
     else
-        local nAuxRetValue = 0
-         m = Item.getItemProperty(sysarg,equip_ptr,Item.ipItemInsureTimes,nAuxRetValue)
-        stage = System.getIntByte(m,0)
-        star = System.getIntByte(m,1)
-        nIndex = (stage -1) * 10 + star + 1
-        if nIndex <= 0 then return end 
+        LocalDT.RepairWarEquipActivation(sysarg, equip_ptr, cfg)
+        local progress = Item.getItemProperty(sysarg, equip_ptr, Item.ipItemInsureTimes, 0)
+        stage = System.getIntByte(progress, 0)
+        star = System.getIntByte(progress, 1)
+        if stage < 1 or star < 1 or star > 10 then return end
+        nIndex = (stage - 1) * 10 + star + 1
         if nIndex > table.getn(cfg.upLev) then
             Actor.sendTipmsg(sysarg,"已满级,无法再次升级",ttFlyTip)
             return --已满级
@@ -634,8 +616,28 @@ function MiscExWarEquipUpLev(sysarg,msgid,packet)
     end
     
  
+    local nJob = Actor.getIntProperty(sysarg, PROP_ACTOR_VOCATION)
+    local nSex = Actor.getIntProperty(sysarg, PROP_ACTOR_SEX) + 1
+    local dest = needCfg.destItemId[nJob]
+    local nNewItemId = dest and dest[nSex]
+    local itemName = nNewItemId and Item.getItemName(nNewItemId)
+    if not itemName then
+        System.trace("warequip item missing: "..tostring(nNewItemId))
+        return
+    end
+
+    local prepared
+    if not equip_ptr then
+        prepared = Item.createItem(nNewItemId, 1, 0, 0, 1)
+        if not prepared then return end
+        if not Item.modifyItemProperty(prepared, Item.ipItemInsureTimes, 0x0101) then
+            Item.releaseItemPtr(prepared)
+            return
+        end
+    end
+
     --扣除消耗
-     for i =1,#needCfg.consume do
+    for i = 1,#needCfg.consume do
         if needCfg.consume[i].type == 1 then --绑金/金币
             local nCoid = Actor.getIntProperty(sysarg,PROP_ACTOR_BIND_COIN)
             if nCoid < needCfg.consume[i].count then
@@ -655,49 +657,28 @@ function MiscExWarEquipUpLev(sysarg,msgid,packet)
         stage = stage + 1
         star = 1
     end
-    --给予新的装备
-    local nJob = Actor.getIntProperty(sysarg,PROP_ACTOR_VOCATION)
-    local nSex = Actor.getIntProperty(sysarg,PROP_ACTOR_SEX)+1
-    local strEx = ""
-    if equip_ptr == nil then 
+    local strEx
+    if prepared then
+        if LocalDT.AddAndEquipPreparedItem(sysarg, prepared, "战装激活", LogIds.WarEquipActive, 0, side, 1) ~= 1 then
+            Item.releaseItemPtr(prepared)
+            return
+        end
+        -- side 用于选择左右侧，读取穿戴结果时使用实际装备槽。
+        if not Item.getEquipByPos(sysarg, nType) then return end
         star = 1
-        stage = 1
-        
-  
-        equip_ptr = Item.createItem(needCfg.destItemId[nJob][nSex],1,0,0,1)
-        if equip_ptr == nil then
-            System.trace("warequip create item error!"..Actor.getIntProperty(sysarg,PROP_ENTITY_ID))
-            return
-        end
-        m = System.setIntByte(0,0,stage)
-        m = System.setIntByte(m,1,star)
-        Item.setItemProperty(sysarg,equip_ptr,Item.ipItemInsureTimes,m)
-        LocalDT.AddAndEquipPreparedItem(sysarg, equip_ptr, "战装激活", LogIds.WarEquipActive, 0, nEquipPos, 1)
-        equip_ptr = Item.getEquipByPos(sysarg,nEquipPos)
-        if not equip_ptr then return end
         strEx = "激活"
-    else --替换装备id
-        local nAuxRetValue = 0
-        local nOldItemId = Item.getItemProperty(sysarg,equip_ptr,Item.ipItemID,nAuxRetValue)
-        local nNewItemId = needCfg.destItemId[nJob][nSex]
-        if Item.getItemName(nNewItemId) == nil then
-            System.trace("warequip create item error!"..Actor.getIntProperty(sysarg,PROP_ENTITY_ID).."not find itemid:"..nNewItemId)
-            return
-        end
+    else
+        local nOldItemId = Item.getItemId(equip_ptr)
         if nNewItemId ~= nOldItemId then
-            Item.setItemProperty(sysarg,equip_ptr,Item.ipItemID,nNewItemId)
-
+            Item.setItemProperty(sysarg, equip_ptr, Item.ipItemID, nNewItemId)
         end
-         --加入到系统日志
-        local nActorId = Actor.getIntProperty(sysarg,PROP_ENTITY_ID)
-        System.sendCommonLog(LogIds.WarEquipUplevel,nActorId,Actor.getName(sysarg),nOldItemId,nNewItemId,0,""," "..oldStage.."-"..oldstar.." "..stage.."-"..star,Item.getItemName(nNewItemId))
+        local progress = System.setIntByte(stage, 1, star)
+        Item.setItemProperty(sysarg, equip_ptr, Item.ipItemInsureTimes, progress)
+        local nActorId = Actor.getIntProperty(sysarg, PROP_ENTITY_ID)
+        System.sendCommonLog(LogIds.WarEquipUplevel,nActorId,Actor.getName(sysarg),nOldItemId,nNewItemId,0,""," "..oldStage.."-"..oldstar.." "..stage.."-"..star,itemName)
         strEx = "升阶"
     end
-    m=0
-    m = System.setIntByte(m,0,stage)
-    m = System.setIntByte(m,1,star)
-    Item.setItemProperty(sysarg,equip_ptr,Item.ipItemInsureTimes,m)
-    local str = string.format("<(n%s)>%s%s！<我也要去/@@showWin,222>",Actor.getName(sysarg),strEx,Item.getItemName(needCfg.destItemId[nJob][nSex])..star.."星")
+    local str = string.format("<(n%s)>%s%s！<我也要去/@@showWin,222>", Actor.getName(sysarg), strEx, itemName..star.."星")
     --重新计算外观
     Actor.collectOperate(sysarg,1)
     System.broadcastTipmsg(str,ttChatWindow)

@@ -603,12 +603,20 @@ function BuildAllCrossBossInfoUIString(sceneId)
 		end			
 	end
 	
-	if cfg == nil then return end	
+	local localCross = LocalDT.LocalCrossScene(sceneId)
+	if cfg == nil then
+		if localCross and localCross.activity == 4 then
+			return "\\".."        <离开龙冢禁地/@Button_ExitYuanGuZhanChang>"
+		end
+		return
+	end
 	
 	local e = "\\" -- 换行
 	
 	local count = 0
-	local bossInfoList = LuaHelp.getAllCrossBossInfoFromSceneId(sceneId)
+	local bossInfoList
+	if not localCross then bossInfoList = LuaHelp.getAllCrossBossInfoFromSceneId(sceneId) end
+	local killed = localCross and System.getDyanmicVar().kfBossBeK
 	if bossInfoList ~= nil then
 		count = math.floor(#bossInfoList / 2)
 	end
@@ -618,7 +626,7 @@ function BuildAllCrossBossInfoUIString(sceneId)
 		info.monid = bossId
 		info.x = cfg.points[i][1]
 		info.y = cfg.points[i][2]
-		info.refreshTime = 0
+		info.refreshTime = killed and killed[bossId] and killed[bossId] + 3 * 60 or 0
 		
 		for j = 1, count do
 			if bossInfoList[j * 2 - 1] == bossId then

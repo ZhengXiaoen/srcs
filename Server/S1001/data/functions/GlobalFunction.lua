@@ -9,6 +9,7 @@ MainFnTable = {}
 
 --脚本子模块使用的局部函数或常量存放位置，避免使用全局对象 
 local LocalDT = {}
+--#include "data\functions\Activity\LocalCross.lua" once
 
 
 

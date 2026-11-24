@@ -541,6 +541,7 @@ LogicCmd =
 			cJingJI_isOpen = 98, --竞技是否开启
 			cJingJI_Acts = 99,--大吉大利活动相关
 			cJingJIZhuanPan =100, --竞技转盘
+			cLocalCross = 101, -- 本服进入或离开跨服活动地图
 
 			--服务端下发
 			sTestNewMis = 1,

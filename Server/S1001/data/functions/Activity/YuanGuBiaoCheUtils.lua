@@ -27,9 +27,23 @@ function GetCrossYaBiaoState(sysarg)
 end
 
 -- 是否能跨服押镖
+LocalDT.GetEscortSceneIndex = function(sceneId)
+    local scene = LocalDT.LocalCrossScene(sceneId)
+    if scene and scene.activity == 1 then
+        return scene.index - 1, scene.cfg.needYb
+    end
+    return System.getCrossBiaoCheSceneCfgIdxBySceneId(sceneId)
+end
+
+LocalDT.IsEscortScene = function(actor)
+    if System.isCrossServer() then return true end
+    local scene = LocalDT.LocalCrossScene(Actor.getSceneId(actor))
+    return scene and scene.activity == 1
+end
+
 function IsCanCrossYaBiao(sysarg, isCheckYabiaoCount)
 	if not System.isCrossServer() then -- 在跨服中就不需要判断了
-		if System.getDaysSinceOpenServer() < 5 then
+		if System.getDaysSinceOpenServer() < CrossServerConfig.YuanGuYaBiAoOpenDay and not CanPassCrossServer() then
 			Actor.sendTipmsg(sysarg, "远古押镖活动开服五天后才开启", ttFlyTip)
 			return false
 		end
@@ -63,15 +77,24 @@ function IsCanCrossYaBiao(sysarg, isCheckYabiaoCount)
 		end
 	end
 			
-	local battle_power = Actor.getMyTopBattle(sysarg)
-	if battle_power==-1 or battle_power==0 then 
-		Actor.sendTipmsg(sysarg, string.format("战力有误", needYb), ttFlyTip)
-		return false
-	end
-	--print("battle_power="..battle_power)
-	local cfgidx, needYb = System.getCrossBiaoCheSceneCfgIdxByBattlePower(battle_power)
-	if cfgidx < 0 then return false end	
-		
+    local cfgidx, needYb
+    if LocalDT.LocalCrossEnabled() then
+        local index, cfg = LocalDT.CrossGroupByPower(CrossServerConfig.BiaoCheEnterScene, LocalDT.CrossBattlePower(sysarg))
+        if not index then
+            Actor.sendTipmsg(sysarg, "战力未达到入场要求", ttFlyTip)
+            return false
+        end
+        cfgidx, needYb = index - 1, cfg.needYb
+    else
+        local power = Actor.getMyTopBattle(sysarg)
+        if not power or power <= 0 then
+            Actor.sendTipmsg(sysarg, "战力有误", ttFlyTip)
+            return false
+        end
+        cfgidx, needYb = System.getCrossBiaoCheSceneCfgIdxByBattlePower(power)
+    end
+    if cfgidx < 0 then return false end
+
 	if needYb > 0 and Actor.getMoneyCount(sysarg, mtYuanbao) < needYb then 
 		Actor.sendTipmsg(sysarg, string.format("元宝数额不足%d进入失败", needYb), ttFlyTip)
 		return false

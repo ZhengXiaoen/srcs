@@ -1,13 +1,14 @@
  --跨服服务器设置
     CrossServerConfig =
     {
+        LocalPlay = true,    -- 在本服运行远古战场、远古押镖和龙冢禁地
         Is3V3RankServer = 0,    --是否是3v3竞技服务器  w w w .  c n 1 2 1. c o m
         Is3V3ShuntServer = 0,   --是否是3v3竞技分流服务器
         Version = 2,        --跨服服务器当前版本- 用于不同的逻辑服版本
         Address = "127.0.0.1",		--跨服服务器内部通讯ip地址
         Port = 0,			--跨服服务器内部通讯端口
-        DartAddress = "172.30.0.6", --远古押镖内部通讯端口
-        DartPort = 33102,   --远古押镖内部通讯ip地址
+        DartAddress = "127.0.0.1", --远古押镖内部通讯地址
+        DartPort = 0,   --单机通过本服地图运行远古押镖
         ShuntAddress = "0", --竞技分流服务器ip
         ShuntPort = 0,  --竞技分流服务器端口
         GateAddress = "139.186.147.172", --跨服服务器的GateServer ip地址

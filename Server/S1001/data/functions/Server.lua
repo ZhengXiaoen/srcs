@@ -562,14 +562,20 @@ function IsActorCanEnterCrossServer(sysarg, enterCrossType)
         end
     elseif enterCrossType == 4 then --行会
         local svar = System.getDyanmicVar()
-        if svar.yuanGuZhanChangguildTime == nil then
-            Actor.sendTipmsg(sysarg,"活动时间未到!",ttFlyTip)
-             return false
-        end
-        --20分钟后入口时间关闭
-        if System.getCurrMiniTime() - svar.yuanGuZhanChangguildcd > 60 * 20 then
-            Actor.sendTipmsg(sysarg,"活动入口已关闭,无法进入!",ttFlyTip)
-            return false
+        if LocalDT.LocalCrossEnabled() then
+            if not LocalDT.LocalGuildCrossOpen() then
+                Actor.sendTipmsg(sysarg, "活动入口未开放", ttFlyTip)
+                return false
+            end
+        else
+            if svar.yuanGuZhanChangguildTime == nil then
+                Actor.sendTipmsg(sysarg, "活动时间未到!", ttFlyTip)
+                return false
+            end
+            if System.getCurrMiniTime() - svar.yuanGuZhanChangguildcd > 60 * 20 then
+                Actor.sendTipmsg(sysarg, "活动入口已关闭,无法进入!", ttFlyTip)
+                return false
+            end
         end
         local nGuildId = Actor.getGuildId(sysarg)
         if nGuildId <= 0 then
@@ -577,13 +583,7 @@ function IsActorCanEnterCrossServer(sysarg, enterCrossType)
             return false
         end
 
-        local var = Actor.getStaticVar(sysarg)
-        local batter = Actor.getIntProperty(sysarg,PROP_ACTOR_BATTLE_POWER)
-        if var.myTopBatter ~= nil then 
-            batter = var.myTopBatter
-
-        end
-        if batter < 3000000 then
+        if LocalDT.CrossBattlePower(sysarg) < CrossServerConfig.GuildEnterScene[1].minBattlePower then
             Actor.sendTipmsg(sysarg,"三百万以上战力才可进入!",ttFlyTip)
             return false
         end

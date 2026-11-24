@@ -998,6 +998,17 @@ end
 IsInYuanGuZhanChangTime = function(sysarg,msgid,packet)
 
 	local svar = System.getDyanmicVar()
+    if LocalDT.LocalCrossEnabled() then
+        local battlefieldOpen = System.getDaysSinceOpenServer() >= CrossServerConfig.YuanGuZhanChangOpenDay
+            and checkActivityTime(YuanGuZhanChangCfg.times) ~= 0
+        local pack = DataPack.allocPacket(sysarg, 151, LogicCmd.miscSysEx.sub.sYuanGuZhanChangStart)
+        DataPack.writeByte(pack, battlefieldOpen and 1 or 0)
+        DataPack.flush(pack)
+        pack = DataPack.allocPacket(sysarg, 151, LogicCmd.miscSysEx.sub.sCrossGuildState)
+        DataPack.writeByte(pack, LocalDT.LocalGuildCrossOpen() and 1 or 0)
+        DataPack.flush(pack)
+        return
+    end
     if svar.yuanGuZhanChangTime == nil then 
 		local pack = DataPack.allocPacket(sysarg,151,LogicCmd.miscSysEx.sub.sYuanGuZhanChangStart)
 		DataPack.writeByte(pack,0) --开启

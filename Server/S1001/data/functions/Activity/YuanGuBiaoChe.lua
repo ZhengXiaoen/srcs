@@ -11,6 +11,15 @@
 
 --开始远古押镖
 function StartYuanGuYaBiao(sysarg)
+    if LocalDT.LocalCrossEnabled() then
+        local x, y = Actor.getEntityPosition(sysarg)
+        if math.max(math.abs(x - 208), math.abs(y - 159)) > 8 then
+            Actor.sendTipmsg(sysarg, "请在龙头镖局附近接镖", ttFlyTip)
+            return
+        end
+        local dartFlag = Actor.getIsDartFlag(sysarg)
+        if Actor.hasState(sysarg, esStateDeath) or (dartFlag ~= 0 and dartFlag ~= 3) then return end
+    end
 	local ybState = GetCrossYaBiaoState(sysarg)
 	if ybState == 1 then
 		Actor.sendTipmsg(sysarg,"您正在押镖",ttFlyTip)
@@ -74,21 +83,19 @@ function StartYuanGuYaBiao(sysarg)
 	end
 	Actor.addTimer(sysarg, ActorTimerIds.CrossYaBiao, StdActivityCfg.KuafuYaSong.biaoCheLiveTime * 1000)
 	
-	-- 只广播给远古战场的玩家
-	--local RwData = StdActivityCfg.KuafuYaSong.RwData	
-	--local NpcName = string.format("<%s/M%s:%s:%s:%s>", RwData[5], RwData[2], RwData[3], RwData[4], RwData[5])
-	--local NpctFly = string.format("<(x%s:%s:%s:%s)>", RwData[2], RwData[3], RwData[4], RwData[5])  
-	local tipmsg = string.format(Lang.ScriptTips.bc00018, Actor.getName(sysarg))
-	
-	for i =1,#CrossServerConfig.BiaoCheEnterScene do
-        local cfg = CrossServerConfig.BiaoCheEnterScene[i]
-        local cfgScene = cfg.nSceneId
-        for j =1,#cfgScene do
-            local nSceneId = cfgScene[j]
-            System.broadcastCrossAreaTipmsg(tipmsg, ttChatWindow, nSceneId)            
+    local tipmsg = string.format(Lang.ScriptTips.bc00018, Actor.getName(sysarg))
+    if LocalDT.LocalCrossEnabled() then
+        for _, actor in ipairs(LuaHelp.getSceneActorListById(sceneid) or {}) do
+            Actor.sendTipmsg(actor, tipmsg, ttChatWindow)
+        end
+    else
+        for _, cfg in ipairs(CrossServerConfig.BiaoCheEnterScene) do
+            for _, mapId in ipairs(cfg.nSceneId) do
+                System.broadcastCrossAreaTipmsg(tipmsg, ttChatWindow, mapId)
+            end
         end
     end
-		
+
 	-- 通知前端押镖成功
 	local netPack = DataPack.allocPacket(sysarg, LogicCmd.miscSysEx.sysId, LogicCmd.miscSysEx.sub.sCrossYaBiao)
 	DataPack.writeByte(netPack, 1) -- 开始押镖
@@ -119,6 +126,13 @@ nil 或 0 正常退出
 5 押镖超时
 --]]
 function EndYuanGuYaBiaoAndExit(sysarg, state)
+    if LocalDT.LocalCrossEnabled() then
+        if not LocalDT.IsEscortScene(sysarg) then return end
+        local data = Actor.getDyanmicVar(sysarg)
+        data.localEscortExitReason = state
+        if not LocalDT.LocalCrossExit(sysarg) then data.localEscortExitReason = nil end
+        return
+    end
 	--如果原来是有镖车的，把他杀死
 	DestroyCrossBiaoChe(sysarg)
 	
@@ -150,7 +164,8 @@ function GiveupYuanGuYaBiao(sysarg)
 end
 
 --领取奖励
-function GetCrossYaBiaoAward(sysarg, index, isLogout)
+function GetCrossYaBiaoAward(sysarg, index, isLogout, previousScene)
+    if index ~= 1 and index ~= 2 then return end
 	
 	--获得押镖状态(0：没有押镖；1：正在押镖；2：押镖成功且没有领取奖励；3：押镖超时)
 	local ybState = GetCrossYaBiaoState(sysarg)
@@ -173,7 +188,7 @@ function GetCrossYaBiaoAward(sysarg, index, isLogout)
 		return
 	end
 	
-	local sceneid = Actor.getSceneId(sysarg)
+	local sceneid = previousScene or Actor.getSceneId(sysarg)
 	
 	local dVar = Actor.getDyanmicVar(sysarg)
 	if dVar.YuanGuSceneId == nil or dVar.YuanGuSceneId ~= sceneid then -- 校验一下
@@ -192,7 +207,7 @@ function GetCrossYaBiaoAward(sysarg, index, isLogout)
 		end
 	end
 		
-	local cfgidx, needYb = System.getCrossBiaoCheSceneCfgIdxBySceneId(sceneid)
+	local cfgidx, needYb = LocalDT.GetEscortSceneIndex(sceneid)
 	if cfgidx < 0 then
 		if not isLogout then
 			Actor.sendTipmsg(sysarg, "该场景没有奖励", ttFlyTip)
@@ -219,6 +234,10 @@ function GetCrossYaBiaoAward(sysarg, index, isLogout)
 	
 	if Awards.Give(sysarg, awards, LogIds.YGYBAward, tostring(index)) == false then
 		print("error GetCrossYaBiaoAward actorid="..Actor.getIntProperty(sysarg, PROP_ENTITY_ID)..",index="..index)
+        if index == 2 then
+            Actor.changeMoney(sysarg, mtYuanbao, StdActivityCfg.KuafuYaSong.doubleAwardYb, LogIds.YGYBDoubleAwardYb, "")
+        end
+        return
 	end	
 	
 	local nActorID = Actor.getIntProperty(sysarg,PROP_ENTITY_ID)
@@ -248,6 +267,18 @@ function GetCrossYaBiaoAward(sysarg, index, isLogout)
 		DataPack.writeByte(netPack, 3) -- 领取奖励成功
 		DataPack.flush(netPack)
 	end
+end
+
+LocalDT.FinishLocalEscort = function(actor, sceneId)
+    if GetCrossYaBiaoState(actor) == 2 then
+        GetCrossYaBiaoAward(actor, 1, true, sceneId)
+    end
+
+    DestroyCrossBiaoChe(actor)
+    local state = Actor.getDyanmicVar(actor)
+    state.YuanGuYBstart = nil
+    state.YuanGuSceneId = nil
+    if Actor.getIsDartFlag(actor) == 3 then Actor.setDartFlag(actor, 0) end
 end
 
 function MovetoCrossYaBiaoNPC(sysarg)
@@ -284,7 +315,11 @@ end
 
 -- 玩家登出
 EventCallDispatcher.OnYuanGuYaBiaoActorLogout = function (sysarg, arg)
-	if not System.isCrossServer() then return end
+    if not LocalDT.IsEscortScene(sysarg) then return end
+    if LocalDT.LocalCrossEnabled() then
+        LocalDT.FinishLocalEscort(sysarg, Actor.getSceneId(sysarg))
+        return
+    end
 
 	if GetCrossYaBiaoState(sysarg) == 2 then -- 2：押镖成功且没有领取奖励
 		GetCrossYaBiaoAward(sysarg, 1, true)
@@ -298,16 +333,16 @@ EventCallDispatcher.OnYuanGuYaBiaoActorLogout = function (sysarg, arg)
 end
 
 EventCallDispatcher.YuanGuYuanBaoChangedEventHandler = function (sysarg, args)
-	if not System.isCrossServer() then return end
+	if not LocalDT.IsEscortScene(sysarg) then return end
 	
 	local nYuanBao = args[1]	--改变元宝数目
 	local nLogId = args[2] --日志ID
 	local isConsume = args[3]
 	
-	if nYuanBao >= 0 then return end
+	if nYuanBao >= 0 or (LocalDT.LocalCrossEnabled() and nLogId == LogIds.YGYBDoubleAwardYb) then return end
 	
 	local sceneid = Actor.getSceneId(sysarg)
-	local cfgidx, needYb = System.getCrossBiaoCheSceneCfgIdxBySceneId(sceneid)
+	local cfgidx, needYb = LocalDT.GetEscortSceneIndex(sceneid)
 	if cfgidx < 0 then return end -- 不在远古押镖场景
 	
 	if needYb <= 0 then return end
@@ -349,7 +384,7 @@ end
 
 -- 玩家死亡
 EventCallDispatcher.YuanGuYuanBaoActorDie = function (sysarg, args)
-	if not System.isCrossServer() then return end
+	if not LocalDT.IsEscortScene(sysarg) then return end
 	
 	--获得押镖状态(0：没有押镖；1：正在押镖；2：押镖成功且没有领取奖励；3：押镖超时)
 	local ybState = GetCrossYaBiaoState(sysarg)
@@ -367,7 +402,7 @@ EventCallDispatcher.YuanGuYuanBaoActorDie = function (sysarg, args)
 	
 	--非安全区死亡则掉元宝(不一定开始了押镖)
 	if not Actor.hasMapAreaAttri(sysarg, aaSaft) then
-		local cfgidx, needYb = System.getCrossBiaoCheSceneCfgIdxBySceneId(Actor.getSceneId(sysarg))
+		local cfgidx, needYb = LocalDT.GetEscortSceneIndex(Actor.getSceneId(sysarg))
 		if cfgidx >= 0 and needYb > 0 then
 			OnYuanGuDeathDropYuanbao(sysarg, needYb)
 		end
@@ -380,10 +415,10 @@ EventCallDispatcher.YuanGuYuanBaoActorDie = function (sysarg, args)
 end
 
 EventCallDispatcher.YuanGuYuanBaoActorReliveHandler = function (sysarg, args)
-	if not System.isCrossServer() then return end
+	if not LocalDT.IsEscortScene(sysarg) then return end
 	
 	local sceneid = Actor.getSceneId(sysarg)
-	local cfgidx, needYb = System.getCrossBiaoCheSceneCfgIdxBySceneId(sceneid)
+	local cfgidx, needYb = LocalDT.GetEscortSceneIndex(sceneid)
 	if cfgidx < 0 then return end -- 不在远古押镖场景
 	
 	if needYb <= 0 then return end
@@ -398,7 +433,7 @@ end
 
 --请求远古押镖的信息
 CrossYaBiaoHandle = function (sysarg, sysid, packet)
-	if not System.isCrossServer() then return end
+	if not LocalDT.IsEscortScene(sysarg) then return end
 		
 	local msgid = DataPack.readByte(packet)
 	
@@ -477,6 +512,7 @@ function YuanGuYaBiaoEnd()
     --end
     local sysVar = System.getDyanmicVar()
     sysVar.crossyabiaoactivity = nil
+    LocalDT.ExitLocalCrossGroup(1)
     if System.isCrossServer() then
         for i =1,#CrossServerConfig.BiaoCheEnterScene do
             local cfg = CrossServerConfig.BiaoCheEnterScene[i]
@@ -575,6 +611,8 @@ function MateRankEnd(nType)
 		end
 	end
 end
+MiscsImplementEx.registerMsgHandler(LogicCmd.miscSysEx.sub.cLocalCross, LocalDT.HandleLocalCrossRequest)
+EventCallDispatcher.registerEventCall(BaseTypes.ActorEventId.aeEnterSceneBack, LocalDT.OnLocalCrossSceneChange)
 MiscsImplementEx.registerMsgHandler(LogicCmd.miscSysEx.sub.cCrossYaBiao, CrossYaBiaoHandle)
 EventCallDispatcher.registerEventCall(BaseTypes.ActorEventId.aeUserLogin, EventCallDispatcher.OnYuanGuYaBiaoActorLogin)
 EventCallDispatcher.registerEventCall(BaseTypes.ActorEventId.aeUserLogout, EventCallDispatcher.OnYuanGuYaBiaoActorLogout)

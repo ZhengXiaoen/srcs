@@ -803,6 +803,8 @@ function OnPlayerLogin(sysarg, isCrossDay)
     	-- 不能放在 EventCallDispatcher.defaultHandlerPlayerEnterSceneBack 中, 因为这时玩家数据还没有初始化完成, 所以改为放这里
     	RefreshCrossBossInfoUIToActor(sysarg)
     	Actor.addTimer(sysarg,49,30 * 1000)
+    else
+        LocalDT.ShowLocalCrossScene(sysarg, LocalDT.LocalCrossScene(Actor.getSceneId(sysarg)))
     end
 
     --3v3竞技领取奖励
@@ -983,7 +985,14 @@ function SendCrossActivityFlag(sysarg)
     local byabiao = 0
     local bSingle = 0
     if sysVar.rankmateactivity == 1 then brank = 1 end
-    if sysVar.crossyabiaoactivity == 1 then byabiao = 1 end
+    if LocalDT.LocalCrossEnabled() then
+        if LocalDT.LocalEscortOpen() then byabiao = 1 end
+        local status = DataPack.allocPacket(sysarg, 46, 6)
+        DataPack.writeByte(status, 1)
+        DataPack.flush(status)
+    elseif sysVar.crossyabiaoactivity == 1 then
+        byabiao = 1
+    end
     if sysVar.singlerankactivity == 1 then bSingle =1 end
     local pack = DataPack.allocPacket(sysarg,46,17)
     DataPack.writeByte(pack,brank)
@@ -3898,8 +3907,9 @@ function OnMonsterByKilled(monster, sysarg, monId, fubenId, sceneId,fuBenPtr)
 		end
 	end
 	
-	--在跨服服务器里面杀怪！！！
-	if System.isCrossServer() ==true then
+	-- 远古战场首领及原跨服击杀统计
+	local localCross = LocalDT.LocalCrossScene(sceneId)
+	if System.isCrossServer() or (localCross and localCross.activity == 0) then
 		--if sceneId >= 403 and sceneId <= 412 and monsterType == 4 then --是boss
 		--之后会加分流地图先屏蔽地图限制
 		if  monsterType == 4 then --是boss
@@ -3928,7 +3938,11 @@ function OnMonsterByKilled(monster, sysarg, monId, fubenId, sceneId,fuBenPtr)
 			dVar.kfBossBeK[monId] = System.getCurrMiniTime()
 			
 			local next_refresh_time = System.getCurrMiniTime() + 3 * 60 --远古战场刷怪
-			System.YGZC_OnBossDie(sceneId, monId, next_refresh_time, true)
+			if localCross then
+				RefreshCrossBossInfoUIToAllActor(sceneId)
+			else
+				System.YGZC_OnBossDie(sceneId, monId, next_refresh_time, true)
+			end
 			
 			--大吉大利活动消耗屠魔点
 			--if (svar.isDringDaJiDaLi ==nil or svar.isDringDaJiDaLi<2 or svar.isDringDaJiDaLi>3)==false then 

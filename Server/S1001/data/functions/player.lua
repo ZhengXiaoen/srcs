@@ -1,4 +1,5 @@
 ﻿--#include "data\config\help\SystemConfig.lua" once
+--#include "data\functions\Activity\LocalCross.lua" once
 --#include "data\functions\SpecialQuest.lua" once
 --#include "data\config\activityconfig\QiBingDuoBao.lua" once
 --#include "data\functions\TimerFunc.lua" once

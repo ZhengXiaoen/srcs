@@ -229,6 +229,16 @@ end
         lua=LuaRuntime(encoding=None,unpack_returned_tuples=True)
         self.assertEqual(lua.eval(b'function(s)local f,e=loadstring(s);return f~=nil,e end')(text),(True,None))
 
+    def test_monster_script_loads_local_cross_before_kill_handler(self):
+        from compile_boss_drop_lua import expand
+
+        script = expand(DATA/'functions/MonsterFunction.lua')
+        lookup = b'LocalDT.LocalCrossScene = function(sceneId)'
+        self.assertEqual(script.count(lookup), 1)
+        self.assertLess(script.index(lookup), script.index(b'function OnMonsterByKilled('))
+        lua = LuaRuntime(encoding=None, unpack_returned_tuples=True)
+        self.assertEqual(lua.eval(b'function(s)local f,e=loadstring(s);return f~=nil,e end')(script), (True, None))
+
 
 if __name__ == '__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--lua-path',type=Path);args=parser.parse_args()

@@ -169,6 +169,54 @@ class NativeEquipmentTests(unittest.TestCase):
         payload[6:8]=struct.pack('<H',count);m.u.mem_write(op,bytes(payload))
         return m.run(0x2a63f0,m.container,op,0,0,0)
 
+    def test_prepare_detached_forge_items_and_keep_backup_identity(self):
+        class LuaItemMachine(EquipmentMachine):
+            def hook(self,u,address,size,data):
+                arg = u.reg_read(UC_X86_REG_RDX)
+                if address == BASE+0x3c03c0:
+                    self.ret(self.lua_args[arg-1]);return
+                if address == BASE+0x3c0440:
+                    self.lua_result = bool(arg);self.ret();return
+                if address == BASE+0x3c1250:
+                    name = m.read(arg,32).split(b'\0',1)[0]
+                    self.registrations[name] = u.reg_read(UC_X86_REG_R8)-BASE
+                    self.ret();return
+                super().hook(u,address,size,data)
+
+        m = LuaItemMachine()
+        m.extra_allowed += [(0x327e50,0x32810a)]
+        source = m.plain(444,11)
+        backup = m.plain(3,12)
+        del m.items[12]
+        m.u.mem_write(source+0x21,bytes(range(1,10)))
+        m.u.mem_write(source+0x62,b'\x06'+bytes(range(1,29)))
+        base_copy = 0x347b6e
+        registration = base_copy+5+struct.unpack('<i',m.read(BASE+base_copy+1,4))[0]
+        m.registrations = {}
+        m.run(registration,HEAP+0x300,BASE+0x4444b8,BASE+0x36df50)
+        self.assertEqual(0x36df50,m.registrations[b'modifyItemProperty'])
+        callback = m.registrations[b'copyItemAttributes']
+        m.lua_args = (backup,source)
+        source_before = m.read(source,129)
+        self.assertEqual(1,m.run(callback,HEAP+0x300))
+        self.assertTrue(m.lua_result)
+        self.assertEqual(12,unpack(m.read(backup,8)))
+        self.assertEqual(3,m.count(backup))
+        unchanged(source_before,m.read(backup,129),skip=(*range(8),0x2d,0x80))
+        self.assertEqual(source_before,m.read(source,129))
+        self.assertEqual(1,m.run(0x327e50,backup,43,0)&255)
+        self.assertEqual(1,m.run(0x327e50,backup,41,6)&255)
+        self.assertEqual((b'\0'*4,b'\x06'),(m.read(backup+0x21,4),m.read(backup+0x62,1)))
+        self.assertEqual(1,m.run(0x327e50,backup,1,2)&255)
+        self.assertEqual(2,m.count(backup))
+        before = m.read(backup,129)
+        self.assertEqual(0,m.run(0x327e50,backup,41,256)&255)
+        self.assertEqual(before,m.read(backup,129))
+        m.u.mem_write(source+8,b'\x01\x00')
+        m.run(callback,HEAP+0x300)
+        self.assertFalse(m.lua_result)
+        self.assertEqual(before,m.read(backup,129))
+
     def test_non_equipment_templates_merge_and_keep_original_strength_check(self):
         for kind in (0,93,101,102,103,106,107,114,116,119,131,200,206,255):
             with self.subTest(kind=kind):

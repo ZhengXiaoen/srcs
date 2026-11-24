@@ -1206,8 +1206,9 @@ LocalDT.SanWeiForgeOne = function(sysarg,index,c)
         Item.setFuHunInfo(sysarg,result,1,soulLevel)
         Item.setFuHunInfo(sysarg,result,2,soulExp)
     end
-    Item.setItemProperty(sysarg,result,Item.ipTaoStrong,6)
-    if Item.getItemProperty(sysarg,result,Item.ipTaoStrong,0) ~= 6
+    -- 新装备入包前先写入属性，入包时按完整属性决定是否合并。
+    if not Item.modifyItemProperty(result,Item.ipTaoStrong,6)
+        or Item.getItemProperty(sysarg,result,Item.ipTaoStrong,0) ~= 6
         or Item.getItemProperty(sysarg,result,Item.ipItemSuperAttrLevel,0) ~= outputPro
         or (soulCfg and experience > 0 and (Item.getFuHunInfo(result,1) ~= soulLevel
             or Item.getFuHunInfo(result,2) ~= soulExp)) then
@@ -1230,9 +1231,8 @@ LocalDT.SanWeiForgeOne = function(sysarg,index,c)
     if not fits then Item.releaseItemPtr(result);return 0,"包裹空间不足" end
     -- 扣除前备份实际选中的装备，失败时保留原绑定、强化、附魂等属性。
     for _,material in ipairs(materials) do
-        material.backup = LocalDT.PrepareDragonEquipSplitItem(sysarg,material.ptr)
-        if material.backup then Item.setItemProperty(sysarg,material.backup,Item.ipItemCount,material.count) end
-        if not material.backup or Item.getItemProperty(sysarg,material.backup,Item.ipItemCount,0) ~= material.count then
+        material.backup = LocalDT.PrepareSanWeiEquipmentCopy(material.ptr,material.count,0)
+        if not material.backup then
             for _,saved in ipairs(materials) do if saved.backup then Item.releaseItemPtr(saved.backup) end end
             Item.releaseItemPtr(result)
             return 0,"材料属性备份失败"
@@ -1272,8 +1272,8 @@ LocalDT.SanWeiForgeOne = function(sysarg,index,c)
     local restored = true
     for _,material in ipairs(materials) do
         if (material.removed or 0) > 0 then
-            Item.setItemProperty(sysarg,material.backup,Item.ipItemCount,material.removed)
-            if Item.addItem(sysarg,material.backup,logStr.."返还",LogIds.sanweizhenhuoHeCheng,material.removed) ~= material.removed then
+            if not Item.modifyItemProperty(material.backup,Item.ipItemCount,material.removed)
+                or Item.addItem(sysarg,material.backup,logStr.."返还",LogIds.sanweizhenhuoHeCheng,material.removed) ~= material.removed then
                 restored = false
                 Item.releaseItemPtr(material.backup)
             end
@@ -2272,13 +2272,8 @@ LocalDT.SanWeiDragonFuseOne = function(sysarg,ptr,cfg,level)
     if before < 1 then return false,"龍之道具不足1个" end
     local prepared
     if count > 1 then
-        prepared = LocalDT.PrepareDragonEquipSplitItem(sysarg,ptr)
+        prepared = LocalDT.PrepareSanWeiEquipmentCopy(ptr,1,level)
         if not prepared then return false,"装备属性复制失败" end
-        Item.setItemProperty(sysarg,prepared,Item.ipDragonEquipLevel,level)
-        if Item.getItemProperty(sysarg,prepared,Item.ipDragonEquipLevel,0) ~= level then
-            Item.releaseItemPtr(prepared)
-            return false,"融合属性设置失败"
-        end
         local fits = Item.getBagEmptyGridCount(sysarg)+(before == 1 and 1 or 0) > 0
         if not fits and Item.getFuHunInfo(prepared,1) == 0 and Item.getFuHunInfo(prepared,2) == 0 then
             for i = 1,Item.getBagItemCount(sysarg) do
@@ -2430,30 +2425,11 @@ LocalDT.DragonEquipSplitAttributesEqual = function(sysarg,first,second)
         and Item.getItemLeftTime(first) == Item.getItemLeftTime(second)
 end
 
--- 只拆堆叠中的一件时，复制全部动态属性，原栈保留其余融合装备。
-LocalDT.PrepareDragonEquipSplitItem = function(sysarg,source)
-    local ptr = Item.createItem(Item.getItemId(source),1,
-        Item.getItemProperty(sysarg,source,Item.ipItemStrong,0),
-        Item.getItemProperty(sysarg,source,Item.ipItemQuality,0),
-        (Item.getItemProperty(sysarg,source,Item.ipItemBind,0)))
+-- 复制实例属性，由调用方指定副本数量和融合等级。
+LocalDT.PrepareSanWeiEquipmentCopy = function(source,count,dragonLevel)
+    local ptr = Item.createItem(Item.getItemId(source),count)
     if not ptr then return end
-    for prop = Item.ipItemStrong,Item.ipItemStaticPropStart-1 do
-        local value,extra = Item.getItemProperty(sysarg,source,prop,0)
-        if prop == Item.ipDragonEquipLevel then value = 0 end
-        local other = Item.getItemProperty(sysarg,ptr,prop,0)
-        if value ~= other then Item.setItemProperty(sysarg,ptr,prop,value) end
-        local copied,copiedExtra = Item.getItemProperty(sysarg,ptr,prop,0)
-        if copied ~= value or copiedExtra ~= extra then
-            Item.releaseItemPtr(ptr)
-            return
-        end
-    end
-    for kind = 1,2 do
-        local value = Item.getFuHunInfo(source,kind)
-        if Item.getFuHunInfo(ptr,kind) ~= value then Item.setFuHunInfo(sysarg,ptr,kind,value) end
-        if Item.getFuHunInfo(ptr,kind) ~= value then Item.releaseItemPtr(ptr);return end
-    end
-    if Item.getItemLeftTime(source) ~= Item.getItemLeftTime(ptr) then
+    if not Item.copyItemAttributes(ptr,source) or not Item.modifyItemProperty(ptr,Item.ipDragonEquipLevel,dragonLevel) then
         Item.releaseItemPtr(ptr)
         return
     end
@@ -2475,7 +2451,7 @@ LocalDT.SplitDragonEquipOne = function(sysarg,pItemPtr,cfg,requested)
     local prepared
     local needGrid = Item.getAddItemNeedGridCount(sysarg,cfg.id2,amount,0,0,0)
     if amount < count then
-        prepared = LocalDT.PrepareDragonEquipSplitItem(sysarg,pItemPtr)
+        prepared = LocalDT.PrepareSanWeiEquipmentCopy(pItemPtr,1,0)
         if not prepared then return 0,"装备属性复制失败",true end
         local normalGrid = 1
         local limit = Item.getItemPropertyById(cfg.id,Item.ipItemDupCount)

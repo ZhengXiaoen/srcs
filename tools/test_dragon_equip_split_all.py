@@ -30,8 +30,22 @@ Item={ipItemID='id',ipDragonEquipLevel=15,ipItemSuperAttrLevel=24,
  getItemProperty=function(_,p,prop) assert(not p.destroyed);return p[propNames[prop] or prop] or 0,0 end,
  setItemProperty=function(_,p,prop,value)
   if failSet and value==0 then return false end
-  if failCopy and p.count==1 and prop==33 then return false end
+  local owned=false
+  for _,item in ipairs(bag) do if item==p then owned=true;break end end
+  if not owned then return false end
   p[propNames[prop] or prop]=value;return true
+ end,
+ modifyItemProperty=function(p,prop,value)
+  assert(not p.destroyed)
+  p[propNames[prop] or prop]=value;return true
+ end,
+ copyItemAttributes=function(dest,source)
+  assert(not dest.destroyed and not source.destroyed and dest.id==source.id)
+  if failCopy then return false end
+  for key,value in pairs(source) do
+   if key~='count' and key~='guid' then dest[key]=value end
+  end
+  return true
  end,
  getBagEmptyGridCount=function() return capacity-#bag end,
  getAddItemNeedGridCount=function(_,id,count,q,s,bind)
@@ -47,7 +61,7 @@ Item={ipItemID='id',ipDragonEquipLevel=15,ipItemSuperAttrLevel=24,
  getItemId=function(p) assert(not p.destroyed);return p.id end,
  getItemPropertyById=function() return 9999 end,
  createItem=function(id,count,strong,quality,bind)
-  return {id=id,count=count,strong=strong,bind=bind,dragon=0,super=0,soul=0,expiry=0}
+  return {id=id,count=count,strong=strong or 0,bind=bind or 0,dragon=0,super=0,soul=0,expiry=0}
  end,
  releaseItemPtr=function(p) assert(not p.destroyed);p.destroyed=true end,
  getFuHunInfo=function(p,kind) assert(not p.destroyed);return kind==1 and 0 or p.soul end,

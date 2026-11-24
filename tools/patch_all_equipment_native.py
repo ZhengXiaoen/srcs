@@ -20,7 +20,8 @@ ROOT = Path(__file__).resolve().parents[1]
 SERVER = ROOT / 'Server/S1001/x64/LogicServerCQ64_R.exe'
 SOURCE_HASH = '75056b342d771238fd95a66f01c2181c3e56a2b89e17c2cc99dd6ccd73a53935'
 LEGACY_HASHES = {'8b9c988a2691ceee1b7d9eda714050d30aec7bcb6aded8b849460e45cfa6db76',
-                 '57697100cc107f9c8d275fbeaed3be480010c8eb24aafd7fb7c98d6957f82954'}
+                 '57697100cc107f9c8d275fbeaed3be480010c8eb24aafd7fb7c98d6957f82954',
+                 '46a0e1d3e01f470bb2125b8ead7f0d7a9382b334ffcc74be78271acd561dc41c'}
 MARKER = b'ALLEQUIPSTACK1\0\0\0'
 BASE = 0x140000000
 HOOKS = {0x2a8bd4: bytes.fromhex('e8f7010000'),
@@ -30,7 +31,9 @@ HOOKS = {0x2a8bd4: bytes.fromhex('e8f7010000'),
          0x1e7370: bytes.fromhex('4889542410'),
          0x2849d0: bytes.fromhex('44884c2420'),
          0x1e77b0: bytes.fromhex('4889542410'),
-         0x2a905e: bytes.fromhex('e8ddfbffff')}
+         0x2a905e: bytes.fromhex('e8ddfbffff'),
+         0x327e50: bytes.fromhex('4489442418'),
+         0x347b6e: bytes.fromhex('e8dd960700')}
 
 
 def asm(source, rva):
@@ -613,6 +616,90 @@ def takeoff(rva, magic=False):
     return asm(code,rva)
 
 
+def modify_prepared_item(rva):
+    # Item.modifyItemProperty is the engine's setter for items before bag insertion.
+    return asm('''
+        cmp edx,41
+        je tao_strength
+        cmp edx,43
+        je dragon_level
+        mov [rsp+0x18],r8d
+        jmp 0x140327e55
+        tao_strength:
+        test rcx,rcx
+        jz invalid
+        cmp r8d,255
+        ja invalid
+        mov [rcx+0x62],r8b
+        jmp success
+        dragon_level:
+        test rcx,rcx
+        jz invalid
+        mov [rcx+0x21],r8d
+        success:
+        mov eax,1
+        ret
+        invalid:
+        xor eax,eax
+        ret
+    ''', rva)
+
+
+def copy_item_attributes(rva):
+    # Lua Item.copyItemAttributes(prepared, source). Use the same item layout as
+    # wear: copy the instance data and retain the destination GUID and count.
+    code = '''
+        sub rsp,0x38
+        mov [rsp+0x20],rcx
+        mov edx,1
+        xor r8d,r8d
+        call 0x1403c03c0
+        mov [rsp+0x28],rax
+        mov rcx,[rsp+0x20]
+        mov edx,2
+        xor r8d,r8d
+        call 0x1403c03c0
+        xor edx,edx
+        mov r10,[rsp+0x28]
+        test rax,rax
+        jz done
+        test r10,r10
+        jz done
+        mov cx,[rax+8]
+        cmp cx,[r10+8]
+        jne done
+        mov r9b,[r10+0x2d]
+    '''
+    for offset in range(8, 0x80, 8):
+        code += f'mov r11,[rax+{offset}]\nmov [r10+{offset}],r11\n'
+    code += '''
+        mov [r10+0x2d],r9b
+        mov edx,1
+        done:
+        mov rcx,[rsp+0x20]
+        call 0x1403c0440
+        mov eax,1
+        add rsp,0x38
+        ret
+    '''
+    return asm(code, rva)
+
+
+def register_copy_item_attributes(rva, callback):
+    code = asm(f'''
+        sub rsp,0x38
+        mov [rsp+0x20],rcx
+        call 0x1403c1250
+        mov rcx,[rsp+0x20]
+        lea rdx,[{BASE+rva+0x80}]
+        lea r8,[{BASE+callback}]
+        call 0x1403c1250
+        add rsp,0x38
+        ret
+    ''', rva)
+    return code.ljust(0x80, b'\0') + b'copyItemAttributes\0'
+
+
 def restore(source):
     import pefile
     pos = source.find(MARKER)
@@ -651,7 +738,7 @@ def patch(source):
     header = MARKER+struct.pack('<Q', len(source))+source[:1024]
     begin = align(offset+len(header),16)
     addresses = [section.VirtualAddress+begin+i*0x1000 for i in range(11)]
-    shared, explicit, template, standard, magic, standard_inner, magic_inner, commit,off,magic_off,actual_add = addresses
+    shared, explicit, template, standard, magic, standard_inner, magic_inner, commit, off, magic_off, actual_add = addresses
     chunks = [attributes(shared), overlap(explicit,shared), overlap(template,shared,True),
               wear(standard,standard_inner), wear(magic,magic_inner,True),
               HOOKS[0x283a30]+asm(f'jmp {BASE+0x283a35}',standard_inner+5),
@@ -679,6 +766,32 @@ def patch(source):
         records.append(struct.pack('<III',rva,rva+len(code),unwind_rva))
     table_rva = section.VirtualAddress+offset+len(payload)
     payload.extend(pdata+b''.join(records))
+
+    # Keep existing helper and exception-table offsets when updating installed
+    # binaries. The final reserved slot has room after the overlap helper.
+    modify = actual_add+align(len(chunks[-1]),16)
+    modify_code = modify_prepared_item(modify)
+    copy = modify+align(len(modify_code),16)
+    copy_code = copy_item_attributes(copy)
+    register_copy = copy+align(len(copy_code),16)
+    register_code = register_copy_item_attributes(register_copy,copy)
+    if register_copy+len(register_code) > actual_add+0x1000:
+        raise ValueError('Prepared item helpers exceeded their reserved space')
+    extra_records = []
+    extra_unwinds = bytearray()
+    prepared_helpers = (
+        (modify,modify_code,bytes.fromhex('01000000')),
+        (copy,copy_code,bytes.fromhex('0104010004620000')),
+        (register_copy,register_code,bytes.fromhex('0104010004620000')),
+    )
+    unwind_start = section.VirtualAddress+offset+len(payload)+12*len(prepared_helpers)
+    for rva,code,unwind in prepared_helpers:
+        local = rva-section.VirtualAddress-offset
+        payload[local:local+len(code)] = code
+        unwind_rva = unwind_start+len(extra_unwinds)
+        extra_records.append(struct.pack('<III',rva,rva+len(code),unwind_rva))
+        extra_unwinds.extend(unwind)
+    payload.extend(b''.join(extra_records)+extra_unwinds)
     virtual_size = offset+len(payload)
     size = align(virtual_size,pe.OPTIONAL_HEADER.FileAlignment)
     result = bytearray(source+b'\0'*(section.PointerToRawData+size-len(source)))
@@ -688,14 +801,15 @@ def patch(source):
     for field,value in [('SizeOfImage',align(section.VirtualAddress+virtual_size,pe.OPTIONAL_HEADER.SectionAlignment)),
                         ('SizeOfCode',pe.OPTIONAL_HEADER.SizeOfCode+size-section.SizeOfRawData)]:
         struct.pack_into('<I',result,pe.OPTIONAL_HEADER.get_field_absolute_offset(field),value)
-    struct.pack_into('<II',result,directory.get_file_offset(),table_rva,len(pdata)+12*len(records))
+    struct.pack_into('<II',result,directory.get_file_offset(),table_rva,len(pdata)+12*(len(records)+len(extra_records)))
     targets = {0x2a8bd4:explicit,0x2a8d22:template,0x283a30:standard,0x1e7370:magic,
-               0x28435b:commit,0x2849d0:off,0x1e77b0:magic_off,0x2a905e:actual_add}
+               0x28435b:commit,0x2849d0:off,0x1e77b0:magic_off,0x2a905e:actual_add,
+               0x327e50:modify,0x347b6e:register_copy}
     for rva,target in targets.items():
         off = pe.get_offset_from_rva(rva)
         if source[off:off+5] != HOOKS[rva]:
             raise ValueError(f'Unexpected native equipment instruction at {rva:x}')
-        op = b'\xe8' if rva in (0x2a8bd4,0x2a8d22,0x2a905e) else b'\xe9'
+        op = b'\xe8' if rva in (0x2a8bd4,0x2a8d22,0x2a905e,0x347b6e) else b'\xe9'
         result[off:off+5] = op+struct.pack('<i',target-rva-5)
     result = bytes(result)
     if restore(result) != source:

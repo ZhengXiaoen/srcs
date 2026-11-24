@@ -73,9 +73,17 @@ Item.getFuHunInfo=function(p,kind) assert(not p.destroyed);return kind==1 and p.
 Item.setFuHunInfo=function(_,p,kind,value) assert(not p.destroyed);p[kind==1 and 'soulLevel' or 'soul']=value end
 Item.setItemProperty=function(_,p,prop,value)
  assert(not p.destroyed)
- if failAttribute and prop==30 then return false end
+ local owned=false
+ for _,item in ipairs(bag) do if item==p then owned=true;break end end
+ if not owned then return false end
  if failDragonSet and prop==15 and value>0 then return false end
  p[propNames[prop] or prop]=value;return true
+end
+local modifyPrepared = Item.modifyItemProperty
+Item.modifyItemProperty=function(p,prop,value)
+ if failAttribute and prop==30 then return false end
+ if failDragonSet and prop==15 and value>0 then return false end
+ return modifyPrepared(p,prop,value)
 end
 Item.removeItem=function(_,ptr,count,label,log)
  assert(not ptr.destroyed);removeCalls=removeCalls+1
@@ -275,12 +283,12 @@ class FurnaceTests(unittest.TestCase):
         self.assertIn("包裹空间不足",self.g.tips[1])
 
     def test_failures_restore_exact_material_attributes_and_actual_fee(self):
-        for flag,value in (("failCreate",True),("failAttribute",True),("failCharge",True),
+        for flag,value in (("failCreate",True),("failAttribute",True),("failCopy",True),("failCharge",True),
                            ("partialCharge",True),("failRemoveOn",1),("failRemoveOn",2),("failOutput",True)):
             with self.subTest(flag=flag,value=value):
                 self.setUp()
                 for n in range(3):
-                    p=self.put(4645,1,bind=n%2);p.soul=11+n;p.soulLevel=n;p.expiry=456+n;p.strong=7+n
+                    p=self.put(4645,1,bind=n%2);p.soul=11+n;p.soulLevel=n;p.expiry=456+n;p.strong=7+n;p.tao=3+n
                 before = self.snapshot()
                 self.g[flag]=value
                 self.click("onDzwdZAll",1,28,36)
